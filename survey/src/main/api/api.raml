@@ -1,0 +1,17 @@
+#%RAML 0.8
+title: Survey Service
+version: 0.1.0
+baseUri: http://server/api/{1.0}
+mediaType: application/json
+protocols: [ HTTP ]
+/survey:
+  displayName: track clients and units
+  /surveyQuestions:
+    displayName: track clients
+    get:
+      description: <<insert text or markdown here>>
+  /surveyResponseList:
+    description: track units
+    get:
+      description: <<insert text or markdown here>>
+  
