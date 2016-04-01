@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of Survey_Question.
@@ -22,8 +25,10 @@ public class SurveyQuestion implements Serializable {
 
 	/** survey_question_id. */
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private String surveyQuestionId;
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="survey_question_id_seq")
+//	@SequenceGenerator(name="survey_question_id_seq", sequenceName="survey_question_id_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer surveyQuestionId;
 
 	/** survey_id. */
 	private String surveyId;
@@ -50,9 +55,13 @@ public class SurveyQuestion implements Serializable {
 	private String userId;
 
 	/** Survey. */
+	@ManyToOne
+	@JoinColumn(name="survey_fk_id")
 	private Survey survey;
 
 	/** Question. */
+	@ManyToOne
+	@JoinColumn(name="question_fk_id")
 	private Question question;
 
 	/**
@@ -61,24 +70,16 @@ public class SurveyQuestion implements Serializable {
 	public SurveyQuestion() {
 	}
 
-	/**
-	 * Set the survey_question_id.
-	 * 
-	 * @param surveyQuestionId
-	 *            survey_question_id
-	 */
-	public void setSurveyQuestionId(String surveyQuestionId) {
+	
+	public Integer getSurveyQuestionId() {
+		return surveyQuestionId;
+	}
+
+
+	public void setSurveyQuestionId(Integer surveyQuestionId) {
 		this.surveyQuestionId = surveyQuestionId;
 	}
 
-	/**
-	 * Get the survey_question_id.
-	 * 
-	 * @return survey_question_id
-	 */
-	public String getSurveyQuestionId() {
-		return this.surveyQuestionId;
-	}
 
 	/**
 	 * Set the survey_id.

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of Custom_Picklist.
@@ -22,8 +23,10 @@ public class CustomPicklist implements Serializable {
 
 	/** picklist_id. */
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private String picklistId;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	//@GeneratedValue(strategy=GenerationType.IDENTITY, generator="picklist_id_seq")
+	//@SequenceGenerator(name="picklist_id_seq", sequenceName="picklist_id_seq")
+	private Integer picklistId;
 
 	/** picklist_key. */
 	private String picklistKey;
@@ -49,23 +52,12 @@ public class CustomPicklist implements Serializable {
 	public CustomPicklist() {
 	}
 
-	/**
-	 * Set the picklist_id.
-	 * 
-	 * @param picklistId
-	 *            picklist_id
-	 */
-	public void setPicklistId(String picklistId) {
-		this.picklistId = picklistId;
+	public Integer getPicklistId() {
+		return picklistId;
 	}
 
-	/**
-	 * Get the picklist_id.
-	 * 
-	 * @return picklist_id
-	 */
-	public String getPicklistId() {
-		return this.picklistId;
+	public void setPicklistId(Integer picklistId) {
+		this.picklistId = picklistId;
 	}
 
 	/**

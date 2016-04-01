@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of Question.
@@ -26,8 +28,10 @@ public class Question implements Serializable {
 
 	/** question_id. */
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private String questionId;
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="question_id_seq")
+//	@SequenceGenerator(name="question_id_seq", sequenceName="question_id_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer questionId;
 
 	/** question_name. */
 	private String questionName;
@@ -72,6 +76,7 @@ public class Question implements Serializable {
 	private String surveyId;
 
 	/** The set of Survey_Question. */
+	@OneToMany(mappedBy="question")
 	private List<SurveyQuestion> surveyQuestion;
 
 	/**
@@ -81,24 +86,6 @@ public class Question implements Serializable {
 		this.surveyQuestion = new ArrayList<SurveyQuestion>();
 	}
 
-	/**
-	 * Set the question_id.
-	 * 
-	 * @param questionId
-	 *            question_id
-	 */
-	public void setQuestionId(String questionId) {
-		this.questionId = questionId;
-	}
-
-	/**
-	 * Get the question_id.
-	 * 
-	 * @return question_id
-	 */
-	public String getQuestionId() {
-		return this.questionId;
-	}
 
 	/**
 	 * Set the question_name.
@@ -367,16 +354,6 @@ public class Question implements Serializable {
 	}
 
 	/**
-	 * Set the set of the Survey_Question.
-	 * 
-	 * @param surveyQuestionSet
-	 *            The set of Survey_Question
-	 */
-	public void setSurveyQuestionSet(List<SurveyQuestion> surveyQuestionSet) {
-		this.surveyQuestion = surveyQuestionSet;
-	}
-
-	/**
 	 * Add the Survey_Question.
 	 * 
 	 * @param surveyQuestion
@@ -386,14 +363,26 @@ public class Question implements Serializable {
 		this.surveyQuestion.add(surveyQuestion);
 	}
 
-	/**
-	 * Get the set of the Survey_Question.
-	 * 
-	 * @return The set of Survey_Question
-	 */
-	public List<SurveyQuestion> getSurveyQuestionSet() {
-		return this.surveyQuestion;
+
+	public Integer getQuestionId() {
+		return questionId;
 	}
+
+
+	public void setQuestionId(Integer questionId) {
+		this.questionId = questionId;
+	}
+
+
+	public List<SurveyQuestion> getSurveyQuestion() {
+		return surveyQuestion;
+	}
+
+
+	public void setSurveyQuestion(List<SurveyQuestion> surveyQuestion) {
+		this.surveyQuestion = surveyQuestion;
+	}
+
 
 	/**
 	 * {@inheritDoc}

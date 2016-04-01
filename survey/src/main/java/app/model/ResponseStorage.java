@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of Response_Storage.
@@ -21,8 +22,6 @@ public class ResponseStorage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** survey_question_id. */
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String surveyQuestionId;
 
 	/** response_value. */
@@ -31,8 +30,11 @@ public class ResponseStorage implements Serializable {
 	/** response_subassessment. */
 	private String responseSubassessment;
 
-	/** client_id. */
-	private String clientId;
+	@Id
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="client_Id_seq")
+//	@SequenceGenerator(name="client_Id_seq", sequenceName="client_Id_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer clientId;
 
 	/** app_id. */
 	private String appId;
@@ -112,23 +114,13 @@ public class ResponseStorage implements Serializable {
 		return this.responseSubassessment;
 	}
 
-	/**
-	 * Set the client_id.
-	 * 
-	 * @param clientId
-	 *            client_id
-	 */
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
+
+	public Integer getClientId() {
+		return clientId;
 	}
 
-	/**
-	 * Get the client_id.
-	 * 
-	 * @return client_id
-	 */
-	public String getClientId() {
-		return this.clientId;
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
 	}
 
 	/**
