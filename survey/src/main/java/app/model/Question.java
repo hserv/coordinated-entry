@@ -7,12 +7,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+
+import org.hibernate.engine.internal.CascadePoint;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Model class of Question.
@@ -49,16 +54,16 @@ public class Question implements Serializable {
 	private String optionsSingleMultipleSelect;
 
 	/** is_copy_question_id. */
-	private String isCopyQuestionId;
+	private Boolean isCopyQuestionId;
 
 	/** hud_boolean. */
-	private String hudBoolean;
+	private Boolean hudBoolean;
 
 	/** locked. */
-	private String locked;
+	private Boolean locked;
 
 	/** inactive. */
-	private String inactive;
+	private Boolean inactive;
 
 	/** label_value. */
 	private String labelValue;
@@ -73,10 +78,11 @@ public class Question implements Serializable {
 	private String userId;
 
 	/** survey_id. */
-	private String surveyId;
+	private Integer surveyId;
 
 	/** The set of Survey_Question. */
-	@OneToMany(mappedBy="question")
+	@OneToMany(mappedBy="question", cascade=CascadeType.ALL)
+	@JsonManagedReference
 	private List<SurveyQuestion> surveyQuestion;
 
 	/**
@@ -182,81 +188,46 @@ public class Question implements Serializable {
 		return this.optionsSingleMultipleSelect;
 	}
 
-	/**
-	 * Set the is_copy_question_id.
-	 * 
-	 * @param isCopyQuestionId
-	 *            is_copy_question_id
-	 */
-	public void setIsCopyQuestionId(String isCopyQuestionId) {
+
+	public Boolean getIsCopyQuestionId() {
+		return isCopyQuestionId;
+	}
+
+
+	public void setIsCopyQuestionId(Boolean isCopyQuestionId) {
 		this.isCopyQuestionId = isCopyQuestionId;
 	}
 
-	/**
-	 * Get the is_copy_question_id.
-	 * 
-	 * @return is_copy_question_id
-	 */
-	public String getIsCopyQuestionId() {
-		return this.isCopyQuestionId;
+
+	public Boolean getHudBoolean() {
+		return hudBoolean;
 	}
 
-	/**
-	 * Set the hud_boolean.
-	 * 
-	 * @param hudBoolean
-	 *            hud_boolean
-	 */
-	public void setHudBoolean(String hudBoolean) {
+
+	public void setHudBoolean(Boolean hudBoolean) {
 		this.hudBoolean = hudBoolean;
 	}
 
-	/**
-	 * Get the hud_boolean.
-	 * 
-	 * @return hud_boolean
-	 */
-	public String getHudBoolean() {
-		return this.hudBoolean;
+
+	public Boolean getLocked() {
+		return locked;
 	}
 
-	/**
-	 * Set the locked.
-	 * 
-	 * @param locked
-	 *            locked
-	 */
-	public void setLocked(String locked) {
+
+	public void setLocked(Boolean locked) {
 		this.locked = locked;
 	}
 
-	/**
-	 * Get the locked.
-	 * 
-	 * @return locked
-	 */
-	public String getLocked() {
-		return this.locked;
+
+	public Boolean getInactive() {
+		return inactive;
 	}
 
-	/**
-	 * Set the inactive.
-	 * 
-	 * @param inactive
-	 *            inactive
-	 */
-	public void setInactive(String inactive) {
+
+	public void setInactive(Boolean inactive) {
 		this.inactive = inactive;
 	}
 
-	/**
-	 * Get the inactive.
-	 * 
-	 * @return inactive
-	 */
-	public String getInactive() {
-		return this.inactive;
-	}
 
 	/**
 	 * Set the label_value.
@@ -340,7 +311,7 @@ public class Question implements Serializable {
 	 * @param surveyId
 	 *            survey_id
 	 */
-	public void setSurveyId(String surveyId) {
+	public void setSurveyId(Integer surveyId) {
 		this.surveyId = surveyId;
 	}
 
@@ -349,7 +320,7 @@ public class Question implements Serializable {
 	 * 
 	 * @return survey_id
 	 */
-	public String getSurveyId() {
+	public Integer getSurveyId() {
 		return this.surveyId;
 	}
 
