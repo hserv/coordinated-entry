@@ -12,7 +12,7 @@
 	<category_index>0</category_index>
 	<zoom>1.0</zoom>
 	<x>0</x>
-	<y>210</y>
+	<y>0</y>
 	<default_color>
 		<r>128</r>
 		<g>128</g>
@@ -135,7 +135,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2016-03-25 19:17:20</creation_date>
-			<updated_date>2016-04-05 17:07:51</updated_date>
+			<updated_date>2016-04-05 17:20:32</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -2123,7 +2123,7 @@
 				<font_name>Segoe UI</font_name>
 				<font_size>9</font_size>
 			<x>24</x>
-			<y>27</y>
+			<y>17</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
