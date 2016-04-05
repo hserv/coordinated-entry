@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of Response_Type.
@@ -23,9 +22,11 @@ public class ResponseType implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="response_type_id_seq")
-//	@SequenceGenerator(name="response_type_id_seq", sequenceName="response_type_id_seq")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	// @GeneratedValue(strategy=GenerationType.SEQUENCE,
+	// generator="response_type_id_seq")
+	// @SequenceGenerator(name="response_type_id_seq",
+	// sequenceName="response_type_id_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer responseTypeId;
 
 	/** hmis_response. */
@@ -35,17 +36,17 @@ public class ResponseType implements Serializable {
 	private String text;
 
 	/** integer. */
-	@Column(name="count")
-	private String integer;
+	@Column(name = "count")
+	private Integer integer;
 
 	/** currency. */
-	private String currency;
+	private Float currency;
 
 	/** custom_picklist. */
-	private String customPicklist;
+	private Boolean customPicklist;
 
 	/** multiple_select. */
-	private String multipleSelect;
+	private Boolean multipleSelect;
 
 	/** max_select. */
 	private String maxSelect;
@@ -68,16 +69,13 @@ public class ResponseType implements Serializable {
 	public ResponseType() {
 	}
 
-
 	public Integer getResponseTypeId() {
 		return responseTypeId;
 	}
 
-
 	public void setResponseTypeId(Integer responseTypeId) {
 		this.responseTypeId = responseTypeId;
 	}
-
 
 	/**
 	 * Set the hmis_response.
@@ -117,80 +115,52 @@ public class ResponseType implements Serializable {
 		return this.text;
 	}
 
-	/**
-	 * Set the integer.
-	 * 
-	 * @param integer
-	 *            integer
-	 */
-	public void setInteger(String integer) {
+	public Integer getInteger() {
+		return integer;
+	}
+
+	public void setInteger(Integer integer) {
 		this.integer = integer;
 	}
 
-	/**
-	 * Get the integer.
-	 * 
-	 * @return integer
-	 */
-	public String getInteger() {
-		return this.integer;
+	public Float getCurrency() {
+		return currency;
 	}
 
-	/**
-	 * Set the currency.
-	 * 
-	 * @param currency
-	 *            currency
-	 */
-	public void setCurrency(String currency) {
+	public void setCurrency(Float currency) {
 		this.currency = currency;
 	}
 
-	/**
-	 * Get the currency.
-	 * 
-	 * @return currency
-	 */
-	public String getCurrency() {
-		return this.currency;
+	public Boolean getCustomPicklist() {
+		return customPicklist;
 	}
 
-	/**
-	 * Set the custom_picklist.
-	 * 
-	 * @param customPicklist
-	 *            custom_picklist
-	 */
-	public void setCustomPicklist(String customPicklist) {
+	public void setCustomPicklist(Boolean customPicklist) {
 		this.customPicklist = customPicklist;
 	}
 
-	/**
-	 * Get the custom_picklist.
-	 * 
-	 * @return custom_picklist
-	 */
-	public String getCustomPicklist() {
-		return this.customPicklist;
+	public Boolean getMultipleSelect() {
+		return multipleSelect;
 	}
 
-	/**
-	 * Set the multiple_select.
-	 * 
-	 * @param multipleSelect
-	 *            multiple_select
-	 */
-	public void setMultipleSelect(String multipleSelect) {
+	public void setMultipleSelect(Boolean multipleSelect) {
 		this.multipleSelect = multipleSelect;
 	}
 
-	/**
-	 * Get the multiple_select.
-	 * 
-	 * @return multiple_select
-	 */
-	public String getMultipleSelect() {
-		return this.multipleSelect;
+	public String getSubassessmentSurveyId() {
+		return subassessmentSurveyId;
+	}
+
+	public void setSubassessmentSurveyId(String subassessmentSurveyId) {
+		this.subassessmentSurveyId = subassessmentSurveyId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	/**
@@ -210,25 +180,6 @@ public class ResponseType implements Serializable {
 	 */
 	public String getMaxSelect() {
 		return this.maxSelect;
-	}
-
-	/**
-	 * Set the subassessment_survey_id.
-	 * 
-	 * @param subassessmentSurveyId
-	 *            subassessment_survey_id
-	 */
-	public void setSubassessmentSurveyId(String subassessmentSurveyId) {
-		this.subassessmentSurveyId = subassessmentSurveyId;
-	}
-
-	/**
-	 * Get the subassessment_survey_id.
-	 * 
-	 * @return subassessment_survey_id
-	 */
-	public String getSubassessmentSurveyId() {
-		return this.subassessmentSurveyId;
 	}
 
 	/**
@@ -268,25 +219,5 @@ public class ResponseType implements Serializable {
 	public Date getDateUpdated() {
 		return this.dateUpdated;
 	}
-
-	/**
-	 * Set the user_id.
-	 * 
-	 * @param userId
-	 *            user_id
-	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	/**
-	 * Get the user_id.
-	 * 
-	 * @return user_id
-	 */
-	public String getUserId() {
-		return this.userId;
-	}
-
 
 }

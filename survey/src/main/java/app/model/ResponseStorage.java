@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of Response_Storage.
@@ -31,9 +30,10 @@ public class ResponseStorage implements Serializable {
 	private String responseSubassessment;
 
 	@Id
-//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="client_Id_seq")
-//	@SequenceGenerator(name="client_Id_seq", sequenceName="client_Id_seq")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	// @GeneratedValue(strategy=GenerationType.SEQUENCE,
+	// generator="client_Id_seq")
+	// @SequenceGenerator(name="client_Id_seq", sequenceName="client_Id_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer clientId;
 
 	/** app_id. */
@@ -55,25 +55,6 @@ public class ResponseStorage implements Serializable {
 	 * Constructor.
 	 */
 	public ResponseStorage() {
-	}
-
-	/**
-	 * Set the survey_question_id.
-	 * 
-	 * @param surveyQuestionId
-	 *            survey_question_id
-	 */
-	public void setSurveyQuestionId(String surveyQuestionId) {
-		this.surveyQuestionId = surveyQuestionId;
-	}
-
-	/**
-	 * Get the survey_question_id.
-	 * 
-	 * @return survey_question_id
-	 */
-	public String getSurveyQuestionId() {
-		return this.surveyQuestionId;
 	}
 
 	/**
@@ -113,7 +94,6 @@ public class ResponseStorage implements Serializable {
 	public String getResponseSubassessment() {
 		return this.responseSubassessment;
 	}
-
 
 	public Integer getClientId() {
 		return clientId;
@@ -199,24 +179,20 @@ public class ResponseStorage implements Serializable {
 		return this.dateUpdated;
 	}
 
-	/**
-	 * Set the user_id.
-	 * 
-	 * @param userId
-	 *            user_id
-	 */
+	public String getSurveyQuestionId() {
+		return surveyQuestionId;
+	}
+
+	public void setSurveyQuestionId(String surveyQuestionId) {
+		this.surveyQuestionId = surveyQuestionId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-	/**
-	 * Get the user_id.
-	 * 
-	 * @return user_id
-	 */
-	public String getUserId() {
-		return this.userId;
-	}
-
 
 }

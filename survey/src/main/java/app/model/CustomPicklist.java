@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of Custom_Picklist.
@@ -23,9 +22,11 @@ public class CustomPicklist implements Serializable {
 
 	/** picklist_id. */
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	//@GeneratedValue(strategy=GenerationType.IDENTITY, generator="picklist_id_seq")
-	//@SequenceGenerator(name="picklist_id_seq", sequenceName="picklist_id_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	// @GeneratedValue(strategy=GenerationType.IDENTITY,
+	// generator="picklist_id_seq")
+	// @SequenceGenerator(name="picklist_id_seq",
+	// sequenceName="picklist_id_seq")
 	private Integer picklistId;
 
 	/** picklist_key. */
@@ -35,7 +36,7 @@ public class CustomPicklist implements Serializable {
 	private String picklistValue;
 
 	/** inactive. */
-	private String inactive;
+	private Boolean inactive;
 
 	/** date_created. */
 	private Date dateCreated;
@@ -99,25 +100,6 @@ public class CustomPicklist implements Serializable {
 	}
 
 	/**
-	 * Set the inactive.
-	 * 
-	 * @param inactive
-	 *            inactive
-	 */
-	public void setInactive(String inactive) {
-		this.inactive = inactive;
-	}
-
-	/**
-	 * Get the inactive.
-	 * 
-	 * @return inactive
-	 */
-	public String getInactive() {
-		return this.inactive;
-	}
-
-	/**
 	 * Set the date_created.
 	 * 
 	 * @param dateCreated
@@ -155,24 +137,20 @@ public class CustomPicklist implements Serializable {
 		return this.dateUpdated;
 	}
 
-	/**
-	 * Set the user_id.
-	 * 
-	 * @param userId
-	 *            user_id
-	 */
+	public Boolean getInactive() {
+		return inactive;
+	}
+
+	public void setInactive(Boolean inactive) {
+		this.inactive = inactive;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-	/**
-	 * Get the user_id.
-	 * 
-	 * @return user_id
-	 */
-	public String getUserId() {
-		return this.userId;
-	}
-
 
 }

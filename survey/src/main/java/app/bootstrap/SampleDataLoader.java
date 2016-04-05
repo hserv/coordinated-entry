@@ -34,10 +34,13 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		
 		Survey survey = new Survey();
-		survey.setDateCreated(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
-		survey.setDateUpdated(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
-		survey.setInactive("Active");
-		survey.setCopySuveryId(1);
+		//survey.setDateCreated(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+		//survey.setDateUpdated(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+		survey.setDateCreated(new Date());
+		survey.setDateUpdated(new Date());
+		
+		survey.setInactive(false);
+		survey.setCopySuveryId(true);
 		survey.setLocked(false);
 		survey.setSurveyOwner("HMISlync");
 		survey.setSurveyTitle("Sample Survey2");
@@ -58,7 +61,7 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 		question.setIsCopyQuestionId(false);
 		question.setLabelValue("HMIS Question");
 		question.setLocked(false);
-		question.setOptionsSingleMultipleSelect("Multiple Choice");
+		question.setOptionsSingleMultipleSelect(true);
 		question.setQuestionDataType("Text");
 		question.setQuestionGroupId("Group1");
 		question.setQuestionName("Sample Question 1");

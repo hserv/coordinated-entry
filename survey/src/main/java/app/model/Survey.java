@@ -40,10 +40,10 @@ public class Survey implements Serializable {
 	private String surveyOwner;
 
 	/** date_created. */
-	private String dateCreated;
+	private Date dateCreated;
 
 	/** date_updated. */
-	private String dateUpdated;
+	private Date dateUpdated;
 
 	/** user_id. */
 	private String userId;
@@ -52,10 +52,10 @@ public class Survey implements Serializable {
 	private Boolean locked;
 
 	/** inactive. */
-	private String inactive;
+	private Boolean inactive;
 
 	/** is_copysuvery_id. */
-	private Integer copySuveryId;
+	private Boolean copySuveryId;
 
 	/** tag_valuestring. */
 	private String tagValue;
@@ -121,62 +121,7 @@ public class Survey implements Serializable {
 		return this.surveyOwner;
 	}
 
-	/**
-	 * Set the date_created.
-	 * 
-	 * @param dateCreated
-	 *            date_created
-	 */
-	public void setDateCreated(String dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	/**
-	 * Get the date_created.
-	 * 
-	 * @return date_created
-	 */
-	public String getDateCreated() {
-		return this.dateCreated;
-	}
-
-	/**
-	 * Set the date_updated.
-	 * 
-	 * @param dateUpdated
-	 *            date_updated
-	 */
-	public void setDateUpdated(String dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
-
-	/**
-	 * Get the date_updated.
-	 * 
-	 * @return date_updated
-	 */
-	public String getDateUpdated() {
-		return this.dateUpdated;
-	}
-
-	/**
-	 * Set the user_id.
-	 * 
-	 * @param userId
-	 *            user_id
-	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	/**
-	 * Get the user_id.
-	 * 
-	 * @return user_id
-	 */
-	public String getUserId() {
-		return this.userId;
-	}
+	
 
 	public Boolean getLocked() {
 		return locked;
@@ -187,34 +132,65 @@ public class Survey implements Serializable {
 	}
 
 
-	/**
-	 * Set the inactive.
-	 * 
-	 * @param inactive
-	 *            inactive
-	 */
-	public void setInactive(String inactive) {
+	
+
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+
+	public Date getDateUpdated() {
+		return dateUpdated;
+	}
+
+
+	public void setDateUpdated(Date dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+
+
+	public String getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+
+	public Boolean getInactive() {
+		return inactive;
+	}
+
+
+	public void setInactive(Boolean inactive) {
 		this.inactive = inactive;
 	}
 
-	/**
-	 * Get the inactive.
-	 * 
-	 * @return inactive
-	 */
-	public String getInactive() {
-		return this.inactive;
-	}
 
-
-
-	public Integer getCopySuveryId() {
+	public Boolean getCopySuveryId() {
 		return copySuveryId;
 	}
 
 
-	public void setCopySuveryId(Integer copySuveryId) {
+	public void setCopySuveryId(Boolean copySuveryId) {
 		this.copySuveryId = copySuveryId;
+	}
+
+
+	public String getTagValue() {
+		return tagValue;
+	}
+
+
+	public void setTagValue(String tagValue) {
+		this.tagValue = tagValue;
 	}
 
 

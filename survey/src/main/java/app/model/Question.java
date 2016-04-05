@@ -3,9 +3,7 @@ package app.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,9 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-
-import org.hibernate.engine.internal.CascadePoint;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -51,7 +46,7 @@ public class Question implements Serializable {
 	private String questionGroupId;
 
 	/** options_single_multiple_select. */
-	private String optionsSingleMultipleSelect;
+	private Boolean optionsSingleMultipleSelect;
 
 	/** is_copy_question_id. */
 	private Boolean isCopyQuestionId;
@@ -78,7 +73,7 @@ public class Question implements Serializable {
 	private String userId;
 
 	/** survey_id. */
-	private Integer surveyId;
+	private String surveyId;
 
 	/** The set of Survey_Question. */
 	@OneToMany(mappedBy="question", cascade=CascadeType.ALL)
@@ -150,42 +145,36 @@ public class Question implements Serializable {
 		return this.questionDataType;
 	}
 
-	/**
-	 * Set the question_group_id.
-	 * 
-	 * @param questionGroupId
-	 *            question_group_id
-	 */
+	
+	
+
+	public String getQuestionGroupId() {
+		return questionGroupId;
+	}
+
+
 	public void setQuestionGroupId(String questionGroupId) {
 		this.questionGroupId = questionGroupId;
 	}
 
-	/**
-	 * Get the question_group_id.
-	 * 
-	 * @return question_group_id
-	 */
-	public String getQuestionGroupId() {
-		return this.questionGroupId;
+
+	public Boolean getOptionsSingleMultipleSelect() {
+		return optionsSingleMultipleSelect;
 	}
 
-	/**
-	 * Set the options_single_multiple_select.
-	 * 
-	 * @param optionsSingleMultipleSelect
-	 *            options_single_multiple_select
-	 */
-	public void setOptionsSingleMultipleSelect(String optionsSingleMultipleSelect) {
+
+	public void setOptionsSingleMultipleSelect(Boolean optionsSingleMultipleSelect) {
 		this.optionsSingleMultipleSelect = optionsSingleMultipleSelect;
 	}
 
-	/**
-	 * Get the options_single_multiple_select.
-	 * 
-	 * @return options_single_multiple_select
-	 */
-	public String getOptionsSingleMultipleSelect() {
-		return this.optionsSingleMultipleSelect;
+
+	public String getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 
@@ -286,24 +275,7 @@ public class Question implements Serializable {
 		return this.dateUpdated;
 	}
 
-	/**
-	 * Set the user_id.
-	 * 
-	 * @param userId
-	 *            user_id
-	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	/**
-	 * Get the user_id.
-	 * 
-	 * @return user_id
-	 */
-	public String getUserId() {
-		return this.userId;
-	}
+	
 
 	/**
 	 * Set the survey_id.
@@ -311,7 +283,7 @@ public class Question implements Serializable {
 	 * @param surveyId
 	 *            survey_id
 	 */
-	public void setSurveyId(Integer surveyId) {
+	public void setSurveyId(String surveyId) {
 		this.surveyId = surveyId;
 	}
 
@@ -320,7 +292,7 @@ public class Question implements Serializable {
 	 * 
 	 * @return survey_id
 	 */
-	public Integer getSurveyId() {
+	public String getSurveyId() {
 		return this.surveyId;
 	}
 
