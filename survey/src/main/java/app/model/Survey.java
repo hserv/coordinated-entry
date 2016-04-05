@@ -1,14 +1,18 @@
 package app.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Model class of Survey.
@@ -24,8 +28,10 @@ public class Survey implements Serializable {
 
 	/** survey_id. */
 	@Id
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="survey_id_seq")
+//	@SequenceGenerator(name="survey_id_seq", sequenceName="survey_id_seq")
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private String surveyId;
+	private Integer surveyId;
 
 	/** survey_title. */
 	private String surveyTitle;
@@ -34,54 +40,48 @@ public class Survey implements Serializable {
 	private String surveyOwner;
 
 	/** date_created. */
-	private Date dateCreated;
+	private String dateCreated;
 
 	/** date_updated. */
-	private Date dateUpdated;
+	private String dateUpdated;
 
 	/** user_id. */
 	private String userId;
 
 	/** locked. */
-	private String locked;
+	private Boolean locked;
 
 	/** inactive. */
 	private String inactive;
 
 	/** is_copysuvery_id. */
-	private String isCopysuveryId;
+	private Integer copySuveryId;
 
 	/** tag_valuestring. */
-	private String tagValuestring;
+	private String tagValue;
 
 	/** The set of Survey_Question. */
-	private Set<SurveyQuestion> surveyQuestionSet;
+	@OneToMany(mappedBy="survey", cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<SurveyQuestion> surveyQuestion;
 
 	/**
 	 * Constructor.
 	 */
 	public Survey() {
-		this.surveyQuestionSet = new HashSet<SurveyQuestion>();
+		this.surveyQuestion = new ArrayList<SurveyQuestion>();
 	}
 
-	/**
-	 * Set the survey_id.
-	 * 
-	 * @param surveyId
-	 *            survey_id
-	 */
-	public void setSurveyId(String surveyId) {
+
+	public Integer getSurveyId() {
+		return surveyId;
+	}
+
+
+	public void setSurveyId(Integer surveyId) {
 		this.surveyId = surveyId;
 	}
 
-	/**
-	 * Get the survey_id.
-	 * 
-	 * @return survey_id
-	 */
-	public String getSurveyId() {
-		return this.surveyId;
-	}
 
 	/**
 	 * Set the survey_title.
@@ -127,7 +127,7 @@ public class Survey implements Serializable {
 	 * @param dateCreated
 	 *            date_created
 	 */
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
@@ -136,7 +136,7 @@ public class Survey implements Serializable {
 	 * 
 	 * @return date_created
 	 */
-	public Date getDateCreated() {
+	public String getDateCreated() {
 		return this.dateCreated;
 	}
 
@@ -146,7 +146,7 @@ public class Survey implements Serializable {
 	 * @param dateUpdated
 	 *            date_updated
 	 */
-	public void setDateUpdated(Date dateUpdated) {
+	public void setDateUpdated(String dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
 
@@ -155,7 +155,7 @@ public class Survey implements Serializable {
 	 * 
 	 * @return date_updated
 	 */
-	public Date getDateUpdated() {
+	public String getDateUpdated() {
 		return this.dateUpdated;
 	}
 
@@ -178,24 +178,14 @@ public class Survey implements Serializable {
 		return this.userId;
 	}
 
-	/**
-	 * Set the locked.
-	 * 
-	 * @param locked
-	 *            locked
-	 */
-	public void setLocked(String locked) {
+	public Boolean getLocked() {
+		return locked;
+	}
+
+	public void setLocked(Boolean locked) {
 		this.locked = locked;
 	}
 
-	/**
-	 * Get the locked.
-	 * 
-	 * @return locked
-	 */
-	public String getLocked() {
-		return this.locked;
-	}
 
 	/**
 	 * Set the inactive.
@@ -216,24 +206,17 @@ public class Survey implements Serializable {
 		return this.inactive;
 	}
 
-	/**
-	 * Set the is_copysuvery_id.
-	 * 
-	 * @param isCopysuveryId
-	 *            is_copysuvery_id
-	 */
-	public void setIsCopysuveryId(String isCopysuveryId) {
-		this.isCopysuveryId = isCopysuveryId;
+
+
+	public Integer getCopySuveryId() {
+		return copySuveryId;
 	}
 
-	/**
-	 * Get the is_copysuvery_id.
-	 * 
-	 * @return is_copysuvery_id
-	 */
-	public String getIsCopysuveryId() {
-		return this.isCopysuveryId;
+
+	public void setCopySuveryId(Integer copySuveryId) {
+		this.copySuveryId = copySuveryId;
 	}
+
 
 	/**
 	 * Set the tag_valuestring.
@@ -241,8 +224,8 @@ public class Survey implements Serializable {
 	 * @param tagValuestring
 	 *            tag_valuestring
 	 */
-	public void setTagValuestring(String tagValuestring) {
-		this.tagValuestring = tagValuestring;
+	public void setTagValuestring(String tagValue) {
+		this.tagValue = tagValue;
 	}
 
 	/**
@@ -251,7 +234,7 @@ public class Survey implements Serializable {
 	 * @return tag_valuestring
 	 */
 	public String getTagValuestring() {
-		return this.tagValuestring;
+		return this.tagValue;
 	}
 
 	/**
@@ -260,8 +243,8 @@ public class Survey implements Serializable {
 	 * @param surveyQuestionSet
 	 *            The set of Survey_Question
 	 */
-	public void setSurveyQuestionSet(Set<SurveyQuestion> surveyQuestionSet) {
-		this.surveyQuestionSet = surveyQuestionSet;
+	public void setSurveyQuestion(List<SurveyQuestion> surveyQuestion) {
+		this.surveyQuestion = surveyQuestion;
 	}
 
 	/**
@@ -271,7 +254,7 @@ public class Survey implements Serializable {
 	 *            Survey_Question
 	 */
 	public void addSurveyQuestion(SurveyQuestion surveyQuestion) {
-		this.surveyQuestionSet.add(surveyQuestion);
+		this.surveyQuestion.add(surveyQuestion);
 	}
 
 	/**
@@ -279,8 +262,8 @@ public class Survey implements Serializable {
 	 * 
 	 * @return The set of Survey_Question
 	 */
-	public Set<SurveyQuestion> getSurveyQuestionSet() {
-		return this.surveyQuestionSet;
+	public List<SurveyQuestion> getSurveyQuestion() {
+		return this.surveyQuestion;
 	}
 
 	/**

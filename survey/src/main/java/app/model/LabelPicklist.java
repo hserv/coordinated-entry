@@ -2,10 +2,12 @@ package app.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of label_picklist.
@@ -21,8 +23,11 @@ public class LabelPicklist implements Serializable {
 
 	/** index. */
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private String index;
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="labelpicklist_id_seq")
+//	@SequenceGenerator(name="labelpicklist_id_seq", sequenceName="labelpicklist_id_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column()
+	private Integer labelPicklistId;
 
 	/** label_value. */
 	private String labelValue;
@@ -33,24 +38,16 @@ public class LabelPicklist implements Serializable {
 	public LabelPicklist() {
 	}
 
-	/**
-	 * Set the index.
-	 * 
-	 * @param index
-	 *            index
-	 */
-	public void setIndex(String index) {
-		this.index = index;
+
+	public Integer getLabelPicklistId() {
+		return labelPicklistId;
 	}
 
-	/**
-	 * Get the index.
-	 * 
-	 * @return index
-	 */
-	public String getIndex() {
-		return this.index;
+	public void setLabelPicklistId(Integer labelPicklistId) {
+		this.labelPicklistId = labelPicklistId;
 	}
+
+
 
 	/**
 	 * Set the label_value.
@@ -78,7 +75,7 @@ public class LabelPicklist implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((index == null) ? 0 : index.hashCode());
+		result = prime * result + ((labelPicklistId == null) ? 0 : labelPicklistId.hashCode());
 		return result;
 	}
 
@@ -97,11 +94,11 @@ public class LabelPicklist implements Serializable {
 			return false;
 		}
 		LabelPicklist other = (LabelPicklist) obj;
-		if (index == null) {
-			if (other.index != null) {
+		if (labelPicklistId == null) {
+			if (other.labelPicklistId != null) {
 				return false;
 			}
-		} else if (!index.equals(other.index)) {
+		} else if (!labelPicklistId.equals(other.labelPicklistId)) {
 			return false;
 		}
 		return true;

@@ -3,10 +3,12 @@ package app.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Model class of Response_Type.
@@ -20,10 +22,11 @@ public class ResponseType implements Serializable {
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** response_type_id. */
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private String responseTypeId;
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="response_type_id_seq")
+//	@SequenceGenerator(name="response_type_id_seq", sequenceName="response_type_id_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer responseTypeId;
 
 	/** hmis_response. */
 	private String hmisResponse;
@@ -32,6 +35,7 @@ public class ResponseType implements Serializable {
 	private String text;
 
 	/** integer. */
+	@Column(name="count")
 	private String integer;
 
 	/** currency. */
@@ -64,24 +68,16 @@ public class ResponseType implements Serializable {
 	public ResponseType() {
 	}
 
-	/**
-	 * Set the response_type_id.
-	 * 
-	 * @param responseTypeId
-	 *            response_type_id
-	 */
-	public void setResponseTypeId(String responseTypeId) {
+
+	public Integer getResponseTypeId() {
+		return responseTypeId;
+	}
+
+
+	public void setResponseTypeId(Integer responseTypeId) {
 		this.responseTypeId = responseTypeId;
 	}
 
-	/**
-	 * Get the response_type_id.
-	 * 
-	 * @return response_type_id
-	 */
-	public String getResponseTypeId() {
-		return this.responseTypeId;
-	}
 
 	/**
 	 * Set the hmis_response.

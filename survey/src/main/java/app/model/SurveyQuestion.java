@@ -7,6 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * Model class of Survey_Question.
@@ -22,14 +27,16 @@ public class SurveyQuestion implements Serializable {
 
 	/** survey_question_id. */
 	@Id
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="survey_question_id_seq")
+//	@SequenceGenerator(name="survey_question_id_seq", sequenceName="survey_question_id_seq")
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private String surveyQuestionId;
+	private Integer surveyQuestionId;
 
 	/** survey_id. */
-	private String surveyId;
+	private Integer surveyId;
 
 	/** question_id. */
-	private String questionId;
+	private Integer questionId;
 
 	/** question_parent. */
 	private String questionParent;
@@ -50,9 +57,15 @@ public class SurveyQuestion implements Serializable {
 	private String userId;
 
 	/** Survey. */
+	@ManyToOne
+	@JoinColumn(name="survey_fk_id")
+	@JsonBackReference
 	private Survey survey;
 
 	/** Question. */
+	@ManyToOne
+	@JoinColumn(name="question_fk_id")
+	@JsonBackReference
 	private Question question;
 
 	/**
@@ -61,62 +74,36 @@ public class SurveyQuestion implements Serializable {
 	public SurveyQuestion() {
 	}
 
-	/**
-	 * Set the survey_question_id.
-	 * 
-	 * @param surveyQuestionId
-	 *            survey_question_id
-	 */
-	public void setSurveyQuestionId(String surveyQuestionId) {
+	
+	public Integer getSurveyQuestionId() {
+		return surveyQuestionId;
+	}
+
+
+	public void setSurveyQuestionId(Integer surveyQuestionId) {
 		this.surveyQuestionId = surveyQuestionId;
 	}
 
-	/**
-	 * Get the survey_question_id.
-	 * 
-	 * @return survey_question_id
-	 */
-	public String getSurveyQuestionId() {
-		return this.surveyQuestionId;
+
+	public Integer getSurveyId() {
+		return surveyId;
 	}
 
-	/**
-	 * Set the survey_id.
-	 * 
-	 * @param surveyId
-	 *            survey_id
-	 */
-	public void setSurveyId(String surveyId) {
+
+	public void setSurveyId(Integer surveyId) {
 		this.surveyId = surveyId;
 	}
 
-	/**
-	 * Get the survey_id.
-	 * 
-	 * @return survey_id
-	 */
-	public String getSurveyId() {
-		return this.surveyId;
+
+	public Integer getQuestionId() {
+		return questionId;
 	}
 
-	/**
-	 * Set the question_id.
-	 * 
-	 * @param questionId
-	 *            question_id
-	 */
-	public void setQuestionId(String questionId) {
+
+	public void setQuestionId(Integer questionId) {
 		this.questionId = questionId;
 	}
 
-	/**
-	 * Get the question_id.
-	 * 
-	 * @return question_id
-	 */
-	public String getQuestionId() {
-		return this.questionId;
-	}
 
 	/**
 	 * Set the question_parent.
