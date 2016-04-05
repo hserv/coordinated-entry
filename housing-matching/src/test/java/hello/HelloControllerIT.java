@@ -35,6 +35,7 @@ public class HelloControllerIT {
 		template = new TestRestTemplate();
 	}
 
+	
 	@Test
 	public void getHello() throws Exception {
 		ResponseEntity<String> response = template.getForEntity(base.toString(), String.class);
