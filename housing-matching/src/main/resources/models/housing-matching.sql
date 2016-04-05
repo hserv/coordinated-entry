@@ -1,32 +1,60 @@
 
 /* Drop Tables */
 
+DROP TABLE IF EXISTS note;
 DROP TABLE IF EXISTS match_reservations;
-DROP TABLE IF EXISTS client_contact_info;
+DROP TABLE IF EXISTS eligible_clients;
+DROP TABLE IF EXISTS client_info;
 DROP TABLE IF EXISTS housing_inventory;
 DROP TABLE IF EXISTS housing_unit_address;
-DROP TABLE IF EXISTS note;
-DROP TABLE IF EXISTS user_views;
+DROP TABLE IF EXISTS survey_response;
 
 
 
 
 /* Create Tables */
 
-CREATE TABLE client_contact_info
+CREATE TABLE client_info
 (
-	client_id varchar NOT NULL,
-	client_phone_number varchar,
-	client_email varchar,
+	id uuid NOT NULL,
+	first_name char(50),
+	middle_name char(50),
+	last_name char(50),
+	name_suffix char(50),
+	ssn char(9),
+	dob date,
+	gender varchar,
+	other_gender char(10),
+	ethnicity varchar,
+	race varchar,
+	contact_number varchar,
+	contact_email varchar,
+	veteran_status boolean,
+	date_created date,
+	date_updated date,
+	user_id uuid,
+	CONSTRAINT client_pk PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+CREATE TABLE eligible_clients
+(
+	client_id uuid NOT NULL,
+	spdatScore int,
+	category varchar,
+	matched boolean,
+	survey_date date,
+	spdat_label varchar CHECK spdat_label in ('youth','single adult','family')),
+	id uuid NOT NULL,
 	PRIMARY KEY (client_id)
 ) WITHOUT OIDS;
 
 
 CREATE TABLE housing_inventory
 (
-	housing_unit_id varchar NOT NULL,
+	housing_unit_id uuid NOT NULL,
 	project_id varchar,
-	address_id varchar,
+	address_id uuid NOT NULL,
 	beds_current int,
 	beds_capacity int,
 	family_unit boolean,
@@ -42,8 +70,7 @@ CREATE TABLE housing_inventory
 
 CREATE TABLE housing_unit_address
 (
-	address_id varchar NOT NULL,
-	housing_unit_id varchar,
+	address_id uuid NOT NULL,
 	address_line1 varchar,
 	address_line2 varchar,
 	address_city varchar,
@@ -59,9 +86,9 @@ CREATE TABLE housing_unit_address
 
 CREATE TABLE match_reservations
 (
-	reservation_id varchar NOT NULL,
-	housing_unit_id varchar,
-	client_id varchar,
+	reservation_id uuid NOT NULL,
+	housing_unit_id uuid NOT NULL,
+	client_id uuid NOT NULL,
 	note_id varchar,
 	match_date date,
 	match_status varchar CHECK (match_status in ('accepted','rejected','nodetermination')),
@@ -71,7 +98,6 @@ CREATE TABLE match_reservations
 	inactive boolean,
 	date_created date,
 	date_updated date,
-	user_id varchar,
 	PRIMARY KEY (reservation_id)
 ) WITHOUT OIDS;
 
@@ -80,25 +106,40 @@ CREATE TABLE note
 (
 	note_id varchar NOT NULL,
 	note_string varchar,
+	reservation_id uuid NOT NULL,
 	PRIMARY KEY (note_id)
 ) WITHOUT OIDS;
 
 
-CREATE TABLE user_views
+CREATE TABLE survey_response
 (
-	reservation_id varchar,
-	user_id varchar NOT NULL,
-	date_viewed date,
-	PRIMARY KEY (user_id)
+	survey_question_id varchar(10),
+	response_value varchar(50),
+	response_subassessment varchar(50),
+	question_score int,
+	client_id varchar(10),
+	app_id varchar(10),
+	effective_date date,
+	date_created date,
+	date_updated date,
+	user_id varchar(10)
 ) WITHOUT OIDS;
 
 
 
 /* Create Foreign Keys */
 
+ALTER TABLE eligible_clients
+	ADD FOREIGN KEY (id)
+	REFERENCES client_info (id)
+	ON UPDATE RESTRICT
+	ON DELETE RESTRICT
+;
+
+
 ALTER TABLE match_reservations
 	ADD FOREIGN KEY (client_id)
-	REFERENCES client_contact_info (client_id)
+	REFERENCES eligible_clients (client_id)
 	ON UPDATE RESTRICT
 	ON DELETE RESTRICT
 ;
@@ -120,17 +161,9 @@ ALTER TABLE housing_inventory
 ;
 
 
-ALTER TABLE match_reservations
-	ADD FOREIGN KEY (note_id)
-	REFERENCES note (note_id)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE match_reservations
-	ADD FOREIGN KEY (user_id)
-	REFERENCES user_views (user_id)
+ALTER TABLE note
+	ADD FOREIGN KEY (reservation_id)
+	REFERENCES match_reservations (reservation_id)
 	ON UPDATE RESTRICT
 	ON DELETE RESTRICT
 ;
