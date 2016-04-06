@@ -1,6 +1,5 @@
 package app.bootstrap;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,11 +45,13 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 		survey.setSurveyTitle("Sample Survey2");
 		survey.setTagValuestring("Copied from HMIS");
 		survey.setUserId("Vijay");
+		survey.setSection_id("Section Id");
 		
 		List<SurveyQuestion> surveyQuestions = new ArrayList<SurveyQuestion>();
 		SurveyQuestion surveyQuestion = new SurveyQuestion();
 		surveyQuestion.setDateCreated(new Date());
 		surveyQuestion.setDateUpdated(new Date());
+		surveyQuestion.setSectionId("Section Id");
 		
 		Question question = new Question();
 		question.setDateCreated(new Date());

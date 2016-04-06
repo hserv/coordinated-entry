@@ -59,6 +59,9 @@ public class Survey implements Serializable {
 
 	/** tag_valuestring. */
 	private String tagValue;
+	
+	/** section_id. */
+	private String section_id;
 
 	/** The set of Survey_Question. */
 	@OneToMany(mappedBy="survey", cascade=CascadeType.ALL)
@@ -276,6 +279,16 @@ public class Survey implements Serializable {
 			return false;
 		}
 		return true;
+	}
+
+
+	public String getSection_id() {
+		return section_id;
+	}
+
+
+	public void setSection_id(String section_id) {
+		this.section_id = section_id;
 	}
 
 }

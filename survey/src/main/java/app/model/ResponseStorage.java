@@ -50,6 +50,9 @@ public class ResponseStorage implements Serializable {
 
 	/** user_id. */
 	private String userId;
+	
+	/** section_id. */
+	private String sectionId;
 
 	/**
 	 * Constructor.
@@ -193,6 +196,14 @@ public class ResponseStorage implements Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getSectionId() {
+		return sectionId;
+	}
+
+	public void setSectionId(String sectionId) {
+		this.sectionId = sectionId;
 	}
 
 }

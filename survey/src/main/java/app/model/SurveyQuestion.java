@@ -54,6 +54,9 @@ public class SurveyQuestion implements Serializable {
 
 	/** user_id. */
 	private String userId;
+	
+	/** section_id. */
+	private String sectionId;
 
 	/** Survey. */
 	@ManyToOne
@@ -254,6 +257,16 @@ public class SurveyQuestion implements Serializable {
 	 */
 	public Question getQuestion() {
 		return this.question;
+	}
+
+
+	public String getSectionId() {
+		return sectionId;
+	}
+
+
+	public void setSectionId(String sectionId) {
+		this.sectionId = sectionId;
 	}
 
 

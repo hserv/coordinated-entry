@@ -4,14 +4,30 @@ version: 0.1.0
 baseUri: http://server/api/{1.0}
 mediaType: application/json
 protocols: [ HTTP ]
-/survey:
-  displayName: track clients and units
-  /surveyQuestions:
-    displayName: track clients
+/surveyAPI:
+  displayName: Survey API
+  /login:
+    displayName: Login Authenticate
+    post:
+      description: <<Put User Id and Password here>>
+  /surveyType:
+    displayName: Select Type of survey
     get:
+      description: <<insert text or markdown here>>
+  /getSurvey:
+    displayName: Loaad Survey
+    post:
+      description: <<insert text or markdown here>>
+  /nextSurveyQuestions:
+    displayName: track clients
+    post:
       description: <<insert text or markdown here>>
   /surveyResponseList:
     description: track units
-    get:
+    post:
+      description: <<insert text or markdown here>>
+  /surveyResponse:
+    description: track units
+    post:
       description: <<insert text or markdown here>>
   
