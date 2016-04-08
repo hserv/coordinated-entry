@@ -1,51 +1,32 @@
-package app.bootstrap;
+package app.view.mapper;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
-
 import app.entity.Question;
 import app.entity.Survey;
 import app.entity.SurveyQuestion;
-import app.repository.QuestionBankRepository;
-import app.repository.SurveyQuestionRepository;
-import app.repository.SurveyRepository;
 
-@Component
-public class SampleDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-	@Autowired
-	private SurveyRepository surveyRepository;
-	
-	@Autowired
-	private QuestionBankRepository questionBankRepository;
+public class SurveyConverter {
 
-	@Autowired
-	private SurveyQuestionRepository surveyQuestionRepository;
-	
-	
-	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
+	public Survey convertSurveyEntityFromView(app.view.Survey surveyView) {
 		
 		Survey survey = new Survey();
 		//survey.setDateCreated(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
 		//survey.setDateUpdated(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
-		survey.setDateCreated(new Date());
-		survey.setDateUpdated(new Date());
+		survey.setDateCreated(surveyView.getDateCreated());
+		survey.setDateUpdated(surveyView.getDateUpdated());
 		
-		survey.setInactive(false);
-		survey.setCopySuveryId(true);
-		survey.setLocked(false);
-		survey.setSurveyOwner("HMISlync");
-		survey.setSurveyTitle("Sample Survey2");
-		survey.setTagValuestring("Copied from HMIS");
-		survey.setUserId("Vijay");
-		survey.setSection_id("Section Id");
+		survey.setInactive(surveyView.getInactive());
+		survey.setCopySuveryId(surveyView.getCopySuveryId());
+		survey.setLocked(surveyView.getLocked());
+		survey.setSurveyOwner(surveyView.getSurveyOwner());
+		survey.setSurveyTitle(surveyView.getSurveyTitle());
+		survey.setTagValue(surveyView.getTagValue());
+		survey.setUserId(surveyView.getUserId());
+		survey.setSection_id(surveyView.getSection_id());
 		
 		List<SurveyQuestion> surveyQuestions = new ArrayList<SurveyQuestion>();
 		SurveyQuestion surveyQuestion = new SurveyQuestion();
@@ -80,15 +61,13 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 		surveyQuestion.setUserId("Admin User");
 		
 		
-		questionBankRepository.save(question);
-		surveyRepository.save(survey);
 		
 		surveyQuestion.setQuestionId(question.getQuestionId());
 		surveyQuestion.setSurveyId(survey.getSurveyId());
 		surveyQuestions.add(surveyQuestion);
 		
-		surveyQuestionRepository.save(surveyQuestions);
+		
+		return null;
 		
 	}
-
 }

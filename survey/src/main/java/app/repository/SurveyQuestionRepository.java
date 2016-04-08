@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import app.model.SurveyQuestion;
+import app.entity.SurveyQuestion;
 
 public interface SurveyQuestionRepository extends JpaRepository<SurveyQuestion, Integer>{
 
