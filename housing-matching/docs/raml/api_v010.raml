@@ -1,0 +1,465 @@
+#%RAML 0.8
+title: Housing Matching Service
+version: 0.1.0
+#baseUri: http://server/api/{version}
+baseUri: http://mocksvc.mulesoft.com/mocks/d380eab8-f7d0-48a4-804b-c816753b395a/api/{version}
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            Supports OAuth 2.0 for authenticating all API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token. Do not use
+                       with the "access_token" query string parameter.
+                    type: string
+                    example: |
+                      Authorization: Bearer czZCaGRSa3F0MzpnWDFmQmF0M2JW
+            queryParameters:
+                access_token:
+                    description: |
+                       Used to send a valid OAuth 2 access token. Do not use together with
+                       the "Authorization" header
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or Dropbox
+                        revoked or expired an access token. To fix, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won't help here.
+        settings:
+          authorizationUri: https://www.hserv.com/1/oauth2/authorize
+          accessTokenUri: https://api.hserv.com/1/oauth2/token
+          authorizationGrants: [ code, token ]
+mediaType: application/json
+/health:
+  displayName: Get health status of the service.
+  get:
+    description: Returns the health status of the Micro Service.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "status":"ok"
+            }
+/matches:
+  displayName: Trigger the matching process once score calculation is done.
+  post:
+    description: |
+      Use this API to trigger the matching process once score calculation is done. Posting an empty body would suffice.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "triggered":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  get:
+    description: Get the list of the proposed matches.
+    responses:
+      200:
+        body:
+          example : |
+            {
+              "matches": [
+                {
+                  "reservation_id":"12345",
+                  "client_id": "456788",
+                  "housing_unit_id": "09876",
+                  "match_date": "2016-10-10",
+                  "user_id": "admin",
+                  "matchedStatus": "true"
+                },
+                {
+                  "reservation_id":"123456",
+                  "client_id": "4567886",
+                  "housing_unit_id": "098766",
+                  "match_date": "2016-10-11",
+                  "user_id": "testuser",
+                  "matchedStatus": "false"
+                }
+              ]
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+    
+  delete:
+    description: |
+      Clear all the proposed matches.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "deleted":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  /client/{id}:
+    displayName: Perform operations based on the client id.
+    uriParameters:
+      id:
+        description: id of the client.
+        type: string
+    get:
+      description: Get the proposed matche for a client_id.
+      responses:
+        200:
+          body:
+            example : |
+              {
+                    "reservation_id":"12345",
+                    "client_id": "456788",
+                    "housing_unit_id": "09876",
+                    "match_date": "2016-10-10",
+                    "user_id": "admin",
+                    "matchedStatus": "true"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    delete:
+      description: |
+        Clears off the proposed match for a particular client.
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "deleted":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    put:
+      description: |
+        Used for accepting the match for a client id.
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "matched":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+/scores:
+  displayName: Trigger score totalling once survey responses are ready.
+  post:
+    description: |
+      Trigger score totalling via POST. An Empty body request would suffice.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "triggered":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  get:
+    description: Get the list of clients and their survey scores.
+    responses:
+      200:
+        body:
+          example : |
+            {
+              "scores": [
+                {
+                  "client_id": "456788",
+                  "survey_score": "11",
+                  "survey_type":"vi-spdat"
+                },
+                {
+                  "client_id": "123456",
+                  "survey_score": "12",
+                  "survey_type":custom assesssment"
+                }
+              ]
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+    
+  delete:
+    description: |
+      Clear all the survey scores.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "deleted":"ok"
+            }
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  /client/{id}:
+    displayName: Perform operations based on the client id.
+    uriParameters:
+      id:
+        description: id of the client.
+        type: string
+    get:
+      description: Get the survey score for a client_id.
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "client_id":"12345",
+                  "survey_score": "12",
+                  "survey_type":custom assesssment"
+                }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    delete:
+      description: |
+        Clears off the survey score for a particular client.
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "deleted":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+    put:
+      description: |
+        Used for updating survey score for a client id.
+      body:
+        application/json:
+          example: |
+            {
+              "client_id":"12345",
+              "survey_score": "12",
+              "survey_type":custom assesssment"
+            }
+      responses:
+        200:
+          body:
+            example : |
+              {
+               "updated":"ok"
+              }
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+/eligible-clients:
+  displayName: Returns a list of Top Eligible Clients
+  get:
+    description: Returns the most eligible clients.
+    responses:
+      200:
+        body:
+          example : |
+            {
+             "clients":[{"client_id":"12345",
+                         "name":"TestUser",
+                         "spdatScore":"23",
+                         "surveyDate":"2016-10-10",
+                         "matchedStatus":true
+                         },
+                         {"client_id":"23456",
+                         "name":"UserTest",
+                         "spdatScore":"13",
+                         "surveyDate":"2016-06-10",
+                         "matchedStatus":false
+                         }
+             ]
+            }     
+      403 :
+        body:
+          example : |
+            {
+              "error": "Token Not Valid"
+            }
+  put:
+    description: Update client list. Will accept json having updated details of one or more clients.
+    body:
+      application/json:
+        example: |
+          {
+            "client_id":"12345",
+            "name":"TestUser",
+            "spdatScore":"23",
+            "surveyDate":"2016-10-10",
+            "matchedStatus":true
+          }
+    responses:
+        200:
+          body:
+            example : |
+              {
+                "updated":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+  post:
+    description: Will add client to the eligible list. Accept json having one or more clients.
+    body:
+      application/json:
+        example: |
+          {
+            "client_id":"12345",
+            "name":"TestUser",
+            "spdatScore":"23",
+            "surveyDate":"2016-10-10",
+            "matchedStatus":true
+          }
+    responses:
+        200:
+          body:
+            example : |
+              {
+                "added":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+  delete:
+    description: Deletes the entire eligible-clients list.
+
+
+
+  /{id}:
+    displayName: Perform operations based on client_id.
+    uriParameters:
+      id:
+        description: id of the client.
+        type: string
+    get:
+      description: Fetch a particular client
+      responses:
+        200:
+          body:
+            example : |
+              {
+                "client_id":"12345",
+                "name":"TestUser",
+                "surveyScore":"23",
+                "surveyType":"vi-spdat",
+                "surveyDate":"2016-10-10",
+                "matchedStatus":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+        404 :
+          body:
+            example : |
+              {
+                "error": "Resource Not Found"
+              }
+    delete:
+      description: Delete a particular client
+      responses:
+        200:
+          body:
+            example : |
+              {
+                "deleted":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
+        404 :
+          body:
+            example : |
+              {
+                "error": "Resource Not Found"
+              }
+    put:
+      description: |
+        This API will be used to modify the deatils of a particular client.
+      body:
+        application/json:
+          example: |
+            {
+              "client_id":"12345",
+              "name":"TestUser",
+              "surveyScore":"23",
+              "surveyType":"vi-spdat",
+              "surveyDate":"2016-10-10",
+              "matchedStatus":true
+            }
+      responses:
+        200:
+          body:
+            example : |
+              {
+                "updated":true
+              }     
+        403 :
+          body:
+            example : |
+              {
+                "error": "Token Not Valid"
+              }
