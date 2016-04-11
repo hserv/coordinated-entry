@@ -44,7 +44,7 @@ public class Survey implements Serializable {
 	private String surveyOwner;
 
 	/** date_created. */
-	
+	@DateFormatter
 	private Date dateCreated;
 
 	/** date_updated. */
@@ -141,7 +141,6 @@ public class Survey implements Serializable {
 
 
 	
-	@DateFormatter
 	public Date getDateCreated() {
 		return dateCreated;
 	}

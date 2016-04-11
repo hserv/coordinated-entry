@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Question implements Serializable {
+public class QuestionView implements Serializable {
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -55,13 +55,13 @@ public class Question implements Serializable {
 	private String surveyId;
 
 	/** The set of Survey_Question. */
-	private List<SurveyQuestion> surveyQuestion;
+	private List<SurveyQuestionView> surveyQuestionView;
 
 	/**
 	 * Constructor.
 	 */
-	public Question() {
-		this.surveyQuestion = new ArrayList<SurveyQuestion>();
+	public QuestionView() {
+		this.surveyQuestionView = new ArrayList<SurveyQuestionView>();
 	}
 
 
@@ -276,11 +276,11 @@ public class Question implements Serializable {
 	/**
 	 * Add the Survey_Question.
 	 * 
-	 * @param surveyQuestion
+	 * @param surveyQuestionView
 	 *            Survey_Question
 	 */
-	public void addSurveyQuestion(SurveyQuestion surveyQuestion) {
-		this.surveyQuestion.add(surveyQuestion);
+	public void addSurveyQuestion(SurveyQuestionView surveyQuestionView) {
+		this.surveyQuestionView.add(surveyQuestionView);
 	}
 
 
@@ -294,13 +294,13 @@ public class Question implements Serializable {
 	}
 
 
-	public List<SurveyQuestion> getSurveyQuestion() {
-		return surveyQuestion;
+	public List<SurveyQuestionView> getSurveyQuestion() {
+		return surveyQuestionView;
 	}
 
 
-	public void setSurveyQuestion(List<SurveyQuestion> surveyQuestion) {
-		this.surveyQuestion = surveyQuestion;
+	public void setSurveyQuestion(List<SurveyQuestionView> surveyQuestionView) {
+		this.surveyQuestionView = surveyQuestionView;
 	}
 
 
@@ -329,7 +329,7 @@ public class Question implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Question other = (Question) obj;
+		QuestionView other = (QuestionView) obj;
 		if (surveyId == null) {
 			if (other.surveyId != null) {
 				return false;
