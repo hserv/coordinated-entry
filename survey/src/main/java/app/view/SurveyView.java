@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Survey implements Serializable {
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import app.util.DateFormatter;
+
+public class SurveyView implements Serializable {
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -19,6 +25,7 @@ public class Survey implements Serializable {
 	private String surveyOwner;
 
 	/** date_created. */
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
 	private Date dateCreated;
 
 	/** date_updated. */
@@ -43,13 +50,13 @@ public class Survey implements Serializable {
 	private String section_id;
 
 	/** The set of Survey_Question. */
-	private List<SurveyQuestion> surveyQuestion;
+	private List<SurveyQuestionView> surveyQuestionView;
 
 	/**
 	 * Constructor.
 	 */
-	public Survey() {
-		this.surveyQuestion = new ArrayList<SurveyQuestion>();
+	public SurveyView() {
+		this.surveyQuestionView = new ArrayList<SurveyQuestionView>();
 	}
 
 
@@ -179,18 +186,18 @@ public class Survey implements Serializable {
 	 * @param surveyQuestionSet
 	 *            The set of Survey_Question
 	 */
-	public void setSurveyQuestion(List<SurveyQuestion> surveyQuestion) {
-		this.surveyQuestion = surveyQuestion;
+	public void setSurveyQuestion(List<SurveyQuestionView> surveyQuestionView) {
+		this.surveyQuestionView = surveyQuestionView;
 	}
 
 	/**
 	 * Add the Survey_Question.
 	 * 
-	 * @param surveyQuestion
+	 * @param surveyQuestionView
 	 *            Survey_Question
 	 */
-	public void addSurveyQuestion(SurveyQuestion surveyQuestion) {
-		this.surveyQuestion.add(surveyQuestion);
+	public void addSurveyQuestion(SurveyQuestionView surveyQuestionView) {
+		this.surveyQuestionView.add(surveyQuestionView);
 	}
 
 	/**
@@ -198,8 +205,8 @@ public class Survey implements Serializable {
 	 * 
 	 * @return The set of Survey_Question
 	 */
-	public List<SurveyQuestion> getSurveyQuestion() {
-		return this.surveyQuestion;
+	public List<SurveyQuestionView> getSurveyQuestion() {
+		return this.surveyQuestionView;
 	}
 
 	/**
@@ -227,7 +234,7 @@ public class Survey implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Survey other = (Survey) obj;
+		SurveyView other = (SurveyView) obj;
 		if (surveyId == null) {
 			if (other.surveyId != null) {
 				return false;

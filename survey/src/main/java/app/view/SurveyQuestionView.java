@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-public class SurveyQuestion implements Serializable {
+public class SurveyQuestionView implements Serializable {
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -46,14 +46,14 @@ public class SurveyQuestion implements Serializable {
 	/** section_id. */
 	private String sectionId;
 
-	private Survey survey;
+	private SurveyView surveyView;
 
-	private Question question;
+	private QuestionView questionView;
 
 	/**
 	 * Constructor.
 	 */
-	public SurveyQuestion() {
+	public SurveyQuestionView() {
 	}
 
 	
@@ -204,11 +204,11 @@ public class SurveyQuestion implements Serializable {
 	/**
 	 * Set the Survey.
 	 * 
-	 * @param survey
+	 * @param surveyView
 	 *            Survey
 	 */
-	public void setSurvey(Survey survey) {
-		this.survey = survey;
+	public void setSurvey(SurveyView surveyView) {
+		this.surveyView = surveyView;
 	}
 
 	/**
@@ -216,18 +216,18 @@ public class SurveyQuestion implements Serializable {
 	 * 
 	 * @return Survey
 	 */
-	public Survey getSurvey() {
-		return this.survey;
+	public SurveyView getSurvey() {
+		return this.surveyView;
 	}
 
 	/**
 	 * Set the Question.
 	 * 
-	 * @param question
+	 * @param questionView
 	 *            Question
 	 */
-	public void setQuestion(Question question) {
-		this.question = question;
+	public void setQuestion(QuestionView questionView) {
+		this.questionView = questionView;
 	}
 
 	/**
@@ -235,8 +235,8 @@ public class SurveyQuestion implements Serializable {
 	 * 
 	 * @return Question
 	 */
-	public Question getQuestion() {
-		return this.question;
+	public QuestionView getQuestion() {
+		return this.questionView;
 	}
 
 

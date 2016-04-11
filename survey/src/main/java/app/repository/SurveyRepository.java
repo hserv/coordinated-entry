@@ -13,4 +13,5 @@ public interface SurveyRepository extends JpaRepository<Survey, Integer>{
 	
 	public List<Survey> findBySurveyTitleContainingAllIgnoringCase(String title) ;
 	
+	
 }
