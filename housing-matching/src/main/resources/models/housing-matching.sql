@@ -1,4 +1,12 @@
+-- Schema: housing
 
+ DROP SCHEMA housing;
+
+CREATE SCHEMA housing
+  AUTHORIZATION postgres;
+
+  
+set schema 'housing';
 /* Drop Tables */
 
 DROP TABLE IF EXISTS note;
@@ -44,7 +52,7 @@ CREATE TABLE eligible_clients
 	category varchar,
 	matched boolean,
 	survey_date date,
-	spdat_label varchar CHECK spdat_label in ('youth','single adult','family')),
+	spdat_label varchar,
 	id uuid NOT NULL,
 	PRIMARY KEY (client_id)
 ) WITHOUT OIDS;
@@ -167,6 +175,8 @@ ALTER TABLE note
 	ON UPDATE RESTRICT
 	ON DELETE RESTRICT
 ;
+
+
 
 
 
