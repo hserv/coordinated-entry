@@ -1,14 +1,10 @@
-package com.servinglynk.hmis.housinginventory.domain;
+package com.hserv.coordinatedentry.housinginventory.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -19,21 +15,17 @@ import java.util.Objects;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Note implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
-    @Column(name = "note_id", nullable = false)
-    private Long noteId;
-    
-    @Column(name = "note")
-    private String note;
-    
-    @OneToMany(mappedBy = "note")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<MatchReservations> matchReservationss = new HashSet<>();
+    @Column(name = "note_id")
+    private String noteId;
+
+    @Column(name = "note_string")
+    private String noteString;
 
     public Long getId() {
         return id;
@@ -43,28 +35,20 @@ public class Note implements Serializable {
         this.id = id;
     }
 
-    public Long getNoteId() {
+    public String getNoteId() {
         return noteId;
     }
-    
-    public void setNoteId(Long noteId) {
+
+    public void setNoteId(String noteId) {
         this.noteId = noteId;
     }
 
-    public String getNote() {
-        return note;
-    }
-    
-    public void setNote(String note) {
-        this.note = note;
+    public String getNoteString() {
+        return noteString;
     }
 
-    public Set<MatchReservations> getMatchReservationss() {
-        return matchReservationss;
-    }
-
-    public void setMatchReservationss(Set<MatchReservations> matchReservationss) {
-        this.matchReservationss = matchReservationss;
+    public void setNoteString(String noteString) {
+        this.noteString = noteString;
     }
 
     @Override
@@ -92,7 +76,7 @@ public class Note implements Serializable {
         return "Note{" +
             "id=" + id +
             ", noteId='" + noteId + "'" +
-            ", note='" + note + "'" +
+            ", noteString='" + noteString + "'" +
             '}';
     }
 }
