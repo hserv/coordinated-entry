@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A HousingUnitAssignment.
@@ -14,16 +15,14 @@ import java.util.Objects;
 @Entity
 @Table(name = "housing_unit_assignment")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class HousingUnitAssignment implements Serializable {
+public class HousingUnitAssignment extends HousingInventoryBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+   
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(name = "assignment_id")
-    private String assignmentId;
+    private UUID assignmentId;
 
     @Column(name = "client_id")
     private String clientId;
@@ -37,82 +36,45 @@ public class HousingUnitAssignment implements Serializable {
     @ManyToOne
     private HousingInventory housingInventory;
 
-    public Long getId() {
-        return id;
-    }
+	public UUID getAssignmentId() {
+		return assignmentId;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setAssignmentId(UUID assignmentId) {
+		this.assignmentId = assignmentId;
+	}
 
-    public String getAssignmentId() {
-        return assignmentId;
-    }
+	public String getClientId() {
+		return clientId;
+	}
 
-    public void setAssignmentId(String assignmentId) {
-        this.assignmentId = assignmentId;
-    }
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
 
-    public String getClientId() {
-        return clientId;
-    }
+	public String getHouseholdId() {
+		return householdId;
+	}
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
+	public void setHouseholdId(String householdId) {
+		this.householdId = householdId;
+	}
 
-    public String getHouseholdId() {
-        return householdId;
-    }
+	public ZonedDateTime getCheckoutDate() {
+		return checkoutDate;
+	}
 
-    public void setHouseholdId(String householdId) {
-        this.householdId = householdId;
-    }
+	public void setCheckoutDate(ZonedDateTime checkoutDate) {
+		this.checkoutDate = checkoutDate;
+	}
 
-    public ZonedDateTime getCheckoutDate() {
-        return checkoutDate;
-    }
+	public HousingInventory getHousingInventory() {
+		return housingInventory;
+	}
 
-    public void setCheckoutDate(ZonedDateTime checkoutDate) {
-        this.checkoutDate = checkoutDate;
-    }
+	public void setHousingInventory(HousingInventory housingInventory) {
+		this.housingInventory = housingInventory;
+	}
 
-    public HousingInventory getHousingInventory() {
-        return housingInventory;
+	
     }
-
-    public void setHousingInventory(HousingInventory housingInventory) {
-        this.housingInventory = housingInventory;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        HousingUnitAssignment housingUnitAssignment = (HousingUnitAssignment) o;
-        if(housingUnitAssignment.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, housingUnitAssignment.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "HousingUnitAssignment{" +
-            "id=" + id +
-            ", assignmentId='" + assignmentId + "'" +
-            ", clientId='" + clientId + "'" +
-            ", householdId='" + householdId + "'" +
-            ", checkoutDate='" + checkoutDate + "'" +
-            '}';
-    }
-}

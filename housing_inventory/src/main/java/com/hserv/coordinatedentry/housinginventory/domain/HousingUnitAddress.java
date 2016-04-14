@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A HousingUnitAddress.
@@ -13,16 +14,13 @@ import java.util.Objects;
 @Entity
 @Table(name = "housing_unit_address")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class HousingUnitAddress implements Serializable {
+public class HousingUnitAddress extends HousingInventoryBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(name = "address_id")
-    private String addressId;
+    private UUID addressId;
 
     @Column(name = "addressline_1")
     private String addressline1;
@@ -42,100 +40,65 @@ public class HousingUnitAddress implements Serializable {
     @ManyToOne
     private HousingInventory housingInventory;
 
-    public Long getId() {
-        return id;
-    }
+	public UUID getAddressId() {
+		return addressId;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setAddressId(UUID addressId) {
+		this.addressId = addressId;
+	}
 
-    public String getAddressId() {
-        return addressId;
-    }
+	public String getAddressline1() {
+		return addressline1;
+	}
 
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
-    }
+	public void setAddressline1(String addressline1) {
+		this.addressline1 = addressline1;
+	}
 
-    public String getAddressline1() {
-        return addressline1;
-    }
+	public String getAddressline2() {
+		return addressline2;
+	}
 
-    public void setAddressline1(String addressline1) {
-        this.addressline1 = addressline1;
-    }
+	public void setAddressline2(String addressline2) {
+		this.addressline2 = addressline2;
+	}
 
-    public String getAddressline2() {
-        return addressline2;
-    }
+	public String getCity() {
+		return city;
+	}
 
-    public void setAddressline2(String addressline2) {
-        this.addressline2 = addressline2;
-    }
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public String getState() {
+		return state;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public void setState(String state) {
+		this.state = state;
+	}
 
-    public String getState() {
-        return state;
-    }
+	public String getZip() {
+		return zip;
+	}
 
-    public void setState(String state) {
-        this.state = state;
-    }
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
 
-    public String getZip() {
-        return zip;
-    }
+	public HousingInventory getHousingInventory() {
+		return housingInventory;
+	}
 
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
+	public void setHousingInventory(HousingInventory housingInventory) {
+		this.housingInventory = housingInventory;
+	}
+    
+    
 
-    public HousingInventory getHousingInventory() {
-        return housingInventory;
-    }
+      
 
-    public void setHousingInventory(HousingInventory housingInventory) {
-        this.housingInventory = housingInventory;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        HousingUnitAddress housingUnitAddress = (HousingUnitAddress) o;
-        if(housingUnitAddress.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, housingUnitAddress.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "HousingUnitAddress{" +
-            "id=" + id +
-            ", addressId='" + addressId + "'" +
-            ", addressline1='" + addressline1 + "'" +
-            ", addressline2='" + addressline2 + "'" +
-            ", city='" + city + "'" +
-            ", state='" + state + "'" +
-            ", zip='" + zip + "'" +
-            '}';
-    }
+   
 }

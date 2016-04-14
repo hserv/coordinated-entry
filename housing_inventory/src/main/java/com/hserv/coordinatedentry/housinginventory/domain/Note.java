@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A Note.
@@ -13,70 +14,31 @@ import java.util.Objects;
 @Entity
 @Table(name = "note")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Note implements Serializable {
+public class Note extends HousingInventoryBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(name = "note_id")
-    private String noteId;
+    private UUID noteId;
 
     @Column(name = "note_string")
     private String noteString;
 
-    public Long getId() {
-        return id;
-    }
+	public UUID getNoteId() {
+		return noteId;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setNoteId(UUID noteId) {
+		this.noteId = noteId;
+	}
 
-    public String getNoteId() {
-        return noteId;
-    }
+	public String getNoteString() {
+		return noteString;
+	}
 
-    public void setNoteId(String noteId) {
-        this.noteId = noteId;
-    }
+	public void setNoteString(String noteString) {
+		this.noteString = noteString;
+	}
 
-    public String getNoteString() {
-        return noteString;
-    }
-
-    public void setNoteString(String noteString) {
-        this.noteString = noteString;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Note note = (Note) o;
-        if(note.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, note.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Note{" +
-            "id=" + id +
-            ", noteId='" + noteId + "'" +
-            ", noteString='" + noteString + "'" +
-            '}';
-    }
+   
 }

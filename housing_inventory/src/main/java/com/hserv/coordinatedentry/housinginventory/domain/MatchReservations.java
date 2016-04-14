@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A MatchReservations.
@@ -14,16 +15,13 @@ import java.util.Objects;
 @Entity
 @Table(name = "match_reservations")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class MatchReservations implements Serializable {
+public class MatchReservations extends HousingInventoryBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+    
     @Column(name = "reservation_id")
-    private String reservationId;
+    private UUID reservationId;
 
     @Column(name = "client_id")
     private String clientId;
@@ -51,116 +49,77 @@ public class MatchReservations implements Serializable {
     @JoinColumn(unique = true)
     private Note note;
 
-    public Long getId() {
-        return id;
-    }
+	public UUID getReservationId() {
+		return reservationId;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setReservationId(UUID reservationId) {
+		this.reservationId = reservationId;
+	}
 
-    public String getReservationId() {
-        return reservationId;
-    }
+	public String getClientId() {
+		return clientId;
+	}
 
-    public void setReservationId(String reservationId) {
-        this.reservationId = reservationId;
-    }
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
 
-    public String getClientId() {
-        return clientId;
-    }
+	public ZonedDateTime getMatchDate() {
+		return matchDate;
+	}
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
+	public void setMatchDate(ZonedDateTime matchDate) {
+		this.matchDate = matchDate;
+	}
 
-    public ZonedDateTime getMatchDate() {
-        return matchDate;
-    }
+	public Boolean getMatchStatus() {
+		return matchStatus;
+	}
 
-    public void setMatchDate(ZonedDateTime matchDate) {
-        this.matchDate = matchDate;
-    }
+	public void setMatchStatus(Boolean matchStatus) {
+		this.matchStatus = matchStatus;
+	}
 
-    public Boolean isMatchStatus() {
-        return matchStatus;
-    }
+	public Integer getReservationAdult() {
+		return reservationAdult;
+	}
 
-    public void setMatchStatus(Boolean matchStatus) {
-        this.matchStatus = matchStatus;
-    }
+	public void setReservationAdult(Integer reservationAdult) {
+		this.reservationAdult = reservationAdult;
+	}
 
-    public Integer getReservationAdult() {
-        return reservationAdult;
-    }
+	public Integer getReservationChildren() {
+		return reservationChildren;
+	}
 
-    public void setReservationAdult(Integer reservationAdult) {
-        this.reservationAdult = reservationAdult;
-    }
+	public void setReservationChildren(Integer reservationChildren) {
+		this.reservationChildren = reservationChildren;
+	}
 
-    public Integer getReservationChildren() {
-        return reservationChildren;
-    }
+	public HousingInventory getHousingInventory() {
+		return housingInventory;
+	}
 
-    public void setReservationChildren(Integer reservationChildren) {
-        this.reservationChildren = reservationChildren;
-    }
+	public void setHousingInventory(HousingInventory housingInventory) {
+		this.housingInventory = housingInventory;
+	}
 
-    public HousingInventory getHousingInventory() {
-        return housingInventory;
-    }
+	public EligibleClient getEligibleClient() {
+		return eligibleClient;
+	}
 
-    public void setHousingInventory(HousingInventory housingInventory) {
-        this.housingInventory = housingInventory;
-    }
+	public void setEligibleClient(EligibleClient eligibleClient) {
+		this.eligibleClient = eligibleClient;
+	}
 
-    public EligibleClient getEligibleClient() {
-        return eligibleClient;
-    }
+	public Note getNote() {
+		return note;
+	}
 
-    public void setEligibleClient(EligibleClient eligibleClient) {
-        this.eligibleClient = eligibleClient;
-    }
+	public void setNote(Note note) {
+		this.note = note;
+	}
 
-    public Note getNote() {
-        return note;
-    }
-
-    public void setNote(Note note) {
-        this.note = note;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        MatchReservations matchReservations = (MatchReservations) o;
-        if(matchReservations.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, matchReservations.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "MatchReservations{" +
-            "id=" + id +
-            ", reservationId='" + reservationId + "'" +
-            ", clientId='" + clientId + "'" +
-            ", matchDate='" + matchDate + "'" +
-            ", matchStatus='" + matchStatus + "'" +
-            ", reservationAdult='" + reservationAdult + "'" +
-            ", reservationChildren='" + reservationChildren + "'" +
-            '}';
-    }
+    
 }

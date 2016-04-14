@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Objects;
 
 /**
@@ -16,16 +17,13 @@ import java.util.Objects;
 @Entity
 @Table(name = "housing_inventory")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class HousingInventory implements Serializable {
+public class HousingInventory extends HousingInventoryBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(name = "housing_unit_id")
-    private String housingUnitId;
+    private UUID housingUnitId;
 
     @Column(name = "project_id")
     private String projectId;
@@ -57,116 +55,76 @@ public class HousingInventory implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<MatchReservations> matchReservationss = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
+	public UUID getHousingUnitId() {
+		return housingUnitId;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setHousingUnitId(UUID housingUnitId) {
+		this.housingUnitId = housingUnitId;
+	}
 
-    public String getHousingUnitId() {
-        return housingUnitId;
-    }
+	public String getProjectId() {
+		return projectId;
+	}
 
-    public void setHousingUnitId(String housingUnitId) {
-        this.housingUnitId = housingUnitId;
-    }
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
 
-    public String getProjectId() {
-        return projectId;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public String getUserId() {
-        return userId;
-    }
+	public Integer getBedsCurrent() {
+		return bedsCurrent;
+	}
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	public void setBedsCurrent(Integer bedsCurrent) {
+		this.bedsCurrent = bedsCurrent;
+	}
 
-    public Integer getBedsCurrent() {
-        return bedsCurrent;
-    }
+	public Integer getBedsCapacity() {
+		return bedsCapacity;
+	}
 
-    public void setBedsCurrent(Integer bedsCurrent) {
-        this.bedsCurrent = bedsCurrent;
-    }
+	public void setBedsCapacity(Integer bedsCapacity) {
+		this.bedsCapacity = bedsCapacity;
+	}
 
-    public Integer getBedsCapacity() {
-        return bedsCapacity;
-    }
+	public Boolean getFamilyUnit() {
+		return familyUnit;
+	}
 
-    public void setBedsCapacity(Integer bedsCapacity) {
-        this.bedsCapacity = bedsCapacity;
-    }
+	public void setFamilyUnit(Boolean familyUnit) {
+		this.familyUnit = familyUnit;
+	}
 
-    public Boolean isFamilyUnit() {
-        return familyUnit;
-    }
+	public Set<HousingUnitAddress> getHousingUnitAddresss() {
+		return housingUnitAddresss;
+	}
 
-    public void setFamilyUnit(Boolean familyUnit) {
-        this.familyUnit = familyUnit;
-    }
+	public void setHousingUnitAddresss(Set<HousingUnitAddress> housingUnitAddresss) {
+		this.housingUnitAddresss = housingUnitAddresss;
+	}
 
-    public Set<HousingUnitAddress> getHousingUnitAddresss() {
-        return housingUnitAddresss;
-    }
+	public Set<HousingUnitAssignment> getHousingUnitAssignments() {
+		return housingUnitAssignments;
+	}
 
-    public void setHousingUnitAddresss(Set<HousingUnitAddress> housingUnitAddresss) {
-        this.housingUnitAddresss = housingUnitAddresss;
-    }
+	public void setHousingUnitAssignments(Set<HousingUnitAssignment> housingUnitAssignments) {
+		this.housingUnitAssignments = housingUnitAssignments;
+	}
 
-    public Set<HousingUnitAssignment> getHousingUnitAssignments() {
-        return housingUnitAssignments;
-    }
+	public Set<MatchReservations> getMatchReservationss() {
+		return matchReservationss;
+	}
 
-    public void setHousingUnitAssignments(Set<HousingUnitAssignment> housingUnitAssignments) {
-        this.housingUnitAssignments = housingUnitAssignments;
-    }
-
-    public Set<MatchReservations> getMatchReservationss() {
-        return matchReservationss;
-    }
-
-    public void setMatchReservationss(Set<MatchReservations> matchReservationss) {
-        this.matchReservationss = matchReservationss;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        HousingInventory housingInventory = (HousingInventory) o;
-        if(housingInventory.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, housingInventory.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "HousingInventory{" +
-            "id=" + id +
-            ", housingUnitId='" + housingUnitId + "'" +
-            ", projectId='" + projectId + "'" +
-            ", userId='" + userId + "'" +
-            ", bedsCurrent='" + bedsCurrent + "'" +
-            ", bedsCapacity='" + bedsCapacity + "'" +
-            ", familyUnit='" + familyUnit + "'" +
-            '}';
-    }
+	public void setMatchReservationss(Set<MatchReservations> matchReservationss) {
+		this.matchReservationss = matchReservationss;
+	}
+     
 }

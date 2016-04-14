@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A EligibleClient.
@@ -14,16 +15,14 @@ import java.util.Objects;
 @Entity
 @Table(name = "eligible_client")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class EligibleClient implements Serializable {
+public class EligibleClient extends HousingInventoryBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    
 
     @Column(name = "client_id")
-    private String clientId;
+    private UUID clientId;
 
     @Column(name = "spadat_score")
     private Integer spadatScore;
@@ -44,100 +43,61 @@ public class EligibleClient implements Serializable {
     @JoinColumn(unique = true)
     private ClientInfo clientInfo;
 
-    public Long getId() {
-        return id;
-    }
+	public UUID getClientId() {
+		return clientId;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setClientId(UUID clientId) {
+		this.clientId = clientId;
+	}
 
-    public String getClientId() {
-        return clientId;
-    }
+	public Integer getSpadatScore() {
+		return spadatScore;
+	}
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
+	public void setSpadatScore(Integer spadatScore) {
+		this.spadatScore = spadatScore;
+	}
 
-    public Integer getSpadatScore() {
-        return spadatScore;
-    }
+	public String getCategory() {
+		return category;
+	}
 
-    public void setSpadatScore(Integer spadatScore) {
-        this.spadatScore = spadatScore;
-    }
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
-    public String getCategory() {
-        return category;
-    }
+	public Boolean getMatched() {
+		return matched;
+	}
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
+	public void setMatched(Boolean matched) {
+		this.matched = matched;
+	}
 
-    public Boolean isMatched() {
-        return matched;
-    }
+	public ZonedDateTime getSurveyDate() {
+		return surveyDate;
+	}
 
-    public void setMatched(Boolean matched) {
-        this.matched = matched;
-    }
+	public void setSurveyDate(ZonedDateTime surveyDate) {
+		this.surveyDate = surveyDate;
+	}
 
-    public ZonedDateTime getSurveyDate() {
-        return surveyDate;
-    }
+	public String getSpdatLevel() {
+		return spdatLevel;
+	}
 
-    public void setSurveyDate(ZonedDateTime surveyDate) {
-        this.surveyDate = surveyDate;
-    }
+	public void setSpdatLevel(String spdatLevel) {
+		this.spdatLevel = spdatLevel;
+	}
 
-    public String getSpdatLevel() {
-        return spdatLevel;
-    }
+	public ClientInfo getClientInfo() {
+		return clientInfo;
+	}
 
-    public void setSpdatLevel(String spdatLevel) {
-        this.spdatLevel = spdatLevel;
-    }
+	public void setClientInfo(ClientInfo clientInfo) {
+		this.clientInfo = clientInfo;
+	}
 
-    public ClientInfo getClientInfo() {
-        return clientInfo;
-    }
-
-    public void setClientInfo(ClientInfo clientInfo) {
-        this.clientInfo = clientInfo;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        EligibleClient eligibleClient = (EligibleClient) o;
-        if(eligibleClient.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, eligibleClient.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "EligibleClient{" +
-            "id=" + id +
-            ", clientId='" + clientId + "'" +
-            ", spadatScore='" + spadatScore + "'" +
-            ", category='" + category + "'" +
-            ", matched='" + matched + "'" +
-            ", surveyDate='" + surveyDate + "'" +
-            ", spdatLevel='" + spdatLevel + "'" +
-            '}';
-    }
+    
 }
