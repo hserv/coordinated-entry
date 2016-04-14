@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * A ClientInfo.
@@ -15,12 +14,13 @@ import java.util.UUID;
 @Entity
 @Table(name = "client_info")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ClientInfo extends HousingInventoryBaseEntity implements Serializable {
+public class ClientInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
