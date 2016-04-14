@@ -35,7 +35,7 @@ public class LoggingAspect {
 	}
 	
 	//@Pointcut(value="execution(* app.service.*.*(..)) || execution(* app.controller.*.*(..))")
-	@Pointcut(value="execution(* app.controller.*.*(..))")
+	@Pointcut(value="execution(* com.hserv.coordinatedentry.service.*.*(..))")
 	public void loggingPointCut(){
 		
 	}

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.hserv.coordinatedentry.util.JsonDateDeserializer;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
 
 public class SurveyView implements Serializable {
@@ -23,10 +25,12 @@ public class SurveyView implements Serializable {
 
 	/** date_created. */
 	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateCreated;
 
 	/** date_updated. */
 	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateUpdated;
 
 	/** user_id. */
@@ -207,6 +211,15 @@ public class SurveyView implements Serializable {
 		return this.surveyQuestionView;
 	}
 
+	public String getSection_id() {
+		return section_id;
+	}
+
+
+	public void setSection_id(String section_id) {
+		this.section_id = section_id;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -244,13 +257,15 @@ public class SurveyView implements Serializable {
 	}
 
 
-	public String getSection_id() {
-		return section_id;
-	}
-
-
-	public void setSection_id(String section_id) {
-		this.section_id = section_id;
+	@Override
+	public String toString() {
+		return "SurveyView [surveyId=" + surveyId + ", surveyTitle="
+				+ surveyTitle + ", surveyOwner=" + surveyOwner
+				+ ", dateCreated=" + dateCreated + ", dateUpdated="
+				+ dateUpdated + ", userId=" + userId + ", locked=" + locked
+				+ ", inactive=" + inactive + ", copySuveryId=" + copySuveryId
+				+ ", tagValue=" + tagValue + ", section_id=" + section_id
+				+ ", surveyQuestionView=" + surveyQuestionView + "]";
 	}
 
 }

@@ -204,25 +204,6 @@ public class Survey implements Serializable {
 
 
 	/**
-	 * Set the tag_valuestring.
-	 * 
-	 * @param tagValuestring
-	 *            tag_valuestring
-	 */
-	public void setTagValuestring(String tagValue) {
-		this.tagValue = tagValue;
-	}
-
-	/**
-	 * Get the tag_valuestring.
-	 * 
-	 * @return tag_valuestring
-	 */
-	public String getTagValuestring() {
-		return this.tagValue;
-	}
-
-	/**
 	 * Set the set of the Survey_Question.
 	 * 
 	 * @param surveyQuestionSet

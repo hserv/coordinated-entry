@@ -1,10 +1,13 @@
 package com.hserv.coordinatedentry.view.mapper;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.hserv.coordinatedentry.entity.Question;
 import com.hserv.coordinatedentry.entity.Survey;
 import com.hserv.coordinatedentry.entity.SurveyQuestion;
 import com.hserv.coordinatedentry.view.SurveyQuestionView;
@@ -29,9 +32,36 @@ public class SurveyConverter {
 		survey.setUserId(surveyView.getUserId());
 		survey.setSection_id(surveyView.getSection_id());
 		
+		List<SurveyQuestionView> surveyQuestionViewList = surveyView.getSurveyQuestion();
+		List<SurveyQuestion> surveyQuestions = new ArrayList<SurveyQuestion>();
+		
+		if(surveyQuestionViewList!=null && !surveyQuestionViewList.isEmpty())
+			for (Iterator iterator = surveyQuestionViewList.iterator(); iterator.hasNext();) {
+				SurveyQuestionView surveyQuestionView = (SurveyQuestionView) iterator.next();
+				
+				SurveyQuestion surveyQuestion = new SurveyQuestion();
+				populateSurveyQuestionEntity(surveyQuestion, surveyQuestionView);
+				surveyQuestions.add(surveyQuestion);
+			}
+		
+		survey.setSurveyQuestion(surveyQuestions);
+	
 		return survey;
 	}
 	
+	public void populateSurveyQuestionEntity(SurveyQuestion surveyQuestion, SurveyQuestionView surveyQuestionView){
+		surveyQuestion.setDateCreated(surveyQuestionView.getDateCreated());
+		surveyQuestion.setDateUpdated(surveyQuestionView.getDateUpdated());
+		surveyQuestion.setSectionId(surveyQuestionView.getSectionId());
+		//surveyQuestion.setSurvey(survey);
+		surveyQuestion.setQuestionChild(surveyQuestionView.getQuestionChild());
+		surveyQuestion.setQuestionParent(surveyQuestionView.getQuestionParent());
+		surveyQuestion.setRequired(surveyQuestionView.getRequired());
+		surveyQuestion.setUserId(surveyQuestionView.getUserId());
+		surveyQuestion.setQuestionId(surveyQuestionView.getQuestionId());
+		surveyQuestion.setSurveyId(surveyQuestionView.getSurveyId());
+		surveyQuestion.setSurveyQuestionId(surveyQuestionView.getSurveyQuestionId());
+	}
 	/*public List<SurveyView> convertSurveyViewListFromEntityList(List<SurveyView> surveyViewList, List<Survey> surveyList){
 		
 		if(surveyList==null || surveyList.isEmpty()) return surveyViewList;
@@ -68,21 +98,25 @@ public class SurveyConverter {
 		if(surveyQuestionList==null || surveyQuestionList.isEmpty()) return ;
 		for(SurveyQuestion surveyQuestion : surveyQuestionList){
 			SurveyQuestionView surveyQuestionView = new SurveyQuestionView();
-			surveyQuestionView.setSurveyQuestionId(surveyQuestion.getSurveyQuestionId());
-			surveyQuestionView.setDateCreated(surveyQuestion.getDateCreated());
-			surveyQuestionView.setDateUpdated(surveyQuestion.getDateUpdated());
-			surveyQuestionView.setSectionId(surveyQuestion.getSectionId());
-			
-			//surveyQuestionView.setQuestion(surveyQuestion.getQuestion());
-			//surveyQuestionView.setSurvey(survey);
-			surveyQuestionView.setQuestionChild(surveyQuestion.getQuestionChild());
-			surveyQuestionView.setQuestionParent(surveyQuestion.getQuestionParent());
-			surveyQuestionView.setRequired(surveyQuestion.getRequired());
-			surveyQuestionView.setUserId(surveyQuestion.getUserId());
-			
-			surveyQuestionView.setQuestionId(surveyQuestion.getQuestionId());
-			surveyQuestionView.setSurveyId(surveyQuestion.getSurveyId());
+			populateSurveyQuestionMapping(surveyQuestionView, surveyQuestion);
 			surveyQuestionViewList.add(surveyQuestionView);
 		}
+	}
+	
+	public void populateSurveyQuestionMapping(SurveyQuestionView surveyQuestionView, SurveyQuestion surveyQuestion){
+		surveyQuestionView.setSurveyQuestionId(surveyQuestion.getSurveyQuestionId());
+		surveyQuestionView.setDateCreated(surveyQuestion.getDateCreated());
+		surveyQuestionView.setDateUpdated(surveyQuestion.getDateUpdated());
+		surveyQuestionView.setSectionId(surveyQuestion.getSectionId());
+		
+		//surveyQuestionView.setQuestion(surveyQuestion.getQuestion());
+		//surveyQuestionView.setSurvey(survey);
+		surveyQuestionView.setQuestionChild(surveyQuestion.getQuestionChild());
+		surveyQuestionView.setQuestionParent(surveyQuestion.getQuestionParent());
+		surveyQuestionView.setRequired(surveyQuestion.getRequired());
+		surveyQuestionView.setUserId(surveyQuestion.getUserId());
+		
+		surveyQuestionView.setQuestionId(surveyQuestion.getQuestionId());
+		surveyQuestionView.setSurveyId(surveyQuestion.getSurveyId());
 	}
 }

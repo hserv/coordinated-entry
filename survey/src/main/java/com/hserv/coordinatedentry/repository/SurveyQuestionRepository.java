@@ -8,6 +8,6 @@ import com.hserv.coordinatedentry.entity.SurveyQuestion;
 
 public interface SurveyQuestionRepository extends JpaRepository<SurveyQuestion, Integer>{
 
-	//public List<SurveyQuestion> findByQuestions
+	public List<SurveyQuestion> findBySurveyId(Integer surveyId);
 	
 }

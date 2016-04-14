@@ -76,61 +76,61 @@ public class SurveyRESTImpl {
 	}
 
 	// /service/secure/survey/create - POST
-	@RequestMapping(method = RequestMethod.POST, value="/service/survey/create")
-	public @ResponseBody WSResponse createSurvey(@RequestBody Survey survey){
-		WSResponse wsResponseStatus = null;
+	@RequestMapping(method = RequestMethod.POST, value="/surveys/create")
+	public @ResponseBody WSResponse createSurvey(@RequestBody SurveyView surveyView){
+		WSResponse wsResponse = null;
 
-		Survey survey1 = null;
+		ResponseMessage response = null;
 
 		try{
-			wsResponseStatus = new WSResponse();
-			survey1 = surveyRepository.save(survey);
-			wsResponseStatus.setData(survey1);
-			wsResponseStatus.setStatusCode("200");
-			wsResponseStatus.setStatus("Success");
+			wsResponse = new WSResponse();
+			response = surveyHandlerService.createSurvey(surveyView);
+			wsResponse.setData(response.name());
+			wsResponse.setStatusCode("200");
+			wsResponse.setStatus("Success");
 
 		}catch(Exception e){
-			wsResponseStatus.setErroMessage("Something Wrong in createSurvey API"+e.getMessage());
+			wsResponse.setErroMessage("Something Wrong in createSurvey API"+e.getMessage());
 		}
 
-		return wsResponseStatus;
+		return wsResponse;
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value="/surveys/{surveyId}/update")
-	public @ResponseBody WSResponse updateSurvey(@PathParam("surveyId") String surveyId, @RequestBody SurveyView surveyView){
-		WSResponse wsResponseStatus = null;
+	public @ResponseBody WSResponse updateSurvey(@PathVariable("surveyId") String surveyId, @RequestBody SurveyView surveyView){
+		WSResponse wsResponse = null;
 		System.out.println("update called : "+ surveyId);
 		try{
 			System.out.println(surveyView.getSurveyId());
-			wsResponseStatus = new WSResponse();
+			wsResponse = new WSResponse();
 			surveyHandlerService.updateSurvey(surveyView);
-			wsResponseStatus.setStatusCode("200");
-			wsResponseStatus.setStatusMessage("Success");
+			wsResponse.setStatusCode("200");
+			wsResponse.setStatusMessage("Success");
 
 		}catch(Exception e){
-			wsResponseStatus.setErroMessage("Something Wrong in updateSurvey API"+e.getMessage());
+			wsResponse.setErroMessage("Something Wrong in updateSurvey API"+e.getMessage());
 		}
 
-		return wsResponseStatus;
+		return wsResponse;
 
 	}
 
 
 	@RequestMapping(method = RequestMethod.DELETE, value="/surveys/{surveyId}")
 	public @ResponseBody WSResponse deleteSurvey(@PathVariable("surveyId") Integer surveyId){
-		WSResponse wsResponseStatus = null;
+		WSResponse wsResponse = null;
 		System.out.println("surveyId ; "+surveyId);
 		try{
-			wsResponseStatus = new WSResponse();
+			wsResponse = new WSResponse();
 			ResponseMessage result = surveyHandlerService.deleteSurvey(surveyId);
 			System.out.println("result : "+result);
-			wsResponseStatus.setStatusCode("200");
-			wsResponseStatus.setStatus("Success");
+			wsResponse.setStatusCode("200");
+			wsResponse.setStatus("Success");
 		}catch(Exception e){
-			wsResponseStatus.setErroMessage("Something wrong in deleteSurvey API"+e.getMessage());
+			wsResponse.setErroMessage("Something wrong in deleteSurvey API"+e.getMessage());
 		}
-		//Response.status(200).entity(wsResponseStatus).build();
-		return wsResponseStatus;
+		//Response.status(200).entity(wsResponse).build();
+		return wsResponse;
 	}
 
 	@RequestMapping("service/survey/byTitle")
