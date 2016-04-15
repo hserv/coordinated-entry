@@ -185,4 +185,15 @@ public class HousingInventory implements java.io.Serializable {
 		this.matchReservationses = matchReservationses;
 	}
 
+	@Override
+	public String toString() {
+		return "HousingInventory [housingUnitId=" + housingUnitId + ", housingUnitAddress=" + housingUnitAddress
+				+ ", projectId=" + projectId + ", bedsCurrent=" + bedsCurrent + ", bedsCapacity=" + bedsCapacity
+				+ ", familyUnit=" + familyUnit + ", inService=" + inService + ", vacant=" + vacant + ", inactive="
+				+ inactive + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", userId=" + userId
+				+ ", matchReservationses=" + matchReservationses + "]";
+	}
+
+	
+	
 }

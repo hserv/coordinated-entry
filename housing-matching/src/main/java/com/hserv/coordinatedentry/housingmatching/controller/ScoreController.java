@@ -13,7 +13,7 @@ import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 
 @RestController
 @ResponseBody
-@RequestMapping(value = "/coordinatedentry/housingmatching/scores", produces = "application/json")
+@RequestMapping(value = "/scores", produces = "application/json")
 public class ScoreController {
 	
 	@Autowired

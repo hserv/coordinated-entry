@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@ResponseBody
-@RequestMapping(value = "/coordinatedentry/health", produces = "application/json")
+@RequestMapping(value = "/health", produces = "application/json")
 public class HealthController {
 
 	/**

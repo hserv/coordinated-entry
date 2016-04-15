@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/coordinatedentry/matches", produces = "application/json")
+@RequestMapping(value = "/matches", produces = "application/json")
 public class MatchController {
 
 	/**

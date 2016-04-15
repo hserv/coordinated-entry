@@ -23,12 +23,12 @@ public class HousingUnitServiceImpl implements HousingUnitService {
 
 	@Override
 	public List<HousingInventoryModel> getHousingInventoryList(String userId) {
-		List<HousingInventory> housingInventories = housingInventoryRepo.findByUserId(userId);
+		List<HousingInventory> housingInventories = housingInventoryRepo.findAvailableHousingUnit();
 		List<HousingInventoryModel> inventoryModels = new ArrayList<HousingInventoryModel>();
 		for(HousingInventory inventory : housingInventories) {
 			inventoryModels.add(housingInventoryTranslator.translate(inventory));
 		}
-		return null;
+		return inventoryModels;
 	}
 
 }
