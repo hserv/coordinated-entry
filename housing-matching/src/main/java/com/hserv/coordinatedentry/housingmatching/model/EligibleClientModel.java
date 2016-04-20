@@ -1,73 +1,99 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
 import java.util.Date;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.validation.constraints.NotNull;
 
 public class EligibleClientModel {
 
-	private UUID clientId;
-	private String firstName;
-	private String lastName;
-	private int age;
-	private int spdatscore;
+	private String clientId;
+	private ClientInfoModel clientInfo;
+	private Integer surveyScore;
 	private String category;
-	private boolean matched;
+	private Boolean matched;
 	private Date surveyDate;
 	private String spdatLabel;
-	public UUID getClientId() {
+
+	private Set<MatchReservationModel> matchReservations = new HashSet<>(0);
+
+	@NotNull
+	public String getClientId() {
 		return clientId;
 	}
-	public void setClientId(UUID clientId) {
+
+	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
-	public String getFirstName() {
-		return firstName;
+
+	//@NotNull
+	public ClientInfoModel getClientInfo() {
+		return clientInfo;
 	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+
+	public void setClientInfo(ClientInfoModel clientInfo) {
+		this.clientInfo = clientInfo;
 	}
-	public String getLastName() {
-		return lastName;
+
+	@NotNull
+	public Integer getSurveyScore() {
+		return surveyScore;
 	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+
+	public void setSurveyScore(Integer surveyScore) {
+		this.surveyScore = surveyScore;
 	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public int getSpdatscore() {
-		return spdatscore;
-	}
-	public void setSpdatscore(int spdatscore) {
-		this.spdatscore = spdatscore;
-	}
+
+	@NotNull
 	public String getCategory() {
 		return category;
 	}
+
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public boolean isMatched() {
+
+	@NotNull
+	public Boolean getMatched() {
 		return matched;
 	}
-	public void setMatched(boolean matched) {
+
+	public void setMatched(Boolean matched) {
 		this.matched = matched;
 	}
+
+	@NotNull
 	public Date getSurveyDate() {
 		return surveyDate;
 	}
+
 	public void setSurveyDate(Date surveyDate) {
 		this.surveyDate = surveyDate;
 	}
+
+	@NotNull
 	public String getSpdatLabel() {
 		return spdatLabel;
 	}
+
 	public void setSpdatLabel(String spdatLabel) {
 		this.spdatLabel = spdatLabel;
 	}
-	
-	
+
+	public Set<MatchReservationModel> getMatchReservations() {
+		return matchReservations;
+	}
+
+	public void setMatchReservations(Set<MatchReservationModel> matchReservations) {
+		this.matchReservations = matchReservations;
+	}
+
+	@Override
+	public String toString() {
+		return "EligibleClientModel [clientId=" + clientId + ", clientInfo=" + clientInfo + ", spdatscore="
+				+ surveyScore + ", category=" + category + ", matched=" + matched + ", surveyDate=" + surveyDate
+				+ ", spdatLabel=" + spdatLabel + ", matchReservations=" + matchReservations + "]";
+	}
+
 }

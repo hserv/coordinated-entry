@@ -3,16 +3,14 @@ package com.hserv.coordinatedentry.housingmatching.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * Note 
- */
 @Entity
-@Table(name = "note", schema = "housing")
+@Table(name = "note", schema = "ces")
 public class Note implements java.io.Serializable {
 
 	private String noteId;
@@ -33,8 +31,8 @@ public class Note implements java.io.Serializable {
 		this.noteString = noteString;
 	}
 
+	//@GeneratedValue(generator = "generator")
 	@Id
-
 	@Column(name = "note_id", unique = true, nullable = false)
 	public String getNoteId() {
 		return this.noteId;

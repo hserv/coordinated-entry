@@ -1,4 +1,5 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,11 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * HousingInventory 
- */
 @Entity
-@Table(name = "housing_inventory", schema = "housing")
+@Table(name = "housing_inventory", schema = "ces")
 public class HousingInventory implements java.io.Serializable {
 
 	private UUID housingUnitId;
@@ -34,7 +32,7 @@ public class HousingInventory implements java.io.Serializable {
 	private Date dateCreated;
 	private Date dateUpdated;
 	private String userId;
-	private Set<MatchReservations> matchReservationses = new HashSet(0);
+	private Set<MatchReservations> matchReservationses = new HashSet<>(0);
 
 	public HousingInventory() {
 	}
@@ -46,8 +44,7 @@ public class HousingInventory implements java.io.Serializable {
 
 	public HousingInventory(UUID housingUnitId, HousingUnitAddress housingUnitAddress, String projectId,
 			Integer bedsCurrent, Integer bedsCapacity, Boolean familyUnit, Boolean inService, Boolean vacant,
-			Boolean inactive, Date dateCreated, Date dateUpdated, String userId, 
-			Set<MatchReservations> matchReservationses) {
+			Boolean inactive, Date dateCreated, Date dateUpdated, String userId, Set<MatchReservations> matchReservationses) {
 		this.housingUnitId = housingUnitId;
 		this.housingUnitAddress = housingUnitAddress;
 		this.projectId = projectId;
@@ -185,15 +182,4 @@ public class HousingInventory implements java.io.Serializable {
 		this.matchReservationses = matchReservationses;
 	}
 
-	@Override
-	public String toString() {
-		return "HousingInventory [housingUnitId=" + housingUnitId + ", housingUnitAddress=" + housingUnitAddress
-				+ ", projectId=" + projectId + ", bedsCurrent=" + bedsCurrent + ", bedsCapacity=" + bedsCapacity
-				+ ", familyUnit=" + familyUnit + ", inService=" + inService + ", vacant=" + vacant + ", inactive="
-				+ inactive + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", userId=" + userId
-				+ ", matchReservationses=" + matchReservationses + "]";
-	}
-
-	
-	
 }

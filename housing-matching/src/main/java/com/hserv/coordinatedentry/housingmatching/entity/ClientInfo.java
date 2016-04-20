@@ -1,28 +1,22 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * ClientInfo 
- */
 @Entity
-@Table(name = "client_info", schema = "housing")
+@Table(name = "client_info", schema = "ces")
 public class ClientInfo implements java.io.Serializable {
 
-	private UUID id;
+	private UUID clientId;
 	private String firstName;
 	private String middleName;
 	private String lastName;
@@ -38,21 +32,21 @@ public class ClientInfo implements java.io.Serializable {
 	private Boolean veteranStatus;
 	private Date dateCreated;
 	private Date dateUpdated;
-	private Serializable userId;
-	private Set<EligibleClients> eligibleClientses = new HashSet(0);
+	private UUID userId;
+	private EligibleClients eligibleClients;
 
 	public ClientInfo() {
 	}
 
-	public ClientInfo(UUID id) {
-		this.id = id;
+	public ClientInfo(UUID clientId) {
+		this.clientId = clientId;
 	}
 
-	public ClientInfo(UUID id, String firstName, String middleName, String lastName, String nameSuffix,
+	public ClientInfo(UUID clientId, String firstName, String middleName, String lastName, String nameSuffix,
 			String ssn, Date dob, String gender, String otherGender, String ethnicity, String race,
 			String contactNumber, String contactEmail, Boolean veteranStatus, Date dateCreated, Date dateUpdated,
-			Serializable userId, Set<EligibleClients> eligibleClientses) {
-		this.id = id;
+			UUID userId, EligibleClients eligibleClients) {
+		this.clientId = clientId;
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
@@ -69,18 +63,18 @@ public class ClientInfo implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 		this.dateUpdated = dateUpdated;
 		this.userId = userId;
-		this.eligibleClientses = eligibleClientses;
+		this.eligibleClients = eligibleClients;
 	}
 
 	@Id
-	@Column(name = "id", unique = true, nullable = false)
+	@Column(name = "client_id", unique = true, nullable = false)
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
-	public UUID getId() {
-		return this.id;
+	public UUID getClientId() {
+		return this.clientId;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
+	public void setClientId(UUID clientId) {
+		this.clientId = clientId;
 	}
 
 	@Column(name = "first_name", length = 50)
@@ -222,32 +216,22 @@ public class ClientInfo implements java.io.Serializable {
 	}
 
 	@Column(name = "user_id")
-	public Serializable getUserId() {
+	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
+	public UUID getUserId() {
 		return this.userId;
 	}
 
-	public void setUserId(Serializable userId) {
+	public void setUserId(UUID userId) {
 		this.userId = userId;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "clientInfo")
-	public Set<EligibleClients> getEligibleClientses() {
-		return this.eligibleClientses;
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "clientInfo")
+	public EligibleClients getEligibleClients() {
+		return this.eligibleClients;
 	}
 
-	public void setEligibleClientses(Set<EligibleClients> eligibleClientses) {
-		this.eligibleClientses = eligibleClientses;
+	public void setEligibleClients(EligibleClients eligibleClients) {
+		this.eligibleClients = eligibleClients;
 	}
 
-	@Override
-	public String toString() {
-		return "ClientInfo [id=" + id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName="
-				+ lastName + ", nameSuffix=" + nameSuffix + ", ssn=" + ssn + ", dob=" + dob + ", gender=" + gender
-				+ ", otherGender=" + otherGender + ", ethnicity=" + ethnicity + ", race=" + race + ", contactNumber="
-				+ contactNumber + ", contactEmail=" + contactEmail + ", veteranStatus=" + veteranStatus
-				+ ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", userId=" + userId
-				+ ", eligibleClientses= "+ eligibleClientses  +"]";
-	}
-
-	
 }

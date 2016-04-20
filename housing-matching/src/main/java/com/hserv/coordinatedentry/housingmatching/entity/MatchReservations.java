@@ -16,11 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * MatchReservations
- */
 @Entity
-@Table(name = "match_reservations", schema = "housing")
+@Table(name = "match_reservations", schema = "ces")
 public class MatchReservations implements java.io.Serializable {
 
 	private UUID reservationId;
@@ -35,7 +32,8 @@ public class MatchReservations implements java.io.Serializable {
 	private Boolean inactive;
 	private Date dateCreated;
 	private Date dateUpdated;
-	private Set<Note> notes = new HashSet(0);
+	private String userId;
+	private Set<Note> notes = new HashSet<>(0);
 
 	public MatchReservations() {
 	}
@@ -50,7 +48,7 @@ public class MatchReservations implements java.io.Serializable {
 	public MatchReservations(UUID reservationId, EligibleClients eligibleClients,
 			HousingInventory housingInventory, String noteId, Date matchDate, String matchStatus,
 			Integer reservationAdults, Integer reservationChildren, Boolean manualMatch, Boolean inactive,
-			Date dateCreated, Date dateUpdated, Set<Note> notes) {
+			Date dateCreated, Date dateUpdated, String userId, Set<Note> notes) {
 		this.reservationId = reservationId;
 		this.eligibleClients = eligibleClients;
 		this.housingInventory = housingInventory;
@@ -63,6 +61,7 @@ public class MatchReservations implements java.io.Serializable {
 		this.inactive = inactive;
 		this.dateCreated = dateCreated;
 		this.dateUpdated = dateUpdated;
+		this.userId = userId;
 		this.notes = notes;
 	}
 
@@ -179,6 +178,15 @@ public class MatchReservations implements java.io.Serializable {
 
 	public void setDateUpdated(Date dateUpdated) {
 		this.dateUpdated = dateUpdated;
+	}
+
+	@Column(name = "user_id")
+	public String getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "matchReservations")
