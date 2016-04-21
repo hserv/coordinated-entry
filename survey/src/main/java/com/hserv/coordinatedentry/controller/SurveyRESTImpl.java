@@ -5,6 +5,8 @@ import java.util.List;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,9 @@ import com.hserv.coordinatedentry.view.SurveyView;
 @RestController
 public class SurveyRESTImpl {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(SurveyRESTImpl.class);
+	
 	private SurveyRepository surveyRepository;
 	private SurveyHandlerService surveyHandlerService;
 
@@ -78,6 +83,7 @@ public class SurveyRESTImpl {
 	// /service/secure/survey/create - POST
 	@RequestMapping(method = RequestMethod.POST, value="/surveys/create")
 	public @ResponseBody WSResponse createSurvey(@RequestBody SurveyView surveyView){
+		logger.debug("Creating new Survey...............");
 		WSResponse wsResponse = null;
 
 		ResponseMessage response = null;
@@ -90,6 +96,7 @@ public class SurveyRESTImpl {
 			wsResponse.setStatus("Success");
 
 		}catch(Exception e){
+			e.printStackTrace();
 			wsResponse.setErroMessage("Something Wrong in createSurvey API"+e.getMessage());
 		}
 

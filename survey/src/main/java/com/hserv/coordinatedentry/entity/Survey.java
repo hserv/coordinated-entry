@@ -35,7 +35,7 @@ public class Survey implements Serializable {
 	@Id
 //	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="survey_id_seq")
 //	@SequenceGenerator(name="survey_id_seq", sequenceName="survey_id_seq")
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer surveyId;
 
 	/** survey_title. */

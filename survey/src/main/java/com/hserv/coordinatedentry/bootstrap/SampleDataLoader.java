@@ -41,7 +41,7 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 		survey.setInactive(false);
 		survey.setCopySuveryId(true);
 		survey.setLocked(false);
-		survey.setSurveyOwner("HMISlync");
+		survey.setSurveyOwner("HMISlynk");
 		survey.setSurveyTitle("Sample Survey2");
 		survey.setTagValue("Copied from HMIS");
 		survey.setUserId("Vijay");

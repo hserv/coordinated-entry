@@ -1,5 +1,6 @@
 package com.hserv.coordinatedentry.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -52,9 +53,13 @@ public class SurveyHandlerService {
 	public ResponseMessage createSurvey(SurveyView surveyView) {
 		try{
 			Survey survey = new Survey();
-			surveyRepository.save(survey);
+			
 			surveyConverter.convertSurveyEntityFromView(survey, surveyView);
-			surveyQuestionRepository.save(survey.getSurveyQuestion());
+			surveyRepository.save(survey);
+			
+			List<SurveyQuestion> surveyQuestionsList = surveyConverter.populateSurveyQuestionEntityList(survey, surveyView.getSurveyQuestion());
+			
+			surveyQuestionRepository.save(surveyQuestionsList);
 			return ResponseMessage.SUCCESS;
 		}catch(RuntimeException exception){
 			return ResponseMessage.FAILURE;
@@ -70,7 +75,7 @@ public class SurveyHandlerService {
 			for(SurveyQuestionView surveyQuestionView : surveyView.getSurveyQuestion()){
 				System.out.println("surveyQuestion.getSurveyQuestionId() :"+surveyQuestionView.getSurveyQuestionId());
 				SurveyQuestion surveyQuestion = surveyQuestionRepository.findOne(surveyQuestionView.getSurveyQuestionId());
-				surveyConverter.populateSurveyQuestionMapping(surveyQuestionView, surveyQuestion);
+				surveyConverter.populateSurveyQuestionEntity(surveyQuestion, surveyQuestionView, survey);
 				surveyQuestionRepository.saveAndFlush(surveyQuestion);
 			}
 			
