@@ -1,5 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,13 +9,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.hserv.coordinatedentry.housingmatching.dao.ClientInfoRepository;
+import com.hserv.coordinatedentry.housingmatching.dao.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housingmatching.entity.ClientInfo;
+import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
+import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
+import com.hserv.coordinatedentry.housingmatching.service.impl.EligibleClientServiceImpl;
 
 @RestController
 public class ClientInfoController {
     
 	@Autowired
 	ClientInfoRepository clientInfoRepository;
+	
+	@Autowired
+	HousingInventoryRepository housingInventoryRepository;
+	
+	@Autowired
+	EligibleClientService eligibleClientService;
 	
     @RequestMapping("/clients")
     @Transactional(readOnly = true)
@@ -28,6 +40,13 @@ public class ClientInfoController {
     		System.out.println(clientInfo.toString());
     	}
     	
+    	System.out.println("Housing Inventory = " +housingInventoryRepository.count());
+    	List<HousingInventory> housingInventory = housingInventoryRepository.findAvailableHousingUnit();
+    	System.out.println("Housing Available Inventory = " + housingInventory.size());
+    	
+    	System.out.println("Housing Available Housing Unit = " + housingInventory.get(0).getHousingUnitAddress().getAddressLine1());
+    	
+    	System.out.println("Eligible CLients = " + eligibleClientService.getEligibleClients(10).size());
     	
     	RestTemplate clientInfoService = new RestTemplate();
     	String url = "http://localhost:8181/pathToClient";

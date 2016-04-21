@@ -1,30 +1,22 @@
--- Schema: housing
 
- DROP SCHEMA housing;
-
-CREATE SCHEMA housing
-  AUTHORIZATION postgres;
-
-  
-set schema 'housing';
 /* Drop Tables */
 
-DROP TABLE IF EXISTS note;
-DROP TABLE IF EXISTS match_reservations;
-DROP TABLE IF EXISTS eligible_clients;
-DROP TABLE IF EXISTS client_info;
-DROP TABLE IF EXISTS housing_inventory;
-DROP TABLE IF EXISTS housing_unit_address;
-DROP TABLE IF EXISTS survey_response;
+DROP TABLE IF EXISTS ces.note;
+DROP TABLE IF EXISTS ces.match_reservations;
+DROP TABLE IF EXISTS ces.eligible_clients;
+DROP TABLE IF EXISTS ces.client_info;
+DROP TABLE IF EXISTS ces.housing_inventory;
+DROP TABLE IF EXISTS ces.housing_unit_address;
+DROP TABLE IF EXISTS ces.survey_response;
 
 
 
 
 /* Create Tables */
 
-CREATE TABLE client_info
+CREATE TABLE ces.client_info
 (
-	id uuid NOT NULL,
+	client_id uuid NOT NULL,
 	first_name char(50),
 	middle_name char(50),
 	last_name char(50),
@@ -41,24 +33,25 @@ CREATE TABLE client_info
 	date_created date,
 	date_updated date,
 	user_id uuid,
-	CONSTRAINT client_pk PRIMARY KEY (id)
+	CONSTRAINT client_pk PRIMARY KEY (client_id)
 ) WITHOUT OIDS;
 
 
-CREATE TABLE eligible_clients
+CREATE TABLE ces.eligible_clients
 (
-	client_id uuid NOT NULL,
-	spdatScore int,
+	-- Like spdat or custome assessment.
+	survey_type varchar,
+	survey_score int,
 	category varchar,
 	matched boolean,
 	survey_date date,
-	spdat_label varchar,
-	id uuid NOT NULL,
+	spdat_label varchar CHECK spdat_label in ('youth','single adult','family')),
+	client_id uuid NOT NULL,
 	PRIMARY KEY (client_id)
 ) WITHOUT OIDS;
 
 
-CREATE TABLE housing_inventory
+CREATE TABLE ces.housing_inventory
 (
 	housing_unit_id uuid NOT NULL,
 	project_id varchar,
@@ -76,7 +69,7 @@ CREATE TABLE housing_inventory
 ) WITHOUT OIDS;
 
 
-CREATE TABLE housing_unit_address
+CREATE TABLE ces.housing_unit_address
 (
 	address_id uuid NOT NULL,
 	address_line1 varchar,
@@ -92,11 +85,10 @@ CREATE TABLE housing_unit_address
 ) WITHOUT OIDS;
 
 
-CREATE TABLE match_reservations
+CREATE TABLE ces.match_reservations
 (
 	reservation_id uuid NOT NULL,
 	housing_unit_id uuid NOT NULL,
-	client_id uuid NOT NULL,
 	note_id varchar,
 	match_date date,
 	match_status varchar CHECK (match_status in ('accepted','rejected','nodetermination')),
@@ -106,11 +98,13 @@ CREATE TABLE match_reservations
 	inactive boolean,
 	date_created date,
 	date_updated date,
+	user_id varchar,
+	client_id uuid NOT NULL,
 	PRIMARY KEY (reservation_id)
 ) WITHOUT OIDS;
 
 
-CREATE TABLE note
+CREATE TABLE ces.note
 (
 	note_id varchar NOT NULL,
 	note_string varchar,
@@ -119,7 +113,7 @@ CREATE TABLE note
 ) WITHOUT OIDS;
 
 
-CREATE TABLE survey_response
+CREATE TABLE ces.survey_response
 (
 	survey_question_id varchar(10),
 	response_value varchar(50),
@@ -137,46 +131,50 @@ CREATE TABLE survey_response
 
 /* Create Foreign Keys */
 
-ALTER TABLE eligible_clients
-	ADD FOREIGN KEY (id)
-	REFERENCES client_info (id)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE match_reservations
+ALTER TABLE ces.eligible_clients
 	ADD FOREIGN KEY (client_id)
-	REFERENCES eligible_clients (client_id)
+	REFERENCES ces.client_info (client_id)
 	ON UPDATE RESTRICT
 	ON DELETE RESTRICT
 ;
 
 
-ALTER TABLE match_reservations
+ALTER TABLE ces.match_reservations
+	ADD FOREIGN KEY (client_id)
+	REFERENCES ces.eligible_clients (client_id)
+	ON UPDATE RESTRICT
+	ON DELETE RESTRICT
+;
+
+
+ALTER TABLE ces.match_reservations
 	ADD FOREIGN KEY (housing_unit_id)
-	REFERENCES housing_inventory (housing_unit_id)
+	REFERENCES ces.housing_inventory (housing_unit_id)
 	ON UPDATE RESTRICT
 	ON DELETE RESTRICT
 ;
 
 
-ALTER TABLE housing_inventory
+ALTER TABLE ces.housing_inventory
 	ADD FOREIGN KEY (address_id)
-	REFERENCES housing_unit_address (address_id)
+	REFERENCES ces.housing_unit_address (address_id)
 	ON UPDATE RESTRICT
 	ON DELETE RESTRICT
 ;
 
 
-ALTER TABLE note
+ALTER TABLE ces.note
 	ADD FOREIGN KEY (reservation_id)
-	REFERENCES match_reservations (reservation_id)
+	REFERENCES ces.match_reservations (reservation_id)
 	ON UPDATE RESTRICT
 	ON DELETE RESTRICT
 ;
 
 
+
+/* Comments */
+
+COMMENT ON COLUMN ces.eligible_clients.survey_type IS 'Like spdat or custome assessment.';
 
 
 

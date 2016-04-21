@@ -7,11 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * SurveyResponse 
- */
 @Entity
-@Table(name = "survey_response", schema = "housing")
+@Table(name = "survey_response", schema = "ces")
 public class SurveyResponse implements java.io.Serializable {
 
 	private String surveyQuestionId;
@@ -24,6 +21,9 @@ public class SurveyResponse implements java.io.Serializable {
 	private Date dateCreated;
 	private Date dateUpdated;
 	private String userId;
+
+	public SurveyResponse() {
+	}
 
 	@Id
 	@Column(name = "survey_question_id", length = 10)
@@ -117,3 +117,5 @@ public class SurveyResponse implements java.io.Serializable {
 	}
 
 }
+
+

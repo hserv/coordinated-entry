@@ -1,25 +1,26 @@
 package com.hserv.coordinatedentry.housinginventory.domain;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
+ * 
  * A ClientInfo.
- */
+ * 
+ **/
+
 @Entity
 @Table(name = "client_info")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ClientInfo extends HousingInventoryBaseEntity implements Serializable {
+public class ClientInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name="id")
     private UUID id;
 
     @Column(name = "first_name")
@@ -34,7 +35,7 @@ public class ClientInfo extends HousingInventoryBaseEntity implements Serializab
     @Column(name = "suffix")
     private String suffix;
 
-    @Column(name = "ssn")
+    @Column(name = "ssn") 
     private String ssn;
 
     @Column(name = "dob")
@@ -183,7 +184,4 @@ public class ClientInfo extends HousingInventoryBaseEntity implements Serializab
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-    
-    
-    }
+}

@@ -153,7 +153,7 @@
 			  <artifactId>springmvc-raml-plugin</artifactId>
 			  <version>0.4.2</version>
 			  <configuration>
-			    <ramlPath>/src/main/resources/raml/api.raml</ramlPath>
+			    <ramlPath>/docs/raml/api_v010.raml</ramlPath>
 			    <outputRelativePath>/src/generated</outputRelativePath>
 			    <addTimestampFolder>false</addTimestampFolder>
 			    <basePackage>com.hserv.coordinatedentry.housingmatching.controller</basePackage>

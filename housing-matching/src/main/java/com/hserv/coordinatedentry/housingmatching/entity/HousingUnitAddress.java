@@ -14,11 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * HousingUnitAddress 
- */
 @Entity
-@Table(name = "housing_unit_address", schema = "housing")
+@Table(name = "housing_unit_address", schema = "ces")
 public class HousingUnitAddress implements java.io.Serializable {
 
 	private UUID addressId;
@@ -31,7 +28,7 @@ public class HousingUnitAddress implements java.io.Serializable {
 	private Date dateCreated;
 	private Date dateUpdated;
 	private String userId;
-	private Set<HousingInventory> housingInventories = new HashSet(0);
+	private Set<HousingInventory> housingInventories = new HashSet<>(0);
 
 	public HousingUnitAddress() {
 	}
