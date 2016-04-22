@@ -15,5 +15,5 @@ public interface SurveyScoreService {
 	public boolean deleteScoreByClientId(String clientId);
 	
 	public boolean updateScoreByClientId(int score, String clientId);
-	
+
 }

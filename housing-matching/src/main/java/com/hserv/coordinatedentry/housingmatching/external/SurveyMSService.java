@@ -2,9 +2,9 @@ package com.hserv.coordinatedentry.housingmatching.external;
 
 import java.util.List;
 
-import com.hserv.coordinatedentry.housingmatching.model.SurveyResponseModel;
+import com.hserv.coordinatedentry.housingmatching.model.SurveySectionModel;
 
 public interface SurveyMSService {
 
-	public List<SurveyResponseModel> fetchServeyResponse();
+	List<SurveySectionModel> fetchServeyResponse(String clientId);
 }

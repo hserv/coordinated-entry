@@ -47,6 +47,36 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	public int updateMatchStatusAndMAnualMatch(String matchStatus, boolean manualMatch, String reservationId) {
 		return repository.updateMatchStatusAndManualMatch(matchStatus, manualMatch, UUID.fromString(reservationId));
 	}
+
+	@Override
+	public void deleteAll() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<MatchReservationModel> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean deleteByClientId(String clientId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public MatchReservationModel findByClientId(String clientId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean updateByClientId(MatchReservationModel matchReservationModel) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 	

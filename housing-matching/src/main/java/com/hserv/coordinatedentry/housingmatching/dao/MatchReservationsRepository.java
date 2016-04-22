@@ -22,4 +22,6 @@ public interface MatchReservationsRepository extends JpaRepository<MatchReservat
 	public int updateMatchStatusAndManualMatch(String matchStatus, boolean manualMatch, UUID reservationId);
 	
 	
+	
+	
 }

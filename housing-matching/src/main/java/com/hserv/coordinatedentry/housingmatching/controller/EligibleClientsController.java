@@ -29,7 +29,7 @@ public class EligibleClientsController {
 
 	/**
 	 * Returns the most eligible clients. URL :
-	 * http://localhost:8080/eligible-clients/all
+	 * http://localhost:8080/eligible-clients/
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<EligibleClientModel> getEligibleClients() {
@@ -47,7 +47,7 @@ public class EligibleClientsController {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			boolean status = eligibleClientFacade.updateEligibleClients(eligibleClientModels);
-			responseEntity = ResponseEntity.ok("true");
+			responseEntity = ResponseEntity.ok("{\"updated\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
 			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
 		}
@@ -62,8 +62,8 @@ public class EligibleClientsController {
 	public ResponseEntity<String> deleteEligibleClients() {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			eligibleClientFacade.deleteAll();
-			responseEntity = ResponseEntity.ok("true");
+			boolean status = eligibleClientFacade.deleteAll();
+			responseEntity = ResponseEntity.ok("{\"deleted\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
 			responseEntity = new ResponseEntity<String>("fail", HttpStatus.EXPECTATION_FAILED);
 		}
@@ -75,8 +75,8 @@ public class EligibleClientsController {
 			@Validated @RequestBody List<EligibleClientModel> eligibleClientModels) {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			eligibleClientFacade.createEligibleClients(eligibleClientModels);
-			responseEntity = ResponseEntity.ok("true");
+			boolean status = eligibleClientFacade.createEligibleClients(eligibleClientModels);
+			responseEntity = ResponseEntity.ok("{\"added\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
 			responseEntity = new ResponseEntity<String>("fail", HttpStatus.EXPECTATION_FAILED);
 		}
@@ -99,10 +99,10 @@ public class EligibleClientsController {
 			@Validated @RequestBody EligibleClientModel eligibleClientModel) {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			eligibleClientFacade.createEligibleClient(eligibleClientModel);
-			responseEntity = ResponseEntity.ok("true");
+			boolean status = eligibleClientFacade.createEligibleClient(eligibleClientModel);
+			responseEntity = ResponseEntity.ok("{\"added\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
-			responseEntity = new ResponseEntity<String>("fail", HttpStatus.EXPECTATION_FAILED);// .notFound().build();
+			responseEntity = new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);// .notFound().build();
 		}
 		return responseEntity;
 	}
@@ -126,13 +126,14 @@ public class EligibleClientsController {
 	public ResponseEntity<String> deleteEligibleClientById(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			eligibleClientFacade.deleteEligibleClientById(id);
-			responseEntity = ResponseEntity.ok("Record Deleted");
+			boolean status = eligibleClientFacade.deleteEligibleClientById(id);
+			responseEntity = ResponseEntity.ok("{\"deleted\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
-			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
+			responseEntity = new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
 		}
 		return responseEntity;
 	}
+	
 
 	/**
 	 * This API will be used to modify the details of a particular client. URL :
@@ -149,11 +150,10 @@ public class EligibleClientsController {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			boolean status = eligibleClientFacade.updateEligibleClient(id, eligibleClientModel);
-			responseEntity = ResponseEntity.ok("true");
+			responseEntity = ResponseEntity.ok("{\"updated\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
-			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
+			responseEntity = new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
 		}
 		return responseEntity;
 	}
-
 }
