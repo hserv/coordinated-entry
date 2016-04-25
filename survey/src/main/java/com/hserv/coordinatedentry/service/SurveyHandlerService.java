@@ -10,11 +10,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.hserv.coordinatedentry.entity.Survey;
-import com.hserv.coordinatedentry.entity.SurveyQuestion;
-import com.hserv.coordinatedentry.repository.SurveyQuestionRepository;
+import com.hserv.coordinatedentry.entity.SurveySection;
+import com.hserv.coordinatedentry.repository.SurveySectionRepository;
 import com.hserv.coordinatedentry.repository.SurveyRepository;
 import com.hserv.coordinatedentry.util.ResponseMessage;
-import com.hserv.coordinatedentry.view.SurveyQuestionView;
+import com.hserv.coordinatedentry.view.SurveySectionView;
 import com.hserv.coordinatedentry.view.SurveyView;
 import com.hserv.coordinatedentry.view.mapper.SurveyConverter;
 
@@ -23,16 +23,16 @@ import com.hserv.coordinatedentry.view.mapper.SurveyConverter;
 public class SurveyHandlerService {
 
 	private SurveyRepository surveyRepository;
-	private SurveyQuestionRepository surveyQuestionRepository;
+	private SurveySectionRepository surveySectionRepository;
 	private SurveyConverter surveyConverter;
 
 	@Autowired
 	public SurveyHandlerService(SurveyRepository surveyRepository,
-			SurveyQuestionRepository surveyQuestionRepository,
+			SurveySectionRepository surveySectionRepository,
 			SurveyConverter surveyConverter) {
 		super();
 		this.surveyRepository = surveyRepository;
-		this.surveyQuestionRepository = surveyQuestionRepository;
+		this.surveySectionRepository = surveySectionRepository;
 		this.surveyConverter = surveyConverter;
 	}
 
@@ -57,9 +57,9 @@ public class SurveyHandlerService {
 			surveyConverter.convertSurveyEntityFromView(survey, surveyView);
 			surveyRepository.save(survey);
 			
-			List<SurveyQuestion> surveyQuestionsList = surveyConverter.populateSurveyQuestionEntityList(survey, surveyView.getSurveyQuestion());
+			List<SurveySection> surveyQuestionsList = surveyConverter.populateSurveyQuestionEntityList(survey, surveyView.getSurveySection());
 			
-			surveyQuestionRepository.save(surveyQuestionsList);
+			surveySectionRepository.save(surveyQuestionsList);
 			return ResponseMessage.SUCCESS;
 		}catch(RuntimeException exception){
 			return ResponseMessage.FAILURE;
@@ -69,14 +69,14 @@ public class SurveyHandlerService {
 	public ResponseMessage updateSurvey(SurveyView surveyView) {
 		try{
 			Survey survey = surveyRepository.findOne(surveyView.getSurveyId());
-			//surveyQuestionRepository.findBySurveyId(surveyView.getSurveyId());
+			//surveySectionRepository.findBySurveyId(surveyView.getSurveyId());
 			surveyConverter.convertSurveyEntityFromView(survey, surveyView);
 			surveyRepository.saveAndFlush(survey);
-			for(SurveyQuestionView surveyQuestionView : surveyView.getSurveyQuestion()){
-				System.out.println("surveyQuestion.getSurveyQuestionId() :"+surveyQuestionView.getSurveyQuestionId());
-				SurveyQuestion surveyQuestion = surveyQuestionRepository.findOne(surveyQuestionView.getSurveyQuestionId());
-				surveyConverter.populateSurveyQuestionEntity(surveyQuestion, surveyQuestionView, survey);
-				surveyQuestionRepository.saveAndFlush(surveyQuestion);
+			for(SurveySectionView surveySectionView : surveyView.getSurveySection()){
+				System.out.println("surveyQuestion.getSurveyQuestionId() :"+surveySectionView.getSectionId());
+				SurveySection surveyQuestion = surveySectionRepository.findOne(surveySectionView.getSectionId());
+				surveyConverter.populateSurveyQuestionEntity(surveyQuestion, surveySectionView, survey);
+				surveySectionRepository.saveAndFlush(surveyQuestion);
 			}
 			
 			return ResponseMessage.SUCCESS;

@@ -1,7 +1,6 @@
 package com.hserv.coordinatedentry.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,8 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
@@ -77,18 +79,23 @@ public class Question implements Serializable {
 	private String userId;
 
 	/** survey_id. */
-	private String surveyId;
+	private Integer surveyId;
 
 	/** The set of Survey_Question. */
+	//@OneToMany(mappedBy="question", cascade=CascadeType.ALL)
+	//@JsonManagedReference
+	@ManyToOne
+	@JoinColumn(name="section_fk_id")
+	@JsonBackReference
+	private SurveySection surveySection;
+
 	@OneToMany(mappedBy="question", cascade=CascadeType.ALL)
 	@JsonManagedReference
-	private List<SurveyQuestion> surveyQuestion;
-
+	private List<CustomPicklist> customPicklist;
 	/**
 	 * Constructor.
 	 */
 	public Question() {
-		this.surveyQuestion = new ArrayList<SurveyQuestion>();
 	}
 
 
@@ -287,30 +294,16 @@ public class Question implements Serializable {
 	 * @param surveyId
 	 *            survey_id
 	 */
-	public void setSurveyId(String surveyId) {
+
+	
+	public Integer getSurveyId() {
+		return surveyId;
+	}
+
+	public void setSurveyId(Integer surveyId) {
 		this.surveyId = surveyId;
 	}
-
-	/**
-	 * Get the survey_id.
-	 * 
-	 * @return survey_id
-	 */
-	public String getSurveyId() {
-		return this.surveyId;
-	}
-
-	/**
-	 * Add the Survey_Question.
-	 * 
-	 * @param surveyQuestion
-	 *            Survey_Question
-	 */
-	public void addSurveyQuestion(SurveyQuestion surveyQuestion) {
-		this.surveyQuestion.add(surveyQuestion);
-	}
-
-
+	
 	public Integer getQuestionId() {
 		return questionId;
 	}
@@ -320,14 +313,20 @@ public class Question implements Serializable {
 		this.questionId = questionId;
 	}
 
-
-	public List<SurveyQuestion> getSurveyQuestion() {
-		return surveyQuestion;
+	public SurveySection getSurveySection() {
+		return surveySection;
 	}
 
+	public void setSurveySection(SurveySection surveySection) {
+		this.surveySection = surveySection;
+	}
 
-	public void setSurveyQuestion(List<SurveyQuestion> surveyQuestion) {
-		this.surveyQuestion = surveyQuestion;
+	public List<CustomPicklist> getCustomPicklist() {
+		return customPicklist;
+	}
+
+	public void setCustomPicklist(List<CustomPicklist> customPicklist) {
+		this.customPicklist = customPicklist;
 	}
 
 

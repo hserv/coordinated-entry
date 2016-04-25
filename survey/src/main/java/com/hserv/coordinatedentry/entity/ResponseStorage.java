@@ -20,9 +20,6 @@ public class ResponseStorage implements Serializable {
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** survey_question_id. */
-	private String surveyQuestionId;
-
 	/** response_value. */
 	private String responseValue;
 
@@ -180,14 +177,6 @@ public class ResponseStorage implements Serializable {
 	 */
 	public Date getDateUpdated() {
 		return this.dateUpdated;
-	}
-
-	public String getSurveyQuestionId() {
-		return surveyQuestionId;
-	}
-
-	public void setSurveyQuestionId(String surveyQuestionId) {
-		this.surveyQuestionId = surveyQuestionId;
 	}
 
 	public String getUserId() {

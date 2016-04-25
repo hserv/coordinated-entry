@@ -3,6 +3,7 @@ package com.hserv.coordinatedentry.view;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,12 +15,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
 
-public class SurveyQuestionView implements Serializable {
+public class SurveySectionView implements Serializable {
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
-	private Integer surveyQuestionId;
 
 	/** survey_id. */
 	private Integer surveyId;
@@ -48,29 +47,25 @@ public class SurveyQuestionView implements Serializable {
 	private String userId;
 	
 	/** section_id. */
-	private String sectionId;
+	private Integer sectionId;
 
 	private SurveyView surveyView;
 
 	private QuestionView questionView;
 
+	private String sectionDetail;
+
+	private String sectionText;
+
+	private double sectionWeight;
+
 	/**
 	 * Constructor.
 	 */
-	public SurveyQuestionView() {
+	public SurveySectionView() {
 	}
 
 	
-	public Integer getSurveyQuestionId() {
-		return surveyQuestionId;
-	}
-
-
-	public void setSurveyQuestionId(Integer surveyQuestionId) {
-		this.surveyQuestionId = surveyQuestionId;
-	}
-
-
 	public Integer getSurveyId() {
 		return surveyId;
 	}
@@ -244,14 +239,43 @@ public class SurveyQuestionView implements Serializable {
 	}
 
 
-	public String getSectionId() {
+	public Integer getSectionId() {
 		return sectionId;
 	}
 
 
-	public void setSectionId(String sectionId) {
+	public void setSectionId(Integer sectionId) {
 		this.sectionId = sectionId;
 	}
 
+
+	public String getSectionDetail() {
+		return sectionDetail;
+	}
+
+
+	public void setSectionDetail(String sectionDetail) {
+		this.sectionDetail = sectionDetail;
+	}
+
+
+	public String getSectionText() {
+		return sectionText;
+	}
+
+
+	public void setSectionText(String sectionText) {
+		this.sectionText = sectionText;
+	}
+
+
+	public double getSectionWeight() {
+		return sectionWeight;
+	}
+
+
+	public void setSectionWeight(double sectionWeight) {
+		this.sectionWeight = sectionWeight;
+	}
 
 }

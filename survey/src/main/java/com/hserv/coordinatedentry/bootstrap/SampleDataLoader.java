@@ -9,11 +9,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import com.hserv.coordinatedentry.entity.CustomPicklist;
 import com.hserv.coordinatedentry.entity.Question;
 import com.hserv.coordinatedentry.entity.Survey;
-import com.hserv.coordinatedentry.entity.SurveyQuestion;
+import com.hserv.coordinatedentry.entity.SurveySection;
+import com.hserv.coordinatedentry.repository.CustomPickListRepository;
 import com.hserv.coordinatedentry.repository.QuestionBankRepository;
-import com.hserv.coordinatedentry.repository.SurveyQuestionRepository;
+import com.hserv.coordinatedentry.repository.SurveySectionRepository;
 import com.hserv.coordinatedentry.repository.SurveyRepository;
 
 @Component
@@ -26,7 +28,10 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 	private QuestionBankRepository questionBankRepository;
 
 	@Autowired
-	private SurveyQuestionRepository surveyQuestionRepository;
+	private SurveySectionRepository surveySectionRepository;
+	
+	@Autowired
+	private CustomPickListRepository customPickListRepository;
 	
 	
 	@Override
@@ -45,14 +50,15 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 		survey.setSurveyTitle("Sample Survey2");
 		survey.setTagValue("Copied from HMIS");
 		survey.setUserId("Vijay");
-		survey.setSection_id("Section Id");
+		survey.setSectionId(1);
 		
-		List<SurveyQuestion> surveyQuestions = new ArrayList<SurveyQuestion>();
-		SurveyQuestion surveyQuestion = new SurveyQuestion();
-		surveyQuestion.setDateCreated(new Date());
-		surveyQuestion.setDateUpdated(new Date());
-		surveyQuestion.setSectionId("Section Id");
+		List<SurveySection> surveySections = new ArrayList<SurveySection>();
+		SurveySection surveySection = new SurveySection();
+		surveySection.setDateCreated(new Date());
+		surveySection.setDateUpdated(new Date());
+		//surveySection.setSectionId(12);
 		
+		List<Question> questions = new ArrayList<>();
 		Question question = new Question();
 		question.setDateCreated(new Date());
 		question.setDateUpdated(new Date());
@@ -69,26 +75,46 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 		//question.setSurveyQuestion(surveyQuestions);
 		question.setUserId("Admin User");
 		//
-		
 		//survey.setSurveyQuestion(surveyQuestions );
 		
-		surveyQuestion.setQuestion(question );
-		surveyQuestion.setSurvey(survey);
-		surveyQuestion.setQuestionChild("Child 1");
-		surveyQuestion.setQuestionParent("Parent 1");
-		surveyQuestion.setRequired("Yes");
-		surveyQuestion.setUserId("Admin User");
+		surveySection.setQuestions(questions);
+		surveySection.setSurvey(survey);
+		surveySection.setQuestionChild("Child 1");
+		surveySection.setQuestionParent("Parent 1");
+		surveySection.setRequired("Yes");
+		surveySection.setUserId("Admin User");
+		surveySection.setSectionDetail("Section Details");
+		surveySection.setSectionText("Section text goes here");
+		surveySection.setSectionWeight(1);
 		
-		
-		questionBankRepository.save(question);
 		surveyRepository.save(survey);
 		
-		surveyQuestion.setQuestionId(question.getQuestionId());
-		surveyQuestion.setSurveyId(survey.getSurveyId());
-		surveyQuestions.add(surveyQuestion);
+		surveySection.setQuestionId(question.getQuestionId());
+		surveySection.setSurveyId(survey.getSurveyId());
+		surveySections.add(surveySection);
 		
-		surveyQuestionRepository.save(surveyQuestions);
+		surveySectionRepository.save(surveySections);
 		
+		question.setSurveyId(survey.getSurveyId());
+		question.setSurveySection(surveySection);
+		questions.add(question);
+		questionBankRepository.save(questions);
+		
+		List <CustomPicklist> customPicklists = new ArrayList<CustomPicklist>();
+		customPicklists.add(createPickList("Accept", "Accept", question));
+		customPicklists.add(createPickList("Reject", "Reject", question));
+		customPickListRepository.save(customPicklists);
 	}
 
+	public CustomPicklist createPickList(String key, String value, Question question) {
+		CustomPicklist customPickList = new CustomPicklist();
+		customPickList.setDateCreated(new Date());
+		customPickList.setDateUpdated(new Date());
+		customPickList.setInactive(false);
+		customPickList.setPicklistKey(key);
+		customPickList.setPicklistValue(value);
+		customPickList.setUserId("Admin");
+		customPickList.setQuestion(question);
+		return customPickList ;
+	}
 }

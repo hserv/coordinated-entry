@@ -49,16 +49,16 @@ public class SurveyView implements Serializable {
 	private String tagValue;
 	
 	/** section_id. */
-	private String section_id;
+	private Integer sectionId;
 
 	/** The set of Survey_Question. */
-	private List<SurveyQuestionView> surveyQuestionView;
+	private List<SurveySectionView> surveySectionView;
 
 	/**
 	 * Constructor.
 	 */
 	public SurveyView() {
-		this.surveyQuestionView = new ArrayList<SurveyQuestionView>();
+		this.surveySectionView = new ArrayList<SurveySectionView>();
 	}
 
 
@@ -188,18 +188,18 @@ public class SurveyView implements Serializable {
 	 * @param surveyQuestionSet
 	 *            The set of Survey_Question
 	 */
-	public void setSurveyQuestion(List<SurveyQuestionView> surveyQuestionView) {
-		this.surveyQuestionView = surveyQuestionView;
+	public void setSurveySection(List<SurveySectionView> surveySectionView) {
+		this.surveySectionView = surveySectionView;
 	}
 
 	/**
 	 * Add the Survey_Question.
 	 * 
-	 * @param surveyQuestionView
+	 * @param surveySectionView
 	 *            Survey_Question
 	 */
-	public void addSurveyQuestion(SurveyQuestionView surveyQuestionView) {
-		this.surveyQuestionView.add(surveyQuestionView);
+	public void addSurveySection(SurveySectionView surveySectionView) {
+		this.surveySectionView.add(surveySectionView);
 	}
 
 	/**
@@ -207,19 +207,21 @@ public class SurveyView implements Serializable {
 	 * 
 	 * @return The set of Survey_Question
 	 */
-	public List<SurveyQuestionView> getSurveyQuestion() {
-		return this.surveyQuestionView;
+	public List<SurveySectionView> getSurveySection() {
+		return this.surveySectionView;
 	}
 
-	public String getSection_id() {
-		return section_id;
-	}
-
-
-	public void setSection_id(String section_id) {
-		this.section_id = section_id;
-	}
 	
+	public Integer getSectionId() {
+		return sectionId;
+	}
+
+
+	public void setSectionId(Integer sectionId) {
+		this.sectionId = sectionId;
+	}
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -264,8 +266,8 @@ public class SurveyView implements Serializable {
 				+ ", dateCreated=" + dateCreated + ", dateUpdated="
 				+ dateUpdated + ", userId=" + userId + ", locked=" + locked
 				+ ", inactive=" + inactive + ", copySuveryId=" + copySuveryId
-				+ ", tagValue=" + tagValue + ", section_id=" + section_id
-				+ ", surveyQuestionView=" + surveyQuestionView + "]";
+				+ ", tagValue=" + tagValue + ", section_id=" + sectionId
+				+ ", surveySectionView=" + surveySectionView + "]";
 	}
 
 }

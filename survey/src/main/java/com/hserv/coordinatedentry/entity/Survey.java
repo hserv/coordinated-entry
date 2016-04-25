@@ -68,18 +68,18 @@ public class Survey implements Serializable {
 	private String tagValue;
 	
 	/** section_id. */
-	private String section_id;
+	private Integer sectionId;
 
 	/** The set of Survey_Question. */
 	@OneToMany(mappedBy="survey", cascade=CascadeType.ALL)
 	@JsonManagedReference
-	private List<SurveyQuestion> surveyQuestion;
+	private List<SurveySection> surveySection;
 
 	/**
 	 * Constructor.
 	 */
 	public Survey() {
-		this.surveyQuestion = new ArrayList<SurveyQuestion>();
+		this.surveySection = new ArrayList<SurveySection>();
 	}
 
 
@@ -209,8 +209,8 @@ public class Survey implements Serializable {
 	 * @param surveyQuestionSet
 	 *            The set of Survey_Question
 	 */
-	public void setSurveyQuestion(List<SurveyQuestion> surveyQuestion) {
-		this.surveyQuestion = surveyQuestion;
+	public void setSurveySection(List<SurveySection> surveySection) {
+		this.surveySection = surveySection;
 	}
 
 	/**
@@ -219,8 +219,8 @@ public class Survey implements Serializable {
 	 * @param surveyQuestion
 	 *            Survey_Question
 	 */
-	public void addSurveyQuestion(SurveyQuestion surveyQuestion) {
-		this.surveyQuestion.add(surveyQuestion);
+	public void addSurveySection(SurveySection surveySection) {
+		this.surveySection.add(surveySection);
 	}
 
 	/**
@@ -228,8 +228,8 @@ public class Survey implements Serializable {
 	 * 
 	 * @return The set of Survey_Question
 	 */
-	public List<SurveyQuestion> getSurveyQuestion() {
-		return this.surveyQuestion;
+	public List<SurveySection> getSurveySection() {
+		return this.surveySection;
 	}
 
 	/**
@@ -269,13 +269,15 @@ public class Survey implements Serializable {
 	}
 
 
-	public String getSection_id() {
-		return section_id;
+	public Integer getSectionId() {
+		return sectionId;
 	}
 
 
-	public void setSection_id(String section_id) {
-		this.section_id = section_id;
+	public void setSectionId(Integer sectionId) {
+		this.sectionId = sectionId;
 	}
+
+
 
 }

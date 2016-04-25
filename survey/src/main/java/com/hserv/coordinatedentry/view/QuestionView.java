@@ -60,13 +60,13 @@ public class QuestionView implements Serializable {
 	private String surveyId;
 
 	/** The set of Survey_Question. */
-	private List<SurveyQuestionView> surveyQuestionView;
+	private List<SurveySectionView> surveySectionView;
 
 	/**
 	 * Constructor.
 	 */
 	public QuestionView() {
-		this.surveyQuestionView = new ArrayList<SurveyQuestionView>();
+		this.surveySectionView = new ArrayList<SurveySectionView>();
 	}
 
 
@@ -281,11 +281,11 @@ public class QuestionView implements Serializable {
 	/**
 	 * Add the Survey_Question.
 	 * 
-	 * @param surveyQuestionView
+	 * @param surveySectionView
 	 *            Survey_Question
 	 */
-	public void addSurveyQuestion(SurveyQuestionView surveyQuestionView) {
-		this.surveyQuestionView.add(surveyQuestionView);
+	public void addSurveySection(SurveySectionView surveySectionView) {
+		this.surveySectionView.add(surveySectionView);
 	}
 
 
@@ -299,13 +299,13 @@ public class QuestionView implements Serializable {
 	}
 
 
-	public List<SurveyQuestionView> getSurveyQuestion() {
-		return surveyQuestionView;
+	public List<SurveySectionView> getSurveySection() {
+		return surveySectionView;
 	}
 
 
-	public void setSurveyQuestion(List<SurveyQuestionView> surveyQuestionView) {
-		this.surveyQuestionView = surveyQuestionView;
+	public void setSurveySection(List<SurveySectionView> surveySectionView) {
+		this.surveySectionView = surveySectionView;
 	}
 
 

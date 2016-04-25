@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.hserv.coordinatedentry.entity.SurveyQuestion;
+import com.hserv.coordinatedentry.entity.SurveySection;
 
-public interface SurveyQuestionRepository extends JpaRepository<SurveyQuestion, Integer>{
+public interface SurveySectionRepository extends JpaRepository<SurveySection, Integer>{
 
-	public List<SurveyQuestion> findBySurveyId(Integer surveyId);
+	public List<SurveySection> findBySurveyId(Integer surveyId);
 	
 }
