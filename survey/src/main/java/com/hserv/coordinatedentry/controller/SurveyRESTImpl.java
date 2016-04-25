@@ -25,23 +25,21 @@ import com.hserv.coordinatedentry.view.SurveyView;
 
 
 @RestController
+@RequestMapping("/surveys")
 public class SurveyRESTImpl {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SurveyRESTImpl.class);
 	
-	private SurveyRepository surveyRepository;
 	private SurveyHandlerService surveyHandlerService;
 
 	@Autowired
-	public SurveyRESTImpl(SurveyRepository surveyRepository,
-			SurveyHandlerService surveyHandlerService) {
+	public SurveyRESTImpl(SurveyHandlerService surveyHandlerService) {
 		super();
-		this.surveyRepository = surveyRepository;
 		this.surveyHandlerService = surveyHandlerService;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/surveys/all")
+	@RequestMapping(method = RequestMethod.GET, value="/all")
 	public @ResponseBody WSResponse getSurveyQuestions(){
 		WSResponse wsRepsSts= null;
 		List<Survey> surveys = null;
@@ -61,17 +59,23 @@ public class SurveyRESTImpl {
 		
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/surveys/{surveyId}")
+	@RequestMapping(method = RequestMethod.GET, value="/{surveyId}")
 	public @ResponseBody WSResponse getSelectedSurvey(@PathVariable Integer surveyId){
 		WSResponse wsRepsSts= null;
 		Survey survey = null;
 
 		try{
 			wsRepsSts = new WSResponse();
-			survey = surveyRepository.findOne(surveyId);
-			wsRepsSts.setData(survey);
-			wsRepsSts.setStatusCode("200");
-			wsRepsSts.setStatusMessage("Success");
+			survey = surveyHandlerService.getSurveyById(surveyId);
+			if(survey != null) {
+				wsRepsSts.setData(survey);
+				wsRepsSts.setStatusCode("200");
+				wsRepsSts.setStatusMessage("Success");
+			} else {
+				wsRepsSts.setData(null);
+				wsRepsSts.setStatusCode("500");
+				wsRepsSts.setStatusMessage("Failure - No survey exists for survey Id " +surveyId);				
+			}
 		}catch(Exception e){
 			wsRepsSts.setErroMessage("Something Wrong in fetching Servey"+e.getMessage());
 		}
@@ -81,7 +85,7 @@ public class SurveyRESTImpl {
 	}
 
 	// /service/secure/survey/create - POST
-	@RequestMapping(method = RequestMethod.POST, value="/surveys/create")
+	@RequestMapping(method = RequestMethod.POST, value="/create")
 	public @ResponseBody WSResponse createSurvey(@RequestBody SurveyView surveyView){
 		logger.debug("Creating new Survey...............");
 		WSResponse wsResponse = null;
@@ -103,7 +107,7 @@ public class SurveyRESTImpl {
 		return wsResponse;
 	}
 	
-	@RequestMapping(method = RequestMethod.PUT, value="/surveys/{surveyId}/update")
+	@RequestMapping(method = RequestMethod.PUT, value="/{surveyId}")
 	public @ResponseBody WSResponse updateSurvey(@PathVariable("surveyId") String surveyId, @RequestBody SurveyView surveyView){
 		WSResponse wsResponse = null;
 		System.out.println("update called : "+ surveyId);
@@ -123,7 +127,7 @@ public class SurveyRESTImpl {
 	}
 
 
-	@RequestMapping(method = RequestMethod.DELETE, value="/surveys/{surveyId}")
+	@RequestMapping(method = RequestMethod.DELETE, value="/{surveyId}")
 	public @ResponseBody WSResponse deleteSurvey(@PathVariable("surveyId") Integer surveyId){
 		WSResponse wsResponse = null;
 		System.out.println("surveyId ; "+surveyId);
@@ -140,11 +144,11 @@ public class SurveyRESTImpl {
 		return wsResponse;
 	}
 
-	@RequestMapping("service/survey/byTitle")
+	/*@RequestMapping("service/survey/byTitle")
 	public @ResponseBody List<Survey> getSurveyByTitle(@Param ("title") String title){
 		List response = surveyRepository.findBySurveyTitleContainingAllIgnoringCase(title);
 		return response;
 
-	}
+	}*/
 
 }
