@@ -6,14 +6,19 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class EligibleClientModel {
 
 	private String clientId;
 	private ClientInfoModel clientInfo;
 	private Integer surveyScore;
-	private String category;
+	private String programType;
 	private Boolean matched;
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="EST")
 	private Date surveyDate;
+	
 	private String spdatLabel;
 
 	private Set<MatchReservationModel> matchReservations = new HashSet<>(0);
@@ -46,12 +51,12 @@ public class EligibleClientModel {
 	}
 
 	@NotNull
-	public String getCategory() {
-		return category;
+	public String getProgramType() {
+		return programType;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setProgramType(String programType) {
+		this.programType = programType;
 	}
 
 	@NotNull
@@ -92,7 +97,7 @@ public class EligibleClientModel {
 	@Override
 	public String toString() {
 		return "EligibleClientModel [clientId=" + clientId + ", clientInfo=" + clientInfo + ", spdatscore="
-				+ surveyScore + ", category=" + category + ", matched=" + matched + ", surveyDate=" + surveyDate
+				+ surveyScore + ", programType=" + programType + ", matched=" + matched + ", surveyDate=" + surveyDate
 				+ ", spdatLabel=" + spdatLabel + ", matchReservations=" + matchReservations + "]";
 	}
 

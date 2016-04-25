@@ -26,6 +26,7 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClients
 	@Transactional(readOnly = false)
 	public Long deleteByClientId(UUID clientId);
 	
+	@Transactional(readOnly = false)
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClients as ec set ec.surveyScore = 0")
 	public void deleteScores();
@@ -34,10 +35,8 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClients
 	@Query("update EligibleClients as ec set ec.surveyScore = 0 where ec.clientId = ?1")
 	public void deleteScoreByClientId(String clientId);
 	
+	@Transactional(readOnly = false)
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClients as ec set ec.surveyScore = ?1 where ec.clientId = ?2")
-	public void updateScoreByClientId(int score, String clientId);
-	
-	
-
+	public void updateScoreByClientId(int score, UUID clientId);
 }

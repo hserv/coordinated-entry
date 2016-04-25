@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -16,9 +16,6 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "eligible_clients", schema = "ces")
@@ -28,7 +25,7 @@ public class EligibleClients implements java.io.Serializable {
 	private ClientInfo clientInfo;
 	private String surveyType;
 	private Integer surveyScore;
-	private String category;
+	private String programType;
 	private Boolean matched;
 	private Date surveyDate;
 	private String spdatLabel;
@@ -41,21 +38,19 @@ public class EligibleClients implements java.io.Serializable {
 		this.clientInfo = clientInfo;
 	}
 
-	public EligibleClients(ClientInfo clientInfo, String surveyType, Integer surveyScore, String category,
+	public EligibleClients(ClientInfo clientInfo, String surveyType, Integer surveyScore, String programType,
 			Boolean matched, Date surveyDate, String spdatLabel, Set<MatchReservations> matchReservationses) {
 		this.clientInfo = clientInfo;
 		this.surveyType = surveyType;
 		this.surveyScore = surveyScore;
-		this.category = category;
+		this.programType = programType;
 		this.matched = matched;
 		this.surveyDate = surveyDate;
 		this.spdatLabel = spdatLabel;
 		this.matchReservationses = matchReservationses;
 	}
 
-	//@GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "clientInfo"))
 	@Id
-	//@GeneratedValue(generator = "generator")
 	@Column(name = "client_id", unique = true, nullable = false)
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
 	public UUID getClientId() {
@@ -94,13 +89,13 @@ public class EligibleClients implements java.io.Serializable {
 		this.surveyScore = surveyScore;
 	}
 
-	@Column(name = "category")
-	public String getCategory() {
-		return this.category;
+	@Column(name = "program_type")
+	public String getProgramType() {
+		return this.programType;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setProgramType(String programType) {
+		this.programType = programType;
 	}
 
 	@Column(name = "matched")
@@ -113,7 +108,7 @@ public class EligibleClients implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "survey_date", length = 13)
+	@Column(name = "survey_date")
 	public Date getSurveyDate() {
 		return this.surveyDate;
 	}
@@ -131,7 +126,8 @@ public class EligibleClients implements java.io.Serializable {
 		this.spdatLabel = spdatLabel;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eligibleClients")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eligibleClients" , cascade=CascadeType.ALL)
+	
 	public Set<MatchReservations> getMatchReservationses() {
 		return this.matchReservationses;
 	}

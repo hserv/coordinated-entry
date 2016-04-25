@@ -49,7 +49,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 
 	private Sort sortByScore() {
-		return new Sort(Sort.Direction.DESC, "spdatscore");
+		return new Sort(Sort.Direction.DESC, "surveyScore");
 	}
 
 	private Sort sortBySurveyDate() {
@@ -58,7 +58,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 
 	@Override
 	public List<EligibleClientModel> getEligibleClients() {
-		List<EligibleClients> clients = eligibleClientsRepository.findAll();
+		List<EligibleClients> clients = eligibleClientsRepository.findAll(sort());
 		List<EligibleClientModel> clientsModels = new ArrayList<EligibleClientModel>();
 		for(EligibleClients client : clients) {
 			clientsModels.add(eligibleClientsTranslator.translate(client));
@@ -124,6 +124,17 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean updateEligibleClientScore(String clientID, int scoreTotal) {
+		boolean status = false;
+		if(!StringUtils.isEmpty(clientID)&&
+				eligibleClientsRepository.exists(UUID.fromString(clientID))){
+			eligibleClientsRepository.updateScoreByClientId(scoreTotal, UUID.fromString(clientID));
+			status = true;
+		}
+		return status;	
 	}
 	
 	

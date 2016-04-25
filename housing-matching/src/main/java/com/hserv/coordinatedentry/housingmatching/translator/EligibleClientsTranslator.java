@@ -1,5 +1,8 @@
 package com.hserv.coordinatedentry.housingmatching.translator;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,7 +30,7 @@ public class EligibleClientsTranslator {
 
 		if (null != eligibleClient) {
 			eligibleClientModel = new EligibleClientModel();
-			eligibleClientModel.setCategory(eligibleClient.getCategory());
+			eligibleClientModel.setProgramType(eligibleClient.getProgramType());
 			eligibleClientModel.setClientId(eligibleClient.getClientId().toString());
 			eligibleClientModel.setMatched(eligibleClient.getMatched());
 			eligibleClientModel.setSpdatLabel(eligibleClient.getSpdatLabel());
@@ -51,15 +54,10 @@ public class EligibleClientsTranslator {
 	}
 
 	public EligibleClients translate(EligibleClientModel eligibleClientModel) {
-		EligibleClients eligibleClients = null;
-		if (eligibleClientModel != null) {
-			eligibleClients = new EligibleClients();
-		} else {
-			return null;
-		}
+		EligibleClients eligibleClients = new EligibleClients();
 
 		eligibleClients.setClientId(UUID.fromString(eligibleClientModel.getClientId()));
-		eligibleClients.setCategory(eligibleClientModel.getCategory());
+		eligibleClients.setProgramType(eligibleClientModel.getProgramType());
 		eligibleClients.setMatched(eligibleClientModel.getMatched());
 		eligibleClients.setSpdatLabel(eligibleClientModel.getSpdatLabel());
 		eligibleClients.setSurveyScore(eligibleClientModel.getSurveyScore());

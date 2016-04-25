@@ -23,4 +23,6 @@ public interface EligibleClientService {
 	boolean updateEligibleClients(List<EligibleClientModel> eligibleClientModels);
 	
 	boolean createEligibleClients(List<EligibleClientModel> eligibleClientModels);
+
+	boolean updateEligibleClientScore(String clientID, int scoreTotal);
 }
