@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.hserv.coordinatedentry.entity.Question;
 import com.hserv.coordinatedentry.entity.Survey;
 import com.hserv.coordinatedentry.entity.SurveySection;
+import com.hserv.coordinatedentry.view.QuestionView;
 import com.hserv.coordinatedentry.view.SurveySectionView;
 import com.hserv.coordinatedentry.view.SurveyView;
 
@@ -35,7 +36,7 @@ public class SurveyConverter {
 		return survey;
 	}
 	
-	public List<SurveySection> populateSurveyQuestionEntityList(Survey survey, List<SurveySectionView> surveyQuestionViewList){
+	public List<SurveySection> populateSurveySectionEntityList(Survey survey, List<SurveySectionView> surveyQuestionViewList){
 		
 		List<SurveySection> surveyQuestionsList = new ArrayList<>();
 		
@@ -43,15 +44,16 @@ public class SurveyConverter {
 			for (Iterator iterator = surveyQuestionViewList.iterator(); iterator.hasNext();) {
 				SurveySectionView surveySectionView = (SurveySectionView) iterator.next();
 				
-				SurveySection surveyQuestion = new SurveySection();
-				populateSurveyQuestionEntity(surveyQuestion, surveySectionView, survey);
-				surveyQuestionsList.add(surveyQuestion);
+				SurveySection surveySection = new SurveySection();
+				
+				populateSurveySectionEntity(surveySection, surveySectionView, survey);
+				surveyQuestionsList.add(surveySection);
 			}
 		
 		return surveyQuestionsList;
 	}
 	
-	public SurveySection populateSurveyQuestionEntity(SurveySection surveySection, SurveySectionView surveySectionView, Survey survey){
+	public SurveySection populateSurveySectionEntity(SurveySection surveySection, SurveySectionView surveySectionView, Survey survey){
 		
 				surveySection.setDateCreated(surveySectionView.getDateCreated());
 				surveySection.setDateUpdated(surveySectionView.getDateUpdated());
@@ -66,7 +68,38 @@ public class SurveyConverter {
 				surveySection.setSectionDetail(surveySectionView.getSectionDetail());
 				surveySection.setSectionText(surveySectionView.getSectionText());
 				surveySection.setSectionWeight(surveySectionView.getSectionWeight());
+				surveySection.setQuestions(populateSurveyQuestionEntityList(surveySectionView, surveySection));
 				return surveySection;
+	}
+	
+	public List<Question> populateSurveyQuestionEntityList(SurveySectionView surveySectionView, SurveySection surveySection){
+		List<Question> questions = new ArrayList<>();
+		for (QuestionView questionView : surveySectionView.getQuestions()) {
+			Question question = new Question();
+			populateSurveyQuestionEntity(surveySection, question);
+			questions.add(question);
+		}
+		return questions;
+		
+	}
+	public Question populateSurveyQuestionEntity(SurveySection surveySection, Question question){
+		question.setDateCreated(new Date());
+		question.setDateUpdated(new Date());
+		question.setDisplayText("How frequent you go for vacations");
+		question.setHudBoolean(true);
+		question.setInactive(true);
+		question.setIsCopyQuestionId(false);
+		question.setLabelValue("HMIS Question");
+		question.setLocked(false);
+		question.setOptionsSingleMultipleSelect(true);
+		question.setQuestionDataType("Text");
+		question.setQuestionGroupId("Group1");
+		question.setQuestionName("Sample Question 1");
+		//question.setSurveyQuestion(surveyQuestions);
+		question.setUserId("Admin User");
+		//question.setSurveyId(surveySection.getSurveyId());
+		question.setSurveySection(surveySection);
+		return question;
 	}
 	
 	/*public List<SurveyView> convertSurveyViewListFromEntityList(List<SurveyView> surveyViewList, List<Survey> surveyList){
@@ -128,4 +161,6 @@ public class SurveyConverter {
 		surveySectionView.setSectionText(surveySection.getSectionText());
 		surveySectionView.setSectionWeight(surveySection.getSectionWeight());
 	}
+	
+	//public void populateQuestionViewFromRepo(Question)
 }

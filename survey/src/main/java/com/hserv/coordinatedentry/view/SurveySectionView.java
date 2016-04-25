@@ -2,24 +2,33 @@ package com.hserv.coordinatedentry.view;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.hserv.coordinatedentry.entity.Question;
+import com.hserv.coordinatedentry.entity.Survey;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
 
 public class SurveySectionView implements Serializable {
+	
+
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	private Integer sectionId;
+	
 	/** survey_id. */
 	private Integer surveyId;
 
@@ -46,12 +55,12 @@ public class SurveySectionView implements Serializable {
 	/** user_id. */
 	private String userId;
 	
-	/** section_id. */
-	private Integer sectionId;
 
-	private SurveyView surveyView;
+	/** Survey. */
+	private Survey survey;
 
-	private QuestionView questionView;
+	/** Question. */
+	private List<QuestionView> questions;
 
 	private String sectionDetail;
 
@@ -203,11 +212,11 @@ public class SurveySectionView implements Serializable {
 	/**
 	 * Set the Survey.
 	 * 
-	 * @param surveyView
+	 * @param survey
 	 *            Survey
 	 */
-	public void setSurvey(SurveyView surveyView) {
-		this.surveyView = surveyView;
+	public void setSurvey(Survey survey) {
+		this.survey = survey;
 	}
 
 	/**
@@ -215,30 +224,26 @@ public class SurveySectionView implements Serializable {
 	 * 
 	 * @return Survey
 	 */
-	public SurveyView getSurvey() {
-		return this.surveyView;
+	public Survey getSurvey() {
+		return this.survey;
 	}
 
 	/**
 	 * Set the Question.
 	 * 
-	 * @param questionView
+	 * @param question
 	 *            Question
 	 */
-	public void setQuestion(QuestionView questionView) {
-		this.questionView = questionView;
-	}
-
-	/**
-	 * Get the Question.
-	 * 
-	 * @return Question
-	 */
-	public QuestionView getQuestion() {
-		return this.questionView;
+	
+	public List<QuestionView> getQuestions() {
+		return questions;
 	}
 
 
+	public void setQuestions(List<QuestionView> questions) {
+		this.questions = questions;
+	}
+	
 	public Integer getSectionId() {
 		return sectionId;
 	}
@@ -278,4 +283,6 @@ public class SurveySectionView implements Serializable {
 		this.sectionWeight = sectionWeight;
 	}
 
+
+	
 }
