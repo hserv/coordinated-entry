@@ -5,28 +5,28 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hserv.coordinatedentry.housingmatching.helper.MatchAlgorithmRequestHelper;
+import com.hserv.coordinatedentry.housingmatching.helper.AutoMatchRequestHelper;
 import com.hserv.coordinatedentry.housingmatching.model.MatchAlgorithmModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
-import com.hserv.coordinatedentry.housingmatching.service.AutoMatchAlgorithmService;
+import com.hserv.coordinatedentry.housingmatching.service.AutoMatchService;
 
 @Component
-public class MatchFacade {
+public class AutoMatchFacade {
 
 	@Autowired
-	MatchAlgorithmRequestHelper matchAlgorithmRequestHelper;
+	AutoMatchRequestHelper autoMatchRequestHelper;
 
 	@Autowired
-	AutoMatchAlgorithmService autoMatchAlgorithmService;
+	AutoMatchService autoMatchService;
 
 	public void createMatch(String userId) {
 		// TODO validate user
 		
 		
-		MatchAlgorithmModel matchAlgoModel = matchAlgorithmRequestHelper.getMatchAlgorithmRequest(userId);
+		MatchAlgorithmModel matchAlgoModel = autoMatchRequestHelper.getMatchAlgorithmRequest(userId);
 
 		// 6. call auto-matching algorithm to get right match
-		List<MatchReservationModel> matchedReservationModels = autoMatchAlgorithmService.execute(matchAlgoModel);
+		List<MatchReservationModel> matchedReservationModels = autoMatchService.execute(matchAlgoModel);
 
 		// 7. check the county
 
