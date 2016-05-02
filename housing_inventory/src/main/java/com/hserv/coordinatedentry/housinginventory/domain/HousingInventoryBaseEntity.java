@@ -1,39 +1,65 @@
 package com.hserv.coordinatedentry.housinginventory.domain;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import org.mariadb.jdbc.internal.common.queryresults.ColumnNameMap;
-
 @MappedSuperclass
-public class HousingInventoryBaseEntity {
+public class HousingInventoryBaseEntity implements Serializable {
 
-	@Column(name="date_updated")
-	private Date dateUpdated;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name="date_created")
-	private Date dateCreated;
-	@Column(name="inactive")
-	private boolean inactive;
+	private LocalDateTime dateCreated;
 	
-	public Date getDateUpdated() {
-		return dateUpdated;
+	@Column(name="date_updated")
+	private LocalDateTime dateUpdated;
+	
+	@Column(name="inactive")
+	private Boolean inactive;
+	
+	
+	public HousingInventoryBaseEntity(){
+		
 	}
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-	public void setDateCreated(Date dateCreated) {
+	
+
+	public HousingInventoryBaseEntity(LocalDateTime dateCreated, LocalDateTime dateUpdated, Boolean inactive) {
+		super();
 		this.dateCreated = dateCreated;
-	}
-	public boolean isInactive() {
-		return inactive;
-	}
-	public void setInactive(boolean inactive) {
+		this.dateUpdated = dateUpdated;
 		this.inactive = inactive;
 	}
 
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public LocalDateTime getDateUpdated() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdated(LocalDateTime dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+
+	public Boolean getInactive() {
+		return inactive;
+	}
+
+	public void setInactive(Boolean inactive) {
+		this.inactive = inactive;
+	}
+	
 }
