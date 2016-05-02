@@ -1,18 +1,22 @@
 package com.hserv.coordinatedentry.view;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.hserv.coordinatedentry.entity.CustomPicklist;
+import com.hserv.coordinatedentry.entity.SurveySection;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
 
 public class QuestionView implements Serializable {
+	
+
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** question_id. */
 	private Integer questionId;
 
 	/** question_name. */
@@ -57,16 +61,16 @@ public class QuestionView implements Serializable {
 	private String userId;
 
 	/** survey_id. */
-	private String surveyId;
+	private Integer surveyId;
 
 	/** The set of Survey_Question. */
-	private List<SurveySectionView> surveySectionView;
+	private SurveySection surveySection;
 
+	private List<CustomPicklist> customPicklist;
 	/**
 	 * Constructor.
 	 */
 	public QuestionView() {
-		this.surveySectionView = new ArrayList<SurveySectionView>();
 	}
 
 
@@ -265,30 +269,16 @@ public class QuestionView implements Serializable {
 	 * @param surveyId
 	 *            survey_id
 	 */
-	public void setSurveyId(String surveyId) {
+
+	
+	public Integer getSurveyId() {
+		return surveyId;
+	}
+
+	public void setSurveyId(Integer surveyId) {
 		this.surveyId = surveyId;
 	}
-
-	/**
-	 * Get the survey_id.
-	 * 
-	 * @return survey_id
-	 */
-	public String getSurveyId() {
-		return this.surveyId;
-	}
-
-	/**
-	 * Add the Survey_Question.
-	 * 
-	 * @param surveySectionView
-	 *            Survey_Question
-	 */
-	public void addSurveySection(SurveySectionView surveySectionView) {
-		this.surveySectionView.add(surveySectionView);
-	}
-
-
+	
 	public Integer getQuestionId() {
 		return questionId;
 	}
@@ -298,14 +288,20 @@ public class QuestionView implements Serializable {
 		this.questionId = questionId;
 	}
 
-
-	public List<SurveySectionView> getSurveySection() {
-		return surveySectionView;
+	public SurveySection getSurveySection() {
+		return surveySection;
 	}
 
+	public void setSurveySection(SurveySection surveySection) {
+		this.surveySection = surveySection;
+	}
 
-	public void setSurveySection(List<SurveySectionView> surveySectionView) {
-		this.surveySectionView = surveySectionView;
+	public List<CustomPicklist> getCustomPicklist() {
+		return customPicklist;
+	}
+
+	public void setCustomPicklist(List<CustomPicklist> customPicklist) {
+		this.customPicklist = customPicklist;
 	}
 
 
@@ -344,5 +340,6 @@ public class QuestionView implements Serializable {
 		}
 		return true;
 	}
+
 
 }

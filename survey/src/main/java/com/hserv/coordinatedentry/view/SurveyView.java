@@ -24,13 +24,13 @@ public class SurveyView implements Serializable {
 	private String surveyOwner;
 
 	/** date_created. */
-	@JsonSerialize(using=JsonDateSerializer.class)
-	@JsonDeserialize(using=JsonDateDeserializer.class)
+	//@JsonSerialize(using=JsonDateSerializer.class)
+	//@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateCreated;
 
 	/** date_updated. */
-	@JsonSerialize(using=JsonDateSerializer.class)
-	@JsonDeserialize(using=JsonDateDeserializer.class)
+	//@JsonSerialize(using=JsonDateSerializer.class)
+	//@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateUpdated;
 
 	/** user_id. */

@@ -36,22 +36,28 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
         <apikit:router config-ref="apiConfig" doc:name="APIkit Router" />
         <exception-strategy ref="apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy" />
     </flow>
-    <flow name="get:/survey/login:apiConfig">
+    <flow name="get:/surveys/all:apiConfig">
+        <set-payload value="#[{&quot;statusCode&quot;:&quot;200&quot;,&quot;status&quot;:&quot;Success&quot;,&quot;statusMessage&quot;:null,&quot;errorCode&quot;:null,&quot;erroMessage&quot;:null,&quot;data&quot;:[{&quot;surveyId&quot;:1,&quot;surveyTitle&quot;:&quot;Sample Survey2&quot;,&quot;surveyOwner&quot;:&quot;HMISlynk&quot;,&quot;dateCreated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;dateUpdated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;userId&quot;:&quot;Vijay&quot;,&quot;locked&quot;:false,&quot;inactive&quot;:false,&quot;copySuveryId&quot;:true,&quot;tagValue&quot;:&quot;Copied from HMIS&quot;,&quot;sectionId&quot;:1,&quot;surveySection&quot;:[{&quot;sectionId&quot;:1,&quot;surveyId&quot;:1,&quot;questionId&quot;:null,&quot;questionParent&quot;:&quot;Parent 1&quot;,&quot;questionChild&quot;:&quot;Child 1&quot;,&quot;required&quot;:&quot;Yes&quot;,&quot;dateCreated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;dateUpdated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;userId&quot;:&quot;Admin User&quot;,&quot;questions&quot;:[{&quot;questionId&quot;:1,&quot;questionName&quot;:&quot;Sample Question 1&quot;,&quot;displayText&quot;:&quot;How frequent you go for vacations&quot;,&quot;questionDataType&quot;:&quot;Text&quot;,&quot;questionGroupId&quot;:&quot;Group1&quot;,&quot;optionsSingleMultipleSelect&quot;:true,&quot;isCopyQuestionId&quot;:false,&quot;hudBoolean&quot;:true,&quot;locked&quot;:false,&quot;inactive&quot;:true,&quot;labelValue&quot;:&quot;HMIS Question&quot;,&quot;dateCreated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;dateUpdated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;userId&quot;:&quot;Admin User&quot;,&quot;surveyId&quot;:1,&quot;customPicklist&quot;:[{&quot;picklistId&quot;:1,&quot;picklistKey&quot;:&quot;Accept&quot;,&quot;picklistValue&quot;:&quot;Accept&quot;,&quot;inactive&quot;:false,&quot;userId&quot;:&quot;Admin&quot;},{&quot;picklistId&quot;:2,&quot;picklistKey&quot;:&quot;Reject&quot;,&quot;picklistValue&quot;:&quot;Reject&quot;,&quot;inactive&quot;:false,&quot;userId&quot;:&quot;Admin&quot;}]}],&quot;sectionDetail&quot;:&quot;Section Details&quot;,&quot;sectionText&quot;:&quot;Section text goes here&quot;,&quot;sectionWeight&quot;:1}]}]}]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/surveys/{surveyId}:apiConfig">
         <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
     </flow>
-    <flow name="get:/survey/surveyType:apiConfig">
+     <flow name="put:/surveys/{surveyId}/update:apiConfig">
         <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
     </flow>
-     <flow name="get:/survey/getSurvey:apiConfig">
+    <flow name="put:/question/{questionId}:apiConfig">
         <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
     </flow>
-    <flow name="get:/survey/nextSurveyQuestions:apiConfig">
+     <flow name="delete:/surveys/delete/{surveyId}:apiConfig">
         <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
     </flow>
-     <flow name="get:/survey/surveyResponseList:apiConfig">
+     <flow name="post:/surveys/create:apiConfig">
         <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
     </flow>
-     <flow name="get:/survey/surveyResponse:apiConfig">
+    <flow name="post:/question/create:apiConfig">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/user/{userId}/surveys/{surveyId}/response:apiConfig">
         <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
     </flow>
     <apikit:mapping-exception-strategy name="apiKitGlobalExceptionMapping">
