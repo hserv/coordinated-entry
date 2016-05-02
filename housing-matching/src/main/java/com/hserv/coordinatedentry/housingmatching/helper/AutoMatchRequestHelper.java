@@ -16,7 +16,7 @@ import com.hserv.coordinatedentry.housingmatching.service.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.service.ProjectEligibilityInfoService;
 
 @Component
-public class MatchAlgorithmRequestHelper {
+public class AutoMatchRequestHelper {
 
 	@Autowired
 	private ProjectEligibilityInfoService projectEligibilityInfoService;

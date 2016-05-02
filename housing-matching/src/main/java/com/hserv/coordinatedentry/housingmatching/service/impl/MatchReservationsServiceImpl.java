@@ -12,6 +12,7 @@ import com.hserv.coordinatedentry.housingmatching.dao.MatchReservationsRepositor
 import com.hserv.coordinatedentry.housingmatching.entity.MatchReservations;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
+import com.hserv.coordinatedentry.housingmatching.service.NotificationService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
 
 @Service
@@ -22,6 +23,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	
 	@Autowired
 	MatchReservationsRepository repository;
+	
+	@Autowired
+	NotificationService notificationService;
 
 	@Override
 	public boolean createMatchReservation(MatchReservationModel matchReservationModel) {
@@ -49,33 +53,56 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 
 	@Override
-	public void deleteAll() {
-		// TODO Auto-generated method stub
-		
+	public boolean deleteAll() {
+		repository.deleteAll();	
+		return true;
 	}
+	
 
 	@Override
-	public List<MatchReservationModel> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<MatchReservationModel> findAll() {
+		return matchReservationTranslator.translate(new HashSet<MatchReservations>(repository.findAll()));
 	}
 
 	@Override
 	public boolean deleteByClientId(String clientId) {
-		// TODO Auto-generated method stub
+		if (repository.exists(UUID.fromString(clientId))) {
+			repository.deleteByEligibleClientsClientId(UUID.fromString(clientId));
+			return true;
+		}
+		repository.deleteByEligibleClientsClientId(UUID.fromString(clientId));
 		return false;
 	}
 
 	@Override
 	public MatchReservationModel findByClientId(String clientId) {
-		// TODO Auto-generated method stub
+		if (repository.exists(UUID.fromString(clientId))) {
+			return matchReservationTranslator.translate(repository.findByEligibleClientsClientId(UUID.fromString(clientId)));
+		}
 		return null;
 	}
 
 	@Override
-	public boolean updateByClientId(MatchReservationModel matchReservationModel) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateByClientId(String clientId, MatchReservationModel matchReservationModel) {
+		MatchReservations matchReservations = matchReservationTranslator.translate(matchReservationModel);
+		if (matchReservations.getEligibleClients() != null)
+			matchReservations.getEligibleClients().setClientId(UUID.fromString(clientId));
+		repository.saveAndFlush(matchReservations);
+		
+		sendNotification(matchReservationModel);
+		return true;
+	}
+
+	private void sendNotification(MatchReservationModel matchReservationModel) {
+		// if input value is approve/yes then only
+		if ("approve".equalsIgnoreCase(matchReservationModel.getMatchStatus())
+				|| "yes".equalsIgnoreCase(matchReservationModel.getMatchStatus())) {
+			// call notification service to notify housing unit/user/client
+			
+			notificationService.notifyHousingUnit();
+			notificationService.notifyUser();
+			notificationService.notifyClient();
+		}
 	}
 	
 	

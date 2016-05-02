@@ -21,7 +21,8 @@ public interface MatchReservationsRepository extends JpaRepository<MatchReservat
 	@Query("update MatchReservations ms set ms.matchStatus = ?1, ms.manualMatch = ?2 where ms.reservationId = ?3")
 	public int updateMatchStatusAndManualMatch(String matchStatus, boolean manualMatch, UUID reservationId);
 	
+	public void deleteByEligibleClientsClientId(UUID clientId);
 	
-	
+	public MatchReservations findByEligibleClientsClientId(UUID clientId);
 	
 }
