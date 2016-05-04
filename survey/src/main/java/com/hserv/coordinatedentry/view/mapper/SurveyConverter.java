@@ -106,16 +106,16 @@ public class SurveyConverter {
 	}
 	
 	
-	/*public List<SurveyView> convertSurveyViewListFromEntityList(List<SurveyView> surveyViewList, List<Survey> surveyList){
+	public List<SurveyView> convertSurveyViewListFromEntityList(List<SurveyView> surveyViewList, List<Survey> surveyList){
 		
 		if(surveyList==null || surveyList.isEmpty()) return surveyViewList;
 		for(Survey survey : surveyList){
 			SurveyView surveyView = new SurveyView();
-			surveyViewList.add(convertSurveyViewFromEntity(surveyView, survey));
+			surveyViewList.add(populateSurveyDescriptionListFromEntity(surveyView, survey));
 		}
 		return surveyViewList;
 		
-	}*/
+	}
 	
 	public SurveyView convertSurveyViewFromEntity(SurveyView surveyView, Survey survey){
 		surveyView.setSurveyId(survey.getSurveyId());
@@ -137,6 +137,15 @@ public class SurveyConverter {
 		return surveyView;
 	}
 	
+	public SurveyView populateSurveyDescriptionListFromEntity(SurveyView surveyView, Survey survey){
+		surveyView.setSurveyId(survey.getSurveyId());
+		surveyView.setSurveyTitle(survey.getSurveyTitle());
+		surveyView.setDateCreated(survey.getDateCreated());
+		surveyView.setDateUpdated(survey.getDateUpdated());
+		
+		return surveyView;
+	}
+	
 	private void populateSurveySectionMappingList(List<SurveySectionView> surveyQuestionViewList, List<SurveySection> surveyQuestionList){
 		//
 		if(surveyQuestionList==null || surveyQuestionList.isEmpty()) return ;
@@ -146,6 +155,7 @@ public class SurveyConverter {
 			surveyQuestionViewList.add(surveySectionView);
 		}
 	}
+	
 	
 	public void populateSurveySectionMapping(SurveySectionView surveySectionView, SurveySection surveySection){
 		surveySectionView.setDateCreated(surveySection.getDateCreated());

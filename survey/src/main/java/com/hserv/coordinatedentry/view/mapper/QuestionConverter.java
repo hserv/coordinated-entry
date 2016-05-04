@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.hserv.coordinatedentry.entity.CustomPicklist;
 import com.hserv.coordinatedentry.entity.Question;
 import com.hserv.coordinatedentry.entity.SurveySection;
 import com.hserv.coordinatedentry.view.QuestionView;
@@ -73,6 +74,23 @@ public class QuestionConverter {
 			questionViewList.add(questionView);
 		}
 		return questionViewList;
+	}
+	
+	public Question setCustomPickListData(Question question) {
+		String QUESTION_DATA_TYPE_BOOLEAN = "boolean";
+		if(question.getQuestionDataType().equals(QUESTION_DATA_TYPE_BOOLEAN)){
+			List<CustomPicklist> customPickList = new ArrayList<CustomPicklist>();
+			CustomPicklist customPicklist2 = new CustomPicklist();
+			customPicklist2.setPicklistValue("Yes");
+			customPickList.add(customPicklist2);
+			
+			CustomPicklist customPicklist3 = new CustomPicklist();
+			customPicklist3.setPicklistValue("No");
+			customPickList.add(customPicklist3);
+			question.setCustomPicklist(customPickList);
+		}
+		
+		return question;
 	}
 
 }

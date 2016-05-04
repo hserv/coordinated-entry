@@ -2,13 +2,9 @@ package com.hserv.coordinatedentry.controller;
 
 import java.util.List;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hserv.coordinatedentry.entity.Survey;
-import com.hserv.coordinatedentry.repository.SurveyRepository;
 import com.hserv.coordinatedentry.service.SurveyHandlerService;
 import com.hserv.coordinatedentry.util.ResponseMessage;
 import com.hserv.coordinatedentry.util.WSResponse;
@@ -42,11 +37,31 @@ public class SurveyRESTImpl {
 	@RequestMapping(method = RequestMethod.GET, value="/all")
 	public @ResponseBody WSResponse getSurveyQuestions(){
 		WSResponse wsRepsSts= null;
-		List<Survey> surveys = null;
+		List<SurveyView> surveys = null;
 
 		try{
 			wsRepsSts = new WSResponse();
 			surveys = surveyHandlerService.getSurveyList();
+			wsRepsSts.setStatusCode("200");
+			wsRepsSts.setStatus("Success");
+			wsRepsSts.setData(surveys);
+		}catch(Exception e){
+			wsRepsSts.setStatus("Failure");
+			wsRepsSts.setErroMessage("Something Wrong in getSurveyQuestions API"+e.getMessage());
+		}
+		return wsRepsSts;
+		
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/allSurvey")
+	public @ResponseBody WSResponse getAllSurveyQuestions(){
+		WSResponse wsRepsSts= null;
+		List<Survey> surveys = null;
+
+		try{
+			wsRepsSts = new WSResponse();
+			surveys = surveyHandlerService.getAllSurveyList();
 			wsRepsSts.setStatusCode("200");
 			wsRepsSts.setStatus("Success");
 			wsRepsSts.setData(surveys);

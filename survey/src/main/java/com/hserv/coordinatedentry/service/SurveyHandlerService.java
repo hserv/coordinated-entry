@@ -1,5 +1,6 @@
 package com.hserv.coordinatedentry.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -46,7 +47,14 @@ public class SurveyHandlerService {
 		this.customPickListRepository =  customPickListRepository;
 	}
 
-	public List<Survey> getSurveyList() {
+	public List<SurveyView> getSurveyList() {
+		List<Survey> surveyList = surveyRepository.findAll();
+		List<SurveyView> surveyViewList = new ArrayList<SurveyView>(); 
+		surveyViewList = surveyConverter.convertSurveyViewListFromEntityList(surveyViewList, surveyList);
+		return surveyViewList;
+	}
+	
+	public List<Survey> getAllSurveyList() {
 		List<Survey> surveyList = surveyRepository.findAll();
 		//List<SurveyView> surveyViewList = new ArrayList<SurveyView>(); 
 		//surveyConverter.convertSurveyViewListFromEntityList(surveyViewList, surveyList);
@@ -59,10 +67,10 @@ public class SurveyHandlerService {
 		surveyConverter.convertSurveyViewFromEntity(surveyView, survey);
 		return survey;
 	}
-	public Survey getSurveyByUserId(String userId,Integer surveyId) {
+	public Survey getSurveyBySurveyIdAndUserId(Integer surveyId, String userId) {
 		Survey survey = surveyRepository.findBySurveyIdAndUserId(surveyId,userId);
-		/*SurveyView surveyView = new SurveyView(); 
-		surveyConverter.convertSurveyViewFromEntity(surveyView, survey);*/
+		SurveyView surveyView = new SurveyView(); 
+		surveyConverter.convertSurveyViewFromEntity(surveyView, survey);
 		return survey;
 	}
 		

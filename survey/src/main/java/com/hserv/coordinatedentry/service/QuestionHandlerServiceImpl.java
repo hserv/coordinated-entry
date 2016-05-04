@@ -33,16 +33,15 @@ public class QuestionHandlerServiceImpl implements QuestionHandlerService {
 	}
 	
 	@Override
-	public ResponseMessage createQuestion(QuestionView questionView) {
+	public Question createQuestion(Question question) {
 		try {
 
-			Question question = new Question();
-			surveyConverter.populateSurveyQuestionEntity(questionView,
-					question, null);
-			questionBankRepository.save(question);
-			return ResponseMessage.SUCCESS;
+			//Question question = new Question();
+			Question result = questionConverter.setCustomPickListData(question);
+			Question questionBean = questionBankRepository.save(result);
+			return questionBean;
 		} catch (RuntimeException exception) {
-			return ResponseMessage.FAILURE;
+			return new Question();
 		}
 	}
 
