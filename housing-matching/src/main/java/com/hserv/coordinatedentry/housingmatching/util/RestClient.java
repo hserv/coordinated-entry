@@ -16,5 +16,4 @@ public class RestClient {
 		//RestTemplate restTemplate = new RestTemplate();
 		return restTemplate.getForObject(url, responseType);
 	}
-
 }

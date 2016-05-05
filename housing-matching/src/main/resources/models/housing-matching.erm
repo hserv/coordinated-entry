@@ -135,7 +135,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2016-03-25 19:17:20</creation_date>
-			<updated_date>2016-04-25 16:48:59</updated_date>
+			<updated_date>2016-05-02 12:55:21</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -643,7 +643,7 @@
 			<complex_unique_key_list>
 			</complex_unique_key_list>
 			<table_properties>
-				<schema>ces</schema>
+				<schema>housing_match</schema>
 				<without_oids>true</without_oids>
 			</table_properties>
 		</table>
@@ -875,7 +875,7 @@
 					<logical_name></logical_name>
 					<physical_name></physical_name>
 					<type>varchar</type>
-					<constraint>CHECK spdat_label in (&apos;youth&apos;,&apos;single adult&apos;,&apos;family&apos;))</constraint>
+					<constraint>CHECK (spdat_label in (&apos;youth&apos;,&apos;single adult&apos;,&apos;family&apos;))</constraint>
 					<default_value></default_value>
 					<auto_increment>false</auto_increment>
 					<foreign_key>false</foreign_key>
@@ -906,7 +906,7 @@
 			<complex_unique_key_list>
 			</complex_unique_key_list>
 			<table_properties>
-				<schema>ces</schema>
+				<schema>housing_match</schema>
 				<without_oids>true</without_oids>
 			</table_properties>
 		</table>
@@ -1390,7 +1390,7 @@
 			<complex_unique_key_list>
 			</complex_unique_key_list>
 			<table_properties>
-				<schema>ces</schema>
+				<schema>housing_match</schema>
 				<without_oids>true</without_oids>
 			</table_properties>
 		</table>

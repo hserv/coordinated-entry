@@ -24,4 +24,6 @@ public interface MatchReservationsService {
 	public MatchReservationModel findByClientId(String clientId);
 	
 	public boolean updateByClientId(String clientId, MatchReservationModel matchReservationModel);
+	
+	public void createMatch();
  }

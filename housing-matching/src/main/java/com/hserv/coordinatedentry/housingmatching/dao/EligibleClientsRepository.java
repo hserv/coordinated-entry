@@ -33,7 +33,7 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClients
 	
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClients as ec set ec.surveyScore = 0 where ec.clientId = ?1")
-	public void deleteScoreByClientId(String clientId);
+	public void deleteScoreByClientId(UUID clientId);
 	
 	@Transactional(readOnly = false)
 	@Modifying(clearAutomatically=true)

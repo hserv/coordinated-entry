@@ -17,12 +17,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "match_reservations", schema = "ces")
+@Table(name = "match_reservations", schema = "housing_match")
 public class MatchReservations implements java.io.Serializable {
 
 	private UUID reservationId;
 	private EligibleClients eligibleClients;
-	private HousingInventory housingInventory;
 	private String noteId;
 	private Date matchDate;
 	private String matchStatus;
@@ -33,25 +32,24 @@ public class MatchReservations implements java.io.Serializable {
 	private Date dateCreated;
 	private Date dateUpdated;
 	private String userId;
+	private UUID housingUnitId;
 	private Set<Note> notes = new HashSet<>(0);
 
 	public MatchReservations() {
 	}
 
-	public MatchReservations(UUID reservationId, EligibleClients eligibleClients,
-			HousingInventory housingInventory) {
+	public MatchReservations(UUID reservationId, EligibleClients eligibleClients, UUID housingUnitId) {
 		this.reservationId = reservationId;
 		this.eligibleClients = eligibleClients;
-		this.housingInventory = housingInventory;
+		this.housingUnitId = housingUnitId;
 	}
 
-	public MatchReservations(UUID reservationId, EligibleClients eligibleClients,
-			HousingInventory housingInventory, String noteId, Date matchDate, String matchStatus,
-			Integer reservationAdults, Integer reservationChildren, Boolean manualMatch, Boolean inactive,
-			Date dateCreated, Date dateUpdated, String userId, Set<Note> notes) {
+	public MatchReservations(UUID reservationId, EligibleClients eligibleClients, String noteId, Date matchDate,
+			String matchStatus, Integer reservationAdults, Integer reservationChildren, Boolean manualMatch,
+			Boolean inactive, Date dateCreated, Date dateUpdated, String userId, UUID housingUnitId,
+			Set<Note> notes) {
 		this.reservationId = reservationId;
 		this.eligibleClients = eligibleClients;
-		this.housingInventory = housingInventory;
 		this.noteId = noteId;
 		this.matchDate = matchDate;
 		this.matchStatus = matchStatus;
@@ -62,10 +60,12 @@ public class MatchReservations implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 		this.dateUpdated = dateUpdated;
 		this.userId = userId;
+		this.housingUnitId = housingUnitId;
 		this.notes = notes;
 	}
 
 	@Id
+
 	@Column(name = "reservation_id", unique = true, nullable = false)
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
 	public UUID getReservationId() {
@@ -84,16 +84,6 @@ public class MatchReservations implements java.io.Serializable {
 
 	public void setEligibleClients(EligibleClients eligibleClients) {
 		this.eligibleClients = eligibleClients;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "housing_unit_id", nullable = false)
-	public HousingInventory getHousingInventory() {
-		return this.housingInventory;
-	}
-
-	public void setHousingInventory(HousingInventory housingInventory) {
-		this.housingInventory = housingInventory;
 	}
 
 	@Column(name = "note_id")
@@ -187,6 +177,15 @@ public class MatchReservations implements java.io.Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	@Column(name = "housing_unit_id", nullable = false)
+	public UUID getHousingUnitId() {
+		return this.housingUnitId;
+	}
+
+	public void setHousingUnitId(UUID housingUnitId) {
+		this.housingUnitId = housingUnitId;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "matchReservations")

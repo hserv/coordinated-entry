@@ -1,28 +1,25 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "eligible_clients", schema = "ces")
+@Table(name = "eligible_clients", schema = "housing_match")
 public class EligibleClients implements java.io.Serializable {
 
 	private UUID clientId;
-	private ClientInfo clientInfo;
 	private String surveyType;
 	private Integer surveyScore;
 	private String programType;
@@ -34,13 +31,13 @@ public class EligibleClients implements java.io.Serializable {
 	public EligibleClients() {
 	}
 
-	public EligibleClients(ClientInfo clientInfo) {
-		this.clientInfo = clientInfo;
+	public EligibleClients(UUID clientId) {
+		this.clientId = clientId;
 	}
 
-	public EligibleClients(ClientInfo clientInfo, String surveyType, Integer surveyScore, String programType,
+	public EligibleClients(UUID clientId, String surveyType, Integer surveyScore, String programType,
 			Boolean matched, Date surveyDate, String spdatLabel, Set<MatchReservations> matchReservationses) {
-		this.clientInfo = clientInfo;
+		this.clientId = clientId;
 		this.surveyType = surveyType;
 		this.surveyScore = surveyScore;
 		this.programType = programType;
@@ -51,6 +48,7 @@ public class EligibleClients implements java.io.Serializable {
 	}
 
 	@Id
+
 	@Column(name = "client_id", unique = true, nullable = false)
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
 	public UUID getClientId() {
@@ -59,16 +57,6 @@ public class EligibleClients implements java.io.Serializable {
 
 	public void setClientId(UUID clientId) {
 		this.clientId = clientId;
-	}
-
-	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
-	public ClientInfo getClientInfo() {
-		return this.clientInfo;
-	}
-
-	public void setClientInfo(ClientInfo clientInfo) {
-		this.clientInfo = clientInfo;
 	}
 
 	@Column(name = "survey_type")
@@ -108,7 +96,7 @@ public class EligibleClients implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "survey_date")
+	@Column(name = "survey_date", length = 13)
 	public Date getSurveyDate() {
 		return this.surveyDate;
 	}
@@ -126,8 +114,7 @@ public class EligibleClients implements java.io.Serializable {
 		this.spdatLabel = spdatLabel;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eligibleClients" , cascade=CascadeType.ALL)
-	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eligibleClients")
 	public Set<MatchReservations> getMatchReservationses() {
 		return this.matchReservationses;
 	}
