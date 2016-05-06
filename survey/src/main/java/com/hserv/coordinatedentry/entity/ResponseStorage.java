@@ -2,11 +2,16 @@ package com.hserv.coordinatedentry.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Model class of Response_Storage.
@@ -20,36 +25,57 @@ public class ResponseStorage implements Serializable {
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** response_value. */
-	private String responseValue;
-
-	/** response_subassessment. */
-	private String responseSubassessment;
-
 	@Id
 	// @GeneratedValue(strategy=GenerationType.SEQUENCE,
 	// generator="client_Id_seq")
 	// @SequenceGenerator(name="client_Id_seq", sequenceName="client_Id_seq")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer clientId;
+	private Integer responseId;
 
-	/** app_id. */
-	private String appId;
-
-	/** effective_date. */
-	private Date effectiveDate;
-
-	/** date_created. */
+	@OneToMany(mappedBy="responseStorage", cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<QuestionResponse> questionResponseList;
+	
+	private Integer surveyId;
+	private String clientId;
 	private Date dateCreated;
-
-	/** date_updated. */
 	private Date dateUpdated;
-
-	/** user_id. */
 	private String userId;
 	
-	/** section_id. */
-	private String sectionId;
+	/** response_value. *//*
+	private String responseValue;
+
+	*//** response_subassessment. *//*
+	private String responseSubassessment;*/
+	
+	/** client_id. */
+	
+	
+	/** app_id. *//*
+	private String appId;
+
+	*//** effective_date. *//*
+	private Date effectiveDate;*/
+
+	
+	
+	/** response_type_id. *//*
+	@ManyToOne
+	@JoinColumn(name="response_type_fk_id")
+	@JsonBackReference
+	private Integer responseTypeId;
+	
+	*//** section_id. *//*
+	@ManyToOne
+	@JoinColumn(name="section_fk_id")
+	@JsonBackReference
+	private Integer sectionId;
+	
+	*//** question_id. *//*
+	@ManyToOne
+	@JoinColumn(name="question_fk_id")
+	@JsonBackReference
+	private Integer questionId;*/
 
 	/**
 	 * Constructor.
@@ -57,126 +83,36 @@ public class ResponseStorage implements Serializable {
 	public ResponseStorage() {
 	}
 
-	/**
-	 * Set the response_value.
-	 * 
-	 * @param responseValue
-	 *            response_value
-	 */
-	public void setResponseValue(String responseValue) {
-		this.responseValue = responseValue;
+	public Integer getResponseId() {
+		return responseId;
 	}
 
-	/**
-	 * Get the response_value.
-	 * 
-	 * @return response_value
-	 */
-	public String getResponseValue() {
-		return this.responseValue;
+	public void setResponseId(Integer responseId) {
+		this.responseId = responseId;
 	}
 
-	/**
-	 * Set the response_subassessment.
-	 * 
-	 * @param responseSubassessment
-	 *            response_subassessment
-	 */
-	public void setResponseSubassessment(String responseSubassessment) {
-		this.responseSubassessment = responseSubassessment;
-	}
-
-	/**
-	 * Get the response_subassessment.
-	 * 
-	 * @return response_subassessment
-	 */
-	public String getResponseSubassessment() {
-		return this.responseSubassessment;
-	}
-
-	public Integer getClientId() {
+	public String getClientId() {
 		return clientId;
 	}
 
-	public void setClientId(Integer clientId) {
+	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
 
-	/**
-	 * Set the app_id.
-	 * 
-	 * @param appId
-	 *            app_id
-	 */
-	public void setAppId(String appId) {
-		this.appId = appId;
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
-	/**
-	 * Get the app_id.
-	 * 
-	 * @return app_id
-	 */
-	public String getAppId() {
-		return this.appId;
-	}
-
-	/**
-	 * Set the effective_date.
-	 * 
-	 * @param effectiveDate
-	 *            effective_date
-	 */
-	public void setEffectiveDate(Date effectiveDate) {
-		this.effectiveDate = effectiveDate;
-	}
-
-	/**
-	 * Get the effective_date.
-	 * 
-	 * @return effective_date
-	 */
-	public Date getEffectiveDate() {
-		return this.effectiveDate;
-	}
-
-	/**
-	 * Set the date_created.
-	 * 
-	 * @param dateCreated
-	 *            date_created
-	 */
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
-	/**
-	 * Get the date_created.
-	 * 
-	 * @return date_created
-	 */
-	public Date getDateCreated() {
-		return this.dateCreated;
+	public Date getDateUpdated() {
+		return dateUpdated;
 	}
 
-	/**
-	 * Set the date_updated.
-	 * 
-	 * @param dateUpdated
-	 *            date_updated
-	 */
 	public void setDateUpdated(Date dateUpdated) {
 		this.dateUpdated = dateUpdated;
-	}
-
-	/**
-	 * Get the date_updated.
-	 * 
-	 * @return date_updated
-	 */
-	public Date getDateUpdated() {
-		return this.dateUpdated;
 	}
 
 	public String getUserId() {
@@ -187,12 +123,20 @@ public class ResponseStorage implements Serializable {
 		this.userId = userId;
 	}
 
-	public String getSectionId() {
-		return sectionId;
+    public Integer getSurveyId() {
+		return surveyId;
 	}
 
-	public void setSectionId(String sectionId) {
-		this.sectionId = sectionId;
+	public void setSurveyId(Integer surveyId) {
+		this.surveyId = surveyId;
+	}
+
+	public List<QuestionResponse> getQuestionResponseList() {
+		return questionResponseList;
+	}
+
+	public void setQuestionResponseList(List<QuestionResponse> questionResponseList) {
+		this.questionResponseList = questionResponseList;
 	}
 
 }
