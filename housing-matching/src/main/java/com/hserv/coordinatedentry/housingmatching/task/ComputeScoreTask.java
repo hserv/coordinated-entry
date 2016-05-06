@@ -2,6 +2,7 @@ package com.hserv.coordinatedentry.housingmatching.task;
 
 import java.util.List;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -28,19 +29,19 @@ public class ComputeScoreTask extends TimerTask {
 	public void run() {
 		if (deferredResult.isSetOrExpired()) {
 		} else {
-			processServeyResponse(clientId);
+			processSurveyResponse(clientId);
 			deferredResult.setResult(new String("{\"triggered\": \"ok\"}\""));
 		}
 	}
 
-	private List<SurveySectionModel> processServeyResponse(String clientID) {
+	private List<SurveySectionModel> processSurveyResponse(String clientID) {
 		
 		//call survey MS (Use RestTemplate for calling)
-		List<SurveySectionModel> surveyResponseModels = surveyMSService.fetchServeyResponse(clientID);
+		List<SurveySectionModel> surveyResponseModels = surveyMSService.fetchSurveyResponse(clientID);
 		
 		//total the score
 		int scoreTotal = totalScoreOnSurveyResponse(surveyResponseModels);
-		eligibleClientService.updateEligibleClientScore(clientID, scoreTotal);
+		eligibleClientService.updateEligibleClientScore(UUID.fromString(clientID), scoreTotal);
 		//find the category based upon score like TPH, RRH
 		//set survey date to dto or entity object
 		//add other criterion as well

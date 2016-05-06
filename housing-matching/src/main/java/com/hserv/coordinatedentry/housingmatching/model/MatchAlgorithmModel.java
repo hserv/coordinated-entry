@@ -4,19 +4,18 @@ import java.util.List;
 
 public class MatchAlgorithmModel {
 
-	private List<ProjectEligibilityInfoModel> projectEliginilityInfoModels;
+	//private List<ProjectEligibilityInfoModel> projectEligibilityInfoModels;
 	private List<CommunityPreferenceInfoModel> communityPreferenceModels;
 	private List<HousingInventoryModel> housingInventoryModels;
 	private List<EligibleClientModel> eligibleClientModels;
-	private List<RuleModel> ruleModels;
 
-	public List<ProjectEligibilityInfoModel> getProjectEliginilityInfoModels() {
-		return projectEliginilityInfoModels;
+	/*public List<ProjectEligibilityInfoModel> getProjectEligibilityInfoModels() {
+		return projectEligibilityInfoModels;
 	}
 
-	public void setProjectEliginilityInfoModels(List<ProjectEligibilityInfoModel> projectEliginilityInfoModels) {
-		this.projectEliginilityInfoModels = projectEliginilityInfoModels;
-	}
+	public void setProjectEliginilityInfoModels(List<ProjectEligibilityInfoModel> projectEligibilityInfoModels) {
+		this.projectEligibilityInfoModels = projectEligibilityInfoModels;
+	}*/
 
 	public List<CommunityPreferenceInfoModel> getCommunityPreferenceModels() {
 		return communityPreferenceModels;
@@ -40,14 +39,6 @@ public class MatchAlgorithmModel {
 
 	public void setEligibleClientModels(List<EligibleClientModel> eligibleClientModels) {
 		this.eligibleClientModels = eligibleClientModels;
-	}
-
-	public List<RuleModel> getRuleModels() {
-		return ruleModels;
-	}
-
-	public void setRuleModels(List<RuleModel> ruleModels) {
-		this.ruleModels = ruleModels;
 	}
 
 }

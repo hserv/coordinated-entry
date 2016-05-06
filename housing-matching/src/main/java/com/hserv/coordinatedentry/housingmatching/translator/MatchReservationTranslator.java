@@ -36,8 +36,6 @@ public class MatchReservationTranslator {
 			return null;
 		}
 		Iterator<MatchReservationModel> modelItr = matchReservationsModels.iterator();
-		Iterator<MatchReservations> dbItr = matchReservations.iterator();
-
 		while (modelItr.hasNext()) {
 			matchReservations.add(translate(modelItr.next()));
 		}
