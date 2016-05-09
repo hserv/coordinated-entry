@@ -6,14 +6,11 @@ DROP TABLE IF EXISTS housing_match.match_reservations;
 DROP TABLE IF EXISTS housing_match.eligible_clients;
 
 
-
-
 /* Create Tables */
 
 CREATE TABLE housing_match.eligible_clients
 (
 	client_id uuid NOT NULL,
-	-- Like spdat or custome assessment.
 	survey_type varchar,
 	survey_score int,
 	program_type varchar,
@@ -29,7 +26,7 @@ CREATE TABLE housing_match.match_reservations
 	reservation_id uuid NOT NULL,
 	note_id varchar,
 	match_date date,
-	match_status varchar CHECK (match_status in ('accepted','rejected','nodetermination')),
+	match_status varchar CHECK (match_status in ('accepted','rejected')),
 	reservation_adults int,
 	reservation_children int,
 	manual_match boolean,
@@ -70,11 +67,4 @@ ALTER TABLE housing_match.note
 	ON DELETE RESTRICT
 ;
 
-
-
-/* Comments */
-
-COMMENT ON COLUMN housing_match.eligible_clients.survey_type IS 'Like spdat or custome assessment.';
-
-
-
+commit;
