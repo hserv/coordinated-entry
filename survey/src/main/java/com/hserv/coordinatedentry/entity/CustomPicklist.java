@@ -7,6 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Model class of Custom_Picklist.
@@ -39,14 +44,20 @@ public class CustomPicklist implements Serializable {
 	private Boolean inactive;
 
 	/** date_created. */
+	@JsonIgnore
 	private Date dateCreated;
 
 	/** date_updated. */
+	@JsonIgnore
 	private Date dateUpdated;
 
 	/** user_id. */
 	private String userId;
 
+	@ManyToOne
+	@JoinColumn(name="question_fk_id")
+	@JsonBackReference
+	private Question question;
 	/**
 	 * Constructor.
 	 */
@@ -151,6 +162,14 @@ public class CustomPicklist implements Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public Question getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(Question question) {
+		this.question = question;
 	}
 
 }

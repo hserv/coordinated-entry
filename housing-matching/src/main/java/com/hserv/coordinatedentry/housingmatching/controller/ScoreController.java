@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import com.hserv.coordinatedentry.housingmatching.facade.SurveyScoreFacade;
-import com.hserv.coordinatedentry.housingmatching.facade.SurveyTotallingFacade;
-import com.hserv.coordinatedentry.housingmatching.model.SurveyScoreModel;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 
 @RestController
 @ResponseBody
@@ -24,21 +23,33 @@ import com.hserv.coordinatedentry.housingmatching.model.SurveyScoreModel;
 public class ScoreController {
 
 	@Autowired
-	SurveyScoreFacade surveyScoreFacade;
+	SurveyScoreService surveyScoreService;
 	
-	@Autowired
-	SurveyTotallingFacade surveyTotallingFacade;
-
 	/**
 	 * Trigger score totalling via POST. An Empty body request would suffice.
 	 * 
 	 * 
 	 */
+	
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public DeferredResult<String> calculateScore() {
+		DeferredResult<String> deferredResult = new DeferredResult<>();
+		try {
+			surveyScoreService.calculateScore();
+			deferredResult.setResult("triggered: 'ok'");
+		} catch (Exception ex) {
+			deferredResult.setResult(new String("{\"failed\": \"true\"}\""));
+			ex.printStackTrace();
+		}
+		return deferredResult;
+	}
+	
+	
 	@RequestMapping(value = "{id}", method = RequestMethod.POST)
 	public DeferredResult<String> createScore(@PathVariable String id) {
 		DeferredResult<String> deferredResult = new DeferredResult<>();
 		try {
-			surveyTotallingFacade.updateClientScore(id ,deferredResult);
+			surveyScoreService.updateClientScore(id ,deferredResult);
 		} catch (Exception ex) {
 			deferredResult.setResult(new String("{\"failed\": \"true\"}\""));
 		}
@@ -50,8 +61,8 @@ public class ScoreController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public List<SurveyScoreModel> getScores() {
-		return surveyScoreFacade.getScores();
+	public List<EligibleClientModel> getScores() {
+		return surveyScoreService.getScores();
 	}
 
 	/**
@@ -63,7 +74,7 @@ public class ScoreController {
 	public ResponseEntity<String> deleteScores() {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			surveyScoreFacade.deleteScores();
+			surveyScoreService.deleteScores();
 			responseEntity = ResponseEntity.ok("success");
 		} catch (Exception ex) {
 			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
@@ -79,7 +90,7 @@ public class ScoreController {
 	public ResponseEntity<String> getClientById(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			int score = surveyScoreFacade.getScoreByClientId(id);
+			int score = surveyScoreService.getScoreByClientId(id);
 			responseEntity = ResponseEntity.ok("score :" + String.valueOf(score));
 		} catch (Exception ex) {
 			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
@@ -96,7 +107,7 @@ public class ScoreController {
 	public ResponseEntity<String> deleteClientById(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			surveyScoreFacade.deleteScoreByClientId(id);
+			surveyScoreService.deleteScoreByClientId(id);
 			responseEntity = ResponseEntity.ok("Score Deleted");
 		} catch (Exception ex) {
 			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
@@ -113,7 +124,7 @@ public class ScoreController {
 	public ResponseEntity<String> updateClientById(@PathVariable String id, @RequestBody int score) {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			surveyScoreFacade.updateScoreByClientId(score, id);
+			surveyScoreService.updateScoreByClientId(score, id);
 			responseEntity = ResponseEntity.ok("Score Updated");
 		} catch (Exception ex) {
 			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);

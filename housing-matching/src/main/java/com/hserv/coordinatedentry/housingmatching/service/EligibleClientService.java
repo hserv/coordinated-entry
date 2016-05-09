@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 
@@ -8,13 +9,13 @@ public interface EligibleClientService {
 
 	List<EligibleClientModel> getEligibleClients(int num);
 
-	EligibleClientModel getEligibleClientDetail(String clientID);
+	EligibleClientModel getEligibleClientDetail(UUID clientID);
 
 	List<EligibleClientModel> getEligibleClients();
 
-	boolean updateEligibleClient(String clientID , EligibleClientModel eligibleClientModel);
+	boolean updateEligibleClient(UUID clientID , EligibleClientModel eligibleClientModel);
 
-	boolean deleteEligibleClientById(String clientID);
+	boolean deleteEligibleClientById(UUID clientID);
 	
 	boolean createEligibleClient(EligibleClientModel eligibleClientModel);
 	
@@ -24,5 +25,5 @@ public interface EligibleClientService {
 	
 	boolean createEligibleClients(List<EligibleClientModel> eligibleClientModels);
 
-	boolean updateEligibleClientScore(String clientID, int scoreTotal);
+	boolean updateEligibleClientScore(UUID clientID, int scoreTotal);
 }

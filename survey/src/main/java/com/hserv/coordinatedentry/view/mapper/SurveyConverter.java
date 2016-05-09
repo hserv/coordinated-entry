@@ -36,82 +36,86 @@ public class SurveyConverter {
 		return survey;
 	}
 	
-	public List<SurveySection> populateSurveySectionEntityList(Survey survey, List<SurveySectionView> surveyQuestionViewList){
+	public List<SurveySection> populateSurveySectionEntityList(Survey survey, List<SurveySectionView> surveySectionViewList){
 		
-		List<SurveySection> surveyQuestionsList = new ArrayList<>();
+		List<SurveySection> surveySectionList = new ArrayList<>();
 		
-		if(surveyQuestionViewList!=null && !surveyQuestionViewList.isEmpty())
-			for (Iterator iterator = surveyQuestionViewList.iterator(); iterator.hasNext();) {
+		if(surveySectionViewList!=null && !surveySectionViewList.isEmpty())
+			for (Iterator iterator = surveySectionViewList.iterator(); iterator.hasNext();) {
 				SurveySectionView surveySectionView = (SurveySectionView) iterator.next();
 				
-				SurveySection surveySection = new SurveySection();
-				
-				populateSurveySectionEntity(surveySection, surveySectionView, survey);
-				surveyQuestionsList.add(surveySection);
+				SurveySection surveySection = populateSurveySectionEntity( surveySectionView, survey);
+				surveySectionList.add(surveySection);
 			}
 		
-		return surveyQuestionsList;
+		return surveySectionList;
 	}
 	
-	public SurveySection populateSurveySectionEntity(SurveySection surveySection, SurveySectionView surveySectionView, Survey survey){
-		
-				surveySection.setDateCreated(surveySectionView.getDateCreated());
-				surveySection.setDateUpdated(surveySectionView.getDateUpdated());
-				surveySection.setSectionId(surveySectionView.getSectionId());
-				surveySection.setSurvey(survey);
-				surveySection.setQuestionChild(surveySectionView.getQuestionChild());
-				surveySection.setQuestionParent(surveySectionView.getQuestionParent());
-				surveySection.setRequired(surveySectionView.getRequired());
-				surveySection.setUserId(surveySectionView.getUserId());
-				surveySection.setQuestionId(surveySectionView.getQuestionId());
-				surveySection.setSurveyId(survey.getSurveyId());
-				surveySection.setSectionDetail(surveySectionView.getSectionDetail());
-				surveySection.setSectionText(surveySectionView.getSectionText());
-				surveySection.setSectionWeight(surveySectionView.getSectionWeight());
-				surveySection.setQuestions(populateSurveyQuestionEntityList(surveySectionView, surveySection));
-				return surveySection;
+	public SurveySection populateSurveySectionEntity( SurveySectionView surveySectionView, Survey survey){
+		SurveySection surveySection = new SurveySection();
+		return populateSurveySectionEntity( surveySection , surveySectionView, survey);
 	}
+	
+	
+	public SurveySection populateSurveySectionEntity(SurveySection surveySection ,  SurveySectionView surveySectionView, Survey survey){
+		surveySection.setDateCreated(surveySectionView.getDateCreated());
+		surveySection.setDateUpdated(surveySectionView.getDateUpdated());
+		surveySection.setSectionId(surveySectionView.getSectionId());
+		surveySection.setSurvey(survey);
+		surveySection.setQuestionChild(surveySectionView.getQuestionChild());
+		surveySection.setQuestionParent(surveySectionView.getQuestionParent());
+		surveySection.setRequired(surveySectionView.getRequired());
+		surveySection.setUserId(surveySectionView.getUserId());
+		surveySection.setQuestionId(surveySectionView.getQuestionId());
+		surveySection.setSurveyId(survey.getSurveyId());
+		surveySection.setSectionDetail(surveySectionView.getSectionDetail());
+		surveySection.setSectionText(surveySectionView.getSectionText());
+		surveySection.setSectionWeight(surveySectionView.getSectionWeight());
+		//surveySection.setQuestions(populateSurveyQuestionEntityList(surveySectionView, surveySection));
+		return surveySection;
+}
 	
 	public List<Question> populateSurveyQuestionEntityList(SurveySectionView surveySectionView, SurveySection surveySection){
 		List<Question> questions = new ArrayList<>();
 		for (QuestionView questionView : surveySectionView.getQuestions()) {
 			Question question = new Question();
-			populateSurveyQuestionEntity(surveySection, question);
+			populateSurveyQuestionEntity(questionView, question, surveySection);
 			questions.add(question);
 		}
 		return questions;
-		
 	}
-	public Question populateSurveyQuestionEntity(SurveySection surveySection, Question question){
+	public Question populateSurveyQuestionEntity(QuestionView questionView, Question question, SurveySection surveySection){
 		question.setDateCreated(new Date());
 		question.setDateUpdated(new Date());
-		question.setDisplayText("How frequent you go for vacations");
-		question.setHudBoolean(true);
-		question.setInactive(true);
-		question.setIsCopyQuestionId(false);
-		question.setLabelValue("HMIS Question");
-		question.setLocked(false);
-		question.setOptionsSingleMultipleSelect(true);
-		question.setQuestionDataType("Text");
-		question.setQuestionGroupId("Group1");
-		question.setQuestionName("Sample Question 1");
+		question.setDisplayText(questionView.getDisplayText());
+		question.setHudBoolean(questionView.getHudBoolean());
+		question.setInactive(questionView.getInactive());
+		question.setIsCopyQuestionId(questionView.getIsCopyQuestionId());
+		question.setLabelValue(questionView.getLabelValue());
+		question.setLocked(questionView.getLocked());
+		question.setOptionsSingleMultipleSelect(questionView.getOptionsSingleMultipleSelect());
+		question.setQuestionDataType(questionView.getQuestionDataType());
+		question.setQuestionGroupId(questionView.getQuestionGroupId());
+		question.setQuestionName(questionView.getQuestionName());
 		//question.setSurveyQuestion(surveyQuestions);
-		question.setUserId("Admin User");
-		//question.setSurveyId(surveySection.getSurveyId());
+		question.setUserId(questionView.getUserId());
+		question.setSurveyId(questionView.getSurveyId());
 		question.setSurveySection(surveySection);
+		//question.getCustomPicklist().addAll(questionView.getCustomPicklist());
 		return question;
 	}
 	
-	/*public List<SurveyView> convertSurveyViewListFromEntityList(List<SurveyView> surveyViewList, List<Survey> surveyList){
+	
+	public List<SurveyView> convertSurveyViewListFromEntityList(List<SurveyView> surveyViewList, List<Survey> surveyList){
 		
 		if(surveyList==null || surveyList.isEmpty()) return surveyViewList;
 		for(Survey survey : surveyList){
 			SurveyView surveyView = new SurveyView();
-			surveyViewList.add(convertSurveyViewFromEntity(surveyView, survey));
+			surveyViewList.add(populateSurveyDescriptionListFromEntity(surveyView, survey));
 		}
 		return surveyViewList;
 		
-	}*/
+	}
 	
 	public SurveyView convertSurveyViewFromEntity(SurveyView surveyView, Survey survey){
 		surveyView.setSurveyId(survey.getSurveyId());
@@ -133,6 +137,15 @@ public class SurveyConverter {
 		return surveyView;
 	}
 	
+	public SurveyView populateSurveyDescriptionListFromEntity(SurveyView surveyView, Survey survey){
+		surveyView.setSurveyId(survey.getSurveyId());
+		surveyView.setSurveyTitle(survey.getSurveyTitle());
+		surveyView.setDateCreated(survey.getDateCreated());
+		surveyView.setDateUpdated(survey.getDateUpdated());
+		
+		return surveyView;
+	}
+	
 	private void populateSurveySectionMappingList(List<SurveySectionView> surveyQuestionViewList, List<SurveySection> surveyQuestionList){
 		//
 		if(surveyQuestionList==null || surveyQuestionList.isEmpty()) return ;
@@ -142,6 +155,7 @@ public class SurveyConverter {
 			surveyQuestionViewList.add(surveySectionView);
 		}
 	}
+	
 	
 	public void populateSurveySectionMapping(SurveySectionView surveySectionView, SurveySection surveySection){
 		surveySectionView.setDateCreated(surveySection.getDateCreated());

@@ -4,20 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.hserv.coordinatedentry.entity.Question;
-import com.hserv.coordinatedentry.entity.Survey;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
 
 public class SurveySectionView implements Serializable {
@@ -57,7 +44,7 @@ public class SurveySectionView implements Serializable {
 	
 
 	/** Survey. */
-	private Survey survey;
+	private SurveyView survey;
 
 	/** Question. */
 	private List<QuestionView> questions;
@@ -209,24 +196,17 @@ public class SurveySectionView implements Serializable {
 		return this.userId;
 	}
 
-	/**
-	 * Set the Survey.
-	 * 
-	 * @param survey
-	 *            Survey
-	 */
-	public void setSurvey(Survey survey) {
+	
+
+	public SurveyView getSurvey() {
+		return survey;
+	}
+
+
+	public void setSurvey(SurveyView survey) {
 		this.survey = survey;
 	}
 
-	/**
-	 * Get the Survey.
-	 * 
-	 * @return Survey
-	 */
-	public Survey getSurvey() {
-		return this.survey;
-	}
 
 	/**
 	 * Set the Question.

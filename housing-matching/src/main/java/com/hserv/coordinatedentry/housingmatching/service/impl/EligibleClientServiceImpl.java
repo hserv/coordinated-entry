@@ -29,7 +29,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	public List<EligibleClientModel> getEligibleClients(int num) {
 		List<EligibleClientModel> eligibleClientModels = new ArrayList<>();
 		List<EligibleClients> eligibleClients = eligibleClientsRepository
-				.findTopEligibleClients(new PageRequest(0, num, sort()));
+				.findTopEligibleClients(new PageRequest(0, num, eligibleClientSortClause()));
 		for (EligibleClients eligibleClient : eligibleClients) {
 			eligibleClientModels.add(eligibleClientsTranslator.translate(eligibleClient));
 		}
@@ -38,27 +38,15 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 
 	@Override
-	public EligibleClientModel getEligibleClientDetail(String clientID) {
-		EligibleClients eligibleClient = eligibleClientsRepository.findByClientId(UUID.fromString(clientID));
+	public EligibleClientModel getEligibleClientDetail(UUID clientID) {
+		EligibleClients eligibleClient = eligibleClientsRepository.findByClientId(clientID);
 		EligibleClientModel eligibleClientModel=  eligibleClientsTranslator.translate(eligibleClient);
 		return eligibleClientModel;
 	}
 	
-	private Sort sort() {
-		return sortBySurveyDate().and(sortByScore());
-	}
-
-	private Sort sortByScore() {
-		return new Sort(Sort.Direction.DESC, "surveyScore");
-	}
-
-	private Sort sortBySurveyDate() {
-		return new Sort(Sort.Direction.ASC, "surveyDate");
-	}
-
 	@Override
 	public List<EligibleClientModel> getEligibleClients() {
-		List<EligibleClients> clients = eligibleClientsRepository.findAll(sort());
+		List<EligibleClients> clients = eligibleClientsRepository.findAll(eligibleClientSortClause());
 		List<EligibleClientModel> clientsModels = new ArrayList<EligibleClientModel>();
 		for(EligibleClients client : clients) {
 			clientsModels.add(eligibleClientsTranslator.translate(client));
@@ -67,10 +55,10 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 
 	@Override
-	public boolean updateEligibleClient(String clientID, EligibleClientModel eligibleClientModel) {
+	public boolean updateEligibleClient(UUID clientID, EligibleClientModel eligibleClientModel) {
 		boolean status = false;
 		if(!StringUtils.isEmpty(eligibleClientModel.getClientId())&&
-				eligibleClientsRepository.exists(UUID.fromString(clientID))){
+				eligibleClientsRepository.exists(clientID)){
 			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel));
 			status = true;
 		}
@@ -78,10 +66,10 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 
 	@Override
-	public boolean deleteEligibleClientById(String clientID) {
+	public boolean deleteEligibleClientById(UUID clientID) {
 		boolean status = false;
-		if(!StringUtils.isEmpty(clientID)&& eligibleClientsRepository.exists(UUID.fromString(clientID))){
-			eligibleClientsRepository.deleteByClientId(UUID.fromString(clientID));
+		if(!StringUtils.isEmpty(clientID)&& eligibleClientsRepository.exists(clientID)){
+			eligibleClientsRepository.deleteByClientId(clientID);
 			status = true;
 		}
 		return status;
@@ -91,7 +79,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	public boolean createEligibleClient(EligibleClientModel eligibleClientModel) {
 		boolean status = false;
 		if(!StringUtils.isEmpty(eligibleClientModel.getClientId()) &&
-				!eligibleClientsRepository.exists(UUID.fromString(eligibleClientModel.getClientId()))){
+				!eligibleClientsRepository.exists(eligibleClientModel.getClientId())){
 			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel));
 			status = true;
 		}
@@ -127,21 +115,26 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 
 	@Override
-	public boolean updateEligibleClientScore(String clientID, int scoreTotal) {
+	public boolean updateEligibleClientScore(UUID clientID, int scoreTotal) {
 		boolean status = false;
 		if(!StringUtils.isEmpty(clientID)&&
-				eligibleClientsRepository.exists(UUID.fromString(clientID))){
-			eligibleClientsRepository.updateScoreByClientId(scoreTotal, UUID.fromString(clientID));
+				eligibleClientsRepository.exists(clientID)){
+			eligibleClientsRepository.updateScoreByClientId(scoreTotal, clientID);
 			status = true;
 		}
 		return status;	
 	}
 	
-	
-	
-	
-	
-	
-	
+	private Sort eligibleClientSortClause() {
+		return sortBySurveyDate().and(sortByScore());
+	}
+
+	private Sort sortByScore() {
+		return new Sort(Sort.Direction.DESC, "surveyScore");
+	}
+
+	private Sort sortBySurveyDate() {
+		return new Sort(Sort.Direction.ASC, "surveyDate");
+	}
 	
 }
