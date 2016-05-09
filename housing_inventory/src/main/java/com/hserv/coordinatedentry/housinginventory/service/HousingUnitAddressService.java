@@ -1,86 +1,81 @@
 package com.hserv.coordinatedentry.housinginventory.service;
 
-import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
-import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
-import com.hserv.coordinatedentry.housinginventory.web.rest.dto.HousingUnitAddressDTO;
-import com.hserv.coordinatedentry.housinginventory.web.rest.mapper.HousingUnitAddressMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
-
-import javax.inject.Inject;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-/**
- * Service Implementation for managing HousingUnitAddress.
- */
-@Service
-@Transactional
-public class HousingUnitAddressService {
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.HibernateTemplate;
+import org.springframework.stereotype.Component;
 
-    private final Logger log = LoggerFactory.getLogger(HousingUnitAddressService.class);
-    
-    @Inject
-    private HousingUnitAddressRepository housingUnitAddressRepository;
-    
-    @Inject
-    private HousingUnitAddressMapper housingUnitAddressMapper;
-    
-    /**
-     * Save a housingUnitAddress.
-     * 
-     * @param housingUnitAddressDTO the entity to save
-     * @return the persisted entity
-     */
-    public HousingUnitAddressDTO save(HousingUnitAddressDTO housingUnitAddressDTO) {
-        log.debug("Request to save HousingUnitAddress : {}", housingUnitAddressDTO);
-        HousingUnitAddress housingUnitAddress = housingUnitAddressMapper.housingUnitAddressDTOToHousingUnitAddress(housingUnitAddressDTO);
-        housingUnitAddress.setAddressId(UUID.randomUUID());
-        housingUnitAddress = housingUnitAddressRepository.save(housingUnitAddress);
-        HousingUnitAddressDTO result = housingUnitAddressMapper.housingUnitAddressToHousingUnitAddressDTO(housingUnitAddress);
-        return result;
-    }
+import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
+import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
+import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
+import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
 
-    /**
-     *  Get all the housingUnitAddresses.
-     *  
-     *  @param pageable the pagination information
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true) 
-    public Page<HousingUnitAddress> findAll(Pageable pageable) {
-        log.debug("Request to get all HousingUnitAddresses");
-        Page<HousingUnitAddress> result = housingUnitAddressRepository.findAll(pageable); 
-        return result;
-    }
+@Component
+public class HousingUnitAddressService  {
+	
+	@Autowired
+	private HousingUnitAddressRepository housingUnitAddressRepository;
 
-    /**
-     *  Get one housingUnitAddress by id.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
-    @Transactional(readOnly = true) 
-    public HousingUnitAddressDTO findOne(UUID id) {
-        log.debug("Request to get HousingUnitAddress : {}", id);
-        HousingUnitAddress housingUnitAddress = housingUnitAddressRepository.findOne(id);
-        HousingUnitAddressDTO housingUnitAddressDTO = housingUnitAddressMapper.housingUnitAddressToHousingUnitAddressDTO(housingUnitAddress);
-        return housingUnitAddressDTO;
-    }
+	@Autowired
+	private HousingInventoryRepository housingInventoryRepository;
+	
+	
+	 @Autowired
+	 HibernateTemplate hibernateTemplate;
+	
+	 public HousingUnitAddress saveHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
+			housingUnitAddress.setAddressId(UUID.randomUUID());
+			housingUnitAddress=housingUnitAddressRepository.save(housingUnitAddress);
+		return housingUnitAddress;
+	}
 
-    /**
-     *  Delete the  housingUnitAddress by id.
-     *  
-     *  @param id the id of the entity
-     */
-    public void delete(UUID id) {
-        log.debug("Request to delete HousingUnitAddress : {}", id);
+	public boolean updateHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
+		boolean flag=false;
+		try {
+			housingUnitAddressRepository.save(housingUnitAddress);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return false;
+	}
+	
+	public List<HousingUnitAddress> findAll(){
+		return housingUnitAddressRepository.findAll();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HousingUnitAddress> getAllHousingUnitAddress(UUID housingUnitId){
+		List<HousingUnitAddress> housingUnitAddress=new ArrayList<HousingUnitAddress>(0);
+		HousingInventory housingInventory=housingInventoryRepository.findOne(housingUnitId);
+		for(HousingUnitAddress addr: housingInventory.getHousingUnitAddresss()){
+			addr.setHousingInventory(null);
+			addr.setHousingInventoryId(housingUnitId.toString());
+			housingUnitAddress.add(addr);
+		}
+	
+		//housingUnitAddressRepository.findAll();
+		/*DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAddress.class)
+				.createCriteria("housingInventory")
+				.add(Restrictions.eq("housingInventoryId", housingUnitId));
+		//crit.add(Restrictions.eq("housingInventory.housingInventoryId","housingUnitId", FetchMode.JOIN));
+		List<HousingUnitAddress> housingUnitAddress=(List<HousingUnitAddress>)hibernateTemplate.findByCriteria(crit);*/
+		return housingUnitAddress;
+	}
+
+	@SuppressWarnings("unchecked")
+	public HousingUnitAddress getHousingUnitAddressById(UUID id) {
+		return housingUnitAddressRepository.findOne(id);
+	}
+	
+	public void delete(UUID id) {
+        //log.debug("Request to delete HousingUnitAddress : {}", id);
         housingUnitAddressRepository.delete(id);
     }
 }
