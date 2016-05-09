@@ -18,25 +18,25 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClients
 	
 	public EligibleClients findByClientId(UUID clientID);
 
-	@Query("select ec from EligibleClients as ec where ec.matched = false")
-	public List<EligibleClients> findTopEligibleClients(Pageable pageable);
+	@Query("select ec from EligibleClients as ec where ec.matched = false and programType=?1")
+	List<EligibleClients> findTopEligibleClients(String programType, Pageable pageable);
 	
 	public List<EligibleClients> findAll();
 	
 	@Transactional(readOnly = false)
-	public Long deleteByClientId(UUID clientId);
+	Long deleteByClientId(UUID clientId);
 	
 	@Transactional(readOnly = false)
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClients as ec set ec.surveyScore = 0")
-	public void deleteScores();
+	void deleteScores();
 	
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClients as ec set ec.surveyScore = 0 where ec.clientId = ?1")
-	public void deleteScoreByClientId(UUID clientId);
+	void deleteScoreByClientId(UUID clientId);
 	
 	@Transactional(readOnly = false)
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClients as ec set ec.surveyScore = ?1 where ec.clientId = ?2")
-	public void updateScoreByClientId(int score, UUID clientId);
+	void updateScoreByClientId(int score, UUID clientId);
 }

@@ -10,9 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.hserv.coordinatedentry.housingmatching.dao.MatchReservationsRepository;
 import com.hserv.coordinatedentry.housingmatching.entity.MatchReservations;
+import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.external.NotificationService;
 import com.hserv.coordinatedentry.housingmatching.external.UserService;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.model.HousingInventoryModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
+import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
 
@@ -27,6 +31,12 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 	@Autowired
 	NotificationService notificationService;
+	
+	@Autowired
+	EligibleClientService eligibleClientService;
+	
+	@Autowired
+	HousingUnitService housingUnitService;
 	
 
 	@Autowired
@@ -117,8 +127,16 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	@Override
 	public void createMatch() {
 	//	1.get clients for rrh 
+		int num = 20;
+		String programType = "rrh";
+		List<EligibleClientModel> eligibleClientModelList = 
+				eligibleClientService.getEligibleClients(num , programType);
+		
 	//	2.get housing avail for rrh
+		HousingInventoryModel  housingInventoryModel = 
+				housingUnitService.getHousingInventoryList("userId", false, "projectId");
 	//	3.Based upon address of 1 and 2 , match list 1 and 2
+		
 	//	4.perform 1-3 for other program types
 	//
 	//		C1-3000 C2-3008 C3-2010

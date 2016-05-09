@@ -26,10 +26,10 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	private EligibleClientsTranslator eligibleClientsTranslator;
 
 	@Override
-	public List<EligibleClientModel> getEligibleClients(int num) {
+	public List<EligibleClientModel> getEligibleClients(int num , String programType) {
 		List<EligibleClientModel> eligibleClientModels = new ArrayList<>();
 		List<EligibleClients> eligibleClients = eligibleClientsRepository
-				.findTopEligibleClients(new PageRequest(0, num, eligibleClientSortClause()));
+				.findTopEligibleClients(programType ,new PageRequest(0, num, eligibleClientSortClause()));
 		for (EligibleClients eligibleClient : eligibleClients) {
 			eligibleClientModels.add(eligibleClientsTranslator.translate(eligibleClient));
 		}

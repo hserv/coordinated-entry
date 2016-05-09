@@ -1,5 +1,8 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Address extends HousingMatchBaseModel {
 
 	private String addressId;

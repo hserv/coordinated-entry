@@ -7,7 +7,7 @@ import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 
 public interface EligibleClientService {
 
-	List<EligibleClientModel> getEligibleClients(int num);
+	List<EligibleClientModel> getEligibleClients(int num , String programType);
 
 	EligibleClientModel getEligibleClientDetail(UUID clientID);
 
