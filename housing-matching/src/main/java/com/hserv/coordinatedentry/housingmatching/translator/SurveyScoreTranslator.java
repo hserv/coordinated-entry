@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hserv.coordinatedentry.housingmatching.entity.EligibleClients;
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 
 @Component
@@ -15,23 +15,23 @@ public class SurveyScoreTranslator {
 	@Autowired
 	EligibleClientsTranslator eligibleClientsTranslator;
 	
-	public List<EligibleClientModel> translate(List<EligibleClients> eligibleClientsList) {
+	public List<EligibleClientModel> translate(List<EligibleClient> eligibleClientsList) {
 		List<EligibleClientModel> clientModels = null;
 
 		if (eligibleClientsList != null && !eligibleClientsList.isEmpty()) {
 			clientModels = new ArrayList<EligibleClientModel>();
-			for (EligibleClients client : eligibleClientsList) {
+			for (EligibleClient client : eligibleClientsList) {
 				clientModels.add(translate(client));
 			}
 		}
 		return clientModels;
 	}
 	
-	public EligibleClients translate(EligibleClientModel clientModel) {
-		EligibleClients eligibleClients = null;
+	public EligibleClient translate(EligibleClientModel clientModel) {
+		EligibleClient eligibleClients = null;
 		
 		if (clientModel != null) {
-			eligibleClients = new EligibleClients();
+			eligibleClients = new EligibleClient();
 		} else {
 			return null;
 		}
@@ -46,7 +46,7 @@ public class SurveyScoreTranslator {
 		return eligibleClients;
 	}
 	
-	public EligibleClientModel translate(EligibleClients eligibleClient) {
+	public EligibleClientModel translate(EligibleClient eligibleClient) {
 		EligibleClientModel clientModel = null;
 		
 		if (eligibleClient != null) {

@@ -8,21 +8,21 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.hserv.coordinatedentry.housingmatching.entity.MatchReservations;
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
 
 @Repository
-public interface MatchReservationsRepository extends JpaRepository<MatchReservations, Serializable>{
+public interface MatchReservationsRepository extends JpaRepository<Match, Serializable>{
 
 	@Modifying(clearAutomatically=true)
-	@Query("update MatchReservations ms set ms.matchStatus = ?1 where ms.reservationId = ?2")
+	@Query("update Match ms set ms.matchStatus = ?1 where ms.reservationId = ?2")
 	int updateMatchStatus(String matchStatus, UUID reservationId);
 	
 	@Modifying(clearAutomatically=true)
-	@Query("update MatchReservations ms set ms.matchStatus = ?1, ms.manualMatch = ?2 where ms.reservationId = ?3")
+	@Query("update Match ms set ms.matchStatus = ?1, ms.manualMatch = ?2 where ms.reservationId = ?3")
 	int updateMatchStatusAndManualMatch(String matchStatus, boolean manualMatch, UUID reservationId);
 	
-	void deleteByEligibleClientsClientId(UUID clientId);
+	void deleteByEligibleClientClientId(UUID clientId);
 	
-	MatchReservations findByEligibleClientsClientId(UUID clientId);
+	Match findByEligibleClientClientId(UUID clientId);
 	
 }

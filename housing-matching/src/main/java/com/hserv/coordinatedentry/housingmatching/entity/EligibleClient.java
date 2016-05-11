@@ -11,13 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "eligible_clients", schema = "housing_match")
-public class EligibleClients implements java.io.Serializable {
+public class EligibleClient implements Serializable {
 
 	private UUID clientId;
 	private String surveyType;
@@ -26,17 +27,19 @@ public class EligibleClients implements java.io.Serializable {
 	private Boolean matched;
 	private Date surveyDate;
 	private String spdatLabel;
-	private Set<MatchReservations> matchReservationses = new HashSet<>(0);
 
-	public EligibleClients() {
+	private transient int zipCode;
+	
+	public EligibleClient() {
 	}
 
-	public EligibleClients(UUID clientId) {
+	public EligibleClient(UUID clientId) {
 		this.clientId = clientId;
 	}
 
-	public EligibleClients(UUID clientId, String surveyType, Integer surveyScore, String programType,
-			Boolean matched, Date surveyDate, String spdatLabel, Set<MatchReservations> matchReservationses) {
+	public EligibleClient(UUID clientId, String surveyType, Integer surveyScore, String programType,
+			Boolean matched, Date surveyDate, String spdatLabel, Set<Match> matchReservations
+			,int zipCode) {
 		this.clientId = clientId;
 		this.surveyType = surveyType;
 		this.surveyScore = surveyScore;
@@ -44,7 +47,7 @@ public class EligibleClients implements java.io.Serializable {
 		this.matched = matched;
 		this.surveyDate = surveyDate;
 		this.spdatLabel = spdatLabel;
-		this.matchReservationses = matchReservationses;
+		this.zipCode = zipCode;
 	}
 
 	@Id
@@ -114,13 +117,14 @@ public class EligibleClients implements java.io.Serializable {
 		this.spdatLabel = spdatLabel;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eligibleClients")
-	public Set<MatchReservations> getMatchReservationses() {
-		return this.matchReservationses;
+
+	public int getZipCode() {
+		return zipCode;
 	}
 
-	public void setMatchReservationses(Set<MatchReservations> matchReservationses) {
-		this.matchReservationses = matchReservationses;
+	public void setZipCode(int zipCode) {
+		this.zipCode = zipCode;
 	}
 
+	
 }

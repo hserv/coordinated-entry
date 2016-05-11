@@ -13,18 +13,18 @@ import javax.persistence.Table;
 public class Note implements java.io.Serializable {
 
 	private String noteId;
-	private MatchReservations matchReservations;
+	private Match matchReservations;
 	private String noteString;
 
 	public Note() {
 	}
 
-	public Note(String noteId, MatchReservations matchReservations) {
+	public Note(String noteId, Match matchReservations) {
 		this.noteId = noteId;
 		this.matchReservations = matchReservations;
 	}
 
-	public Note(String noteId, MatchReservations matchReservations, String noteString) {
+	public Note(String noteId, Match matchReservations, String noteString) {
 		this.noteId = noteId;
 		this.matchReservations = matchReservations;
 		this.noteString = noteString;
@@ -43,11 +43,11 @@ public class Note implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "reservation_id", nullable = false)
-	public MatchReservations getMatchReservations() {
+	public Match getMatchReservations() {
 		return this.matchReservations;
 	}
 
-	public void setMatchReservations(MatchReservations matchReservations) {
+	public void setMatchReservations(Match matchReservations) {
 		this.matchReservations = matchReservations;
 	}
 

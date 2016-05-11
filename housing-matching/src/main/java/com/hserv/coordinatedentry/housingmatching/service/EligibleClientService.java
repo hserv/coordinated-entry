@@ -3,11 +3,12 @@ package com.hserv.coordinatedentry.housingmatching.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 
 public interface EligibleClientService {
 
-	List<EligibleClientModel> getEligibleClients(int num , String programType);
+	List<EligibleClient> getEligibleClients(int num , String programType);
 
 	EligibleClientModel getEligibleClientDetail(UUID clientID);
 

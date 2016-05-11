@@ -2,9 +2,7 @@ package com.hserv.coordinatedentry.housingmatching.external.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,19 +13,19 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
+import com.hserv.coordinatedentry.housingmatching.model.HousingInventory;
 import com.hserv.coordinatedentry.housingmatching.model.HousingInventoryModel;
 
 @Service
 public class HousingUnitServiceImpl implements HousingUnitService {
 
-	@Autowired
 	private RestTemplate restTemplate;
-
+	
 	@Value("${HOUSING_INVENTORY_MS_URL}")
 	private String housingInventoryUrl;
 
 	@Override
-	public HousingInventoryModel getHousingInventoryList( String userId, boolean inactive,
+	public List<HousingInventory> getHousingInventoryList( String userId, boolean inactive,
 			String projectId) {
 
 		// set the header to accept json
@@ -74,7 +72,7 @@ public class HousingUnitServiceImpl implements HousingUnitService {
 			housingInventoryModel = response.getBody();
 		}
 
-		return housingInventoryModel;
+		return housingInventoryModel.getHousingInventories();
 	}
 
 }

@@ -20,11 +20,6 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency> -->
-		
 		<dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
@@ -45,11 +40,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 		</dependency>
-		
-		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-websocket</artifactId> 
-			</dependency> <dependency> <groupId>org.apache.tomcat.embed</groupId> <artifactId>tomcat-embed-websocket</artifactId> 
-			<scope>provided</scope> </dependency> -->
-
 
 		<!-- tag::actuator[] -->
 		<dependency>
@@ -83,22 +73,32 @@
 			<version>4.3.8.Final</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.servinglynk.hmis.warehouse</groupId>
+			<artifactId>core-client</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
 
 	</dependencies>
+	
+	<repositories>
+		<repository>
+			<id>deployment</id>
+			<url>http://52.39.104.238:8080/nexus/service/local/repositories/snapshots/content/</url>
+		</repository>
+	</repositories>
 
 	<properties>
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-
 
 	<build>
 		<plugins>
@@ -109,10 +109,6 @@
 					<executable>true</executable>
 				</configuration>
 			</plugin>
-			<!-- Dependencies for external container <plugin> <groupId>org.apache.tomcat.maven</groupId> 
-				<artifactId>tomcat7-maven-plugin</artifactId> <version>2.2</version> </plugin> 
-				<plugin> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-maven-plugin</artifactId> 
-				<version>9.2.3.v20140905</version> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -133,21 +129,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
-				<configuration> <jvmArguments> -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 
-				</jvmArguments> </configuration> </plugin -->
-
-			<!-- Diabling RAML file generated -->
-			<!-- <plugin> <groupId>com.phoenixnap.oss</groupId> <artifactId>springmvc-raml-plugin</artifactId> 
-				<version>0.4.2</version> <configuration> <ramlPath>/docs/raml/api_v010.raml</ramlPath> 
-				<outputRelativePath>/src/generated</outputRelativePath> <addTimestampFolder>false</addTimestampFolder> 
-				<basePackage>com.hserv.coordinatedentry.housingmatching.controller</basePackage> 
-				<baseUri>/coordinatedentry</baseUri> <seperateMethodsByContentType>false</seperateMethodsByContentType> 
-				</configuration> <executions> <execution> <id>generate-springmvc-endpoints</id> 
-				<phase>compile</phase> <goals> <goal>generate-springmvc-endpoints</goal> 
-				</goals> </execution> </executions> </plugin> -->
-
-
 		</plugins>
 	</build>
 

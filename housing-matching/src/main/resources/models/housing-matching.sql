@@ -67,4 +67,3 @@ ALTER TABLE housing_match.note
 	ON DELETE RESTRICT
 ;
 
-commit;
