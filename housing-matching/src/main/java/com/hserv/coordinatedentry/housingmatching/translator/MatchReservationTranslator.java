@@ -7,19 +7,19 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.hserv.coordinatedentry.housingmatching.entity.MatchReservations;
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 
 @Component
 public class MatchReservationTranslator {
 
-	public Set<MatchReservationModel> translate(Set<MatchReservations> matchReservations) {
+	public Set<MatchReservationModel> translate(Set<Match> matchReservations) {
 		Set<MatchReservationModel> matchReservationModelSet = null;
 
 		if (null != matchReservations && !matchReservations.isEmpty()) {
 			matchReservationModelSet = new HashSet<>();
 
-			for (MatchReservations matchRerserve : matchReservations) {
+			for (Match matchRerserve : matchReservations) {
 				MatchReservationModel matchReservationModel = translate(matchRerserve);
 				matchReservationModelSet.add(matchReservationModel);
 			}
@@ -28,8 +28,8 @@ public class MatchReservationTranslator {
 		return matchReservationModelSet;
 	}
 
-	public Set<MatchReservations> translates(Set<MatchReservationModel> matchReservationsModels) {
-		Set<MatchReservations> matchReservations = null;
+	public Set<Match> translates(Set<MatchReservationModel> matchReservationsModels) {
+		Set<Match> matchReservations = null;
 		if (matchReservationsModels != null && !matchReservationsModels.isEmpty()) {
 			matchReservations = new HashSet<>();
 		} else {
@@ -42,7 +42,7 @@ public class MatchReservationTranslator {
 		return matchReservations;
 	}
 
-	public MatchReservationModel translate(MatchReservations matchReserve) {
+	public MatchReservationModel translate(Match matchReserve) {
 		MatchReservationModel matchReservationModel = new MatchReservationModel();
 		matchReservationModel.setReservationId(matchReserve.getReservationId().toString());
 		matchReservationModel.setMatchStatus(matchReserve.getMatchStatus());
@@ -57,10 +57,10 @@ public class MatchReservationTranslator {
 		return matchReservationModel;
 	}
 
-	public MatchReservations translate(MatchReservationModel matchRerserveModel) {
-		MatchReservations matchReservations = null;
+	public Match translate(MatchReservationModel matchRerserveModel) {
+		Match matchReservations = null;
 		if (matchRerserveModel != null) {
-			matchReservations = new MatchReservations();
+			matchReservations = new Match();
 		} else {
 			return null;
 		}

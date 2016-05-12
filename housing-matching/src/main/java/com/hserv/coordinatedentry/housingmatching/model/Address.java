@@ -1,5 +1,8 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Address extends HousingMatchBaseModel {
 
 	private String addressId;
@@ -12,7 +15,7 @@ public class Address extends HousingMatchBaseModel {
 
 	private String addressState;
 
-	private String zipCode;
+	private int zipCode;
 
 	private boolean inactive;
 
@@ -56,11 +59,11 @@ public class Address extends HousingMatchBaseModel {
 		this.addressState = addressState;
 	}
 
-	public String getZipCode() {
+	public int getZipCode() {
 		return zipCode;
 	}
 
-	public void setZipCode(String zipCode) {
+	public void setZipCode(int zipCode) {
 		this.zipCode = zipCode;
 	}
 

@@ -2,11 +2,11 @@ package com.hserv.coordinatedentry.housingmatching.external;
 
 import java.util.List;
 
-import com.hserv.coordinatedentry.housingmatching.model.HousingInventoryModel;
+import com.hserv.coordinatedentry.housingmatching.model.HousingInventory;
 
 
 public interface HousingUnitService {
 	
-	List<HousingInventoryModel> getHousingInventoryList(String userId, boolean inactive, String projectId);
+	List<HousingInventory> getHousingInventoryList(String userId, boolean inactive, String projectId);
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 
@@ -33,6 +34,7 @@ public class EligibleClientsController {
 	 * http://localhost:8080/eligible-clients/
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
+	@APIMapping(value="Get_Eligible_Clients")
 	public List<EligibleClientModel> getEligibleClients() {
 		return eligibleClientService.getEligibleClients();
 	}
@@ -43,6 +45,7 @@ public class EligibleClientsController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.PUT)
+	@APIMapping(value="Update_Eligible_Clients")
 	public ResponseEntity<String> updateEligibleClients(
 			@Validated @RequestBody List<EligibleClientModel> eligibleClientModels) {
 		ResponseEntity<String> responseEntity = null;
@@ -60,6 +63,7 @@ public class EligibleClientsController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.DELETE)
+	@APIMapping(value="Delete_Eligible_Clients")
 	public ResponseEntity<String> deleteEligibleClients() {
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -71,7 +75,9 @@ public class EligibleClientsController {
 		return responseEntity;
 	}
 	
+	//TODO - Have to get rid of this method, after discussion
 	@RequestMapping(value = "", method = RequestMethod.POST)
+	@APIMapping(value="Create_Eligible_Clients")
 	public ResponseEntity<String> createEligibleClients(
 			@Validated @RequestBody List<EligibleClientModel> eligibleClientModels) {
 		ResponseEntity<String> responseEntity = null;
@@ -95,7 +101,8 @@ public class EligibleClientsController {
 	 * "spdatLabel": "youth" }
 	 * 
 	 */
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
+	@APIMapping(value="Create_Eligible_Client")
 	public ResponseEntity<String> createEligibleClient(
 			@Validated @RequestBody EligibleClientModel eligibleClientModel) {
 		ResponseEntity<String> responseEntity = null;
@@ -114,6 +121,7 @@ public class EligibleClientsController {
 	 * 6bb9bd380a11
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@APIMapping(value="Get_Eligible_Client_By_Id")
 	public EligibleClientModel getEligibleClientById(@PathVariable String id) {
 		return eligibleClientService.getEligibleClientDetail(UUID.fromString(id));
 	}
@@ -124,6 +132,7 @@ public class EligibleClientsController {
 	 * 6bb9bd380a12
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@APIMapping(value="Delete_Eligible_Client_By_Id")
 	public ResponseEntity<String> deleteEligibleClientById(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -146,6 +155,7 @@ public class EligibleClientsController {
 	 * "spdatLabel": "family" }
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	@APIMapping(value="Update_Eligible_Client_By_Id")
 	public ResponseEntity<String> updateEligibleClientById(@PathVariable String id,
 			@Validated @RequestBody EligibleClientModel eligibleClientModel) {
 		ResponseEntity<String> responseEntity = null;

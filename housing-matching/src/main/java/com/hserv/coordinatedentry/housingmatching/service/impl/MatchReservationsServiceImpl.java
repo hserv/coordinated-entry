@@ -1,18 +1,25 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hserv.coordinatedentry.housingmatching.dao.MatchReservationsRepository;
-import com.hserv.coordinatedentry.housingmatching.entity.MatchReservations;
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
+import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.external.NotificationService;
 import com.hserv.coordinatedentry.housingmatching.external.UserService;
+import com.hserv.coordinatedentry.housingmatching.model.HousingInventory;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
+import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
 
@@ -28,12 +35,20 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	@Autowired
 	NotificationService notificationService;
 	
-
+	@Autowired
+	EligibleClientService eligibleClientService;
+	
+	@Autowired
+	HousingUnitService housingUnitService;
+	
 	@Autowired
 	UserService userService;
 	
 	@Autowired
 	CommunityServiceLocator communityServiceLocator;
+	
+	@Value("${TOP_N_CLIENTS}")
+	private int numberOfClients;
 	
 	@Override
 	public boolean createMatchReservation(MatchReservationModel matchReservationModel) {
@@ -43,9 +58,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 	@Override
 	public boolean createMatchReservation(List<MatchReservationModel> matchReservationModels) {
-		Set<MatchReservations> matchReservations = matchReservationTranslator
+		Set<Match> matchReservations = matchReservationTranslator
 				.translates(new HashSet<MatchReservationModel>(matchReservationModels));
-		for (MatchReservations matchReservation : matchReservations) {
+		for (Match matchReservation : matchReservations) {
 			repository.saveAndFlush(matchReservation);
 		}
 		return true;
@@ -69,16 +84,16 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 	@Override
 	public Set<MatchReservationModel> findAll() {
-		return matchReservationTranslator.translate(new HashSet<MatchReservations>(repository.findAll()));
+		return matchReservationTranslator.translate(new HashSet<Match>(repository.findAll()));
 	}
 
 	@Override
 	public boolean deleteByClientId(String clientId) {
 		if (repository.exists(UUID.fromString(clientId))) {
-			repository.deleteByEligibleClientsClientId(UUID.fromString(clientId));
+			repository.deleteByEligibleClientClientId(UUID.fromString(clientId));
 			return true;
 		}
-		repository.deleteByEligibleClientsClientId(UUID.fromString(clientId));
+		repository.deleteByEligibleClientClientId(UUID.fromString(clientId));
 		return false;
 	}
 
@@ -86,16 +101,16 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	public MatchReservationModel findByClientId(String clientId) {
 		if (repository.exists(UUID.fromString(clientId))) {
 			return matchReservationTranslator
-					.translate(repository.findByEligibleClientsClientId(UUID.fromString(clientId)));
+					.translate(repository.findByEligibleClientClientId(UUID.fromString(clientId)));
 		}
 		return null;
 	}
 
 	@Override
 	public boolean updateByClientId(String clientId, MatchReservationModel matchReservationModel) {
-		MatchReservations matchReservations = matchReservationTranslator.translate(matchReservationModel);
-		if (matchReservations.getEligibleClients() != null)
-			matchReservations.getEligibleClients().setClientId(UUID.fromString(clientId));
+		Match matchReservations = matchReservationTranslator.translate(matchReservationModel);
+		if (matchReservations.getEligibleClient() != null)
+			matchReservations.getEligibleClient().setClientId(UUID.fromString(clientId));
 		repository.saveAndFlush(matchReservations);
 
 		sendNotification(matchReservationModel);
@@ -116,21 +131,84 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 	@Override
 	public void createMatch() {
-	//	1.get clients for rrh 
-	//	2.get housing avail for rrh
-	//	3.Based upon address of 1 and 2 , match list 1 and 2
-	//	4.perform 1-3 for other program types
-	//
-	//		C1-3000 C2-3008 C3-2010
-	//
-	//		H1-3008 H2-2043 H3-3006
-	//
-	//		c3-H2
-	//		c2-h1
-	//		c1-h3
-	//
-	//	select top 10 from eligible_clients where programType = 'RRH' order by score desc survey_date asc.
-	//
-	//	get vacant housing inventories from subhas's api, where programType = 'RRH' and some other query param like gender.
+		String[] programTypes = new String[]{"PSH", "TH","RRH"};
+		
+		List<EligibleClient> clients;
+		List<HousingInventory>  units;
+		List<Match> matches = new ArrayList<>();
+		
+		for(String programType : programTypes){
+			//Get clients for each program type
+			//TODO- wire eligible client service to get clients in desc priority
+			//We dont have zipcode as of now in eligible clients table, thats why made transient,
+			//but have to make a call to clientInfo or can persist the required info during the first score 
+			//calculation call, as that time we anyhow have to get all the client informations
+			//so we can make a table and can map details of eligible client in that.
+			clients = eligibleClientService.getEligibleClients(numberOfClients , programType);
+			
+			//Get vacant housing units for programType
+			//TODO-Mock housing inventory serice using soap-ui or whatever
+			//so that while integration we just need to replace the endpoint
+			//mock it such that we should get data in units variable declared below
+			//I have tested the below code, just wire the housing unit service to rest template
+			units = housingUnitService.getHousingInventoryList("token", false, programType);
+	        
+			//Make sure clients are in desc order of priority
+	        //Allocate house to first member in the list and then to second and so on.
+			//Right now only criterion is zip code.
+			//Run only for maximum number of units available
+			//If only 3 units are avail, no point running for 10 clients
+			for(int i = 0; i < units.size();i++){
+				if(i==clients.size())
+					break;
+				EligibleClient c = clients.get(i);
+	            int cc = c.getZipCode();
+	            int temp = 0;
+	            int count = 0;
+	            int leastIndex = 0;
+	            boolean first = true;
+	            for(HousingInventory u : units){
+	                if(!u.isVacant()){
+	                    count++;
+	                    continue;
+	                }
+	                int diff = Math.abs(u.getAddress().getZipCode()-cc);
+	                if(diff==0){
+	                	first = false;
+	                    leastIndex = count;
+	                    break;
+	                }
+	                if(first){
+	                    first = false;
+	                    temp = diff;
+	                    leastIndex = count;
+	                    count++;
+	                    continue;
+	                }
+	                if(diff < temp){
+	                    leastIndex = count;
+	                }
+	                count++;
+	            }
+	            	Match match = new Match();
+		            match.setEligibleClient(c);
+	                match.setHousingUnitId(UUID.fromString(units.get(leastIndex).getHousingUnitId()));
+	                match.setManualMatch(false);
+	                match.setMatchDate(new Date());
+	                match.setMatchStatus("Proposed");
+	                matches.add(match);
+	                units.get(leastIndex).setVacant(false);
+
+	        }
+
+	        clients.clear();
+	        units.clear();
+		}
+		
+		for(Match m :matches){
+            System.out.println(m.getEligibleClient().getClientId());
+            System.out.println(m.getHousingUnitId());
+            repository.saveAndFlush(m);
+        }
 	}
 }

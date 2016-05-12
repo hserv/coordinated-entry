@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
-import com.hserv.coordinatedentry.housingmatching.entity.EligibleClients;
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
@@ -25,12 +25,12 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Autowired
 	private EligibleClientsTranslator eligibleClientsTranslator;
 
-	@Override
-	public List<EligibleClientModel> getEligibleClients(int num) {
+	
+	public List<EligibleClientModel> getEligibleClientsBack(int num , String programType) {
 		List<EligibleClientModel> eligibleClientModels = new ArrayList<>();
-		List<EligibleClients> eligibleClients = eligibleClientsRepository
-				.findTopEligibleClients(new PageRequest(0, num, eligibleClientSortClause()));
-		for (EligibleClients eligibleClient : eligibleClients) {
+		List<EligibleClient> eligibleClients = eligibleClientsRepository
+				.findTopEligibleClients(programType ,new PageRequest(0, num, eligibleClientSortClause()));
+		for (EligibleClient eligibleClient : eligibleClients) {
 			eligibleClientModels.add(eligibleClientsTranslator.translate(eligibleClient));
 		}
 
@@ -38,17 +38,25 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 
 	@Override
+	public List<EligibleClient> getEligibleClients(int num , String programType) {
+		List<EligibleClient> eligibleClients = eligibleClientsRepository
+				.findTopEligibleClients(programType ,new PageRequest(0, num, eligibleClientSortClause()));
+
+		return eligibleClients;
+	}
+	
+	@Override
 	public EligibleClientModel getEligibleClientDetail(UUID clientID) {
-		EligibleClients eligibleClient = eligibleClientsRepository.findByClientId(clientID);
+		EligibleClient eligibleClient = eligibleClientsRepository.findByClientId(clientID);
 		EligibleClientModel eligibleClientModel=  eligibleClientsTranslator.translate(eligibleClient);
 		return eligibleClientModel;
 	}
 	
 	@Override
 	public List<EligibleClientModel> getEligibleClients() {
-		List<EligibleClients> clients = eligibleClientsRepository.findAll(eligibleClientSortClause());
+		List<EligibleClient> clients = eligibleClientsRepository.findAll(eligibleClientSortClause());
 		List<EligibleClientModel> clientsModels = new ArrayList<EligibleClientModel>();
-		for(EligibleClients client : clients) {
+		for(EligibleClient client : clients) {
 			clientsModels.add(eligibleClientsTranslator.translate(client));
 		}
 		return clientsModels;
@@ -75,6 +83,8 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		return status;
 	}
 
+	//TODO - We should remove this method, as insertion is taken care by calculate score controller
+	//Will ask home app guys if they need it or not
 	@Override
 	public boolean createEligibleClient(EligibleClientModel eligibleClientModel) {
 		boolean status = false;
@@ -103,6 +113,8 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		return false;
 	}
 
+	//TODO - We should remove this method, as insertion is taken care by calculate score controller
+	//Will ask home app guys if they need it or not
 	@Override
 	public boolean createEligibleClients(List<EligibleClientModel> eligibleClientModels) {
 		if (eligibleClientModels != null && !eligibleClientModels.isEmpty()) {

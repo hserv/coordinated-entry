@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
-import com.hserv.coordinatedentry.housingmatching.entity.EligibleClients;
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.external.SurveyMSService;
 import com.hserv.coordinatedentry.housingmatching.model.CommunityType;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
@@ -59,7 +59,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Override
 	public int getScoreByClientId(String clientId) {
 		if (clientId != null && !clientId.isEmpty() && eligibleClientsRepository.exists(UUID.fromString(clientId))) {
-			EligibleClients eligibleClients = eligibleClientsRepository.findByClientId(UUID.fromString(clientId));
+			EligibleClient eligibleClients = eligibleClientsRepository.findByClientId(UUID.fromString(clientId));
 			return eligibleClients.getSurveyScore();
 		}
 		return 0;
@@ -102,10 +102,10 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		}
 		
 		//Iterate and create eligible client entities
-		List<EligibleClients> eligibleClients = new ArrayList<EligibleClients>();
+		List<EligibleClient> eligibleClients = new ArrayList<EligibleClient>();
 		MatchStrategy strategy;
 		for(SurveySectionModel m : surveyResponseModel.getSurveySectionList()){
-			EligibleClients eligibleClient = new EligibleClients();
+			EligibleClient eligibleClient = new EligibleClient();
 			int spdatScore = scoreMap.get(m.getClientId());
 			//hardcoding community for now;should be fetched from user/client
 			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);

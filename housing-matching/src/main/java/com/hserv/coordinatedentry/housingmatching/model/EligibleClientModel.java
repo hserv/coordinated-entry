@@ -15,6 +15,7 @@ public class EligibleClientModel {
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="EST")
 	private Date surveyDate;
 	private String spdatLabel;
+	private String zipcode;
 	
 	public UUID getClientId() {
 		return clientId;
@@ -57,6 +58,12 @@ public class EligibleClientModel {
 	}
 	public void setSpdatLabel(String spdatLabel) {
 		this.spdatLabel = spdatLabel;
+	}
+	public String getZipcode() {
+		return zipcode;
+	}
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
 	}
 	
 }

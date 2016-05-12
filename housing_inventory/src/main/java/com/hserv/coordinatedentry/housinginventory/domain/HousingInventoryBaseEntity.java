@@ -1,39 +1,116 @@
 package com.hserv.coordinatedentry.housinginventory.domain;
 
-import java.util.Date;
-
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import org.mariadb.jdbc.internal.common.queryresults.ColumnNameMap;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @MappedSuperclass
-public class HousingInventoryBaseEntity {
+public class HousingInventoryBaseEntity implements Serializable {
 
-	@Column(name="date_updated")
-	private Date dateUpdated;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name="date_created")
-	private Date dateCreated;
-	@Column(name="inactive")
-	private boolean inactive;
+	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
+	private LocalDateTime dateCreated;
 	
-	public Date getDateUpdated() {
-		return dateUpdated;
+	@Column(name="date_updated")
+	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
+	private LocalDateTime dateUpdated;
+	
+	@Column(name="inactive")
+	private Boolean inactive;
+	
+	
+	public HousingInventoryBaseEntity(){
+		
 	}
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-	public void setDateCreated(Date dateCreated) {
+	
+
+	public HousingInventoryBaseEntity(LocalDateTime dateCreated, LocalDateTime dateUpdated, Boolean inactive) {
+		super();
 		this.dateCreated = dateCreated;
-	}
-	public boolean isInactive() {
-		return inactive;
-	}
-	public void setInactive(boolean inactive) {
+		this.dateUpdated = dateUpdated;
 		this.inactive = inactive;
 	}
 
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public LocalDateTime getDateUpdated() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdated(LocalDateTime dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+
+	public Boolean getInactive() {
+		return inactive;
+	}
+
+	public void setInactive(Boolean inactive) {
+		this.inactive = inactive;
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dateCreated == null) ? 0 : dateCreated.hashCode());
+		result = prime * result + ((dateUpdated == null) ? 0 : dateUpdated.hashCode());
+		result = prime * result + ((inactive == null) ? 0 : inactive.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HousingInventoryBaseEntity other = (HousingInventoryBaseEntity) obj;
+		if (dateCreated == null) {
+			if (other.dateCreated != null)
+				return false;
+		} else if (!dateCreated.equals(other.dateCreated))
+			return false;
+		if (dateUpdated == null) {
+			if (other.dateUpdated != null)
+				return false;
+		} else if (!dateUpdated.equals(other.dateUpdated))
+			return false;
+		if (inactive == null) {
+			if (other.inactive != null)
+				return false;
+		} else if (!inactive.equals(other.inactive))
+			return false;
+		return true;
+	}
+
+
+	@Override
+	public String toString() {
+		return "HousingInventoryBaseEntity [dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", inactive="
+				+ inactive + ", getDateCreated()=" + getDateCreated() + ", getDateUpdated()=" + getDateUpdated()
+				+ ", getInactive()=" + getInactive() + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
+				+ ", toString()=" + super.toString() + "]";
+	}
+	
+	
+	
 }
