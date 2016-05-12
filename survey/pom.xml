@@ -31,14 +31,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-actuator</artifactId>
 		</dependency>
-		 <dependency>
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.4-1206-jdbc42</version>
 		</dependency>
-		 <dependency> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
-			</dependency> 
-			<!--<dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<!--<dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
 			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -48,5 +50,75 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jersey</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.servinglynk.hmis.warehouse</groupId>
+			<artifactId>core-client</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.8.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.5.3</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
 	</dependencies>
+
+	<!-- <repositories>
+	<repository>
+         <id>deployment</id>
+         <url>http://52.33.12.237:8080/nexus/content/repositories/releases/</url>
+         <releases><enabled>true</enabled></releases>
+         <snapshots><enabled>false</enabled></snapshots>
+       </repository>
+       <repository>
+         <id>deployment1</id>
+         <url>http://52.33.12.237:8080/nexus/content/repositories/snapshots/</url>
+         <releases><enabled>false</enabled></releases>
+         <snapshots><enabled>true</enabled></snapshots>
+       </repository>
+	</repositories> -->
 </project>
