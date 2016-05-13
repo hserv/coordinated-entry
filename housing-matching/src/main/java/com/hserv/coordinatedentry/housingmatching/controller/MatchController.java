@@ -40,7 +40,7 @@ public class MatchController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public ResponseEntity<String> createMatch() {
 		matchReservationsService.createMatch();
-		return ResponseEntity.ok("triggered : success");
+		return ResponseEntity.ok("{\"triggered\": \"success\"}\"");
 	}
 
 	/**

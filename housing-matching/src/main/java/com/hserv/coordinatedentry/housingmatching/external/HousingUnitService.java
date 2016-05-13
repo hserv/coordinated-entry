@@ -7,6 +7,6 @@ import com.hserv.coordinatedentry.housingmatching.model.HousingInventory;
 
 public interface HousingUnitService {
 	
-	List<HousingInventory> getHousingInventoryList(String userId, boolean inactive, String projectId);
+	List<HousingInventory> getHousingInventoryList(String token, String projectId);
 
 }

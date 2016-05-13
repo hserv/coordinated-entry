@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.MatchReservationsRepository;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
@@ -46,6 +47,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	
 	@Autowired
 	CommunityServiceLocator communityServiceLocator;
+	
+	@Autowired
+	EligibleClientsRepository eligibleClientsRepository;
 	
 	@Value("${TOP_N_CLIENTS}")
 	private int numberOfClients;
@@ -139,19 +143,10 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		
 		for(String programType : programTypes){
 			//Get clients for each program type
-			//TODO- wire eligible client service to get clients in desc priority
-			//We dont have zipcode as of now in eligible clients table, thats why made transient,
-			//but have to make a call to clientInfo or can persist the required info during the first score 
-			//calculation call, as that time we anyhow have to get all the client informations
-			//so we can make a table and can map details of eligible client in that.
 			clients = eligibleClientService.getEligibleClients(numberOfClients , programType);
 			
 			//Get vacant housing units for programType
-			//TODO-Mock housing inventory serice using soap-ui or whatever
-			//so that while integration we just need to replace the endpoint
-			//mock it such that we should get data in units variable declared below
-			//I have tested the below code, just wire the housing unit service to rest template
-			units = housingUnitService.getHousingInventoryList("token", false, programType);
+			units = housingUnitService.getHousingInventoryList("token", programType);
 	        
 			//Make sure clients are in desc order of priority
 	        //Allocate house to first member in the list and then to second and so on.
@@ -190,15 +185,14 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	                }
 	                count++;
 	            }
-	            	Match match = new Match();
-		            match.setEligibleClient(c);
-	                match.setHousingUnitId(UUID.fromString(units.get(leastIndex).getHousingUnitId()));
-	                match.setManualMatch(false);
-	                match.setMatchDate(new Date());
-	                match.setMatchStatus("Proposed");
-	                matches.add(match);
-	                units.get(leastIndex).setVacant(false);
-
+            	Match match = new Match();
+	            match.setEligibleClient(c);
+                match.setHousingUnitId(UUID.fromString(units.get(leastIndex).getHousingUnitId()));
+                match.setManualMatch(false);
+                match.setMatchDate(new Date());
+                match.setMatchStatus("Proposed");
+                matches.add(match);
+                units.get(leastIndex).setVacant(false);
 	        }
 
 	        clients.clear();
@@ -206,9 +200,12 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		}
 		
 		for(Match m :matches){
-            System.out.println(m.getEligibleClient().getClientId());
-            System.out.println(m.getHousingUnitId());
             repository.saveAndFlush(m);
+            
+            //store eligible client and set match flag to true
+            EligibleClient eligibleClient = m.getEligibleClient();
+            eligibleClient.setMatched(true);
+            eligibleClientsRepository.saveAndFlush(eligibleClient);
         }
 	}
 }
