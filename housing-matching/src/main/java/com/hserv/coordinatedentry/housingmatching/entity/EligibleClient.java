@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "eligible_clients", schema = "housing_match")
@@ -28,7 +29,8 @@ public class EligibleClient implements Serializable {
 	private Date surveyDate;
 	private String spdatLabel;
 
-	private transient int zipCode;
+	
+	private int zipCode;
 	
 	public EligibleClient() {
 	}
@@ -51,7 +53,6 @@ public class EligibleClient implements Serializable {
 	}
 
 	@Id
-
 	@Column(name = "client_id", unique = true, nullable = false)
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
 	public UUID getClientId() {
@@ -117,7 +118,8 @@ public class EligibleClient implements Serializable {
 		this.spdatLabel = spdatLabel;
 	}
 
-
+	//@Transient
+	@Column(name = "zip_code")
 	public int getZipCode() {
 		return zipCode;
 	}

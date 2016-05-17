@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,6 +17,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "match_reservations", schema = "housing_match")
@@ -68,6 +71,11 @@ public class Match implements java.io.Serializable {
 	@Id
 	@Column(name = "reservation_id", unique = true, nullable = false)
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
+	//@Type(type = "pg-uuid")
+	//@GeneratedValue(generator="system-uuid")
+	//@GenericGenerator(name="system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
 	public UUID getReservationId() {
 		return this.reservationId;
 	}
@@ -180,6 +188,7 @@ public class Match implements java.io.Serializable {
 	}
 
 	@Column(name = "housing_unit_id", nullable = false)
+	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
 	public UUID getHousingUnitId() {
 		return this.housingUnitId;
 	}

@@ -1,24 +1,32 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Address extends HousingMatchBaseModel {
+public class Address {
 
+	@JsonProperty(value="address_id")
 	private String addressId;
 
+	@JsonProperty(value="address_line1")
 	private String addressLine1;
 
+	@JsonProperty(value="address_line2")
 	private String addressLine2;
 
+	@JsonProperty(value="address_city")
 	private String addressCity;
 
+	@JsonProperty(value="address_state")
 	private String addressState;
 
+	@JsonProperty(value="zip_code")
 	private int zipCode;
 
+	@JsonProperty(value="inactive")
 	private boolean inactive;
-
+	
 	public String getAddressId() {
 		return addressId;
 	}
@@ -73,14 +81,6 @@ public class Address extends HousingMatchBaseModel {
 
 	public void setInactive(boolean inactive) {
 		this.inactive = inactive;
-	}
-
-	@Override
-	public String toString() {
-		return "Address [addressId=" + addressId + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2
-				+ ", addressCity=" + addressCity + ", addressState=" + addressState + ", zipCode=" + zipCode
-				+ ", inactive=" + inactive + ", getDateCreated()=" + getDateCreated() + ", getDateUpdated()="
-				+ getDateUpdated() + ", getUserId()=" + getUserId() + "]";
 	}
 
 }

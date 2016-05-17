@@ -9,20 +9,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class HousingInventoryModel {
 	
 	@JsonProperty(value="housing_inventories")
-	List<HousingInventory> housingInventories;
+    private List<UnitWrapper> housingInventories;
 
-	public List<HousingInventory> getHousingInventories() {
-		return housingInventories;
-	}
+    public List<UnitWrapper> getHousingInventories() {
+        return housingInventories;
+    }
 
-	public void setHousingInventories(List<HousingInventory> housingInventories) {
-		this.housingInventories = housingInventories;
-	}
-
-	@Override
-	public String toString() {
-		return "HousingInventoryModel [housingInventories=" + housingInventories + "]";
-	}
-	
-	
+    public void setHousingInventories(List<UnitWrapper> housingInventories) {
+        this.housingInventories = housingInventories;
+    }
 }

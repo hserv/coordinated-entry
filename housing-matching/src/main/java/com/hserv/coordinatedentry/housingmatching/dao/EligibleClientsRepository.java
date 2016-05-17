@@ -18,7 +18,7 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	
 	public EligibleClient findByClientId(UUID clientID);
 
-	@Query("select ec from EligibleClient as ec where ec.matched = false and programType=?1")
+	@Query("select ec from EligibleClient as ec where ec.matched=false and ec.programType=?1")
 	List<EligibleClient> findTopEligibleClients(String programType, Pageable pageable);
 	
 	public List<EligibleClient> findAll();
