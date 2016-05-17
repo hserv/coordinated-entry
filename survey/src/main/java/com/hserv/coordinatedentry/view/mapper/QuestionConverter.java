@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.view.mapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -56,7 +57,10 @@ public class QuestionConverter {
 		questionView.setQuestionName(question.getQuestionName());
 		questionView.setSurveyId(question.getSurveyId());
 		questionView.setUserId(question.getUserId());
+		
+		
 		questionView.setSurveySection(question.getSurveySection());
+		//questionView.setSurveySection(question.getSurveySection() != null &&  !question.getSurveySection().isEmpty() ? question.getSurveySection().get(0) : null);
 		
 		
 		

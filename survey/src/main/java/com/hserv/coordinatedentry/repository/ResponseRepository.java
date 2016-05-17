@@ -11,4 +11,8 @@ public interface ResponseRepository extends JpaRepository<ResponseStorage, Integ
 	
 	public List<ResponseStorage> findByClientId(String clientId) ;
 	
+	//public List<ResponseStorage> findByClientIdAndSurveyId(String clientId, Integer surveyId) ;
+	
+	public List<ResponseStorage> findByClientIdAndResponseIdAndSurveyId(String clientId, Integer responseId,  Integer surveyId) ;
+	
 }

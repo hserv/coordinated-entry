@@ -45,11 +45,11 @@ public class Survey implements Serializable {
 	private String surveyOwner;
 
 	/** date_created. */
-	@JsonSerialize(using=JsonDateSerializer.class)
+	//@JsonSerialize(using=JsonDateSerializer.class)
 	private Date dateCreated;
 
 	/** date_updated. */
-	@JsonSerialize(using=JsonDateSerializer.class)
+	//@JsonSerialize(using=JsonDateSerializer.class)
 	private Date dateUpdated;
 
 	/** user_id. */

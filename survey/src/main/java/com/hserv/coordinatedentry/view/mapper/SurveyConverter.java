@@ -100,7 +100,13 @@ public class SurveyConverter {
 		//question.setSurveyQuestion(surveyQuestions);
 		question.setUserId(questionView.getUserId());
 		question.setSurveyId(questionView.getSurveyId());
-		question.setSurveySection(surveySection);
+		
+		/*List<SurveySection> surveySections = new ArrayList<SurveySection>();
+		surveySections.add(surveySection);
+		question.setSurveySection(surveySections);*/
+		
+ 		question.setSurveySection(surveySection);
+		
 		//question.getCustomPicklist().addAll(questionView.getCustomPicklist());
 		return question;
 	}

@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,10 +12,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
@@ -26,6 +33,8 @@ import com.hserv.coordinatedentry.util.JsonDateSerializer;
  * @version $Id$
  */
 @Entity
+@Table(name = "survey_section")
+///@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SurveySection implements Serializable {
 
 	/** serialVersionUID. */
@@ -77,6 +86,10 @@ public class SurveySection implements Serializable {
 	@OneToMany(mappedBy="surveySection", cascade=CascadeType.ALL)
 	@JsonManagedReference
 	private List<Question> questions;
+	
+	/*@ManyToMany
+	@JoinTable(name="SECTION_QUESTION_MAPPING")
+	private List<Question> questions;*/
 
 	@Column(name="section_detail")
 	private String sectionDetail;
@@ -86,6 +99,12 @@ public class SurveySection implements Serializable {
 
 	@Column(name="section_weight")
 	private double sectionWeight;
+	
+	@OneToMany(mappedBy = "surveySection")
+    @JsonIgnore
+    //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private List<SectionQuestionMapping> sectionQuestionMappings;
+
 
 	/**
 	 * Constructor.
@@ -300,6 +319,17 @@ public class SurveySection implements Serializable {
 
 	public void setSectionWeight(double sectionWeight) {
 		this.sectionWeight = sectionWeight;
+	}
+
+
+	public List<SectionQuestionMapping> getSectionQuestionMappings() {
+		return sectionQuestionMappings;
+	}
+
+
+	public void setSectionQuestionMappings(
+			List<SectionQuestionMapping> sectionQuestionMappings) {
+		this.sectionQuestionMappings = sectionQuestionMappings;
 	}
 
 

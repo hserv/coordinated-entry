@@ -11,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -36,6 +39,10 @@ public class ResponseStorage implements Serializable {
 	@JsonManagedReference
 	private List<QuestionResponse> questionResponseList;
 	
+	@OneToMany(mappedBy="responseStorage", cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<SectionScore> sectionScoreList;
+	
 	private Integer surveyId;
 	private String clientId;
 	private Date dateCreated;
@@ -49,6 +56,8 @@ public class ResponseStorage implements Serializable {
 	private String responseSubassessment;*/
 	
 	/** client_id. */
+	@NotEmpty(message = "survey.response.clientid.not.empty")
+	@Length(max = 255, message = "survey.response.clientidid.max.length")
 	
 	
 	/** app_id. *//*

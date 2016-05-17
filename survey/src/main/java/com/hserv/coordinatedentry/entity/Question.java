@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +13,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
@@ -25,6 +35,8 @@ import com.hserv.coordinatedentry.util.JsonDateSerializer;
  * @version $Id$
  */
 @Entity
+@Table(name = "question")
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Question implements Serializable {
 
 	/** serialVersionUID. */
@@ -38,33 +50,43 @@ public class Question implements Serializable {
 	private Integer questionId;
 
 	/** question_name. */
+	@NotEmpty(message = "question.name.not.empty")
+	@Length(max = 255, message = "question.name.max.length")
 	private String questionName;
 
 	/** display_text. */
+	@NotEmpty(message = "question.display_text.not.empty")
+	@Length(max = 255, message = "question.display_text.max.length")
 	private String displayText;
 
 	/** question_data_type. */
+	@NotEmpty(message = "question.question_data_type.not.empty")
+	@Length(max = 255, message = "question.question_data_type.max.length")
 	private String questionDataType;
 
 	/** question_group_id. */
+	@NotEmpty(message = "question.question_group_id.not.empty")
+	@Length(max = 255, message = "question.question_group_id.max.length")
 	private String questionGroupId;
 
 	/** options_single_multiple_select. */
-	private Boolean optionsSingleMultipleSelect;
+	private Boolean optionsSingleMultipleSelect = Boolean.TRUE;
 
 	/** is_copy_question_id. */
-	private Boolean isCopyQuestionId;
+	private Boolean isCopyQuestionId =  Boolean.FALSE;
 
 	/** hud_boolean. */
-	private Boolean hudBoolean;
+	private Boolean hudBoolean = Boolean.TRUE;
 
 	/** locked. */
-	private Boolean locked;
+	private Boolean locked =  Boolean.FALSE;
 
 	/** inactive. */
-	private Boolean inactive;
+	private Boolean inactive =  Boolean.TRUE;
 
 	/** label_value. */
+	@NotEmpty(message = "question.name.not.empty")
+	@Length(max = 255, message = "question.name.max.length")
 	private String labelValue;
 
 	/** date_created. */
@@ -76,9 +98,13 @@ public class Question implements Serializable {
 	private Date dateUpdated;
 
 	/** user_id. */
+	@NotEmpty(message = "survey.userid.not.empty")
+	@Length(max = 255, message = "survey.userid.max.length")
 	private String userId;
 
 	/** survey_id. */
+	@NotNull(message = "survey.surveyid.not.null")
+	@Min(value = 1, message = "survey.surveyid.min.value")
 	private Integer surveyId;
 
 	/** The set of Survey_Question. */
@@ -88,6 +114,14 @@ public class Question implements Serializable {
 	@JoinColumn(name="section_fk_id")
 	@JsonBackReference
 	private SurveySection surveySection;
+	
+	/*@ManyToMany(mappedBy="questions")
+	private List<SurveySection> surveySection;*/
+	
+	@OneToMany(mappedBy = "question")
+    @JsonIgnore
+    //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private List<SectionQuestionMapping> sectionQuestionMappings;
 
 	@OneToMany(mappedBy="question", cascade=CascadeType.ALL)
 	@JsonManagedReference
@@ -320,10 +354,34 @@ public class Question implements Serializable {
 	public void setSurveySection(SurveySection surveySection) {
 		this.surveySection = surveySection;
 	}
+	
+	/*public List<SurveySection> getSurveySection() {
+		return surveySection;
+	}
+
+
+	public void setSurveySection(List<SurveySection> surveySection) {
+		this.surveySection = surveySection;
+	}*/
+	
+
+	public List<SectionQuestionMapping> getSectionQuestionMappings() {
+		return sectionQuestionMappings;
+	}
+
+
+	public void setSectionQuestionMappings(
+			List<SectionQuestionMapping> sectionQuestionMappings) {
+		this.sectionQuestionMappings = sectionQuestionMappings;
+	}
+
 
 	public List<CustomPicklist> getCustomPicklist() {
 		return customPicklist;
 	}
+
+	
+
 
 	public void setCustomPicklist(List<CustomPicklist> customPicklist) {
 		this.customPicklist = customPicklist;

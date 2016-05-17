@@ -2,28 +2,29 @@ package com.hserv.coordinatedentry.util;
 
 import java.io.Serializable;
 
-public class WSResponse implements Serializable{
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-	
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class WSResponse implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
-	public WSResponse(){
-		
+
+	public WSResponse() {
+
 	}
-	
-	private String statusCode;
-	
+
+	private String statusCode = ApplicationConstants._200;
+
 	private String status;
-	
-	private String statusMessage;
-	
+
+	private String statusMessage = ApplicationConstants.SUCCESS;
+
 	private String errorCode;
-	
+
 	private String erroMessage;
-	
+
 	private Object data;
 
-	
 	public Object getData() {
 		return data;
 	}
@@ -71,6 +72,5 @@ public class WSResponse implements Serializable{
 	public void setErroMessage(String erroMessage) {
 		this.erroMessage = erroMessage;
 	}
-	
-	
+
 }

@@ -96,7 +96,13 @@ public class SampleDataLoader implements ApplicationListener<ContextRefreshedEve
 		surveySectionRepository.save(surveySections);
 		
 		question.setSurveyId(survey.getSurveyId());
+		
+		
 		question.setSurveySection(surveySection);
+		/*List<SurveySection> surveySectionList = new ArrayList<SurveySection>();
+		surveySectionList.add(surveySection);
+		question.setSurveySection(surveySectionList);*/
+		
 		questions.add(question);
 		questionBankRepository.save(questions);
 		

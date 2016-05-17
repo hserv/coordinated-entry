@@ -11,10 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.hserv.coordinatedentry.entity.CustomPicklist;
 import com.hserv.coordinatedentry.entity.Question;
+import com.hserv.coordinatedentry.entity.SectionQuestionMapping;
 import com.hserv.coordinatedentry.entity.Survey;
 import com.hserv.coordinatedentry.entity.SurveySection;
+import com.hserv.coordinatedentry.exception.SurveyServiceException;
 import com.hserv.coordinatedentry.repository.CustomPickListRepository;
 import com.hserv.coordinatedentry.repository.QuestionBankRepository;
+import com.hserv.coordinatedentry.repository.SectionQuestionMappingRepository;
 import com.hserv.coordinatedentry.repository.SurveyRepository;
 import com.hserv.coordinatedentry.repository.SurveySectionRepository;
 import com.hserv.coordinatedentry.util.ResponseMessage;
@@ -32,19 +35,22 @@ public class SurveyHandlerService {
 	private QuestionBankRepository questionBankRepository;
 	private SurveyConverter surveyConverter;
 	private CustomPickListRepository customPickListRepository;
+	private SectionQuestionMappingRepository sectionQuestionMappingRepository;
 
 	@Autowired
 	public SurveyHandlerService(SurveyRepository surveyRepository,
 			SurveySectionRepository surveySectionRepository,
 			QuestionBankRepository questionBankRepository,
 			SurveyConverter surveyConverter, 
-			CustomPickListRepository customPickListRepository) {
+			CustomPickListRepository customPickListRepository,
+			SectionQuestionMappingRepository sectionQuestionMappingRepository) {
 		super();
 		this.surveyRepository = surveyRepository;
 		this.surveySectionRepository = surveySectionRepository;
 		this.questionBankRepository = questionBankRepository;
 		this.surveyConverter = surveyConverter;
 		this.customPickListRepository =  customPickListRepository;
+		this.sectionQuestionMappingRepository = sectionQuestionMappingRepository;
 	}
 
 	public List<SurveyView> getSurveyList() {
@@ -92,6 +98,13 @@ public class SurveyHandlerService {
 					surveyConverter.populateSurveyQuestionEntity(questionView, question, surveySection);
 					questionBankRepository.save(question);
 					
+					
+					SectionQuestionMapping sectionQuestionMapping = new SectionQuestionMapping();
+					sectionQuestionMapping.setQuestion(question);
+					sectionQuestionMapping.setSurveySection(surveySection);
+					
+					sectionQuestionMappingRepository.save(sectionQuestionMapping);
+					
 					for (CustomPicklist customPick : questionView.getCustomPicklist()) {
 						customPick.setQuestion(question);
 						customPickListRepository.save(customPick);
@@ -124,6 +137,31 @@ public class SurveyHandlerService {
 			return ResponseMessage.FAILURE;
 		}
 	}
+	
+	/*public ResponseMessage updateSurvey(SurveyView surveyView) {
+		try {
+			
+
+			Survey survey = surveyRepository.findOne(surveyView.getSurveyId());
+
+			if (survey == null) {
+				throw new SurveyServiceException("Survey not exist");
+			}
+
+			surveyConverter.convertSurveyEntityFromView(survey, surveyView);
+			surveyRepository.save(survey);
+
+			for (SurveySectionView surveySectionView : surveyView .getSurveySection()) {
+				SurveySection surveySection = surveySectionRepository.findOne(surveySectionView.getSectionId());
+				surveyConverter.populateSurveySectionEntity(surveySection, surveySectionView, survey);
+				surveySectionRepository.save(surveySection);
+				updateQuestions(surveySectionView, surveySection);
+			}
+		} catch (Exception exception) {
+			return ResponseMessage.FAILURE;			
+		}
+		return ResponseMessage.SUCCESS;
+	}*/
 	
 	public void updateQuestions(SurveySectionView surveySectionView, SurveySection surveySection) {
 		for(QuestionView questionView : surveySectionView.getQuestions()){

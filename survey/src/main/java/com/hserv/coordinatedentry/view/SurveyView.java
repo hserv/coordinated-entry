@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.hserv.coordinatedentry.util.JsonDateDeserializer;
 import com.hserv.coordinatedentry.util.JsonDateSerializer;
 
 public class SurveyView implements Serializable {
@@ -18,40 +22,49 @@ public class SurveyView implements Serializable {
 	private Integer surveyId;
 
 	/** survey_title. */
+	@NotEmpty(message = "survey.title.not.empty")
+	@Length(max = 255, message = "survey.title.max.length")
 	private String surveyTitle;
 
 	/** survey_owner. */
+	@NotEmpty(message = "survey.owner.not.empty")
+	@Length(max = 255, message = "survey.owner.max.length")
 	private String surveyOwner;
 
 	/** date_created. */
-	//@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	//@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateCreated;
 
 	/** date_updated. */
-	//@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	//@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateUpdated;
 
 	/** user_id. */
+	@NotEmpty(message = "survey.userid.not.empty")
+	@Length(max = 255, message = "survey.userid.max.length")
 	private String userId;
 
 	/** locked. */
-	private Boolean locked;
+	private Boolean locked = Boolean.FALSE;
 
 	/** inactive. */
-	private Boolean inactive;
+	private Boolean inactive = Boolean.FALSE;
 
 	/** is_copysuvery_id. */
-	private Boolean copySuveryId;
+	private Boolean copySuveryId = Boolean.TRUE;
 
 	/** tag_valuestring. */
 	private String tagValue;
 	
 	/** section_id. */
+	//@NotNull(message = "survey.sectionid.not.null")
+	//@Min(value = 1, message = "survey.sectionid.min.value")
 	private Integer sectionId;
 
 	/** The set of Survey_Question. */
+	@NotEmpty(message = "survey.sectionview.not.empty")
 	private List<SurveySectionView> surveySectionView;
 
 	/**

@@ -30,4 +30,11 @@ public class ResponseStorageService {
 		return responseRepository.findByClientId(clientId);
 	}
 
+	/*public List<ResponseStorage> findByClientIdAndSurveyId(String clientId, Integer surveyId) {
+		return responseRepository.findByClientIdAndSurveyId(clientId, surveyId);
+	}*/
+	
+	public List<ResponseStorage> findByClientIdAndSurveyId(String clientId, Integer responseId, Integer surveyId) {
+		return responseRepository.findByClientIdAndResponseIdAndSurveyId(clientId, responseId, surveyId);
+	}
 }

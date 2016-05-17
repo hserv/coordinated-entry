@@ -18,7 +18,7 @@ public class QuestionResponse {
 	
 	private Integer questionId;
 	private Integer pickListId;
-	
+	private float questionScore;
 	
 	
 	@ManyToOne
@@ -56,6 +56,14 @@ public class QuestionResponse {
 
 	public void setResponseStorage(ResponseStorage responseStorage) {
 		this.responseStorage = responseStorage;
+	}
+
+	public float getQuestionScore() {
+		return questionScore;
+	}
+
+	public void setQuestionScore(float questionScore) {
+		this.questionScore = questionScore;
 	}
 	
 }

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.hserv.coordinatedentry.annotation.APIMapping;
 //import com.servinglynk.hmis.warehouse.client.authorizationservice.AuthorizationServiceClient;
 import com.hserv.coordinatedentry.authorization.AuthorizationServiceClient;
+import com.hserv.coordinatedentry.exception.AuthorizationException;
 import com.servinglynk.hmis.warehouse.client.model.ApiMethodAuthorizationCheck;
 
 
@@ -19,16 +20,13 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		
-		
-		HandlerMethod handlerMethod = null;
-		handlerMethod = (HandlerMethod) handler;
-		String methodName = handlerMethod.getMethod().getName();
+
+		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);
-		String apiMethodId=null;
-		
-		if(apiMapping!=null) {
-			apiMethodId  = apiMapping.value();
+		String apiMethodId = null;
+
+		if (apiMapping != null) {
+			apiMethodId = apiMapping.value();
 		}
 		apiMethodId = "CLIENT_API_CREATE_SEXUALORIENTATION";
 		
@@ -37,16 +35,24 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 		//this is the object that need be posted to the HMIS Authorization intecetpro
 		ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
 		//Set the Access token that HOME APP Pass on to CES
-		//TODO Swagger work apiMethodAuthorizationCheck.setAccessToken(authorization);
-		apiMethodAuthorizationCheck.setAccessToken("F1C6FF8AB0DA48DBB600B5BC5B65570627EDF58AF85A432193EC5E0B2A775ECE");
+		//TODO Swagger work 
+		apiMethodAuthorizationCheck.setAccessToken(authorization);
+		//apiMethodAuthorizationCheck.setAccessToken("F1C6FF8AB0DA48DBB600B5BC5B65570627EDF58AF85A432193EC5E0B2A775ECE");
 		// SET THE API Method that CES pre registered with HMIS Platform
 		apiMethodAuthorizationCheck.setApiMethodId(apiMethodId);
 		// SET the TRUSTED APP ID that HOME APP(or any client) - NOT CES TRUSTED APP
 		apiMethodAuthorizationCheck.setTrustedAppId("MASTER_TRUSTED_APP");
 		
 		//This is the client Authroization Service client call that needs to be made - 
-		AuthorizationServiceClient client = new AuthorizationServiceClient();
-		apiMethodAuthorizationCheck = client.checkApiAuthorization(apiMethodAuthorizationCheck);
+		
+		try {
+			AuthorizationServiceClient client = new AuthorizationServiceClient();
+			apiMethodAuthorizationCheck = client.checkApiAuthorization(apiMethodAuthorizationCheck);
+		} catch (Exception e) {
+			//TODO: change the message as per returns from response
+			throw new AuthorizationException("Invalid user access token");
+		}
+		
 	
 		return true;
 	}

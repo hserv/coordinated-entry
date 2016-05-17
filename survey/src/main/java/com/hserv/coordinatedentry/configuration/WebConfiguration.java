@@ -6,6 +6,7 @@ import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import com.hserv.coordinatedentry.configuration.aop.LoggingAspect;
 
@@ -48,5 +49,17 @@ public class WebConfiguration {
 	public WebInterceptor webInterceptorBean() {
 		
 		return new WebInterceptor();
+	}
+	
+	/**
+	 * A bean used to read validation messages
+	 * @return
+	 */
+	@Bean(name = "messageSource")
+	public ReloadableResourceBundleMessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasename("classpath:application-message");
+		messageSource.setDefaultEncoding("UTF-8");
+		return messageSource;
 	}
 }
