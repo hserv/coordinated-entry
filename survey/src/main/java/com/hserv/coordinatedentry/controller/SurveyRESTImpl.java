@@ -124,9 +124,9 @@ public class SurveyRESTImpl {
 			System.out.println(surveyView.getSurveyId());
 			
 			ResponseMessage response = surveyHandlerService.updateSurvey(surveyView);
-			/*if (ResponseMessage.FAILURE.equals(response)) {
+			if (ResponseMessage.FAILURE.equals(response)) {
 				throw new SurveyServiceException("Backend server error, Please try again!");
-			}*/
+			}
 			
 			wsResponse.setStatusCode("200");
 			wsResponse.setStatusMessage(ApplicationConstants.SUCCESS);

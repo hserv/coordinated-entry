@@ -33,7 +33,6 @@ public class QuestionConverter {
 		question.setQuestionName(questionView.getQuestionName());
 		// question.setSurveyQuestion(surveyQuestions);
 		question.setUserId(questionView.getUserId());
-		question.setSurveyId(questionView.getSurveyId());
 		// question.setSurveySection(surveySection);
 		// question.getCustomPicklist().addAll(questionView.getCustomPicklist());
 		return question;
@@ -55,7 +54,6 @@ public class QuestionConverter {
 		questionView.setQuestionDataType(question.getQuestionDataType());
 		questionView.setQuestionGroupId(question.getQuestionGroupId());
 		questionView.setQuestionName(question.getQuestionName());
-		questionView.setSurveyId(question.getSurveyId());
 		questionView.setUserId(question.getUserId());
 		
 		

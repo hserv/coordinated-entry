@@ -22,27 +22,27 @@ public class SurveyView implements Serializable {
 	private Integer surveyId;
 
 	/** survey_title. */
-	@NotEmpty(message = "survey.title.not.empty")
+	//@NotEmpty(message = "survey.title.not.empty")
 	@Length(max = 255, message = "survey.title.max.length")
 	private String surveyTitle;
 
 	/** survey_owner. */
-	@NotEmpty(message = "survey.owner.not.empty")
+	//@NotEmpty(message = "survey.owner.not.empty")
 	@Length(max = 255, message = "survey.owner.max.length")
 	private String surveyOwner;
 
 	/** date_created. */
-	@JsonSerialize(using=JsonDateSerializer.class)
+	//////@JsonSerialize(using=JsonDateSerializer.class)
 	//@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateCreated;
 
 	/** date_updated. */
-	@JsonSerialize(using=JsonDateSerializer.class)
+	//@JsonSerialize(using=JsonDateSerializer.class)
 	//@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateUpdated;
 
 	/** user_id. */
-	@NotEmpty(message = "survey.userid.not.empty")
+	//@NotEmpty(message = "survey.userid.not.empty")
 	@Length(max = 255, message = "survey.userid.max.length")
 	private String userId;
 
@@ -64,7 +64,7 @@ public class SurveyView implements Serializable {
 	private Integer sectionId;
 
 	/** The set of Survey_Question. */
-	@NotEmpty(message = "survey.sectionview.not.empty")
+	//@NotEmpty(message = "survey.sectionview.not.empty")
 	private List<SurveySectionView> surveySectionView;
 
 	/**

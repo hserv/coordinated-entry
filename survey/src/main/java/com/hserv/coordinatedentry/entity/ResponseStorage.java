@@ -74,6 +74,10 @@ public class ResponseStorage implements Serializable {
 	@JsonBackReference
 	private Integer responseTypeId;
 	
+	
+	//TODO: Uncomment section id & question id as per requirement & mapping specified in ERD, 
+	//Also check for other fields
+	 * 
 	*//** section_id. *//*
 	@ManyToOne
 	@JoinColumn(name="section_fk_id")

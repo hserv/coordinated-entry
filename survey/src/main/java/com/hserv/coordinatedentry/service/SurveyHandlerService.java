@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.hserv.coordinatedentry.entity.CustomPicklist;
 import com.hserv.coordinatedentry.entity.Question;
@@ -89,7 +91,7 @@ public class SurveyHandlerService {
 			surveyRepository.save(survey);
 			
 			
-			for(SurveySectionView surveySectionView : surveyView.getSurveySection() ){
+			/*for(SurveySectionView surveySectionView : surveyView.getSurveySection() ){
 				SurveySection surveySection  = surveyConverter.populateSurveySectionEntity(surveySectionView, survey);
 				surveySectionRepository.save(surveySection);
 				
@@ -110,7 +112,7 @@ public class SurveyHandlerService {
 						customPickListRepository.save(customPick);
 					}
 				}
-			}
+			}*/
 			return ResponseMessage.SUCCESS;
 		}catch(RuntimeException exception){
 			return ResponseMessage.FAILURE;
@@ -125,7 +127,10 @@ public class SurveyHandlerService {
 			surveyRepository.save(survey);
 			for(SurveySectionView surveySectionView : surveyView.getSurveySection()){
 				System.out.println("surveyQuestion.getSurveyQuestionId() :"+surveySectionView.getSectionId());
-				SurveySection surveySection = surveySectionRepository.findOne(surveySectionView.getSectionId());
+				SurveySection surveySection = new SurveySection();
+				if(surveySectionView!=null && surveySectionView.getSectionId()!=null){
+					surveySection = surveySectionRepository.findOne(surveySectionView.getSectionId());
+				}
 				
 				surveyConverter.populateSurveySectionEntity(surveySection, surveySectionView, survey);
 				surveySectionRepository.save(surveySection);
@@ -164,10 +169,43 @@ public class SurveyHandlerService {
 	}*/
 	
 	public void updateQuestions(SurveySectionView surveySectionView, SurveySection surveySection) {
-		for(QuestionView questionView : surveySectionView.getQuestions()){
-			Question question = questionBankRepository.findOne(questionView.getQuestionId());
-			surveyConverter.populateSurveyQuestionEntity(questionView, question, surveySection);
-			questionBankRepository.save(question);
+		if (!CollectionUtils.isEmpty(surveySectionView.getQuestions())) {
+			for(QuestionView questionView : surveySectionView.getQuestions()){
+				Question question = new Question();
+				
+				boolean isAddQuestionMapping = true;
+				if(questionView!=null && questionView.getQuestionId()!=null){
+					question = questionBankRepository.findOne(questionView.getQuestionId());
+					isAddQuestionMapping = false;
+				}
+				surveyConverter.populateSurveyQuestionEntity(questionView, question, surveySection);
+				questionBankRepository.save(question);
+				
+				if (isAddQuestionMapping) {
+					SectionQuestionMapping sectionQuestionMapping = new SectionQuestionMapping();
+					sectionQuestionMapping.setQuestion(question);
+					sectionQuestionMapping.setSurveySection(surveySection);	
+					sectionQuestionMappingRepository.save(sectionQuestionMapping);
+				}
+				
+				
+				
+				updatePickList(questionView, question);
+			}
+		}
+	}
+	
+	
+	public void updatePickList(QuestionView questionView, Question question){
+		
+		for (CustomPicklist customPick : questionView.getCustomPicklist()) {
+			CustomPicklist customPicklist = new CustomPicklist();
+			if(customPick!=null && customPick.getPicklistId()!=null)
+				customPicklist = customPickListRepository.findOne(customPick.getPicklistId());
+			
+			BeanUtils.copyProperties(customPick, customPicklist);
+			customPicklist.setQuestion(question);
+			customPickListRepository.save(customPicklist);
 		}
 	}
 	

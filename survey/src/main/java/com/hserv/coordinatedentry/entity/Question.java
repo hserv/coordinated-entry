@@ -102,10 +102,6 @@ public class Question implements Serializable {
 	@Length(max = 255, message = "survey.userid.max.length")
 	private String userId;
 
-	/** survey_id. */
-	@NotNull(message = "survey.surveyid.not.null")
-	@Min(value = 1, message = "survey.surveyid.min.value")
-	private Integer surveyId;
 
 	/** The set of Survey_Question. */
 	//@OneToMany(mappedBy="question", cascade=CascadeType.ALL)
@@ -330,13 +326,6 @@ public class Question implements Serializable {
 	 */
 
 	
-	public Integer getSurveyId() {
-		return surveyId;
-	}
-
-	public void setSurveyId(Integer surveyId) {
-		this.surveyId = surveyId;
-	}
 	
 	public Integer getQuestionId() {
 		return questionId;
@@ -387,41 +376,5 @@ public class Question implements Serializable {
 		this.customPicklist = customPicklist;
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((surveyId == null) ? 0 : surveyId.hashCode());
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Question other = (Question) obj;
-		if (surveyId == null) {
-			if (other.surveyId != null) {
-				return false;
-			}
-		} else if (!surveyId.equals(other.surveyId)) {
-			return false;
-		}
-		return true;
-	}
 
 }

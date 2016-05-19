@@ -99,7 +99,6 @@ public class SurveyConverter {
 		question.setQuestionName(questionView.getQuestionName());
 		//question.setSurveyQuestion(surveyQuestions);
 		question.setUserId(questionView.getUserId());
-		question.setSurveyId(questionView.getSurveyId());
 		
 		/*List<SurveySection> surveySections = new ArrayList<SurveySection>();
 		surveySections.add(surveySection);
