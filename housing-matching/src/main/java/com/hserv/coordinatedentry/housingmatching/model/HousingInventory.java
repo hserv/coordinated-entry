@@ -111,10 +111,6 @@ public class HousingInventory {
 				+ address + ", bedsCurrent=" + bedsCurrent + ", bedsCapacity=" + bedsCapacity + ", inService="
 				+ inService + ", familyUnit=" + familyUnit + ", vacant=" + vacant + ", inactive=" + inactive + "]";
 	}
-
-	
-	
-	
 	
 }
 

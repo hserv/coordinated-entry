@@ -30,11 +30,11 @@ public class EligibleClientsController {
 	EligibleClientService eligibleClientService;
 
 	/**
-	 * Returns the most eligible clients. URL :
-	 * http://localhost:8080/eligible-clients/
+	 * Returns the most eligible clients.
+	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	@APIMapping(value="Get_Eligible_Clients")
+	@APIMapping(value="get-eligible-clients")
 	public List<EligibleClientModel> getEligibleClients() {
 		return eligibleClientService.getEligibleClients();
 	}
@@ -45,7 +45,7 @@ public class EligibleClientsController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	@APIMapping(value="Update_Eligible_Clients")
+	@APIMapping(value="update-eligible-clients")
 	public ResponseEntity<String> updateEligibleClients(
 			@Validated @RequestBody List<EligibleClientModel> eligibleClientModels) {
 		ResponseEntity<String> responseEntity = null;
@@ -63,7 +63,7 @@ public class EligibleClientsController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.DELETE)
-	@APIMapping(value="Delete_Eligible_Clients")
+	@APIMapping(value="delete-eligible-clients")
 	public ResponseEntity<String> deleteEligibleClients() {
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -75,9 +75,8 @@ public class EligibleClientsController {
 		return responseEntity;
 	}
 	
-	//TODO - Have to get rid of this method, after discussion
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	@APIMapping(value="Create_Eligible_Clients")
+	@APIMapping(value="create-eligible-clients")
 	public ResponseEntity<String> createEligibleClients(
 			@Validated @RequestBody List<EligibleClientModel> eligibleClientModels) {
 		ResponseEntity<String> responseEntity = null;
@@ -94,15 +93,9 @@ public class EligibleClientsController {
 	 * Will add client to the eligible list. Accept json having one or more
 	 * clients.
 	 * 
-	 * URL :- https://localhost:8080/eligible-clients/create
-	 * 
-	 * { "clientId": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "surveyScore": 80,
-	 * "category": "RRH", "matched": true, "surveyDate": "2016-04-19",
-	 * "spdatLabel": "youth" }
-	 * 
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
-	@APIMapping(value="Create_Eligible_Client")
+	@APIMapping(value="create-eligible-client")
 	public ResponseEntity<String> createEligibleClient(
 			@Validated @RequestBody EligibleClientModel eligibleClientModel) {
 		ResponseEntity<String> responseEntity = null;
@@ -110,29 +103,27 @@ public class EligibleClientsController {
 			boolean status = eligibleClientService.createEligibleClient(eligibleClientModel);
 			responseEntity = ResponseEntity.ok("{\"added\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
-			responseEntity = new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);// .notFound().build();
+			responseEntity = new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
 		}
 		return responseEntity;
 	}
 
 	/**
-	 * Fetch a particular client URL :
-	 * http://localhost:8080/eligible-clients/a0eebc99-9c0b-4ef8-bb6d-
-	 * 6bb9bd380a11
+	 * Fetch a particular client.
+	 * 
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	@APIMapping(value="Get_Eligible_Client_By_Id")
+	@APIMapping(value="get-eligible-client-by-id")
 	public EligibleClientModel getEligibleClientById(@PathVariable String id) {
 		return eligibleClientService.getEligibleClientDetail(UUID.fromString(id));
 	}
 
 	/**
-	 * Delete a particular client URL :
-	 * http://localhost:8080/eligible-clients/a0eebc99-9c0b-4ef8-bb6d-
-	 * 6bb9bd380a12
+	 * Delete a particular client.
+	 * 
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	@APIMapping(value="Delete_Eligible_Client_By_Id")
+	@APIMapping(value="delete-eligible-client-by-id")
 	public ResponseEntity<String> deleteEligibleClientById(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -146,16 +137,11 @@ public class EligibleClientsController {
 	
 
 	/**
-	 * This API will be used to modify the details of a particular client. URL :
-	 * http://localhost:8080/eligible-clients/a0eebc99-9c0b-4ef8-bb6d-
-	 * 6bb9bd380a12
+	 * This API will be used to modify the details of a particular client.
 	 * 
-	 * { "clientId": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "surveyScore": 80,
-	 * "category": "RRH", "matched": true, "surveyDate": "2016-04-19",
-	 * "spdatLabel": "family" }
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	@APIMapping(value="Update_Eligible_Client_By_Id")
+	@APIMapping(value="update-eligible-client-by-id")
 	public ResponseEntity<String> updateEligibleClientById(@PathVariable String id,
 			@Validated @RequestBody EligibleClientModel eligibleClientModel) {
 		ResponseEntity<String> responseEntity = null;

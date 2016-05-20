@@ -4,11 +4,8 @@ import java.util.Date;
 
 public class HousingMatchBaseModel {
 
-	
 	private Date dateCreated;
-	
 	private Date dateUpdated;
-	
 	private String userId;
 
 	public Date getDateCreated() {

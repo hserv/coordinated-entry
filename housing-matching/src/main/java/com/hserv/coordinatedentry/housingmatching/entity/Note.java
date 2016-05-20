@@ -31,7 +31,6 @@ public class Note implements java.io.Serializable {
 	}
 
 	@Id
-
 	@Column(name = "note_id", unique = true, nullable = false)
 	public String getNoteId() {
 		return this.noteId;

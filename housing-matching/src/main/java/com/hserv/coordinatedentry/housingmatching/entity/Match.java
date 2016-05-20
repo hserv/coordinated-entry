@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,10 +50,9 @@ public class Match implements java.io.Serializable {
 		this.housingUnitId = housingUnitId;
 	}
 
-	public Match(UUID reservationId, EligibleClient eligibleClients, String noteId, Date matchDate,
-			String matchStatus, Integer reservationAdults, Integer reservationChildren, Boolean manualMatch,
-			Boolean inactive, Date dateCreated, Date dateUpdated, String userId, UUID housingUnitId,
-			Set<Note> notes) {
+	public Match(UUID reservationId, EligibleClient eligibleClients, String noteId, Date matchDate, String matchStatus,
+			Integer reservationAdults, Integer reservationChildren, Boolean manualMatch, Boolean inactive,
+			Date dateCreated, Date dateUpdated, String userId, UUID housingUnitId, Set<Note> notes) {
 		this.reservationId = reservationId;
 		this.eligibleClient = eligibleClients;
 		this.noteId = noteId;
@@ -70,12 +71,9 @@ public class Match implements java.io.Serializable {
 
 	@Id
 	@Column(name = "reservation_id", unique = true, nullable = false)
-	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
-	//@Type(type = "pg-uuid")
-	//@GeneratedValue(generator="system-uuid")
-	//@GenericGenerator(name="system-uuid", strategy = "uuid")
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	public UUID getReservationId() {
 		return this.reservationId;
 	}
@@ -188,7 +186,7 @@ public class Match implements java.io.Serializable {
 	}
 
 	@Column(name = "housing_unit_id", nullable = false)
-	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	public UUID getHousingUnitId() {
 		return this.housingUnitId;
 	}
@@ -204,6 +202,16 @@ public class Match implements java.io.Serializable {
 
 	public void setNotes(Set<Note> notes) {
 		this.notes = notes;
+	}
+
+	@PrePersist
+	protected void onCreate() {
+		dateCreated = dateUpdated = new Date();
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		dateUpdated = new Date();
 	}
 
 }
