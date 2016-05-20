@@ -1,7 +1,6 @@
 package com.hserv.coordinatedentry.authorization;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -88,7 +87,8 @@ public class AuthorizationServiceClient extends CoreClientBase implements IAutho
 
 	public static void main(String args[]){
 		ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
-		apiMethodAuthorizationCheck.setAccessToken("F1C6FF8AB0DA48DBB600B5BC5B65570627EDF58AF85A432193EC5E0B2A775ECE");
+		//apiMethodAuthorizationCheck.setAccessToken("F1C6FF8AB0DA48DBB600B5BC5B65570627EDF58AF85A432193EC5E0B2A775ECE");
+		apiMethodAuthorizationCheck.setAccessToken("09B3DEB796AE4996B14543417E2F139C72F4AB5BB3E44C5FA90D538B6FE81B53");
 		apiMethodAuthorizationCheck.setApiMethodId("CLIENT_API_CREATE_SEXUALORIENTATION");
 		apiMethodAuthorizationCheck.setTrustedAppId("MASTER_TRUSTED_APP");
 		

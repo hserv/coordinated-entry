@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.hserv.coordinatedentry.entity.Question;
 import com.hserv.coordinatedentry.entity.Survey;
@@ -21,8 +22,8 @@ public class SurveyConverter {
 		
 		//survey.setDateCreated(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
 		//survey.setDateUpdated(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
-		survey.setDateCreated(surveyView.getDateCreated());
-		survey.setDateUpdated(surveyView.getDateUpdated());
+//		survey.setDateCreated(surveyView.getDateCreated());
+//		survey.setDateUpdated(surveyView.getDateUpdated());
 		
 		survey.setInactive(surveyView.getInactive());
 		survey.setCopySuveryId(surveyView.getCopySuveryId());
@@ -111,12 +112,13 @@ public class SurveyConverter {
 	}
 	
 	
-	public List<SurveyView> convertSurveyViewListFromEntityList(List<SurveyView> surveyViewList, List<Survey> surveyList){
+	public List<SurveyView> convertSurveyViewListFromEntityList(List<SurveyView> surveyViewList, List<Survey> surveyList){		
+		if(CollectionUtils.isEmpty(surveyList)) {
+			return surveyViewList;
+		}
 		
-		if(surveyList==null || surveyList.isEmpty()) return surveyViewList;
 		for(Survey survey : surveyList){
-			SurveyView surveyView = new SurveyView();
-			surveyViewList.add(populateSurveyDescriptionListFromEntity(surveyView, survey));
+			surveyViewList.add(populateSurveyDescriptionListFromEntity(new SurveyView(), survey));
 		}
 		return surveyViewList;
 		
@@ -147,7 +149,8 @@ public class SurveyConverter {
 		surveyView.setSurveyTitle(survey.getSurveyTitle());
 		surveyView.setDateCreated(survey.getDateCreated());
 		surveyView.setDateUpdated(survey.getDateUpdated());
-		
+		surveyView.setInactive(survey.getInactive());
+		surveyView.setCopySuveryId(survey.getCopySuveryId());		
 		return surveyView;
 	}
 	

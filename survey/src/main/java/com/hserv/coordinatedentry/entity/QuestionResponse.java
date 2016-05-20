@@ -22,9 +22,9 @@ public class QuestionResponse {
 	
 	
 	@ManyToOne
-	@JoinColumn(name="response_fk_id")
+	@JoinColumn(name="section_score_fk_id")
 	@JsonBackReference
-	private ResponseStorage responseStorage;
+	private SectionScore sectionScore;
 
 	public Integer getId() {
 		return id;
@@ -50,20 +50,20 @@ public class QuestionResponse {
 		this.pickListId = pickListId;
 	}
 
-	public ResponseStorage getResponseStorage() {
-		return responseStorage;
-	}
-
-	public void setResponseStorage(ResponseStorage responseStorage) {
-		this.responseStorage = responseStorage;
-	}
-
 	public float getQuestionScore() {
 		return questionScore;
 	}
 
 	public void setQuestionScore(float questionScore) {
 		this.questionScore = questionScore;
+	}
+
+	public SectionScore getSectionScore() {
+		return sectionScore;
+	}
+
+	public void setSectionScore(SectionScore sectionScore) {
+		this.sectionScore = sectionScore;
 	}
 	
 }

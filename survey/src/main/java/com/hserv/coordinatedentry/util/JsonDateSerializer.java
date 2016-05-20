@@ -13,7 +13,8 @@ public class JsonDateSerializer extends JsonSerializer<Date>{
 
 	@Override
 	public void serialize(Date date, JsonGenerator jsonGenerator, SerializerProvider provider) throws IOException {
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	    //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");	
 	    dateFormat.setTimeZone(TimeZone.getDefault());
 	    String dateString = dateFormat.format(date);
 	    jsonGenerator.writeString(dateString);

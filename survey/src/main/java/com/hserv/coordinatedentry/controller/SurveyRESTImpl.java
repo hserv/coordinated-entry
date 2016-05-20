@@ -29,7 +29,7 @@ import com.hserv.coordinatedentry.view.SurveyView;
 @RequestMapping("/surveys")
 public class SurveyRESTImpl {
 
-	private static final Logger logger = LoggerFactory.getLogger(SurveyRESTImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SurveyRESTImpl.class);
 	
 	private SurveyHandlerService surveyHandlerService;
 
@@ -43,21 +43,16 @@ public class SurveyRESTImpl {
 	@APIMapping(value="SURVEY_API_GET_ALL_SURVEY")
 	public @ResponseBody WSResponse getSurveyList(){
 		WSResponse wsRepsSts= null;
-		List<SurveyView> surveys = null;
-		
-		try{
+		List<SurveyView> surveys = null;		
+		try {
 			wsRepsSts = new WSResponse();
 			surveys = surveyHandlerService.getSurveyList();
-			wsRepsSts.setStatusCode("200");
-			wsRepsSts.setStatus(ApplicationConstants.SUCCESS);
 			wsRepsSts.setData(surveys);
-		}catch(Exception e){
-			wsRepsSts.setStatus(ApplicationConstants.FAILURE);
-			wsRepsSts.setErroMessage("Something Wrong in getSurveyQuestions API"+e.getMessage());
+		} catch (Exception e) {
+			LOGGER.error("Error while fetching surveys", e);
+			throw new SurveyControllerException("Error while fetching surveys, Please try again later!");
 		}
 		return wsRepsSts;
-		
-		
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/{survey_id}")
@@ -92,7 +87,7 @@ public class SurveyRESTImpl {
 	@RequestMapping(method = RequestMethod.POST, value="/")
 	@APIMapping(value="SURVEY_API_CREATE_SURVEY")
 	public @ResponseBody WSResponse createSurvey(@RequestBody @Validated SurveyView surveyView){
-		logger.debug("Creating new Survey...............");
+		LOGGER.debug("Creating new Survey...............");
 		
 		WSResponse wsResponse = null;
 		try{
@@ -103,7 +98,7 @@ public class SurveyRESTImpl {
 			wsResponse.setStatus("Success");
 
 		}catch(Exception e){
-			logger.error("Error while creating new servey: ", e);
+			LOGGER.error("Error while creating new servey: ", e);
 			wsResponse.setErroMessage("Something Wrong in createSurvey API"+e.getMessage());
 		}
 
@@ -144,19 +139,26 @@ public class SurveyRESTImpl {
 	@RequestMapping(method = RequestMethod.DELETE, value="/{survey_id}")
 	@APIMapping(value="SURVEY_API_DELETE_SURVEY")
 	public @ResponseBody WSResponse deleteSurvey(@PathVariable("survey_id") Integer surveyId){
-		WSResponse wsResponse = null;
-		System.out.println("surveyId ; "+surveyId);
 		try{
-			wsResponse = new WSResponse();
+			
+			if (surveyId == null || surveyId < 1) {
+				throw new InvalidArgumentException ("Invalid survey id");
+			}
+			
 			ResponseMessage result = surveyHandlerService.deleteSurvey(surveyId);
-			System.out.println("result : "+result);
-			wsResponse.setStatusCode("200");
-			wsResponse.setStatus("Success");
+			if(result == null || ResponseMessage.FAILURE.equals(result)) {
+				throw new SurveyControllerException("Error while deleting survey, Please try again later!");
+			} 
+			
+			return new WSResponse();
+			
+		}catch(InvalidArgumentException e){
+			throw e;
+		}catch(SurveyControllerException e){
+			throw e;
 		}catch(Exception e){
-			wsResponse.setErroMessage("Something wrong in deleteSurvey API"+e.getMessage());
-		}
-		//Response.status(200).entity(wsResponse).build();
-		return wsResponse;
+			throw new SurveyControllerException("Backend server error, please try again!");
+		}	
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value="/allSurvey")	

@@ -10,12 +10,11 @@ public class WSResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public WSResponse() {
-
 	}
 
 	private String statusCode = ApplicationConstants._200;
 
-	private String status;
+	private String status = ApplicationConstants.SUCCESS;
 
 	private String statusMessage = ApplicationConstants.SUCCESS;
 

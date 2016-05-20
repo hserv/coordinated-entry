@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.hserv.coordinatedentry.entity.SectionQuestionMapping;
+import com.hserv.coordinatedentry.entity.SurveySection;
 
 @Repository
 public interface SectionQuestionMappingRepository extends
@@ -15,5 +16,7 @@ public interface SectionQuestionMappingRepository extends
 
 	@Query("select sqm from SectionQuestionMapping sqm where sqm.question.questionId = :qid")
 	public List<SectionQuestionMapping> getAllSectionQuestionMapping(@Param("qid") Integer questionId);
+	
+	public void deleteBySurveySectionIn(List<SurveySection> surveySections);
 
 }

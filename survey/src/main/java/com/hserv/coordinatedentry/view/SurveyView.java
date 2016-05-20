@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.hserv.coordinatedentry.util.JsonDateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.hserv.coordinatedentry.util.JsonDateDeserializer;
 
 public class SurveyView implements Serializable {
 
@@ -22,7 +19,7 @@ public class SurveyView implements Serializable {
 	private Integer surveyId;
 
 	/** survey_title. */
-	//@NotEmpty(message = "survey.title.not.empty")
+	@NotEmpty(message = "survey.title.not.empty")
 	@Length(max = 255, message = "survey.title.max.length")
 	private String surveyTitle;
 
@@ -33,12 +30,12 @@ public class SurveyView implements Serializable {
 
 	/** date_created. */
 	//////@JsonSerialize(using=JsonDateSerializer.class)
-	//@JsonDeserialize(using=JsonDateDeserializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateCreated;
 
 	/** date_updated. */
 	//@JsonSerialize(using=JsonDateSerializer.class)
-	//@JsonDeserialize(using=JsonDateDeserializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	private Date dateUpdated;
 
 	/** user_id. */

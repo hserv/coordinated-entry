@@ -26,7 +26,7 @@ import com.hserv.coordinatedentry.util.JsonDateSerializer;
  * @version $Id$
  */
 @Entity
-public class Survey implements Serializable {
+public class Survey extends BaseEntity implements Serializable {
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -44,13 +44,13 @@ public class Survey implements Serializable {
 	/** survey_owner. */
 	private String surveyOwner;
 
-	/** date_created. */
-	//@JsonSerialize(using=JsonDateSerializer.class)
-	private Date dateCreated;
-
-	/** date_updated. */
-	//@JsonSerialize(using=JsonDateSerializer.class)
-	private Date dateUpdated;
+//	/** date_created. */
+//	//@JsonSerialize(using=JsonDateSerializer.class)
+//	private Date dateCreated;
+//
+//	/** date_updated. */
+//	//@JsonSerialize(using=JsonDateSerializer.class)
+//	private Date dateUpdated;
 
 	/** user_id. */
 	private String userId;
@@ -143,24 +143,24 @@ public class Survey implements Serializable {
 
 
 	
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-
-	public Date getDateUpdated() {
-		return dateUpdated;
-	}
-
-
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
+//	public Date getDateCreated() {
+//		return dateCreated;
+//	}
+//
+//
+//	public void setDateCreated(Date dateCreated) {
+//		this.dateCreated = dateCreated;
+//	}
+//
+//
+//	public Date getDateUpdated() {
+//		return dateUpdated;
+//	}
+//
+//
+//	public void setDateUpdated(Date dateUpdated) {
+//		this.dateUpdated = dateUpdated;
+//	}
 
 
 	public String getUserId() {

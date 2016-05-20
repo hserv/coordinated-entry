@@ -29,42 +29,27 @@ public class ResponseStorage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	// @GeneratedValue(strategy=GenerationType.SEQUENCE,
-	// generator="client_Id_seq")
-	// @SequenceGenerator(name="client_Id_seq", sequenceName="client_Id_seq")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer responseId;
 
-	@OneToMany(mappedBy="responseStorage", cascade=CascadeType.ALL)
-	@JsonManagedReference
-	private List<QuestionResponse> questionResponseList;
 	
 	@OneToMany(mappedBy="responseStorage", cascade=CascadeType.ALL)
 	@JsonManagedReference
 	private List<SectionScore> sectionScoreList;
 	
 	private Integer surveyId;
+	
+	@NotEmpty(message = "survey.response.clientid.not.empty")
+	@Length(max = 255, message = "survey.response.clientidid.max.length")
 	private String clientId;
+	
 	private Date dateCreated;
 	private Date dateUpdated;
 	private String userId;
-	
-	/** response_value. *//*
 	private String responseValue;
-
-	*//** response_subassessment. *//*
-	private String responseSubassessment;*/
-	
-	/** client_id. */
-	@NotEmpty(message = "survey.response.clientid.not.empty")
-	@Length(max = 255, message = "survey.response.clientidid.max.length")
-	
-	
-	/** app_id. *//*
+	private String responseSubassessment;
 	private String appId;
-
-	*//** effective_date. *//*
-	private Date effectiveDate;*/
+	private Date effectiveDate;
 
 	
 	
@@ -144,12 +129,44 @@ public class ResponseStorage implements Serializable {
 		this.surveyId = surveyId;
 	}
 
-	public List<QuestionResponse> getQuestionResponseList() {
-		return questionResponseList;
+	public String getResponseValue() {
+		return responseValue;
 	}
 
-	public void setQuestionResponseList(List<QuestionResponse> questionResponseList) {
-		this.questionResponseList = questionResponseList;
+	public void setResponseValue(String responseValue) {
+		this.responseValue = responseValue;
+	}
+
+	public String getResponseSubassessment() {
+		return responseSubassessment;
+	}
+
+	public void setResponseSubassessment(String responseSubassessment) {
+		this.responseSubassessment = responseSubassessment;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	public Date getEffectiveDate() {
+		return effectiveDate;
+	}
+
+	public void setEffectiveDate(Date effectiveDate) {
+		this.effectiveDate = effectiveDate;
+	}
+
+	public List<SectionScore> getSectionScoreList() {
+		return sectionScoreList;
+	}
+
+	public void setSectionScoreList(List<SectionScore> sectionScoreList) {
+		this.sectionScoreList = sectionScoreList;
 	}
 
 }

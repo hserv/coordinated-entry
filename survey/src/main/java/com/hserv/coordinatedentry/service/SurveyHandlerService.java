@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -16,7 +18,6 @@ import com.hserv.coordinatedentry.entity.Question;
 import com.hserv.coordinatedentry.entity.SectionQuestionMapping;
 import com.hserv.coordinatedentry.entity.Survey;
 import com.hserv.coordinatedentry.entity.SurveySection;
-import com.hserv.coordinatedentry.exception.SurveyServiceException;
 import com.hserv.coordinatedentry.repository.CustomPickListRepository;
 import com.hserv.coordinatedentry.repository.QuestionBankRepository;
 import com.hserv.coordinatedentry.repository.SectionQuestionMappingRepository;
@@ -31,6 +32,8 @@ import com.hserv.coordinatedentry.view.mapper.SurveyConverter;
 @Transactional
 @Service
 public class SurveyHandlerService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SurveyHandlerService.class);
 
 	private SurveyRepository surveyRepository;
 	private SurveySectionRepository surveySectionRepository;
@@ -56,10 +59,15 @@ public class SurveyHandlerService {
 	}
 
 	public List<SurveyView> getSurveyList() {
-		List<Survey> surveyList = surveyRepository.findAll();
-		List<SurveyView> surveyViewList = new ArrayList<SurveyView>(); 
-		surveyViewList = surveyConverter.convertSurveyViewListFromEntityList(surveyViewList, surveyList);
-		return surveyViewList;
+		List<SurveyView> surveyViewList = null;
+		try {
+			List<Survey> surveyList = surveyRepository.findAll();
+			surveyViewList = surveyConverter.convertSurveyViewListFromEntityList(new ArrayList<SurveyView>(), surveyList);			
+		} catch (Exception e) {
+			LOGGER.error("Backend server error while fetching surveys");
+			return null;
+		}
+		return surveyViewList;		
 	}
 	
 	public List<Survey> getAllSurveyList() {
@@ -211,7 +219,21 @@ public class SurveyHandlerService {
 	
 	public ResponseMessage deleteSurvey(Integer surveyId){
 		try{
-			surveyRepository.delete(surveyId);
+			Survey survey = surveyRepository.getOne(surveyId);
+			
+			if (survey == null) {
+				return ResponseMessage.FAILURE;
+			}
+			
+			//first delete mapping between survey section & question
+			List<SurveySection> surveySections = survey.getSurveySection();			
+			if (!CollectionUtils.isEmpty(surveySections)) {
+				sectionQuestionMappingRepository.deleteBySurveySectionIn(surveySections);
+			}
+			
+			//surveyRepository.delete(surveyId);
+			surveyRepository.delete(survey);
+			
 		}catch(DataAccessException exception){
 			return ResponseMessage.FAILURE;
 		}
