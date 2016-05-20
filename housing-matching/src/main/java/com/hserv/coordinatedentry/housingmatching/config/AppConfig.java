@@ -13,11 +13,16 @@ import com.hserv.coordinatedentry.housingmatching.interceptor.LoggingInterceptor
 
 @Configuration
 public class AppConfig extends WebMvcConfigurerAdapter {
+	
+	@Bean
+	public AuthenticationInterceptor getAuthenticationInterceptor(){
+		return new AuthenticationInterceptor();
+	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new LoggingInterceptor());
-		registry.addInterceptor(new AuthenticationInterceptor());
+		registry.addInterceptor(getAuthenticationInterceptor());
 	}
 
 	@Bean

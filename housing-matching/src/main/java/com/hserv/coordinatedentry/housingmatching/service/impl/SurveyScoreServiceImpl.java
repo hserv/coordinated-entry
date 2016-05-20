@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
@@ -21,7 +19,6 @@ import com.hserv.coordinatedentry.housingmatching.model.SurveySectionModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
-import com.hserv.coordinatedentry.housingmatching.task.ComputeScoreTask;
 import com.hserv.coordinatedentry.housingmatching.translator.SurveyScoreTranslator;
 
 
@@ -120,11 +117,4 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		}
 		
 	}
-	
-	public void updateClientScore(String clientId, DeferredResult<String> deferredResult) {
-		Timer timer = new Timer();
-		ComputeScoreTask task = new ComputeScoreTask(clientId, deferredResult, surveyMSService ,eligibleClientService);
-		timer.schedule(task, 0);
-	}
-
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 
@@ -26,12 +27,13 @@ public class ScoreController {
 	SurveyScoreService surveyScoreService;
 	
 	/**
-	 * Trigger score totalling via POST. An Empty body request would suffice.
+	 * Trigger score totaling via POST. An Empty body request would suffice.
 	 * 
 	 * 
 	 */
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
+	@APIMapping(value="trigger-score-calculation")
 	public DeferredResult<String> calculateScore() {
 		DeferredResult<String> deferredResult = new DeferredResult<>();
 		try {
@@ -46,10 +48,11 @@ public class ScoreController {
 	
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.POST)
-	public DeferredResult<String> createScore(@PathVariable String id) {
+	@APIMapping(value="create-score-by-clientId")
+	public DeferredResult<String> insertScoreForAClient(@PathVariable String id) {
 		DeferredResult<String> deferredResult = new DeferredResult<>();
 		try {
-			surveyScoreService.updateClientScore(id ,deferredResult);
+			//
 		} catch (Exception ex) {
 			deferredResult.setResult(new String("{\"failed\": \"true\"}\""));
 		}
@@ -61,6 +64,7 @@ public class ScoreController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
+	@APIMapping(value="get-scores")
 	public List<EligibleClientModel> getScores() {
 		return surveyScoreService.getScores();
 	}
@@ -71,6 +75,7 @@ public class ScoreController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.DELETE)
+	@APIMapping(value="delete-scores")
 	public ResponseEntity<String> deleteScores() {
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -87,7 +92,8 @@ public class ScoreController {
 	 * 
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
-	public ResponseEntity<String> getClientById(@PathVariable String id) {
+	@APIMapping(value="get-score-by-clientId")
+	public ResponseEntity<String> getScoreByClientId(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			int score = surveyScoreService.getScoreByClientId(id);
@@ -104,7 +110,8 @@ public class ScoreController {
 	 * 
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteClientById(@PathVariable String id) {
+	@APIMapping(value="delete-score-by-clientId")
+	public ResponseEntity<String> deleteScoreByClientId(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			surveyScoreService.deleteScoreByClientId(id);
@@ -121,7 +128,8 @@ public class ScoreController {
 	 * 
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<String> updateClientById(@PathVariable String id, @RequestBody int score) {
+	@APIMapping(value="update-score-by-clientId")
+	public ResponseEntity<String> updateScoreByClientId(@PathVariable String id, @RequestBody int score) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			surveyScoreService.updateScoreByClientId(score, id);

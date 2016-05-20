@@ -83,8 +83,6 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		return status;
 	}
 
-	//TODO - We should remove this method, as insertion is taken care by calculate score controller
-	//Will ask home app guys if they need it or not
 	@Override
 	public boolean createEligibleClient(EligibleClientModel eligibleClientModel) {
 		boolean status = false;
@@ -113,8 +111,6 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		return false;
 	}
 
-	//TODO - We should remove this method, as insertion is taken care by calculate score controller
-	//Will ask home app guys if they need it or not
 	@Override
 	public boolean createEligibleClients(List<EligibleClientModel> eligibleClientModels) {
 		if (eligibleClientModels != null && !eligibleClientModels.isEmpty()) {

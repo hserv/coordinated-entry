@@ -18,6 +18,7 @@ public class MatchReservationModel {
 	private Date dateCreated;
 	private Date dateUpdated;
 	private Set<NoteModel> notes = new HashSet(0);
+	
 	public String getReservationId() {
 		return reservationId;
 	}
@@ -104,7 +105,5 @@ public class MatchReservationModel {
 				+ reservationChildren + ", manualMatch=" + manualMatch + ", inactive=" + inactive + ", dateCreated="
 				+ dateCreated + ", dateUpdated=" + dateUpdated + ", notes=" + notes + "]";
 	}
-	
-	
 	
 }

@@ -28,8 +28,6 @@ public class EligibleClient implements Serializable {
 	private Boolean matched;
 	private Date surveyDate;
 	private String spdatLabel;
-
-	
 	private int zipCode;
 	
 	public EligibleClient() {

@@ -18,7 +18,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			      .authorizeRequests()
 			      .anyRequest().permitAll()
 			      .and()
-			      //.httpBasic().and()
 			      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 

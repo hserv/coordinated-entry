@@ -1,7 +1,6 @@
 
 package com.hserv.coordinatedentry.housingmatching.controller;
 
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
-import com.hserv.coordinatedentry.housingmatching.external.UserService;
-import com.hserv.coordinatedentry.housingmatching.model.HousingInventoryModel;
+import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
-import com.hserv.coordinatedentry.housingmatching.service.community.monterey.MontereyCommunityStrategy;
 
 @RestController
 @RequestMapping(value = "/matches", produces = "application/json")
@@ -38,8 +35,8 @@ public class MatchController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST)
+	@APIMapping(value="trigger-match-process")
 	public ResponseEntity<String> createMatch() {
-		matchReservationsService.createMatch();
 		return ResponseEntity.ok("{\"triggered\": \"success\"}\"");
 	}
 
@@ -48,14 +45,11 @@ public class MatchController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
+	@APIMapping(value="get-proposed-matches")
 	public Set<MatchReservationModel> getMatches() {
 		return matchReservationsService.findAll();
 	}
 
-	/*@RequestMapping(value = "/houseinventory", method = RequestMethod.GET)
-	public List<HousingInventoryModel> testGetInventory() {
-		return inventoryService.getHousingInventoryList(null, false, null);
-	}*/
 
 	/**
 	 * Clear all the proposed matches.
@@ -63,6 +57,7 @@ public class MatchController {
 	 * 
 	 */
 	@RequestMapping(value = "", method = RequestMethod.DELETE)
+	@APIMapping(value="delete-proposed-matches")
 	public ResponseEntity<String> deleteMatches() {
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -82,7 +77,8 @@ public class MatchController {
 	 * 
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
-	public MatchReservationModel getClientById(@PathVariable String id) {
+	@APIMapping(value="get-match-by-clientId")
+	public MatchReservationModel getMatchByClientId(@PathVariable String id) {
 		return matchReservationsService.findByClientId(id);
 	}
 
@@ -92,7 +88,8 @@ public class MatchController {
 	 * 
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteClientById(@PathVariable String id) {
+	@APIMapping(value="delete-match-by-clientId")
+	public ResponseEntity<String> deleteMatchByClientId(@PathVariable String id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			boolean result = matchReservationsService.deleteByClientId(id);
@@ -113,10 +110,9 @@ public class MatchController {
 	 * 
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<String> updateClientById(@PathVariable String id,
+	@APIMapping(value="update-match-by-clientId")
+	public ResponseEntity<String> updateMatchByClientId(@PathVariable String id,
 			@RequestBody MatchReservationModel matchReservationModel) {
-		// call DB layer to update match_reservation table with match_status
-		// as approve or rejected based on the input value
 		ResponseEntity<String> responseEntity = null;
 		try {
 			boolean result = matchReservationsService.updateByClientId(id, matchReservationModel);
