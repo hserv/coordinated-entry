@@ -6,10 +6,13 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,7 +27,9 @@ public class HousingUnitAssignment extends HousingInventoryBaseEntity  {
 	private static final long serialVersionUID = -2423704859507175452L;
 
 	@Id
-    @Column(name = "assignment_id")
+	@Column(name = "assignment_id")
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
     private UUID assignmentId;
 
     @Column(name = "client_id")
@@ -97,11 +102,6 @@ public class HousingUnitAssignment extends HousingInventoryBaseEntity  {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((assignmentId == null) ? 0 : assignmentId.hashCode());
-		result = prime * result + ((checkoutDate == null) ? 0 : checkoutDate.hashCode());
-		result = prime * result + ((clientId == null) ? 0 : clientId.hashCode());
-		result = prime * result + ((householdId == null) ? 0 : householdId.hashCode());
-		result = prime * result + ((housingInventory == null) ? 0 : housingInventory.hashCode());
-		result = prime * result + ((housingInventoryId == null) ? 0 : housingInventoryId.hashCode());
 		return result;
 	}
 
@@ -119,33 +119,10 @@ public class HousingUnitAssignment extends HousingInventoryBaseEntity  {
 				return false;
 		} else if (!assignmentId.equals(other.assignmentId))
 			return false;
-		if (checkoutDate == null) {
-			if (other.checkoutDate != null)
-				return false;
-		} else if (!checkoutDate.equals(other.checkoutDate))
-			return false;
-		if (clientId == null) {
-			if (other.clientId != null)
-				return false;
-		} else if (!clientId.equals(other.clientId))
-			return false;
-		if (householdId == null) {
-			if (other.householdId != null)
-				return false;
-		} else if (!householdId.equals(other.householdId))
-			return false;
-		if (housingInventory == null) {
-			if (other.housingInventory != null)
-				return false;
-		} else if (!housingInventory.equals(other.housingInventory))
-			return false;
-		if (housingInventoryId == null) {
-			if (other.housingInventoryId != null)
-				return false;
-		} else if (!housingInventoryId.equals(other.housingInventoryId))
-			return false;
 		return true;
 	}
+
+	
     
     
 

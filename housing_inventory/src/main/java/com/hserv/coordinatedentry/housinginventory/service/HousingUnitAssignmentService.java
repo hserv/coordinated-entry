@@ -39,10 +39,8 @@ public class HousingUnitAssignmentService  {
 	 
 	 @Transactional
 	 public HousingUnitAssignment saveHousingUnitAssignment(HousingUnitAssignment housingUnitAssignments) {
-		 //for(HousingUnitAssignment housingUnitAssignment: housingUnitAssignments ){
 		 housingUnitAssignments.setAssignmentId(UUID.randomUUID());
 		 housingUnitAssignments=housingUnitAssignmentRepository.save(housingUnitAssignments);
-		 //}
 		return housingUnitAssignments;
 	}
 
@@ -53,14 +51,6 @@ public class HousingUnitAssignmentService  {
 	
 	@SuppressWarnings("unchecked")
 	public List<HousingUnitAssignment> getAllHousingUnitAssignments(UUID housingUnitId){
-		/*DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAssignment.class);
-		//crit.setFetchMode("housingInventory", org.hibernate.FetchMode.JOIN);
-		//crit.add(Restrictions.eq("housingInventory.housingInventoryId", housingUnitId));
-		crit.createAlias("housingInventory", "housingInventory");
-		crit.add(Restrictions.eq("housingInventory.housingInventoryId",housingUnitId));
-		List<HousingUnitAssignment> housingInventoryies=(List<HousingUnitAssignment>)hibernateTemplate.findByCriteria(crit);
-		return housingInventoryies; //housingUnitAssignmentRepository.findAll();
-        */
 		List<HousingUnitAssignment> assignments=new ArrayList<HousingUnitAssignment>(0);
 		HousingInventory housingInventory= HousingInventoryRepository.findOne(housingUnitId);
 		for(HousingUnitAssignment assignment: housingInventory.getHousingUnitAssignments()){
@@ -73,20 +63,11 @@ public class HousingUnitAssignmentService  {
 
 	@SuppressWarnings("unchecked")
 	public HousingUnitAssignment getHousingUnitAssignmentById(UUID id) {
-		/*List<HousingUnitAssignment> list=new ArrayList<HousingUnitAssignment>(0);
-		DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAssignment.class);
-		crit.add(Restrictions.eq("housingInventoryId", housingInventoryId));
-		//crit.setFetchMode("address", FetchMode.JOIN);
-		list=(List<HousingUnitAssignment>)hibernateTemplate.findByCriteria(crit);
-		if(list.size()!=0)
-			return list.get(0);
-		else
-		return null;*/
 		return housingUnitAssignmentRepository.findOne(id);
 	}
 	
 	public void delete(UUID id) {
-        //log.debug("Request to delete HousingUnitAssignment : {}", id);
+		housingUnitAssignmentRepository.findOne(id);
         housingUnitAssignmentRepository.delete(id);
     }
 }

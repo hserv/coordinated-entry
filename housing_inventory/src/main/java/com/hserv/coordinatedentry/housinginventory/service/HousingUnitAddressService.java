@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTemplate;
@@ -31,19 +33,24 @@ public class HousingUnitAddressService  {
 	 HibernateTemplate hibernateTemplate;
 	
 	 public HousingUnitAddress saveHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
-			housingUnitAddress.setAddressId(UUID.randomUUID());
+		 DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAddress.class)
+				 .add(Restrictions.eq("housingInventory.housingInventoryId",housingUnitAddress.getHousingInventory().getHousingInventoryId()))
+				 .setProjection(Projections.max("dateUpdated"));
+		 List<HousingUnitAddress> addresses= (List<HousingUnitAddress>)hibernateTemplate.findByCriteria(crit);
+		 if(addresses!=null&&addresses.size()!=0)
+		 {
+			 HousingUnitAddress address=addresses.get(0);
+			 if(!(housingUnitAddressEqualsExistingAddress(address,housingUnitAddress))){
+				 housingUnitAddress=housingUnitAddressRepository.save(housingUnitAddress);
+			 }
+		 }else
 			housingUnitAddress=housingUnitAddressRepository.save(housingUnitAddress);
 		return housingUnitAddress;
 	}
 
-	public boolean updateHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
-		boolean flag=false;
-		try {
-			housingUnitAddressRepository.save(housingUnitAddress);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return false;
+	public HousingUnitAddress updateHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
+		return 	housingUnitAddressRepository.save(housingUnitAddress);
+		
 	}
 	
 	public List<HousingUnitAddress> findAll(){
@@ -59,13 +66,6 @@ public class HousingUnitAddressService  {
 			addr.setHousingInventoryId(housingUnitId.toString());
 			housingUnitAddress.add(addr);
 		}
-	
-		//housingUnitAddressRepository.findAll();
-		/*DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAddress.class)
-				.createCriteria("housingInventory")
-				.add(Restrictions.eq("housingInventoryId", housingUnitId));
-		//crit.add(Restrictions.eq("housingInventory.housingInventoryId","housingUnitId", FetchMode.JOIN));
-		List<HousingUnitAddress> housingUnitAddress=(List<HousingUnitAddress>)hibernateTemplate.findByCriteria(crit);*/
 		return housingUnitAddress;
 	}
 
@@ -75,7 +75,19 @@ public class HousingUnitAddressService  {
 	}
 	
 	public void delete(UUID id) {
-        //log.debug("Request to delete HousingUnitAddress : {}", id);
+		housingUnitAddressRepository.findOne(id);
         housingUnitAddressRepository.delete(id);
     }
+	
+	//this mehtod ll return false if the housingunit address is not equals to previous one.
+	public boolean housingUnitAddressEqualsExistingAddress(HousingUnitAddress existingAddress, HousingUnitAddress updatedAddress){
+		if(existingAddress.getCity().equals(updatedAddress.getCity())
+				&&existingAddress.getLine1().equals(updatedAddress.getLine1())
+				&&existingAddress.getLine2().equals(updatedAddress.getLine2())
+			    &&existingAddress.getState().equals(updatedAddress.getState())
+			    &&existingAddress.getZipCode().equals(updatedAddress.getZipCode()))
+		return true;
+		else 
+			return false;
+	}
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.service.HousingUnitAddressService;
@@ -25,7 +26,8 @@ public class HousingUnitAddressResource {
 	@Autowired
 	HousingUnitAddressService housingUnitAddressService;
 
-	@RequestMapping(value = "/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE/*, produces = MediaType.APPLICATION_JSON_VALUE*/)
+	@APIMapping(value="CREATE_ADDRESSES")
+	@RequestMapping(value = "/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HousingUnitAddress> createHousingUnitAddress(@RequestBody HousingUnitAddress housingUnitAddress)
 			throws URISyntaxException {
 		// log.debug("REST request to save HousingUnitAddress : {}",
@@ -40,11 +42,13 @@ public class HousingUnitAddressResource {
 				.body(result);
 	}
 	
+	@APIMapping(value="UPDATE_ADDRESSES")
 	@RequestMapping(value = "/addresses", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public List<HousingUnitAddress> getAlladdresses() {
 		return housingUnitAddressService.findAll();
 	}
 	
+	@APIMapping(value="CREATE_ADDRESSES")
 	@RequestMapping(value = "/{housingUnitId}/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE/*, produces = MediaType.APPLICATION_JSON_VALUE*/)
 	public ResponseEntity<HousingUnitAddress> createHousingUnitAddressByHousingUnitId(@RequestBody HousingUnitAddress housingUnitAddress, @PathVariable UUID housingUnitId)
 			throws URISyntaxException {
@@ -66,6 +70,7 @@ public class HousingUnitAddressResource {
 				.body(result);
 	}
 
+	@APIMapping(value="UPDATE_ADDRESSES_BY_HOUSING_UNIT")
 	@RequestMapping(value = "/{housingUnitId}/addresses",
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,37 +87,37 @@ public class HousingUnitAddressResource {
 	    }
 	
 	
-
+	@APIMapping(value="GET_ALL_HISTORICAL_ADDRESS_BY_HOUSING_UNIT_ID")
 	@RequestMapping(value = "/{housingUnitId}/addresses", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public List<HousingUnitAddress> findAll(@PathVariable UUID housingUnitId) {
 		return housingUnitAddressService.getAllHousingUnitAddress(housingUnitId);
 	}
 
+	@APIMapping(value="GET_ADDRESS_BY_ID")
 	@RequestMapping(value = "{housingUnitId}/addresses/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public HousingUnitAddress getHousingInverntoryByID(@PathVariable UUID housingUnitId,   @PathVariable UUID id) {
 		return housingUnitAddressService.getHousingUnitAddressById(id);
 	}
 	
+	@APIMapping(value="UPDATE_ADDRESS_BY_ID")
 	@RequestMapping(value = "{housingUnitId}/addresses/{id}",
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    public ResponseEntity<HousingUnitAddress> updateHousingUnitAddressById(@RequestBody HousingUnitAddress housingUnitAddress, @PathVariable UUID housingUnitId) throws URISyntaxException {
-	        //log.debug("REST request to update HousingUnitAddress : {}", housingUnitAddress);
-	        if (housingUnitAddress.getAddressId()== null) {
-	            return createHousingUnitAddress(housingUnitAddress);
-	        }
 	        HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress);
 	        return ResponseEntity.ok()
 	            .headers(HeaderUtil.createEntityUpdateAlert("housingUnitAddress", housingUnitAddress.getAddressId().toString()))
 	            .body(result);
 	    }
 	
+	@APIMapping(value="DELETE_ADDRESS_BY_ID")
 	@RequestMapping(value = "/addresses/{id}",
 	        method = RequestMethod.DELETE,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    //@Timed
 	    public ResponseEntity<Void> deleteHousingUnitAddress(@PathVariable UUID id) {
 	        //log.debug("REST request to delete HousingUnitAddress : {}", id);
+		   
 	        housingUnitAddressService.delete(id);
 	        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("housingUnitAddress", id.toString())).build();
 	    }

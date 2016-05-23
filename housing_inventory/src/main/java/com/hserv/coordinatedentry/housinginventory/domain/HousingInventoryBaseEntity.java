@@ -2,12 +2,24 @@ package com.hserv.coordinatedentry.housinginventory.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @MappedSuperclass
+@Audited
+@EntityListeners(AuditingEntityListener.class)
 public class HousingInventoryBaseEntity implements Serializable {
 
 	/**
@@ -15,22 +27,36 @@ public class HousingInventoryBaseEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@CreatedDate
 	@Column(name="date_created")
 	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
+	@JsonIgnore
 	private LocalDateTime dateCreated;
-	
+
+	@LastModifiedDate
 	@Column(name="date_updated")
-	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
+	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")	
+	@JsonIgnore
 	private LocalDateTime dateUpdated;
-	
+
+	@CreatedBy
+	@Column(name="created_by")
+	@JsonIgnore
+	private String createdBy;
+
+	@LastModifiedBy
+	@Column(name="last_modified_by")
+	@JsonIgnore
+	private String lastModifiedBy;
+
 	@Column(name="inactive")
 	private Boolean inactive;
-	
-	
+
+
 	public HousingInventoryBaseEntity(){
-		
+
 	}
-	
+
 
 	public HousingInventoryBaseEntity(LocalDateTime dateCreated, LocalDateTime dateUpdated, Boolean inactive) {
 		super();
@@ -110,7 +136,7 @@ public class HousingInventoryBaseEntity implements Serializable {
 				+ ", getInactive()=" + getInactive() + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
 				+ ", toString()=" + super.toString() + "]";
 	}
-	
-	
-	
+
+
+
 }

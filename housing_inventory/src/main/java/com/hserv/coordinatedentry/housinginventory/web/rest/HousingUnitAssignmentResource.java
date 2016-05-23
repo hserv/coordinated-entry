@@ -1,4 +1,3 @@
-
 package com.hserv.coordinatedentry.housinginventory.web.rest;
 import java.net.URISyntaxException;
 import java.time.ZoneId;
@@ -6,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import javax.ws.rs.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,11 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAssignment;
-import com.hserv.coordinatedentry.housinginventory.service.HousingInventoryService;
 import com.hserv.coordinatedentry.housinginventory.service.HousingUnitAssignmentService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 
@@ -33,7 +28,7 @@ public class HousingUnitAssignmentResource {
 	HousingUnitAssignmentService housingUnitAssignmentService;
 	
 	
-
+	@APIMapping(value="CREATE_ASSIGNMENT_BY_HOUSINGUNIT_ID")
 	@RequestMapping(value = "/{housingUnitId}/assignments",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE/*, produces = MediaType.APPLICATION_JSON_VALUE*/)
 	public ResponseEntity<List<HousingUnitAssignment>> createHousingUnitAssignment(@RequestBody List<HousingUnitAssignment> housingUnitAssignments, @PathVariable UUID housingUnitId )
 			throws URISyntaxException {
@@ -56,6 +51,7 @@ public class HousingUnitAssignmentResource {
 		return new ResponseEntity<List<HousingUnitAssignment>>(result,HttpStatus.OK); 
 	}
 
+	@APIMapping(value="UPDATE_ASSIGNMENT_BY_HOUSINGUNIT_ID")
 	   @RequestMapping(value = "/{housingUnitId}/assignments",
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,11 +62,13 @@ public class HousingUnitAssignmentResource {
 	    }
 	
 
+	@APIMapping(value="GET_ALL_ASSIGNMENTS_BY_HOUSINGUNIT_ID")
 	@RequestMapping(value = "/{housingUnitId}/assignments", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public List<HousingUnitAssignment> getAllHousingUnitAssignments(@PathVariable UUID housingUnitId ) {
 		return housingUnitAssignmentService.getAllHousingUnitAssignments(housingUnitId);
 	}
 
+	@APIMapping(value="GET_ASSIGNMENTS_BY_ID")
 	@RequestMapping(value = "/{housingUnitId}/assignments/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public HousingUnitAssignment getHousingInverntoryByID(@PathVariable UUID housingUnitId,  @PathVariable UUID id) {
 		return housingUnitAssignmentService.getHousingUnitAssignmentById(id);
@@ -90,12 +88,12 @@ public class HousingUnitAssignmentResource {
 	            .body(result);
 	    }*/
 	
+	@APIMapping(value="DELETE_ASSIGNMENT_BY_ID")
 	@RequestMapping(value = "/{housingUnitId}/assignments/{id}",
 	        method = RequestMethod.DELETE,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    //@Timed
 	    public ResponseEntity<Void> deleteHousingUnitAddress(@PathVariable UUID housingUnitId, @PathVariable UUID id) {
-	        //log.debug("REST request to delete HousingUnitAssignment : {}", id);
 	        housingUnitAssignmentService.delete(id);
 	        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("housingUnitAssignment", id.toString())).build();
 	    }
