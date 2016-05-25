@@ -1,0 +1,25 @@
+{
+  "responseValue": "Saple Response Text",
+  "responseSubassessment": "sub assesment response",
+  "appId": "abc123xyz22",
+  "effectiveDate": "2016-04-25T14: 32: 18.871-0400",
+  "clientId": "Client3",
+  "dateCreated": "2016-04-25T14: 32: 18.871-0400",
+  "dateUpdated": "2016-04-25T14: 32: 18.871-0400",
+  "userId": "AdminUser",
+  "surveyId": 3,
+  "sectionScoreList": [
+    {
+      "sectionScore": 2,
+      "userId": "Admin",
+      "sectionId": 1,
+      "questionResponseList": [
+        {
+          "questionId": 4,
+          "pickListId": 3,          
+          "questionScore": 2
+        }
+      ]
+    }
+  ]
+}
