@@ -21,7 +21,6 @@ public class SurveySection extends ClientModel{
 
       private int sectionWeight;
       
-      @NotEmpty(message="Order is required")
       private int order;
 
       private UUID surveyId;

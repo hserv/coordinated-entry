@@ -1,6 +1,5 @@
 package com.servinglynk.hmis.warehouse.rest.common;
 
-import static com.servinglynk.hmis.warehouse.common.ErrorCodes.ERR_CODE_INVALID_PARAMETER;
 import static com.servinglynk.hmis.warehouse.common.ErrorCodes.ERR_CODE_UNKNOWN;
 
 import java.security.InvalidParameterException;
