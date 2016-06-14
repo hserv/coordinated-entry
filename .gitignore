@@ -3,3 +3,12 @@ housing_inventory/.project
 housing_inventory/.settings/org.eclipse.core.resources.prefs
 housing_inventory/.settings/
 housing-matching/pom.xml.rej
+*.classpath
+hmis-survey-api/.settings/org.eclipse.m2e.core.prefs
+*.prefs
+hmis-survey-api/.settings/org.eclipse.wst.jsdt.ui.superType.name
+hmis-survey-api/.settings/org.eclipse.wst.jsdt.ui.superType.container
+hmis-survey-api/.settings/.jsdtscope
+hmis-survey-api/.project
+hmis-survey-api/.settings/org.eclipse.wst.common.component
+hmis-survey-api/.settings/org.eclipse.wst.common.project.facet.core.xml

@@ -3,6 +3,7 @@ package com.servinglynk.hmis.warehouse.rest.common;
 import static com.servinglynk.hmis.warehouse.common.ErrorCodes.ERR_CODE_INVALID_PARAMETER;
 import static com.servinglynk.hmis.warehouse.common.ErrorCodes.ERR_CODE_UNKNOWN;
 
+import java.security.InvalidParameterException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,8 @@ public class ExceptionMapper {
 	public static final String ERR_CODE_SURVEY_NOT_FOUND 		            = "SURVEY_NOT_FOUND";	
 	public static final String ERR_CODE_SURVEY_SECTION_NOT_FOUND 		    = "SURVEY_SECTION_NOT_FOUND";	
 	
+	public static final String ERR_CODE_INVALID_PARAMETER					= "INVALID_PARAMETER";
+	
 	
 	// error messages
 	public static final String ERR_MSG_UNKNOWN = "unexpected error occurred";
@@ -55,6 +58,12 @@ public class ExceptionMapper {
 		try {
 
 			throw th;
+		}catch(InvalidParameterException ex){
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode(ERR_CODE_INVALID_PARAMETER);
+			r.setErrorMessage(ex.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
 		}catch(PickListGroupNotFoundException ex){
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);

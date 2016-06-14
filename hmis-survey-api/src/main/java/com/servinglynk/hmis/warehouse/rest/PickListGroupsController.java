@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class PickListGroupsController extends BaseController {
 
    @RequestMapping(method=RequestMethod.POST)
    @APIMapping(value="SURVEY_API_CREATE_PICKLISTGROUP",checkTrustedApp=true,checkSessionToken=true)
-   public PickListGroup createPickListGroup(@RequestBody PickListGroup PickListGroup,HttpServletRequest request) throws Exception{
+   public PickListGroup createPickListGroup(@Valid @RequestBody PickListGroup PickListGroup,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
          serviceFactory.getPickListGroupService().createPickListGroup(PickListGroup,session.getAccount().getUsername()); 
          PickListGroup returnPickListGroup = new PickListGroup();
@@ -35,7 +36,7 @@ public class PickListGroupsController extends BaseController {
 
    @RequestMapping(value="/{picklistgroupid}",method=RequestMethod.PUT)
    @APIMapping(value="SURVEY_API_UPDATE_PICKLISTGROUP",checkTrustedApp=true,checkSessionToken=true)
-   public void updatePickListGroup(@PathVariable( "picklistgroupid" ) UUID PickListGroupId,@RequestBody PickListGroup PickListGroup,HttpServletRequest request) throws Exception{
+   public void updatePickListGroup(@PathVariable( "picklistgroupid" ) UUID PickListGroupId,@Valid @RequestBody PickListGroup PickListGroup,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
         PickListGroup.setPickListGroupId(PickListGroupId);
         serviceFactory.getPickListGroupService().updatePickListGroup(PickListGroup,session.getAccount().getUsername()); 
@@ -72,7 +73,7 @@ public class PickListGroupsController extends BaseController {
    
    @RequestMapping(value="/{picklistgroupid}/picklistvalues",method=RequestMethod.POST)
    @APIMapping(value="SURVEY_API_CREATE_PICKLISTVALUE",checkTrustedApp=true,checkSessionToken=true)
-   public PickListValues createPickListValue(@PathVariable( "picklistgroupid" ) UUID pickListGroupId,
+   public PickListValues createPickListValue(@Valid @PathVariable( "picklistgroupid" ) UUID pickListGroupId,
 		   @RequestBody PickListValues pickListValues,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
        return serviceFactory.getPickListValueService().createPickListValue(pickListGroupId,pickListValues,session.getAccount().getUsername()); 
@@ -81,7 +82,7 @@ public class PickListGroupsController extends BaseController {
    @RequestMapping(value="/{picklistgroupid}/picklistvalues/{picklistvalueid}",method=RequestMethod.PUT)
    @APIMapping(value="SURVEY_API_UPDATE_PICKLISTVALUE",checkTrustedApp=true,checkSessionToken=true)
    public void updatePickListValue(@PathVariable( "picklistgroupid" ) UUID pickListGroupId,
-		   @PathVariable( "picklistvalueid" ) UUID PickListValueId,@RequestBody PickListValue PickListValue,HttpServletRequest request) throws Exception{
+		   @PathVariable( "picklistvalueid" ) UUID PickListValueId,@Valid  @RequestBody PickListValue PickListValue,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
         PickListValue.setPickListValueId(PickListValueId);
         serviceFactory.getPickListGroupService().getPickListGroupById(pickListGroupId);

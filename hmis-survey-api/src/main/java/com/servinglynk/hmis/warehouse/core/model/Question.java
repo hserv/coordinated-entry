@@ -2,7 +2,12 @@ package com.servinglynk.hmis.warehouse.core.model;
 
 import java.util.UUID;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.servinglynk.hmis.warehouse.util.QuestionDataTypeEnum;
+import com.servinglynk.hmis.warehouse.util.QuestionTypeEnum;
 
 @JsonRootName("question")
 public class Question extends ClientModel{
@@ -11,14 +16,16 @@ public class Question extends ClientModel{
       private UUID questionId;
 
       private String projectGroupId;
-
+      
       private String questionDescription;
 
+      @NotBlank(message="Question Display Text is required")
+      @NotEmpty(message="Question Display Text is required")
       private String displayText;
 
-      private String questionDataType;
+      private QuestionDataTypeEnum questionDataType;
 
-      private String questionType;
+      private QuestionTypeEnum questionType;
 
       private String correctValueForAssessment;
 
@@ -60,16 +67,16 @@ public class Question extends ClientModel{
       public void setDisplayText(String displayText){
           this.displayText = displayText;
       }
-      public String getQuestionDataType(){
+      public QuestionDataTypeEnum getQuestionDataType(){
           return questionDataType;
       }
-      public void setQuestionDataType(String questionDataType){
+      public void setQuestionDataType(QuestionDataTypeEnum questionDataType){
           this.questionDataType = questionDataType;
       }
-      public String getQuestionType(){
+      public QuestionTypeEnum getQuestionType(){
           return questionType;
       }
-      public void setQuestionType(String questionType){
+      public void setQuestionType(QuestionTypeEnum questionType){
           this.questionType = questionType;
       }
       public String getCorrectValueForAssessment(){

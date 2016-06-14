@@ -2,6 +2,9 @@ package com.servinglynk.hmis.warehouse.core.model;
 
 import java.util.UUID;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("pickListValue")
@@ -10,8 +13,12 @@ public class PickListValue extends ClientModel{
 
       private UUID pickListValueId;
 
+      @NotBlank(message="Picklist Value Code is required")
+      @NotEmpty(message="Picklist Value Code is required")
       private String pickListValueCode;
 
+      @NotBlank(message="Value Text is required")
+      @NotEmpty(message="Value Text is required")
       private String valueText;
 
       private UUID pickListGroupId;

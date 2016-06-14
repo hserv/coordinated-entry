@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,7 @@ public class SurveysController extends BaseController {
 
    @RequestMapping(method=RequestMethod.POST)
    @APIMapping(value="SURVEY_API_CREATE_SURVEY",checkTrustedApp=true,checkSessionToken=true)
-   public Survey createSurvey(@RequestBody Survey survey,HttpServletRequest request) throws Exception{
+   public Survey createSurvey(@Valid @RequestBody Survey survey,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
          serviceFactory.getSurveyService().createSurvey(survey,session.getAccount().getUsername()); 
          Survey returnsurvey = new Survey();
@@ -36,7 +37,7 @@ public class SurveysController extends BaseController {
 
    @RequestMapping(value="/{surveyid}",method=RequestMethod.PUT)
    @APIMapping(value="SURVEY_API_UPDATE_SURVEY",checkTrustedApp=true,checkSessionToken=true)
-   public void updateSurvey(@PathVariable( "surveyid" ) UUID surveyId,@RequestBody Survey survey,HttpServletRequest request) throws Exception{
+   public void updateSurvey(@PathVariable( "surveyid" ) UUID surveyId,@Valid @RequestBody Survey survey,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
         serviceFactory.getSurveyService().updateSurvey(survey,session.getAccount().getUsername()); 
    }
@@ -72,7 +73,7 @@ public class SurveysController extends BaseController {
    @RequestMapping(method=RequestMethod.POST,value="/{surveyid}/surveysections")
    @APIMapping(value="SURVEY_API_CREATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
    public SurveySection createSurveySection(@PathVariable("surveyid") UUID surveyid,
-		   @RequestBody SurveySection surveySection,HttpServletRequest request) throws Exception{
+		   @Valid @RequestBody SurveySection surveySection,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
          serviceFactory.getSurveySectionService().createSurveySection(surveyid,surveySection,session.getAccount().getUsername()); 
          SurveySection returnSurveySection = new SurveySection();
@@ -83,7 +84,7 @@ public class SurveysController extends BaseController {
    @RequestMapping(value="/{surveyid}/surveysections/{surveysectionid}",method=RequestMethod.PUT)
    @APIMapping(value="SURVEY_API_UPDATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
    public void updateSurveySection(@PathVariable("surveyid") UUID surveyid,
-		   @PathVariable( "surveysectionid" ) UUID SurveySectionId,@RequestBody SurveySection surveySection,HttpServletRequest request) throws Exception{
+		   @PathVariable( "surveysectionid" ) UUID SurveySectionId,@Valid @RequestBody SurveySection surveySection,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
         surveySection.setSurveySectionId(SurveySectionId);
         surveySection.setSurveyId(surveyid);

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public class ClientsController extends BaseController {
 	   @APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
 	   public Responses createResponse(@PathVariable("clientid") UUID clientid,
 			   @PathVariable("surveyid")  UUID surveyid,
-			   @RequestBody Responses response,HttpServletRequest request) throws Exception{
+			   @Valid  @RequestBody Responses response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request);
 	       return serviceFactory.getResponseService().createResponse(clientid,surveyid,response,session.getAccount().getUsername()); 
 	       
@@ -38,7 +39,7 @@ public class ClientsController extends BaseController {
 	   @APIMapping(value="SURVEY_API_UPDATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
 	   public void updateResponse(@PathVariable("clientid") UUID clientid,
 			   @PathVariable("surveyid")  UUID surveyid,@PathVariable( "responseid" ) UUID responseId,
-			   @RequestBody Response response,HttpServletRequest request) throws Exception{
+			   @Valid  @RequestBody Response response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
 	        response.setResponseId(responseId);
 	        response.setSectionId(surveyid);

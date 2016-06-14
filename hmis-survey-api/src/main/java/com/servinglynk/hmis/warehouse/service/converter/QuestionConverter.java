@@ -1,7 +1,11 @@
 package com.servinglynk.hmis.warehouse.service.converter; 
 
+import java.security.InvalidParameterException;
+
 import com.servinglynk.hmis.warehouse.core.model.Question;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
+import com.servinglynk.hmis.warehouse.util.QuestionDataTypeEnum;
+import com.servinglynk.hmis.warehouse.util.QuestionTypeEnum;
 public class QuestionConverter   {
 
    public static QuestionEntity modelToEntity (Question model ,QuestionEntity entity) {
@@ -10,14 +14,18 @@ public class QuestionConverter   {
        entity.setProjectGroupId(model.getProjectGroupId());
        entity.setQuestionDescription(model.getQuestionDescription());
        entity.setDisplayText(model.getDisplayText());
-       entity.setQuestionDataType(model.getQuestionDataType());
-       entity.setQuestionType(model.getQuestionType());
+       entity.setQuestionDataType(model.getQuestionDataType().name());
+       entity.setQuestionType(model.getQuestionType().name());
        entity.setCorrectValueForAssessment(model.getCorrectValueForAssessment());
        entity.setCopyQuestionId(model.getCopyQuestionId());
        entity.setHudQuestion(model.getHudQuestion());
        entity.setLocked(model.getLocked());
        entity.setQuestionWeight(model.getQuestionWeight());
-//       entity.setQuestionGroupId(model.getQuestionGroupId());
+       
+       if(QuestionTypeEnum.isPickListType(model.getQuestionType().getValue())){
+    	  if(model.getPickListGroupId()==null) throw new InvalidParameterException("Picklist Group required");
+       }
+ //       entity.setQuestionGroupId(model.getQuestionGroupId());
 //       entity.setPickListGroupId(model.getPickListGroupId());
        return entity;    
    }
@@ -29,8 +37,8 @@ public class QuestionConverter   {
        model.setProjectGroupId(entity.getProjectGroupId());
        model.setQuestionDescription(entity.getQuestionDescription());
        model.setDisplayText(entity.getDisplayText());
-       model.setQuestionDataType(entity.getQuestionDataType());
-       model.setQuestionType(entity.getQuestionType());
+       model.setQuestionDataType(QuestionDataTypeEnum.valueOf(entity.getQuestionDataType()));
+       model.setQuestionType(QuestionTypeEnum.valueOf(entity.getQuestionType()));
        model.setCorrectValueForAssessment(entity.getCorrectValueForAssessment());
        model.setCopyQuestionId(entity.isCopyQuestionId());
        model.setHudQuestion(entity.isHudQuestion());

@@ -2,6 +2,9 @@ package com.servinglynk.hmis.warehouse.core.model;
 
 import java.util.UUID;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("survey")
@@ -10,8 +13,12 @@ public class Survey extends ClientModel{
 
       private UUID surveyId;
 
+      @NotBlank(message="Survey Title is required")
+      @NotEmpty(message="Survey Title is required")
       private String surveyTitle;
 
+      @NotBlank(message="Survey Owner is required")
+      @NotEmpty(message="Survey Owner is required")
       private String surveyOwner;
 
       private String tagValue;

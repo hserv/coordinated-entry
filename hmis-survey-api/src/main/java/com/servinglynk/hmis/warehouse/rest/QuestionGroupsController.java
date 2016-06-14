@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class QuestionGroupsController extends BaseController {
 
    @RequestMapping(method=RequestMethod.POST)
    @APIMapping(value="SURVEY_API_CREATE_QUESTIONGROUP",checkTrustedApp=true,checkSessionToken=true)
-   public QuestionGroup createQuestionGroup(@RequestBody QuestionGroup QuestionGroup,HttpServletRequest request) throws Exception{
+   public QuestionGroup createQuestionGroup(@Valid @RequestBody QuestionGroup QuestionGroup,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
          serviceFactory.getQuestionGroupService().createQuestionGroup(QuestionGroup,session.getAccount().getUsername()); 
          QuestionGroup returnQuestionGroup = new QuestionGroup();
@@ -35,7 +36,7 @@ public class QuestionGroupsController extends BaseController {
 
    @RequestMapping(value="/{questiongroupid}",method=RequestMethod.PUT)
    @APIMapping(value="SURVEY_API_UPDATE_QUESTIONGROUP",checkTrustedApp=true,checkSessionToken=true)
-   public void updateQuestionGroup(@PathVariable( "questiongroupid" ) UUID questionGroupId,@RequestBody QuestionGroup QuestionGroup,HttpServletRequest request) throws Exception{
+   public void updateQuestionGroup(@PathVariable( "questiongroupid" ) UUID questionGroupId,@Valid @RequestBody QuestionGroup QuestionGroup,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
         serviceFactory.getQuestionGroupService().updateQuestionGroup(QuestionGroup,session.getAccount().getUsername()); 
    }
@@ -69,7 +70,7 @@ public class QuestionGroupsController extends BaseController {
    
    @RequestMapping(value="/{questiongroupid}/questions",method=RequestMethod.POST)
    @APIMapping(value="SURVEY_API_CREATE_QUESTION",checkTrustedApp=true,checkSessionToken=true)
-   public Question createQuestion(@PathVariable( "questiongroupid" ) UUID questionGroupId,@RequestBody Question question,HttpServletRequest request) throws Exception{
+   public Question createQuestion(@PathVariable( "questiongroupid" ) UUID questionGroupId,@Valid @RequestBody Question question,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
         question.setQuestionGroupId(questionGroupId);
          serviceFactory.getQuestionService().createQuestion(question,session.getAccount().getUsername()); 
@@ -81,7 +82,7 @@ public class QuestionGroupsController extends BaseController {
    @RequestMapping(value="/{questiongroupid}/questions/{questionid}",method=RequestMethod.PUT)
    @APIMapping(value="SURVEY_API_UPDATE_QUESTION",checkTrustedApp=true,checkSessionToken=true)
    public void updateQuestion(@PathVariable( "questiongroupid" ) UUID questionGroupId,
-		   @PathVariable( "questionid" ) UUID questionId,@RequestBody Question question,HttpServletRequest request) throws Exception{
+		   @PathVariable( "questionid" ) UUID questionId,@Valid @RequestBody Question question,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
         question.setQuestionId(questionId);
         question.setQuestionGroupId(questionGroupId);
