@@ -7,6 +7,7 @@ public class ResponseConverter {
    public static ResponseEntity modelToEntity (Response model ,ResponseEntity entity) {
        if(entity==null) entity = new ResponseEntity();
        entity.setId(model.getResponseId());
+       entity.setRefused(model.isRefused());
        entity.setResponseText(model.getResponseText());
        entity.setAppId(model.getAppId());
        entity.setClientId(model.getClientId());
@@ -17,6 +18,7 @@ public class ResponseConverter {
    public static Response entityToModel (ResponseEntity entity) {
        Response model = new Response();
        model.setResponseId(entity.getId());
+       model.setRefused(entity.isRefused());
        model.setResponseText(entity.getResponseText());
        model.setQuestionScore(entity.getQuestionScore());
        model.setAppId(entity.getAppId());

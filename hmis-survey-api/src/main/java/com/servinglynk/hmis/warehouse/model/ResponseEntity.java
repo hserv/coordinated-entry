@@ -56,6 +56,11 @@ public class ResponseEntity extends BaseEntity {
 	public UUID getId() {
 		return id;
 	}
+	
+	@Column(name="REFUSED")
+	public boolean refused;
+	
+	
 	public void setId(UUID id) {
 		this.id = id;
 	}
@@ -106,5 +111,11 @@ public class ResponseEntity extends BaseEntity {
 	}
 	public void setQuestionEntity(QuestionEntity questionEntity) {
 		this.questionEntity = questionEntity;
+	}
+	public boolean isRefused() {
+		return refused;
+	}
+	public void setRefused(boolean refused) {
+		this.refused = refused;
 	}
 }

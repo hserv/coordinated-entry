@@ -24,6 +24,7 @@ public class Response extends ClientModel{
 
       private UUID surveyId;
       
+      private boolean refused;
       
     public Response() {
 		super();
@@ -82,5 +83,10 @@ public class Response extends ClientModel{
       public void setSurveyId(UUID surveyId){
           this.surveyId = surveyId;
       }
-
+	public boolean isRefused() {
+		return refused;
+	}
+	public void setRefused(boolean refused) {
+		this.refused = refused;
+	}
  }
