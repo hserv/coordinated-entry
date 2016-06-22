@@ -1,0 +1,316 @@
+#%RAML 0.8
+title: Survey Service
+version: 0.1.0
+#baseUri: http://server/api/{1.0}
+#baseUri: http://mocksvc.mulesoft.com/mocks/ddc2f7fa-12ee-4702-85a4-1c343d4ed1bd/api/{1.0}
+baseUri: http://mocksvc.mulesoft.com/mocks/9e9b0ea3-ca58-4b91-82e1-0debb403da59/mocks/ddc2f7fa-12ee-4702-85a4-1c343d4ed1bd/api/{1.0}
+mediaType: application/json
+protocols: [ HTTP ]
+
+      
+     
+/surveys:
+  description: Store and manipulate surveys.
+  get:
+    description: Retrieve some of the surveys using query parameters.
+    queryParameters: 
+      type:
+        displayName: Type of Survey
+        description: There are kinds of survey need to send specific
+        type: string
+        required: true
+        example: assesment
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include surveys_all_sample.json
+               
+      404:
+        description: The provided API does not exist
+        body:
+          application/json:
+            example: |
+              {
+                "status": "Not Found"
+              } 
+  post:
+    description: Create a new survey.
+    body: 
+      application/json:
+        schema: |
+              {
+                "":""
+              }
+                
+    responses:
+        200:
+          body:
+            application/json:
+              example: !include survey_create.json
+        404:
+          description: The provided API does not exist
+          body:
+            application/json:
+              example: |
+                {
+                "status": "Not Found"
+                }
+                 
+  /{survey_id}:
+    get:
+        description: Retrieve a specific survey.
+        queryParameters: 
+         surveyId:
+          displayName: unique Id Of Survey
+          type: string
+          required: true
+          example: survey111
+        responses:
+          200:
+            body:
+              application/json:
+               example: !include survey_id_sample.json
+          404:
+           description: The provided API does not exist
+           body:
+            application/json:
+              example: |
+                {
+                  "status": "Not Found"
+                }
+    put:
+        description: Update an existing survey.
+        body: 
+          application/json:
+            schema: |
+                  {
+                    "":""
+                  }
+        responses:
+          200:
+            body:
+              application/json:
+               example: !include survey_id_sample.json
+          404:
+           description: The provided API does not exist
+           body:
+            application/json:
+              example: |
+                {
+                  "status": "Not Found"
+                }  
+    delete:
+      description: Inactivate/delete a survey record.
+      queryParameters: 
+        surveyId:
+          displayName: unique Id Of Survey
+          type: string
+          required: true
+          example: survey111
+      responses:
+          200:
+            body:
+              application/json:
+               example: !include survey_id_sample.json
+          404:
+           description: The provided API does not exist
+           body:
+            application/json:
+              example: |
+                {
+                  "status": "Not Found"
+                }
+    /questions:
+      get:
+        description: Retrieve some or all of the questions associated with a survey, using query parameters.
+      post:
+        description: Associate an existing question with a survey.
+      /{question_id}:
+        delete:
+          description: Disassociate an question from a survey.
+
+/questions:
+  description: Store and manipulate questions.
+  get:
+    description: Retrieve some of the questions using query parameters.
+  post:
+    description: Create a new question.
+    body: 
+      application/json:
+        schema: |
+             {
+              "":""
+             }
+              
+    responses:
+        200:
+          body:
+            application/json:                 
+              example: !include question_create.json
+        404:
+         description: The provided API does not exist
+         body:
+          application/json:
+            example: |
+              {
+                "status": "Not Found"
+              } 
+  /{question_id}:
+    get:
+      description: Retrieve a specific question.
+      responses:
+          200:
+            body:
+              application/json:
+                example: !include question_all_sample.json
+               
+          404:
+           description: The provided API does not exist
+           body:
+            application/json:
+              example: |
+                {
+                  "status": "Not Found"
+                }
+    put:
+      description: Modify an existing question.
+      body: 
+        application/json:
+          schema: |
+                {
+                  "":""
+                }
+      responses:
+          200:
+            body:
+              application/json:
+               example: !include question_update.json
+          404:
+           description: The provided API does not exist
+           body:
+            application/json:
+              example: |
+                {
+                  "status": "Not Found"
+                }
+    delete:
+      description: Inactivate/delete a question.
+      responses:
+          200:
+            body:
+              application/json:
+               example: !include question_delete.json
+          404:
+           description: The provided API does not exist
+           body:
+            application/json:
+              example: |
+                {
+                  "status": "Not Found"
+                }
+/clients:
+  description: Work with a client's survey responses.
+  /{client_id}:
+    /surveys:
+      /{survey_id}:
+        /responses:
+          get:
+            description: Retrieve a client's responses for a given survey.
+            queryParameters: 
+              type:
+                displayName: Type of response
+                description: There are kinds of survey need to send specific
+                type: string
+                required: true
+                example: assessment
+            responses:
+              200:
+                body:
+                  application/json:
+                    example: !include response_all.json
+              404:
+                description: The provided API does not exist
+                body:
+                  application/json:
+                    example: |
+                      {
+                        "status": "Not Found"
+                      }                
+          post:
+            description: Save a new survey response for a client.
+            body: 
+              application/json:
+                schema: |
+                      {
+                        "":""
+                      }
+                    
+            responses:
+                200:
+                  body:
+                   application/json:
+                    example: !include response_create.json
+                404:
+                 description: The provided API does not exist
+                 body:
+                  application/json:
+                    example: |
+                      {
+                        "status": "Not Found"
+                      }
+          /{response_id}:
+            get:
+              description: Retrieve a specific survey response.
+              queryParameters: 
+               surveyId:
+                displayName: unique Id Of response
+                type: string
+                required: true
+                example: survey111
+              responses:
+                200:
+                  body:
+                    application/json:
+                     example: !include response_id_sample.json
+                404:
+                 description: The provided API does not exist
+                 body:
+                  application/json:
+                    example: |
+                      {
+                        "status": "Not Found"
+                      }
+            put:
+              description: Update a specific survey response.
+              body: 
+                application/json:
+                  schema: |
+                        {
+                          "":""
+                        }
+              responses:
+                  200:
+                    body:
+                      application/json:
+                       example: !include response_update.json
+                  404:
+                   description: The provided API does not exist
+                   body:
+                    application/json:
+                      example: |
+                        {
+                          "status": "Not Found"
+                        }
+            delete:
+              description: Delete a specific survey response.
+        /sections:
+          description: Retrieve, clear, and override a client's section scores.
+          /{section_id}:
+            /scores:
+              get:
+                description: Get the section scores for a client's survey response.
+              put:
+                description: Modify one or more section scores for a client's survey response.
+              delete:
+                description: Delete the section scores for a client's survey response.

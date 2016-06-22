@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:context="http://www.springframework.org/schema/context" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    <context:property-placeholder location="api.properties" />
+    <apikit:config name="apiConfig" raml="api.raml" consoleEnabled="true" consolePath="console" doc:name="Router" />
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8082" doc:name="HTTP Listener Configuration"
+    tlsContext-ref="TLS_Context" protocol="HTTPS" />
+		<tls:context name="TLS_Context" doc:name="TLS Context">
+		<tls:key-store path="${https.tls.keystore.file}"
+			keyPassword="${https.tls.keypassword}" password="${https.tls.storepassword}" />
+	</tls:context>
+	<mule-ss:security-manager>
+		<mule-ss:delegate-security-provider
+			name="memory-provider" delegate-ref="authenticationManager" />
+	</mule-ss:security-manager>
+	<spring:beans>
+	<ss:authentication-manager alias="authenticationManager">
+			<ss:authentication-provider>
+				<ss:user-service id="userService">
+					<ss:user name="${api.user}" password="${api.password}"
+						authorities="${api.role}" />
+				</ss:user-service>
+			</ss:authentication-provider>
+		</ss:authentication-manager>
+	
+	</spring:beans>
+    <flow name="main" >
+        <http:listener config-ref="HTTP_Listener_Configuration" doc:name="HTTP" path="/api/servey/*" />
+        <http:basic-security-filter realm="mule-realm" />
+        <apikit:router config-ref="apiConfig" doc:name="APIkit Router" />
+        <exception-strategy ref="apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy" />
+    </flow>
+    <flow name="get:/surveys/all:apiConfig">
+        <set-payload value="#[{&quot;statusCode&quot;:&quot;200&quot;,&quot;status&quot;:&quot;Success&quot;,&quot;statusMessage&quot;:null,&quot;errorCode&quot;:null,&quot;erroMessage&quot;:null,&quot;data&quot;:[{&quot;surveyId&quot;:1,&quot;surveyTitle&quot;:&quot;Sample Survey2&quot;,&quot;surveyOwner&quot;:&quot;HMISlynk&quot;,&quot;dateCreated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;dateUpdated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;userId&quot;:&quot;Vijay&quot;,&quot;locked&quot;:false,&quot;inactive&quot;:false,&quot;copySuveryId&quot;:true,&quot;tagValue&quot;:&quot;Copied from HMIS&quot;,&quot;sectionId&quot;:1,&quot;surveySection&quot;:[{&quot;sectionId&quot;:1,&quot;surveyId&quot;:1,&quot;questionId&quot;:null,&quot;questionParent&quot;:&quot;Parent 1&quot;,&quot;questionChild&quot;:&quot;Child 1&quot;,&quot;required&quot;:&quot;Yes&quot;,&quot;dateCreated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;dateUpdated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;userId&quot;:&quot;Admin User&quot;,&quot;questions&quot;:[{&quot;questionId&quot;:1,&quot;questionName&quot;:&quot;Sample Question 1&quot;,&quot;displayText&quot;:&quot;How frequent you go for vacations&quot;,&quot;questionDataType&quot;:&quot;Text&quot;,&quot;questionGroupId&quot;:&quot;Group1&quot;,&quot;optionsSingleMultipleSelect&quot;:true,&quot;isCopyQuestionId&quot;:false,&quot;hudBoolean&quot;:true,&quot;locked&quot;:false,&quot;inactive&quot;:true,&quot;labelValue&quot;:&quot;HMIS Question&quot;,&quot;dateCreated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;dateUpdated&quot;:&quot;2016-04-29T12:43:50.371-0400&quot;,&quot;userId&quot;:&quot;Admin User&quot;,&quot;surveyId&quot;:1,&quot;customPicklist&quot;:[{&quot;picklistId&quot;:1,&quot;picklistKey&quot;:&quot;Accept&quot;,&quot;picklistValue&quot;:&quot;Accept&quot;,&quot;inactive&quot;:false,&quot;userId&quot;:&quot;Admin&quot;},{&quot;picklistId&quot;:2,&quot;picklistKey&quot;:&quot;Reject&quot;,&quot;picklistValue&quot;:&quot;Reject&quot;,&quot;inactive&quot;:false,&quot;userId&quot;:&quot;Admin&quot;}]}],&quot;sectionDetail&quot;:&quot;Section Details&quot;,&quot;sectionText&quot;:&quot;Section text goes here&quot;,&quot;sectionWeight&quot;:1}]}]}]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/surveys/{surveyId}:apiConfig">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+     <flow name="put:/surveys/{surveyId}/update:apiConfig">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="put:/question/{questionId}:apiConfig">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+     <flow name="delete:/surveys/delete/{surveyId}:apiConfig">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+     <flow name="post:/surveys/create:apiConfig">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/question/create:apiConfig">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/user/{userId}/surveys/{surveyId}/response:apiConfig">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+    <apikit:mapping-exception-strategy name="apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>

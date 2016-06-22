@@ -1,0 +1,63 @@
+{
+  "surveyTitle": "Sample Survey2",
+  "surveyOwner": "HMISlynk",
+  "dateCreated": "2016-04-25T14:32:18.871-0400",
+  "dateUpdated": "2016-04-25T14:32:18.871-0400",
+  "userId": "Vijay",
+  "locked": false,
+  "inactive": false,
+  "copySuveryId": true,
+  "tagValue": "Copied from HMIS",
+  "sectionId": 1,
+  "surveySection": [
+    {
+      
+      "surveyId": 1,
+      "questionId": 1,
+      "questionParent": "Parent 1",
+      "questionChild": "Child 1",
+      "required": "Yes",
+      "dateCreated": "2016-04-25T14:32:18.871-0400",
+      "dateUpdated": "2016-04-25T14:32:18.871-0400",
+      "userId": "Admin User",
+      "questions": [
+        {
+          "questionId": 1,
+          "questionName": "Sample Question 1",
+          "displayText": "How frequent you go for vacations",
+          "questionDataType": "Text",
+          "questionGroupId": "Group1",
+          "optionsSingleMultipleSelect": true,
+          "isCopyQuestionId": false,
+          "hudBoolean": true,
+          "locked": false,
+          "inactive": true,
+          "labelValue": "HMIS Question",
+          "dateCreated": "2016-04-25T14:32:18.871-0400",
+          "dateUpdated": "2016-04-25T14:32:18.871-0400",
+          "userId": "Admin User",
+          "surveyId": 1,
+          "customPicklist": [
+            {
+              "picklistId": 1,
+              "picklistKey": "Accept",
+              "picklistValue": "Accept",
+              "inactive": false,
+              "userId": "Admin"
+            },
+            {
+              "picklistId": 2,
+              "picklistKey": "Reject",
+              "picklistValue": "Reject",
+              "inactive": false,
+              "userId": "Admin"
+            }
+          ]
+        }
+      ],
+      "sectionDetail": "Section Details",
+      "sectionText": "Section text goes here",
+      "sectionWeight": 1
+    }
+  ]
+}
