@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import com.servinglynk.hmis.warehouse.core.model.Error;
 import com.servinglynk.hmis.warehouse.service.exception.PickListGroupNotFoundException;
@@ -57,6 +59,12 @@ public class ExceptionMapper {
 		try {
 
 			throw th;
+		}catch (HttpClientErrorException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("REQUEST_AUTHOTICATION_FAILED");
+			r.setErrorMessage("REQUEST_AUTHOTICATION_FAILED");
+			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
 		}catch(InvalidParameterException ex){
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);

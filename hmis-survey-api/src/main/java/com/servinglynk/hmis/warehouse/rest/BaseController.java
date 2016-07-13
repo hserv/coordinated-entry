@@ -30,7 +30,9 @@ public abstract class BaseController {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 	
-	SessionHelper sessionHelper = new SessionHelper();
+	
+	@Autowired
+	SessionHelper sessionHelper;
 	
 	@Autowired
 	ParentServiceFactory serviceFactory;

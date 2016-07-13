@@ -3,25 +3,40 @@ package com.servinglynk.hmis.warehouse.rest.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
+import com.servinglynk.hmis.warehouse.client.authorizationservice.AuthorizationServiceClient;
 import com.servinglynk.hmis.warehouse.client.model.ApiMethodAuthorizationCheck;
+import com.servinglynk.hmis.warehouse.rest.common.SessionHelper;
+import com.servinglynk.hmis.warehouse.rest.common.TrustedAppHelper;
 
 public class ApiAuthCheckInterceptor extends HandlerInterceptorAdapter {
+	
+	@Autowired
+	private SessionHelper sessionHelper;
+	
+	@Autowired
+	private TrustedAppHelper trustedAppHelper;
+	
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		HandlerMethod handlerMethod = null;
 		handlerMethod = (HandlerMethod) handler;
+		
+		String accessToken = this.sessionHelper.retrieveSessionToken(request);
+		String trustedApp = this.trustedAppHelper.retrieveTrustedAppId(request);
 
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);
 		
 		ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
 		apiMethodAuthorizationCheck.setApiMethodId(apiMapping.value());
-
-		//AuthorizationServiceClient client = new AuthorizationServiceClient();
-		//client.checkApiAuthorization(apiMethodAuthorizationCheck);
+		apiMethodAuthorizationCheck.setAccessToken(accessToken);
+		apiMethodAuthorizationCheck.setTrustedAppId(trustedApp);
+		AuthorizationServiceClient client = new AuthorizationServiceClient();
+		ApiMethodAuthorizationCheck clientresponse = client.checkApiAuthorization(apiMethodAuthorizationCheck);
 		
 		return true;
 	}

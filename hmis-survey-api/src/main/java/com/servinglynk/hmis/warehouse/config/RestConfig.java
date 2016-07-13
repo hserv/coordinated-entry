@@ -3,6 +3,7 @@ package com.servinglynk.hmis.warehouse.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +16,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
 import com.servinglynk.hmis.warehouse.rest.SurveysController;
+import com.servinglynk.hmis.warehouse.rest.common.SessionHelper;
+import com.servinglynk.hmis.warehouse.rest.common.TrustedAppHelper;
+import com.servinglynk.hmis.warehouse.rest.interceptor.ApiAuthCheckInterceptor;
 
 @Configuration
 @Import({com.servinglynk.hmis.warehouse.config.DatabaseConfig.class,
@@ -67,4 +72,25 @@ public class RestConfig extends WebMvcConfigurerAdapter {
 	public SurveysController surveysController(){
 		return new SurveysController();
 	}
+	
+	@Bean
+	public ApiAuthCheckInterceptor authCheckInterceptor(){
+		return new ApiAuthCheckInterceptor();
+	}
+	
+	@Bean
+	public SessionHelper sessionHelper(){
+		return new SessionHelper();
+	}
+	
+	@Bean
+	public TrustedAppHelper trustedAppHelper(){
+		return new TrustedAppHelper();
+	}
+	
+	 @Override
+	    public void addInterceptors(InterceptorRegistry registry) {
+	        registry.addInterceptor(authCheckInterceptor());
+	    }
+	
 }
