@@ -9,8 +9,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
-
-import com.hserv.coordinatedentry.housinginventory.authorization.AuthorizationServiceClient;
 import com.servinglynk.hmis.warehouse.client.model.ApiMethodAuthorizationCheck;
 
 
@@ -46,9 +44,9 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 		apiMethodAuthorizationCheck.setTrustedAppId("MASTER_TRUSTED_APP");
 		
 		//This is the client Authroization Service client call that needs to be made - 
-		AuthorizationServiceClient client = new AuthorizationServiceClient();
+/*		AuthorizationServiceClient client = new AuthorizationServiceClient();
 		apiMethodAuthorizationCheck = client.checkApiAuthorization(apiMethodAuthorizationCheck);
-	
+*/	
 		return true;
 	}
 

@@ -1,17 +1,14 @@
 package com.hserv.coordinatedentry.housinginventory.config;
 
-import java.util.Properties;
-
 import org.hibernate.SessionFactory;
+import org.hibernate.jpa.HibernateEntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
@@ -42,28 +39,21 @@ public class DatabaseConfiguration {
 
 	@Value("${entitymanager.packagesToScan}")
 	private String ENTITYMANAGER_PACKAGES_TO_SCAN;
-
 	
-	@Bean
-	public LocalSessionFactoryBean sessionFactory() {
-		LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
-		sessionFactoryBean.setDataSource(dataSource());
-		sessionFactoryBean.setPackagesToScan(ENTITYMANAGER_PACKAGES_TO_SCAN);
-		Properties hibernateProperties = new Properties();
-		hibernateProperties.put("hibernate.dialect", HIBERNATE_DIALECT);
-		hibernateProperties.put("hibernate.show_sql", HIBERNATE_SHOW_SQL);
-		hibernateProperties.put("hibernate.hbm2ddl.auto", HIBERNATE_HBM2DDL_AUTO);
-		sessionFactoryBean.setHibernateProperties(hibernateProperties);
+	
+	@Bean  
+	public SessionFactory sessionFactory(HibernateEntityManagerFactory hemf){  
+	    return hemf.getSessionFactory();  
+	}  
 
-		return sessionFactoryBean;
-	}
 
-	@Bean
-	public HibernateTransactionManager transactionManager() {
+	/*@Bean
+	@Autowired
+	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-		transactionManager.setSessionFactory(sessionFactory().getObject());
+		transactionManager.setSessionFactory(sessionFactory);
 		return transactionManager;
-	}
+	}*/
 
 	@Bean
 	@Autowired
@@ -72,14 +62,4 @@ public class DatabaseConfiguration {
 		return hibernateTemplate;
 	}
 	
-	
-	@Bean(name = "dataSource")
-	public DriverManagerDataSource dataSource() {
-		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-		driverManagerDataSource.setDriverClassName(databaseDriverClassName);
-		driverManagerDataSource.setUrl(datasourceUrl);
-		driverManagerDataSource.setUsername(databaseUsername);
-		driverManagerDataSource.setPassword(databasePassword);
-		return driverManagerDataSource;
-	}
 }
