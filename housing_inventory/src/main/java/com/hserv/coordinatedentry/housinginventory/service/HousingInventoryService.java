@@ -77,8 +77,7 @@ public class HousingInventoryService  {
 		Example filter=Example.create(housingInventory);
 		DetachedCriteria crit=DetachedCriteria.forClass(HousingInventory.class).add(filter);
 		List<HousingInventory> housingInventories=(List<HousingInventory>)hibernateTemplate.findByCriteria(crit);
-		return  housingInventories;//
-//		return housingInventoryRepository.findAll();
+		return  housingInventories;//housingInventoryRepository.findAll();
 	}
 
 	@SuppressWarnings("unchecked")

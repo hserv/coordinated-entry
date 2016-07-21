@@ -2,16 +2,22 @@ package com.hserv.coordinatedentry.housinginventory.authorization;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.oxm.xstream.XStreamMarshaller;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -55,12 +61,12 @@ public class AuthorizationServiceClient extends CoreClientBase implements IAutho
 		messageConverters.add(converter);
 		
 		
-/*		CloseableHttpClient httpClient = HttpClients.custom()
+		CloseableHttpClient httpClient = HttpClients.custom()
 				.setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-		requestFactory.setHttpClient(httpClient);*/
+		requestFactory.setHttpClient(httpClient);
 
-//		restTemplate = new RestTemplate(requestFactory);
+		restTemplate = new RestTemplate(requestFactory);
 		restTemplate.setMessageConverters(messageConverters);
 				
 		HttpEntity entity = new HttpEntity(headers);
@@ -81,7 +87,7 @@ public class AuthorizationServiceClient extends CoreClientBase implements IAutho
         return xmlConverter;
 	}
 
-/*	public static void main(String args[]){
+	public static void main(String args[]){
 		
 		System.setProperty("https.protocol", "TLSv1,TLSv1.1,TLSv1.2");
 		
@@ -92,5 +98,5 @@ public class AuthorizationServiceClient extends CoreClientBase implements IAutho
 		
 		AuthorizationServiceClient client = new AuthorizationServiceClient();
 	    client.checkApiAuthorization(apiMethodAuthorizationCheck);
-	}*/
+	}
 }

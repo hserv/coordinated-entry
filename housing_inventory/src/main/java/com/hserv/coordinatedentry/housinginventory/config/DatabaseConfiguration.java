@@ -3,7 +3,6 @@ package com.hserv.coordinatedentry.housinginventory.config;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.jpa.HibernateEntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +43,7 @@ public class DatabaseConfiguration {
 	@Value("${entitymanager.packagesToScan}")
 	private String ENTITYMANAGER_PACKAGES_TO_SCAN;
 
-/*	
+	
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
@@ -54,7 +53,6 @@ public class DatabaseConfiguration {
 		hibernateProperties.put("hibernate.dialect", HIBERNATE_DIALECT);
 		hibernateProperties.put("hibernate.show_sql", HIBERNATE_SHOW_SQL);
 		hibernateProperties.put("hibernate.hbm2ddl.auto", HIBERNATE_HBM2DDL_AUTO);
-		hibernateProperties.put("hibernate.temp.use_jdbc_metadata_defaults","false");
 		sessionFactoryBean.setHibernateProperties(hibernateProperties);
 
 		return sessionFactoryBean;
@@ -65,12 +63,7 @@ public class DatabaseConfiguration {
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
 		transactionManager.setSessionFactory(sessionFactory().getObject());
 		return transactionManager;
-	} */
-	
-	@Bean  
-	public SessionFactory sessionFactory(HibernateEntityManagerFactory hemf){  
-	    return hemf.getSessionFactory();  
-	}  
+	}
 
 	@Bean
 	@Autowired
@@ -79,7 +72,7 @@ public class DatabaseConfiguration {
 		return hibernateTemplate;
 	}
 	
-	/*
+	
 	@Bean(name = "dataSource")
 	public DriverManagerDataSource dataSource() {
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
@@ -88,5 +81,5 @@ public class DatabaseConfiguration {
 		driverManagerDataSource.setUsername(databaseUsername);
 		driverManagerDataSource.setPassword(databasePassword);
 		return driverManagerDataSource;
-	}*/
+	}
 }

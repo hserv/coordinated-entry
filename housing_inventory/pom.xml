@@ -4,10 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hserv.coordinatedentry.housinginventory</groupId>
+	<artifactId>hmis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
-	<name>Housing Invetory</name>
+	<name>hmis</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -224,5 +225,4 @@
 	</build>
 
 
-	<artifactId>inventory-api</artifactId>
 </project>
