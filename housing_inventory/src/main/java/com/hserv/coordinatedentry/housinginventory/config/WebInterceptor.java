@@ -4,12 +4,7 @@ package com.hserv.coordinatedentry.housinginventory.config;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
-import com.servinglynk.hmis.warehouse.client.model.ApiMethodAuthorizationCheck;
 
 
 /* This is CES an example of CES interceptor. It intercepts all the requests that the micro service receives and also calls HMIS 
@@ -20,7 +15,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		
 		
-		HandlerMethod handlerMethod = null;
+/*		HandlerMethod handlerMethod = null;
 		handlerMethod = (HandlerMethod) handler;
 		String methodName = handlerMethod.getMethod().getName();
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);
@@ -42,7 +37,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 		apiMethodAuthorizationCheck.setApiMethodId(apiMethodId);
 		// SET the TRUSTED APP ID that HOME APP(or any client) - NOT CES TRUSTED APP
 		apiMethodAuthorizationCheck.setTrustedAppId("MASTER_TRUSTED_APP");
-		
+		*/
 		//This is the client Authroization Service client call that needs to be made - 
 /*		AuthorizationServiceClient client = new AuthorizationServiceClient();
 		apiMethodAuthorizationCheck = client.checkApiAuthorization(apiMethodAuthorizationCheck);
@@ -50,14 +45,14 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 		return true;
 	}
 
-	private String extractAuthorizationString(String authorizationHeader) {
+/*	private String extractAuthorizationString(String authorizationHeader) {
 		if (StringUtils.isBlank(authorizationHeader)) {
 			return null;
 		}
 		
 		//TODO: extract token only from string
 		return authorizationHeader;
-	}
+	}*/
 	
 
 }
