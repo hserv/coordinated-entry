@@ -22,7 +22,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new LoggingInterceptor());
-		registry.addInterceptor(getAuthenticationInterceptor());
+		//registry.addInterceptor(getAuthenticationInterceptor());
 	}
 
 	@Bean
