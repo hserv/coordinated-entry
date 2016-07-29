@@ -1,18 +1,31 @@
 package com.hserv.coordinatedentry.housinginventory.web.rest;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +37,6 @@ import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.service.HousingInventoryService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/housing-units")
@@ -33,12 +45,31 @@ public class HousingInventoryResource {
 	@Autowired
 	HousingInventoryService housingInventoryService;
 	
+	@Autowired
+	private PagedResourcesAssembler assembler;
+	
+
+	private ResourceAssembler<HousingInventory, Resource<HousingInventory>> housingInventoryAssembler = new HousingInventoryResource.HousingInventoryAssembler();
+	
+	private class HousingInventoryAssembler implements ResourceAssembler<HousingInventory, Resource<HousingInventory>> {
+
+		@Override
+		public Resource<HousingInventory> toResource(HousingInventory arg0) {
+			Resource<HousingInventory> resource = new Resource<HousingInventory>(arg0);
+			resource.add(
+					linkTo(methodOn(HousingInventoryResource.class).getHousingInverntoryByID(arg0.getHousingInventoryId())).withSelfRel());
+			return resource;
+		}
+	}
+	
+
+	
 	private final Logger log = LoggerFactory.getLogger(HousingInventoryResource.class);
 
 	@APIMapping(value="CREATE_HOUSING_INVENTORIES")
 	@RequestMapping(method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<HousingInventory>> createHousingInventory(@RequestBody List<HousingInventory> housingInventories)
-			throws URISyntaxException {
+			throws Exception {
 		 log.debug("REST request to save HousingInventory : {}", housingInventories);
 		 if(housingInventories.size()==1){
 		HousingInventory result=housingInventoryService.saveHousingInventory(housingInventories.get(0));
@@ -68,15 +99,19 @@ public class HousingInventoryResource {
 	        return new  ResponseEntity<List<HousingInventory>>(lresult, HttpStatus.OK);
 	    }
 	
-	
 	@APIMapping(value="GET_ALL_HOUSING_INVENTORY")
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public List<HousingInventory> findAll(@RequestParam(value="inactive" ,required=false) Boolean inactive ,
-			@RequestParam(value="userId", required=false) String userId,@RequestParam(value="projectId", required=false) String projectId) {
+	public ResponseEntity<Resources<Resource>> findAll(@RequestParam(value="inactive" ,required=false) Boolean inactive ,
+			@RequestParam(value="userId", required=false) String userId,
+			@RequestParam(value="projectId", required=false) String projectId,
+			@PageableDefault(size=30)  Pageable pageable) {
 		HousingInventory housingInventory=new HousingInventory();
 		housingInventory.setUserId(userId);
 		housingInventory.setProjectId(projectId);
-		return housingInventoryService.getAllHousingInventory(housingInventory);
+		
+//		List<HousingInventory> housingInventories = housingInventoryService.getAllHousingInventory(housingInventory);
+		return new ResponseEntity<>(assembler.toResource(housingInventoryService.findAll(pageable), housingInventoryAssembler),
+				HttpStatus.OK);
 	}
 
 	@APIMapping(value="GET_HOUSING_INVENTORY_BY_ID")
@@ -109,4 +144,28 @@ public class HousingInventoryResource {
 	    }
 	
 	
+	@ExceptionHandler(Throwable.class)
+	private void handleException(Throwable t, HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		
+		response.setStatus(403);
+		throw t;
+		/*ExceptionMapper mapper = new ExceptionMapper();
+
+		ExceptionMapper.Result result = mapper.map(t, request);
+		Error er = new Error();
+		
+		er.setCode(result.getError().getCode());
+		er.setMessage(result.getError().getMessage());
+		
+		
+		Errors errors = new Errors();
+		List<Error> errs = new ArrayList<Error>();
+		errs.add(er);
+		
+		errors.setErrors(errs);
+		
+		response.setStatus(result.getStatusCode());
+			
+		return errors;*/
+	}
 }

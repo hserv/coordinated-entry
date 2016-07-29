@@ -30,15 +30,19 @@ public class ApiAuthCheckInterceptor extends HandlerInterceptorAdapter {
 		String trustedApp = this.trustedAppHelper.retrieveTrustedAppId(request);
 
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);
+		if(apiMapping!=null) {
+			ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
+			apiMethodAuthorizationCheck.setApiMethodId(apiMapping.value());
+			apiMethodAuthorizationCheck.setAccessToken(accessToken);
+			apiMethodAuthorizationCheck.setTrustedAppId(trustedApp);
+			AuthorizationServiceClient client = new AuthorizationServiceClient();
+			ApiMethodAuthorizationCheck clientresponse = client.checkApiAuthorization(apiMethodAuthorizationCheck);
 		
-		ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
-		apiMethodAuthorizationCheck.setApiMethodId(apiMapping.value());
-		apiMethodAuthorizationCheck.setAccessToken(accessToken);
-		apiMethodAuthorizationCheck.setTrustedAppId(trustedApp);
-		AuthorizationServiceClient client = new AuthorizationServiceClient();
-		ApiMethodAuthorizationCheck clientresponse = client.checkApiAuthorization(apiMethodAuthorizationCheck);
-		
-		return true;
+			return true;
+		}else{
+			
+			return false;
+		}
 	}
 
 }

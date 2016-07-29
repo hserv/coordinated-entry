@@ -8,6 +8,8 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Component;
 
@@ -50,15 +52,16 @@ public class HousingUnitAssignmentService  {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<HousingUnitAssignment> getAllHousingUnitAssignments(UUID housingUnitId){
+	public Page<HousingUnitAssignment> getAllHousingUnitAssignments(UUID housingUnitId,Pageable pageable){
 		List<HousingUnitAssignment> assignments=new ArrayList<HousingUnitAssignment>(0);
 		HousingInventory housingInventory= HousingInventoryRepository.findOne(housingUnitId);
-		for(HousingUnitAssignment assignment: housingInventory.getHousingUnitAssignments()){
+/*		for(HousingUnitAssignment assignment: housingInventory.getHousingUnitAssignments()){
 			assignment.setHousingInventory(null);
 			assignment.setHousingInventoryId(housingUnitId.toString());
 			assignments.add(assignment);
 		}
-	    return assignments;	
+	    return assignments;	*/
+		return housingUnitAssignmentRepository.findByHousingInventory(housingInventory, pageable);
 	}
 
 	@SuppressWarnings("unchecked")

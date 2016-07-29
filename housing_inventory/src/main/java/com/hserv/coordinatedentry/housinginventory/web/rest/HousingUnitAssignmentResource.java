@@ -1,4 +1,7 @@
 package com.hserv.coordinatedentry.housinginventory.web.rest;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.net.URISyntaxException;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -6,6 +9,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
+import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAssignment;
 import com.hserv.coordinatedentry.housinginventory.service.HousingUnitAssignmentService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
@@ -26,6 +35,22 @@ public class HousingUnitAssignmentResource {
 
 	@Autowired
 	HousingUnitAssignmentService housingUnitAssignmentService;
+	
+	@Autowired
+	private PagedResourcesAssembler assembler;
+	
+	private ResourceAssembler<HousingUnitAssignment, Resource<HousingUnitAssignment>> housingInventoryAssembler = new HousingUnitAssignmentResource.HousingInventoryAssembler();
+	
+	private class HousingInventoryAssembler implements ResourceAssembler<HousingUnitAssignment, Resource<HousingUnitAssignment>> {
+
+		@Override
+		public Resource<HousingUnitAssignment> toResource(HousingUnitAssignment arg0) {
+			Resource<HousingUnitAssignment> resource = new Resource<HousingUnitAssignment>(arg0);
+			resource.add(
+					linkTo(methodOn(HousingUnitAssignmentResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAssignmentId())).withSelfRel());
+			return resource;
+		}
+	}
 	
 	
 	@APIMapping(value="CREATE_ASSIGNMENT_BY_HOUSINGUNIT_ID")
@@ -64,8 +89,9 @@ public class HousingUnitAssignmentResource {
 
 	@APIMapping(value="GET_ALL_ASSIGNMENTS_BY_HOUSINGUNIT_ID")
 	@RequestMapping(value = "/{housingUnitId}/assignments", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public List<HousingUnitAssignment> getAllHousingUnitAssignments(@PathVariable UUID housingUnitId ) {
-		return housingUnitAssignmentService.getAllHousingUnitAssignments(housingUnitId);
+	public ResponseEntity<Resources<Resource>> getAllHousingUnitAssignments(@PathVariable UUID housingUnitId,Pageable pageable ) {
+		return new ResponseEntity<>(assembler.toResource(housingUnitAssignmentService.getAllHousingUnitAssignments(housingUnitId,pageable), housingInventoryAssembler),
+				HttpStatus.OK);
 	}
 
 	@APIMapping(value="GET_ASSIGNMENTS_BY_ID")

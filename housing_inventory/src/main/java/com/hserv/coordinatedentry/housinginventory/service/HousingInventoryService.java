@@ -9,6 +9,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +80,10 @@ public class HousingInventoryService  {
 		DetachedCriteria crit=DetachedCriteria.forClass(HousingInventory.class).add(filter);
 		List<HousingInventory> housingInventories=(List<HousingInventory>)hibernateTemplate.findByCriteria(crit);
 		return  housingInventories;//housingInventoryRepository.findAll();
+	}
+	
+	public Page<HousingInventory> findAll(Pageable pageable){
+		return housingInventoryRepository.findAll(pageable);
 	}
 
 	@SuppressWarnings("unchecked")

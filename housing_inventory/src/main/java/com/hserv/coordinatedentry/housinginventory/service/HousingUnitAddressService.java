@@ -7,10 +7,13 @@ import java.util.UUID;
 
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Component;
 
@@ -34,8 +37,8 @@ public class HousingUnitAddressService  {
 	
 	 public HousingUnitAddress saveHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
 		 DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAddress.class)
-				 .add(Restrictions.eq("housingInventory.housingInventoryId",housingUnitAddress.getHousingInventory().getHousingInventoryId()))
-				 .setProjection(Projections.max("dateUpdated"));
+				 .add(Restrictions.eq("housingInventory.housingInventoryId",housingUnitAddress.getHousingInventoryId()))
+				 .addOrder(Order.asc("dateUpdated"));
 		 List<HousingUnitAddress> addresses= (List<HousingUnitAddress>)hibernateTemplate.findByCriteria(crit);
 		 if(addresses!=null&&addresses.size()!=0)
 		 {
@@ -58,15 +61,17 @@ public class HousingUnitAddressService  {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<HousingUnitAddress> getAllHousingUnitAddress(UUID housingUnitId){
+	public Page<HousingUnitAddress> getAllHousingUnitAddress(UUID housingUnitId,Pageable pageable){
 		List<HousingUnitAddress> housingUnitAddress=new ArrayList<HousingUnitAddress>(0);
 		HousingInventory housingInventory=housingInventoryRepository.findOne(housingUnitId);
-		for(HousingUnitAddress addr: housingInventory.getHousingUnitAddresss()){
+/*		for(HousingUnitAddress addr: housingInventory.getHousingUnitAddresss()){
 			addr.setHousingInventory(null);
 			addr.setHousingInventoryId(housingUnitId.toString());
 			housingUnitAddress.add(addr);
-		}
-		return housingUnitAddress;
+		}*/
+
+		return housingUnitAddressRepository.findByHousingInventory(housingInventory,pageable);
+	//	return housingUnitAddress;
 	}
 
 	@SuppressWarnings("unchecked")

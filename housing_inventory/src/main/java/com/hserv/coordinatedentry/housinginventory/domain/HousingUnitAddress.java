@@ -46,7 +46,7 @@ public class HousingUnitAddress  extends HousingInventoryBaseEntity {
 	private HousingInventory housingInventory;
 	
 	@Transient
-	private String housingInventoryId;
+	private UUID housingInventoryId;
 	
     public HousingUnitAddress(){
 		
@@ -114,11 +114,11 @@ public class HousingUnitAddress  extends HousingInventoryBaseEntity {
 		this.housingInventory = housingInventory;
 	}
 
-	public String getHousingInventoryId() {
+	public UUID getHousingInventoryId() {
 		return housingInventoryId;
 	}
 
-	public void setHousingInventoryId(String housingInventoryId) {
+	public void setHousingInventoryId(UUID housingInventoryId) {
 		this.housingInventoryId = housingInventoryId;
 	}
 

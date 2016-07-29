@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +23,10 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.service.HousingUnitAddressService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.net.URI;
 
 @RestController
@@ -25,6 +35,23 @@ public class HousingUnitAddressResource {
 
 	@Autowired
 	HousingUnitAddressService housingUnitAddressService;
+	
+	@Autowired
+	private PagedResourcesAssembler assembler;
+	
+	private ResourceAssembler<HousingUnitAddress, Resource<HousingUnitAddress>> housingInventoryAssembler = new HousingUnitAddressResource.HousingInventoryAssembler();
+	
+	private class HousingInventoryAssembler implements ResourceAssembler<HousingUnitAddress, Resource<HousingUnitAddress>> {
+
+		@Override
+		public Resource<HousingUnitAddress> toResource(HousingUnitAddress arg0) {
+			Resource<HousingUnitAddress> resource = new Resource<HousingUnitAddress>(arg0);
+			resource.add(
+					linkTo(methodOn(HousingUnitAddressResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAddressId())).withSelfRel());
+			return resource;
+		}
+	}
+	
 
 	@APIMapping(value="CREATE_ADDRESSES")
 	@RequestMapping(value = "/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +88,7 @@ public class HousingUnitAddressResource {
 		housingInventory.setHousingInventoryId(housingUnitId);
 		housingUnitAddress.setHousingInventory(housingInventory);
 		HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress);
-		result.setHousingInventoryId(housingUnitId.toString());
+		result.setHousingInventoryId(housingUnitId);
 		result.setHousingInventory(null);
 		//result.setHousingInventoryId(housingUnitId.toString());
 		return ResponseEntity
@@ -89,8 +116,9 @@ public class HousingUnitAddressResource {
 	
 	@APIMapping(value="GET_ALL_HISTORICAL_ADDRESS_BY_HOUSING_UNIT_ID")
 	@RequestMapping(value = "/{housingUnitId}/addresses", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public List<HousingUnitAddress> findAll(@PathVariable UUID housingUnitId) {
-		return housingUnitAddressService.getAllHousingUnitAddress(housingUnitId);
+	public ResponseEntity<Resources<Resource>> findAll(@PathVariable UUID housingUnitId,Pageable pageable) {
+		return new ResponseEntity<>(assembler.toResource(housingUnitAddressService.getAllHousingUnitAddress(housingUnitId,pageable), housingInventoryAssembler),
+				HttpStatus.OK);
 	}
 
 	@APIMapping(value="GET_ADDRESS_BY_ID")
