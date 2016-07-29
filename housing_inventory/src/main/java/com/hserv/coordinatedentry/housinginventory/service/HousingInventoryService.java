@@ -101,8 +101,8 @@ public class HousingInventoryService  {
 	}
 	
 	public void delete(UUID id) {
-		housingInventoryRepository.findOne(id);
-        housingInventoryRepository.delete(id);
+		HousingInventory inventory = housingInventoryRepository.findOne(id);
+        housingInventoryRepository.delete(inventory);
     }
 	
 	

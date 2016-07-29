@@ -62,16 +62,8 @@ public class HousingUnitAddressService  {
 	
 	@SuppressWarnings("unchecked")
 	public Page<HousingUnitAddress> getAllHousingUnitAddress(UUID housingUnitId,Pageable pageable){
-		List<HousingUnitAddress> housingUnitAddress=new ArrayList<HousingUnitAddress>(0);
 		HousingInventory housingInventory=housingInventoryRepository.findOne(housingUnitId);
-/*		for(HousingUnitAddress addr: housingInventory.getHousingUnitAddresss()){
-			addr.setHousingInventory(null);
-			addr.setHousingInventoryId(housingUnitId.toString());
-			housingUnitAddress.add(addr);
-		}*/
-
 		return housingUnitAddressRepository.findByHousingInventory(housingInventory,pageable);
-	//	return housingUnitAddress;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -80,8 +72,8 @@ public class HousingUnitAddressService  {
 	}
 	
 	public void delete(UUID id) {
-		housingUnitAddressRepository.findOne(id);
-        housingUnitAddressRepository.delete(id);
+		HousingUnitAddress housingUnitAddress = housingUnitAddressRepository.findOne(id);
+        housingUnitAddressRepository.delete(housingUnitAddress);
     }
 	
 	//this mehtod ll return false if the housingunit address is not equals to previous one.

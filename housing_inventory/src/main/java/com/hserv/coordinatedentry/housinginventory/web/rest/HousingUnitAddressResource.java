@@ -92,7 +92,7 @@ public class HousingUnitAddressResource {
 		result.setHousingInventory(null);
 		//result.setHousingInventoryId(housingUnitId.toString());
 		return ResponseEntity
-				.created(new URI("/{housingUnitId}/addresses" + result.getAddressId())).headers(HeaderUtil
+				.created(new URI("/"+housingUnitId+"/addresses" + result.getAddressId())).headers(HeaderUtil
 						.createEntityCreationAlert("housingUnitAddress", result.getAddressId().toString()))
 				.body(result);
 	}

@@ -70,7 +70,7 @@ public class HousingUnitAssignmentService  {
 	}
 	
 	public void delete(UUID id) {
-		housingUnitAssignmentRepository.findOne(id);
-        housingUnitAssignmentRepository.delete(id);
+		HousingUnitAssignment housingUnitAssignment =housingUnitAssignmentRepository.findOne(id);
+        housingUnitAssignmentRepository.delete(housingUnitAssignment);
     }
 }

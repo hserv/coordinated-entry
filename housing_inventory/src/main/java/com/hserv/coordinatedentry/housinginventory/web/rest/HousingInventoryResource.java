@@ -137,7 +137,7 @@ public class HousingInventoryResource {
 	        method = RequestMethod.DELETE,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    //@Timed
-	    public ResponseEntity<Void> deleteHousingInventory(@PathVariable UUID id) {
+	    public ResponseEntity<Void> deleteHousingInventory(@PathVariable("id") UUID id) {
 	        //log.debug("REST request to delete HousingInventory : {}", id);
 	        housingInventoryService.delete(id);
 	        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("housingInventory", id.toString())).build();
