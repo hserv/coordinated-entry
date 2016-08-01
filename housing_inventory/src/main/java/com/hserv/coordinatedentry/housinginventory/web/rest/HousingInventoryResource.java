@@ -3,6 +3,7 @@ package com.hserv.coordinatedentry.housinginventory.web.rest;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -145,10 +146,20 @@ public class HousingInventoryResource {
 	
 	
 	@ExceptionHandler(Throwable.class)
-	private void handleException(Throwable t, HttpServletRequest request, HttpServletResponse response) throws Throwable {
+	private ResponseEntity<String> handleException(Throwable t, HttpServletRequest request, HttpServletResponse response)  {
 		
 		response.setStatus(403);
-		throw t;
+		/*try {
+			response.sendError(403,t.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+		t.printStackTrace();
+		
+		return new ResponseEntity<String>(t.getMessage(), HttpStatus.FORBIDDEN);
+//		throw t;
 		/*ExceptionMapper mapper = new ExceptionMapper();
 
 		ExceptionMapper.Result result = mapper.map(t, request);

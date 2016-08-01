@@ -46,6 +46,7 @@ public class HousingUnitAddressResource {
 		@Override
 		public Resource<HousingUnitAddress> toResource(HousingUnitAddress arg0) {
 			Resource<HousingUnitAddress> resource = new Resource<HousingUnitAddress>(arg0);
+			
 			resource.add(
 					linkTo(methodOn(HousingUnitAddressResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAddressId())).withSelfRel());
 			return resource;
@@ -53,7 +54,7 @@ public class HousingUnitAddressResource {
 	}
 	
 
-	@APIMapping(value="CREATE_ADDRESSES")
+	/*@APIMapping(value="CREATE_ADDRESSES")
 	@RequestMapping(value = "/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HousingUnitAddress> createHousingUnitAddress(@RequestBody HousingUnitAddress housingUnitAddress)
 			throws URISyntaxException {
@@ -73,7 +74,7 @@ public class HousingUnitAddressResource {
 	@RequestMapping(value = "/addresses", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public List<HousingUnitAddress> getAlladdresses() {
 		return housingUnitAddressService.findAll();
-	}
+	}*/
 	
 	@APIMapping(value="CREATE_ADDRESSES")
 	@RequestMapping(value = "/{housingUnitId}/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE/*, produces = MediaType.APPLICATION_JSON_VALUE*/)
@@ -88,9 +89,7 @@ public class HousingUnitAddressResource {
 		housingInventory.setHousingInventoryId(housingUnitId);
 		housingUnitAddress.setHousingInventory(housingInventory);
 		HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress);
-		result.setHousingInventoryId(housingUnitId);
 		result.setHousingInventory(null);
-		//result.setHousingInventoryId(housingUnitId.toString());
 		return ResponseEntity
 				.created(new URI("/"+housingUnitId+"/addresses" + result.getAddressId())).headers(HeaderUtil
 						.createEntityCreationAlert("housingUnitAddress", result.getAddressId().toString()))

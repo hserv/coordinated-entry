@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -22,9 +23,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
-import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAssignment;
 import com.hserv.coordinatedentry.housinginventory.service.HousingUnitAssignmentService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
@@ -46,8 +47,8 @@ public class HousingUnitAssignmentResource {
 		@Override
 		public Resource<HousingUnitAssignment> toResource(HousingUnitAssignment arg0) {
 			Resource<HousingUnitAssignment> resource = new Resource<HousingUnitAssignment>(arg0);
-			/*resource.add(
-					linkTo(methodOn(HousingUnitAssignmentResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAssignmentId())).withSelfRel());*/
+			resource.add(
+					linkTo(methodOn(HousingUnitAssignmentResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAssignmentId())).withSelfRel());
 			return resource;
 		}
 	}

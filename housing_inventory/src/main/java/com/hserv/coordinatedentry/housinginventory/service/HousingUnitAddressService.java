@@ -37,7 +37,7 @@ public class HousingUnitAddressService  {
 	
 	 public HousingUnitAddress saveHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
 		 DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAddress.class)
-				 .add(Restrictions.eq("housingInventory.housingInventoryId",housingUnitAddress.getHousingInventoryId()))
+				 .add(Restrictions.eq("housingInventory.housingInventoryId",housingUnitAddress.getHousingInventory().getHousingInventoryId()))
 				 .addOrder(Order.asc("dateUpdated"));
 		 List<HousingUnitAddress> addresses= (List<HousingUnitAddress>)hibernateTemplate.findByCriteria(crit);
 		 if(addresses!=null&&addresses.size()!=0)

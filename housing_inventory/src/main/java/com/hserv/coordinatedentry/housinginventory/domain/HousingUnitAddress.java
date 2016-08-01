@@ -46,11 +46,10 @@ public class HousingUnitAddress  extends HousingInventoryBaseEntity {
 	
 	@ManyToOne
 	@JoinColumn(name="housing_inventory_housing_unit_id")
-	@JsonIgnore
 	private HousingInventory housingInventory;
 	
-	@Transient
-	private UUID housingInventoryId;
+/*	@Transient
+	private UUID housingInventoryId;*/
 	
     public HousingUnitAddress(){
 		
@@ -118,13 +117,13 @@ public class HousingUnitAddress  extends HousingInventoryBaseEntity {
 		this.housingInventory = housingInventory;
 	}
 
-	public UUID getHousingInventoryId() {
+/*	public UUID getHousingInventoryId() {
 		return housingInventoryId;
 	}
 
 	public void setHousingInventoryId(UUID housingInventoryId) {
 		this.housingInventoryId = housingInventoryId;
-	}
+	}*/
 
 	@Override
 	public int hashCode() {
