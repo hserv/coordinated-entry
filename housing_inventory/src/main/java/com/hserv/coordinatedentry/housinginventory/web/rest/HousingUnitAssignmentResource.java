@@ -47,8 +47,8 @@ public class HousingUnitAssignmentResource {
 		@Override
 		public Resource<HousingUnitAssignment> toResource(HousingUnitAssignment arg0) {
 			Resource<HousingUnitAssignment> resource = new Resource<HousingUnitAssignment>(arg0);
-			resource.add(
-					linkTo(methodOn(HousingUnitAssignmentResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAssignmentId())).withSelfRel());
+/*			resource.add(
+					linkTo(methodOn(HousingUnitAssignmentResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAssignmentId())).withSelfRel());*/
 			return resource;
 		}
 	}

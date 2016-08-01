@@ -47,8 +47,8 @@ public class HousingUnitAddressResource {
 		public Resource<HousingUnitAddress> toResource(HousingUnitAddress arg0) {
 			Resource<HousingUnitAddress> resource = new Resource<HousingUnitAddress>(arg0);
 			
-			resource.add(
-					linkTo(methodOn(HousingUnitAddressResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAddressId())).withSelfRel());
+/*			resource.add(
+					linkTo(methodOn(HousingUnitAddressResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAddressId())).withSelfRel());*/
 			return resource;
 		}
 	}
