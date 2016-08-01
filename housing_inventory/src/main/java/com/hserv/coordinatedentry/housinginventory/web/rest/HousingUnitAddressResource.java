@@ -102,6 +102,9 @@ public class HousingUnitAddressResource {
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    public ResponseEntity<HousingUnitAddress> updateHousingAddress(@RequestBody HousingUnitAddress housingUnitAddress, @PathVariable UUID housingUnitId ) throws URISyntaxException {
 	        //log.debug("REST request to update HousingUnitAddress : {}", housingUnitAddress);
+			HousingInventory inventory = new HousingInventory();
+			inventory.setHousingInventoryId(housingUnitId);
+			housingUnitAddress.setHousingInventory(inventory);
 	        if (housingUnitAddress.getAddressId() == null) {
 	            return createHousingUnitAddressByHousingUnitId(housingUnitAddress, housingUnitId);
 	        }

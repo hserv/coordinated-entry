@@ -46,8 +46,9 @@ public class HousingUnitAddressService  {
 			 if(!(housingUnitAddressEqualsExistingAddress(address,housingUnitAddress))){
 				 housingUnitAddress=housingUnitAddressRepository.save(housingUnitAddress);
 			 }
-		 }else
-			housingUnitAddress=housingUnitAddressRepository.save(housingUnitAddress);
+		 }else{
+			 housingUnitAddress=housingUnitAddressRepository.save(housingUnitAddress);
+		 }
 		return housingUnitAddress;
 	}
 

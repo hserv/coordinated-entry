@@ -49,7 +49,12 @@ public class HousingUnitAssignment extends HousingInventoryBaseEntity  {
     @Transient
     private String housingInventoryId;
 
-    public UUID getAssignmentId() {
+   
+    public HousingUnitAssignment() {
+    	
+	}
+
+	public UUID getAssignmentId() {
         return assignmentId;
     }
 

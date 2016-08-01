@@ -116,11 +116,11 @@ public class HousingUnitAssignmentResource {
 	    }*/
 	
 	@APIMapping(value="DELETE_ASSIGNMENT_BY_ID")
-	@RequestMapping(value = "/{housingUnitId}/assignments/{id}",
+	@RequestMapping(value = "/assignments/{id}",
 	        method = RequestMethod.DELETE,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    //@Timed
-	    public ResponseEntity<Void> deleteHousingUnitAddress(@PathVariable UUID housingUnitId, @PathVariable UUID id) {
+	    public ResponseEntity<Void> deleteHousingUnitAddress( @PathVariable UUID id) {
 	        housingUnitAssignmentService.delete(id);
 	        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("housingUnitAssignment", id.toString())).build();
 	    }
