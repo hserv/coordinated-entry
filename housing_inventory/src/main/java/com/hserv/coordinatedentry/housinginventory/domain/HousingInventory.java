@@ -50,6 +50,9 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	@Column(name = "vacant")
 	private Boolean vacant;
 	
+	@Column(name="alias_name")
+	private String aliasName;
+	
 	@OneToMany(mappedBy = "housingInventory",cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonIgnore
     private Set<HousingUnitAddress> housingUnitAddresss = new HashSet<HousingUnitAddress>();
@@ -169,6 +172,14 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 
 	public void setHousingUnitAssignments(Set<HousingUnitAssignment> housingUnitAssignments) {
 		this.housingUnitAssignments = housingUnitAssignments;
+	}
+
+	public String getAliasName() {
+		return aliasName;
+	}
+
+	public void setAliasName(String aliasName) {
+		this.aliasName = aliasName;
 	}
 
 	@Override
