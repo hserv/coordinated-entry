@@ -41,7 +41,7 @@ import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/housing-units")
-public class HousingInventoryResource {
+public class HousingInventoryResource extends BaseResource{
 
 	@Autowired
 	HousingInventoryService housingInventoryService;
@@ -143,40 +143,4 @@ public class HousingInventoryResource {
 	        housingInventoryService.delete(id);
 	        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("housingInventory", id.toString())).build();
 	    }
-	
-	
-	@ExceptionHandler(Throwable.class)
-	private ResponseEntity<String> handleException(Throwable t, HttpServletRequest request, HttpServletResponse response)  {
-		
-		response.setStatus(403);
-		/*try {
-			response.sendError(403,t.getMessage());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
-		t.printStackTrace();
-		
-		return new ResponseEntity<String>(t.getMessage(), HttpStatus.FORBIDDEN);
-//		throw t;
-		/*ExceptionMapper mapper = new ExceptionMapper();
-
-		ExceptionMapper.Result result = mapper.map(t, request);
-		Error er = new Error();
-		
-		er.setCode(result.getError().getCode());
-		er.setMessage(result.getError().getMessage());
-		
-		
-		Errors errors = new Errors();
-		List<Error> errs = new ArrayList<Error>();
-		errs.add(er);
-		
-		errors.setErrors(errs);
-		
-		response.setStatus(result.getStatusCode());
-			
-		return errors;*/
-	}
 }

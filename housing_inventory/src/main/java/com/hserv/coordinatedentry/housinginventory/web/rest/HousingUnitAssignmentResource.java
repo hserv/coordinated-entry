@@ -32,7 +32,7 @@ import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/housing-units")
-public class HousingUnitAssignmentResource {
+public class HousingUnitAssignmentResource extends BaseResource{
 
 	@Autowired
 	HousingUnitAssignmentService housingUnitAssignmentService;

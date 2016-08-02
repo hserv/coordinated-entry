@@ -31,7 +31,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/housing-units")
-public class HousingUnitAddressResource {
+public class HousingUnitAddressResource extends BaseResource{
 
 	@Autowired
 	HousingUnitAddressService housingUnitAddressService;

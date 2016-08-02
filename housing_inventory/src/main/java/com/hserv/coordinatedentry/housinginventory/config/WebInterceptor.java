@@ -37,13 +37,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 			apiMethodAuthorizationCheck.setAccessToken(getAuthorizationHeader(request));
 			apiMethodAuthorizationCheck.setTrustedAppId(getTrustedApp(request));
 			AuthorizationServiceClient client = new AuthorizationServiceClient();
-			try {
-				ApiMethodAuthorizationCheck clientresponse = client.checkApiAuthorization(apiMethodAuthorizationCheck);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				throw e;
-			}
+			ApiMethodAuthorizationCheck clientresponse = client.checkApiAuthorization(apiMethodAuthorizationCheck);
 			return true;
 		}else{
 			
