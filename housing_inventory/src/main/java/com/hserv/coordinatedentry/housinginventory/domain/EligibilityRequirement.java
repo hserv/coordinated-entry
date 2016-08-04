@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="housing_unit_eligibility",schema="housing_inventory")
-public class HousingUnitEligibility extends HousingInventoryBaseEntity {
+public class EligibilityRequirement extends HousingInventoryBaseEntity {
 
 	@Id
 	@Column(name = "eligibility_id")
@@ -21,11 +21,7 @@ public class HousingUnitEligibility extends HousingInventoryBaseEntity {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
     @org.hibernate.annotations.Type(type="pg-uuid")
 	private UUID eligibilityId;
-	
-	@Column(name="housing_unit_id")
-    @org.hibernate.annotations.Type(type="pg-uuid")
-	private UUID housingUnitId;
-	
+		
 	@Column(name="project_id")
     @org.hibernate.annotations.Type(type="pg-uuid")
 	private UUID projectId;
@@ -39,12 +35,6 @@ public class HousingUnitEligibility extends HousingInventoryBaseEntity {
 	}
 	public void setEligibilityId(UUID eligibilityId) {
 		this.eligibilityId = eligibilityId;
-	}
-	public UUID getHousingUnitId() {
-		return housingUnitId;
-	}
-	public void setHousingUnitId(UUID housingUnitId) {
-		this.housingUnitId = housingUnitId;
 	}
 	public UUID getProjectId() {
 		return projectId;

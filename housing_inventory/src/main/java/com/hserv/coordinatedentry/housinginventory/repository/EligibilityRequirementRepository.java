@@ -1,0 +1,16 @@
+package com.hserv.coordinatedentry.housinginventory.repository;
+
+import java.io.Serializable;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.hserv.coordinatedentry.housinginventory.domain.EligibilityRequirement;
+
+public interface EligibilityRequirementRepository extends JpaRepository<EligibilityRequirement, Serializable>{
+
+	Page<EligibilityRequirement> findByProjectId(UUID projectId,Pageable pageable);
+	
+}
