@@ -18,23 +18,27 @@ import com.hserv.coordinatedentry.housinginventory.enums.VeteranStatusEnum;
 
 public class EligibilityRequirementModel {
 	
-	private UUID eligibiityRequirementId;
+	private UUID eligibilityRequirementId;
 	
 	private String type;
 	private GenderEnum gender;
 	private boolean servesSingles;
 	private boolean servesHouseholdWithChildren;
+	
+	@Min(value=1,message="Minimum Age must be greater than 0")
 	private Integer minAge;
+	
+	@Min(value=1,message="Maximum Age must be greater than 0")
 	private Integer maxAge;
 	private boolean incomeRequirement;
 	
-	@Min(0)
+	@Min(value=0,message="Minimum Income must be greater than or equal to 0")
 	private Long minimumIncome;
 	
-	@Min(0)
+	@Min(value=0,message="Maximum Income must be greater than or equal to 0")
 	private Long maximumIncome;
 
-	@Length(min=5,max=5)
+	@Length(min=5,max=5,message="Invalid zip code")
 	private String zipCode;
 	private VeteranStatusEnum disability;
 	private boolean alcoholAbuse;
@@ -53,11 +57,11 @@ public class EligibilityRequirementModel {
 	private MonthshomelesspastthreeyearsEnum monthsHomelessPastThreeYears;
 	private ResidencepriorEnum residencePrior;
 	
-	public UUID getEligibiityRequirementId() {
-		return eligibiityRequirementId;
+	public UUID getEligibilityRequirementId() {
+		return eligibilityRequirementId;
 	}
-	public void setEligibiityRequirementId(UUID eligibiityRequirementId) {
-		this.eligibiityRequirementId = eligibiityRequirementId;
+	public void setEligibilityRequirementId(UUID eligibilityRequirementId) {
+		this.eligibilityRequirementId = eligibilityRequirementId;
 	}
 	public String getType() {
 		return type;

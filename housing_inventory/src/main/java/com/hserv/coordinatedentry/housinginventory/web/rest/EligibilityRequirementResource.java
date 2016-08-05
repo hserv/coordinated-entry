@@ -71,8 +71,8 @@ public class EligibilityRequirementResource extends BaseResource {
 		eligibility.setEligibility(JsonUtil.toJSON(eligibilityModel));
 		housingUnitEligibilityRepository.save(eligibility);
 		 
-		EligibilityRequirementModel lresult = new EligibilityRequirementModel();
-		lresult.setEligibiityRequirementId(eligibility.getEligibilityId());
+		EligibilityRequirementModel lresult = JsonUtil.fromJSON(eligibility.getEligibility(), EligibilityRequirementModel.class);
+		lresult.setEligibilityRequirementId(eligibility.getEligibilityId());
 		return new ResponseEntity<EligibilityRequirementModel>(lresult, HttpStatus.OK);
 
 		
