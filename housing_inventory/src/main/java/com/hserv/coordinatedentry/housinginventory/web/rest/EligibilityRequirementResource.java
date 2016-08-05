@@ -67,7 +67,6 @@ public class EligibilityRequirementResource extends BaseResource {
 	public ResponseEntity<EligibilityRequirementModel> createEligibility(@PathVariable UUID projectId,
 			@Valid @RequestBody EligibilityRequirementModel eligibilityModel, HttpServletRequest request) throws Exception {
 		EligibilityRequirement eligibility = new EligibilityRequirement();
-		eligibility.setEligibilityId(UUID.randomUUID());
 		eligibility.setProjectId(projectId);
 		eligibility.setEligibility(JsonUtil.toJSON(eligibilityModel));
 		housingUnitEligibilityRepository.save(eligibility);
