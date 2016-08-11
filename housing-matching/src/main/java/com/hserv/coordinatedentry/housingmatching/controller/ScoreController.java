@@ -2,6 +2,7 @@
 package com.hserv.coordinatedentry.housingmatching.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -93,7 +94,7 @@ public class ScoreController {
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
 	@APIMapping(value="get-score-by-clientId")
-	public ResponseEntity<String> getScoreByClientId(@PathVariable String id) {
+	public ResponseEntity<String> getScoreByClientId(@PathVariable UUID id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			int score = surveyScoreService.getScoreByClientId(id);
@@ -111,12 +112,13 @@ public class ScoreController {
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.DELETE)
 	@APIMapping(value="delete-score-by-clientId")
-	public ResponseEntity<String> deleteScoreByClientId(@PathVariable String id) {
+	public ResponseEntity<String> deleteScoreByClientId(@PathVariable UUID id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			surveyScoreService.deleteScoreByClientId(id);
 			responseEntity = ResponseEntity.ok("Score Deleted");
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
 		}
 		return responseEntity;
@@ -129,7 +131,7 @@ public class ScoreController {
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.PUT)
 	@APIMapping(value="update-score-by-clientId")
-	public ResponseEntity<String> updateScoreByClientId(@PathVariable String id, @RequestBody int score) {
+	public ResponseEntity<String> updateScoreByClientId(@PathVariable UUID id, @RequestBody int score) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			surveyScoreService.updateScoreByClientId(score, id);

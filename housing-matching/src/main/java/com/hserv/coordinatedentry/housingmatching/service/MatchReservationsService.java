@@ -2,6 +2,7 @@ package com.hserv.coordinatedentry.housingmatching.service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 
@@ -19,11 +20,11 @@ public interface MatchReservationsService {
 	
 	public Set<MatchReservationModel> findAll();
 	
-	public boolean deleteByClientId(String clientId);
+	public boolean deleteByClientId(UUID clientId);
 	
-	public MatchReservationModel findByClientId(String clientId);
+	public MatchReservationModel findByClientId(UUID clientId);
 	
-	public boolean updateByClientId(String clientId, MatchReservationModel matchReservationModel);
+	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel);
 	
 	public void createMatch();
  }

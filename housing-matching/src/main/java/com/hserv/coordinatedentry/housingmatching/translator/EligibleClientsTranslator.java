@@ -37,6 +37,10 @@ public class EligibleClientsTranslator {
 		eligibleClients.setSpdatLabel(eligibleClientModel.getSpdatLabel());
 		eligibleClients.setSurveyScore(eligibleClientModel.getSurveyScore());
 		eligibleClients.setSurveyDate(eligibleClientModel.getSurveyDate());
+		if(eligibleClientModel.getZipcode()!=null)
+			eligibleClients.setZipCode(Integer.parseInt(eligibleClientModel.getZipcode()));
+		if(eligibleClients.getSurveyType()!=null)
+			eligibleClientModel.setSurveyType(eligibleClientModel.getSurveyType());
 
 		return eligibleClients;
 	}

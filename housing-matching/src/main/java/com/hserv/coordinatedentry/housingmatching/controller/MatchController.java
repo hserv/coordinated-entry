@@ -2,6 +2,7 @@
 package com.hserv.coordinatedentry.housingmatching.controller;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,7 +79,7 @@ public class MatchController {
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
 	@APIMapping(value="get-match-by-clientId")
-	public MatchReservationModel getMatchByClientId(@PathVariable String id) {
+	public MatchReservationModel getMatchByClientId(@PathVariable UUID id) {
 		return matchReservationsService.findByClientId(id);
 	}
 
@@ -89,7 +90,7 @@ public class MatchController {
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.DELETE)
 	@APIMapping(value="delete-match-by-clientId")
-	public ResponseEntity<String> deleteMatchByClientId(@PathVariable String id) {
+	public ResponseEntity<String> deleteMatchByClientId(@PathVariable UUID id) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			boolean result = matchReservationsService.deleteByClientId(id);
@@ -111,7 +112,7 @@ public class MatchController {
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.PUT)
 	@APIMapping(value="update-match-by-clientId")
-	public ResponseEntity<String> updateMatchByClientId(@PathVariable String id,
+	public ResponseEntity<String> updateMatchByClientId(@PathVariable UUID id,
 			@RequestBody MatchReservationModel matchReservationModel) {
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -122,6 +123,7 @@ public class MatchController {
 			}
 
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
 		}
 

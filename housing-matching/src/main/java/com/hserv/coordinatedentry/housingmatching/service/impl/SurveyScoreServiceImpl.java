@@ -54,30 +54,23 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	}
 
 	@Override
-	public int getScoreByClientId(String clientId) {
-		if (clientId != null && !clientId.isEmpty() && eligibleClientsRepository.exists(UUID.fromString(clientId))) {
-			EligibleClient eligibleClients = eligibleClientsRepository.findByClientId(UUID.fromString(clientId));
-			return eligibleClients.getSurveyScore();
-		}
-		return 0;
+	public int getScoreByClientId(UUID clientId) {
+			EligibleClient eligibleClients = eligibleClientsRepository.findByClientId(clientId);
+			if(eligibleClients!=null)
+				return eligibleClients.getSurveyScore();
+		     return 0;
 	}
 
 	@Override
-	public boolean deleteScoreByClientId(String clientId) {
-		if (clientId != null && !clientId.isEmpty() && eligibleClientsRepository.exists(UUID.fromString(clientId))) {
-			eligibleClientsRepository.deleteScoreByClientId(UUID.fromString(clientId));
+	public boolean deleteScoreByClientId(UUID clientId) {
+			eligibleClientsRepository.deleteScoreByClientId(clientId);
 			return true;
-		}
-		return false;
 	}
 
 	@Override
-	public boolean updateScoreByClientId(int score, String clientId) {
-		if (clientId != null && !clientId.isEmpty() && eligibleClientsRepository.exists(UUID.fromString(clientId))) {
-			eligibleClientsRepository.updateScoreByClientId(score, UUID.fromString(clientId));
+	public boolean updateScoreByClientId(int score, UUID clientId) {
+			eligibleClientsRepository.updateScoreByClientId(score, clientId);
 			return true;
-		}
-		return false;
 	}
 
 	@Override

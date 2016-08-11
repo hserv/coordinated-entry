@@ -84,6 +84,7 @@ public class EligibleClientsController {
 			boolean status = eligibleClientService.createEligibleClients(eligibleClientModels);
 			responseEntity = ResponseEntity.ok("{\"added\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			responseEntity = new ResponseEntity<String>("fail", HttpStatus.EXPECTATION_FAILED);
 		}
 		return responseEntity;

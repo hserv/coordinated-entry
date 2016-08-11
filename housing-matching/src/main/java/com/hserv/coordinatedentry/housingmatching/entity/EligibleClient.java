@@ -1,15 +1,19 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -29,6 +33,8 @@ public class EligibleClient implements Serializable {
 	private Date surveyDate;
 	private String spdatLabel;
 	private int zipCode;
+	
+	private List<Match> matchs = new ArrayList<>(); 
 	
 	public EligibleClient() {
 	}
@@ -126,5 +132,12 @@ public class EligibleClient implements Serializable {
 		this.zipCode = zipCode;
 	}
 
-	
+	@OneToMany(mappedBy="eligibleClient",cascade= CascadeType.REMOVE)
+	public List<Match> getMatchs() {
+		return matchs;
+	}
+
+	public void setMatchs(List<Match> matchs) {
+		this.matchs = matchs;
+	}
 }

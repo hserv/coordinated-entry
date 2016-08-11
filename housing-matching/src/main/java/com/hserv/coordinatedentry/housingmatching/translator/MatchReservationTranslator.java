@@ -44,7 +44,7 @@ public class MatchReservationTranslator {
 
 	public MatchReservationModel translate(Match matchReserve) {
 		MatchReservationModel matchReservationModel = new MatchReservationModel();
-		matchReservationModel.setReservationId(matchReserve.getReservationId().toString());
+		matchReservationModel.setReservationId(matchReserve.getReservationId());
 		matchReservationModel.setMatchStatus(matchReserve.getMatchStatus());
 		matchReservationModel.setMatchDate(matchReserve.getMatchDate());
 		matchReservationModel.setManualMatch(matchReserve.getManualMatch());
@@ -64,7 +64,7 @@ public class MatchReservationTranslator {
 		} else {
 			return null;
 		}
-		match.setReservationId(UUID.fromString(matchRerserveModel.getReservationId()));
+		match.setReservationId(matchRerserveModel.getReservationId());
 		match.setMatchStatus(matchRerserveModel.getMatchStatus());
 		match.setMatchDate(matchRerserveModel.getMatchDate());
 		match.setManualMatch(matchRerserveModel.getManualMatch());
@@ -74,6 +74,8 @@ public class MatchReservationTranslator {
 		match.setReservationChildren(matchRerserveModel.getReservationChildren());
 		match.setInactive(matchRerserveModel.getInactive());
 		match.setNoteId(matchRerserveModel.getNoteId());
+		match.setHousingUnitId(matchRerserveModel.getHousingUnitId());
+	//	match.setHousingUnitId(UUID.fromString(matchRerserveModel.getHousingInventory().getHousingInventories().get(0).getHousingInventory().getHousingUnitId()));
 		return match;
 	}
 

@@ -92,32 +92,36 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 
 	@Override
-	public boolean deleteByClientId(String clientId) {
-		if (repository.exists(UUID.fromString(clientId))) {
-			repository.deleteByEligibleClientClientId(UUID.fromString(clientId));
+	public boolean deleteByClientId(UUID clientId) {
+		if (repository.exists(clientId)) {
+			repository.deleteByEligibleClientClientId(clientId);
 			return true;
 		}
-		repository.deleteByEligibleClientClientId(UUID.fromString(clientId));
 		return false;
 	}
 
 	@Override
-	public MatchReservationModel findByClientId(String clientId) {
-		if (repository.exists(UUID.fromString(clientId))) {
+	public MatchReservationModel findByClientId(UUID clientId) {
+		EligibleClient eligibleClient = eligibleClientsRepository.findOne(clientId);
+		if (eligibleClient!=null) 
 			return matchReservationTranslator
-					.translate(repository.findByEligibleClientClientId(UUID.fromString(clientId)));
-		}
+					.translate(repository.findByEligibleClient(eligibleClient).get(0));
+		
 		return null;
 	}
 
 	@Override
-	public boolean updateByClientId(String clientId, MatchReservationModel matchReservationModel) {
+	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel) {
+	
+			EligibleClient eligibleClient = eligibleClientsRepository.findOne(clientId);
+			if(eligibleClient==null)
+				return false;
+			
 		Match matchReservations = matchReservationTranslator.translate(matchReservationModel);
-		if (matchReservations.getEligibleClient() != null)
-			matchReservations.getEligibleClient().setClientId(UUID.fromString(clientId));
+			matchReservations.setEligibleClient(eligibleClient);
 		repository.saveAndFlush(matchReservations);
 
-		sendNotification(matchReservationModel);
+	//	sendNotification(matchReservationModel);
 		return true;
 	}
 

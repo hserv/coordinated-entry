@@ -3,11 +3,13 @@ package com.hserv.coordinatedentry.housingmatching.model;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class MatchReservationModel {
-	private String reservationId;
+	private UUID reservationId;
 	private EligibleClientModel eligibleClients;
 	private HousingInventoryModel housingInventory;
+	private UUID housingUnitId;
 	private String noteId;
 	private Date matchDate;
 	private String matchStatus;
@@ -19,10 +21,10 @@ public class MatchReservationModel {
 	private Date dateUpdated;
 	private Set<NoteModel> notes = new HashSet(0);
 	
-	public String getReservationId() {
+	public UUID getReservationId() {
 		return reservationId;
 	}
-	public void setReservationId(String reservationId) {
+	public void setReservationId(UUID reservationId) {
 		this.reservationId = reservationId;
 	}
 	public EligibleClientModel getEligibleClients() {
@@ -96,6 +98,14 @@ public class MatchReservationModel {
 	}
 	public void setNotes(Set<NoteModel> notes) {
 		this.notes = notes;
+	}
+	
+	
+	public UUID getHousingUnitId() {
+		return housingUnitId;
+	}
+	public void setHousingUnitId(UUID housingUnitId) {
+		this.housingUnitId = housingUnitId;
 	}
 	@Override
 	public String toString() {
