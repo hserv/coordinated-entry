@@ -97,7 +97,7 @@ MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageCo
 		headers.add("Accept","application/json");
 		headers.add("Content-Type","application/json");
 		headers.add("X-HMIS-TrustedApp-Id", "MASTER_TRUSTED_APP");
-		headers.add("Authorization","HMISUserAuth session_token=8BDFFEC83872467CB5F2E48A07C0A055F2EB44207CCB48E18167C46391109586");
+		headers.add("Authorization","HMISUserAuth session_token=75FA4103585E4EC7AF3A1B3E7A4D103E905CEC430620459C99CE34603EF5A44D");
 		
 		HttpEntity<Object> entity = new HttpEntity<Object>(headers);
 		
@@ -115,7 +115,7 @@ MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageCo
 			e.printStackTrace();
 		}*/
 		
-		System.out.println(" survey "+responseEntity.getBody());
+		System.out.println(" survey "+responseEntity.getBody().getClientsSurveyScores().size());
 		
 		return responseEntity.getBody();
 	}

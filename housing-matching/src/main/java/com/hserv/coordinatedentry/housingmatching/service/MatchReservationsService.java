@@ -4,6 +4,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
+
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 
 public interface MatchReservationsService {
@@ -18,7 +25,7 @@ public interface MatchReservationsService {
 	
 	public boolean deleteAll();
 	
-	public Set<MatchReservationModel> findAll();
+	public Page<Match> findAll(Pageable pageable);
 	
 	public boolean deleteByClientId(UUID clientId);
 	

@@ -5,6 +5,11 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
+import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
 
 @RestController
 @RequestMapping(value = "/matches", produces = "application/json")
@@ -27,6 +35,27 @@ public class MatchController {
 
 	@Autowired
 	HousingUnitService inventoryService;
+	
+	@Autowired
+	MatchReservationTranslator matchReservationTranslator;
+	
+	@Autowired
+	private PagedResourcesAssembler assembler;
+	
+
+	private ResourceAssembler<Match, Resource<MatchReservationModel>> housingInventoryAssembler = new MatchController.HousingInventoryAssembler();
+	
+	private class HousingInventoryAssembler implements ResourceAssembler<Match, Resource<MatchReservationModel>> {
+
+		@Override
+		public Resource<MatchReservationModel> toResource(Match arg0) {
+			Resource<MatchReservationModel> resource = new Resource<MatchReservationModel>(matchReservationTranslator.translate(arg0));
+			/*resource.add(
+					linkTo(methodOn(HousingInventoryResource.class).getHousingInverntoryByID(arg0.getHousingInventoryId())).withSelfRel());*/
+			return resource;
+		}
+	}	
+
 
 
 	/**
@@ -47,8 +76,9 @@ public class MatchController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@APIMapping(value="get-proposed-matches")
-	public Set<MatchReservationModel> getMatches() {
-		return matchReservationsService.findAll();
+	public ResponseEntity<Resources<Resource>> getMatches(Pageable pageable) {
+		return new ResponseEntity<>(assembler.toResource(matchReservationsService.findAll(pageable), housingInventoryAssembler),
+				HttpStatus.OK);
 	}
 
 

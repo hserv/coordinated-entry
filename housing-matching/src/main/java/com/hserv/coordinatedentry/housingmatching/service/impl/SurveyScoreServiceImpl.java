@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
@@ -76,7 +77,8 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	}
 
 	@Override
-	public void calculateScore() {
+	@Transactional
+	public void calculateScore() throws Exception {
 		
 		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponse();
 		
@@ -90,10 +92,12 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			eligibleClient.setMatched(false);
 			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(), true, false));
-		//	eligibleClient.setSpdatLabel(m.getSpdatLabel());
+			
+			// Hard coded value 
+			eligibleClient.setSpdatLabel("youth");
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
-			eligibleClientsRepository.saveAndFlush(eligibleClient);
-			eligibleClients.add(eligibleClient);
+			eligibleClientsRepository.save(eligibleClient);
+			//eligibleClients.add(eligibleClient);
 			
 		}
 

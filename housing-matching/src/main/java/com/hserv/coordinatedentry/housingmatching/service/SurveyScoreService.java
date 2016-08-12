@@ -7,7 +7,7 @@ import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 
 public interface SurveyScoreService {
 	
-	public void calculateScore();
+	public void calculateScore() throws Exception ;
 
 	public List<EligibleClientModel> getScores();
 	

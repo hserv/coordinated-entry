@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
+import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 
 @RestController
 @ResponseBody
@@ -27,6 +34,29 @@ public class ScoreController {
 	@Autowired
 	SurveyScoreService surveyScoreService;
 	
+	@Autowired
+	private PagedResourcesAssembler assembler;
+	
+	@Autowired
+	private EligibleClientsTranslator eligibleClientsTranslator;
+	
+
+	private ResourceAssembler<EligibleClient, Resource<EligibleClientModel>> housingInventoryAssembler = new ScoreController.HousingInventoryAssembler();
+	
+	private class HousingInventoryAssembler implements ResourceAssembler<EligibleClient, Resource<EligibleClientModel>> {
+
+		@Override
+		public Resource<EligibleClientModel> toResource(EligibleClient arg0) {
+			Resource<EligibleClientModel> resource = new Resource<EligibleClientModel>(eligibleClientsTranslator.translate(arg0));
+			/*resource.add(
+					linkTo(methodOn(HousingInventoryResource.class).getHousingInverntoryByID(arg0.getHousingInventoryId())).withSelfRel());*/
+			return resource;
+		}
+	}	
+	
+	
+	
+	
 	/**
 	 * Trigger score totaling via POST. An Empty body request would suffice.
 	 * 
@@ -35,7 +65,7 @@ public class ScoreController {
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	@APIMapping(value="trigger-score-calculation")
-	public DeferredResult<String> calculateScore() {
+	public DeferredResult<String> calculateScore() throws Exception {
 		DeferredResult<String> deferredResult = new DeferredResult<>();
 		try {
 			surveyScoreService.calculateScore();

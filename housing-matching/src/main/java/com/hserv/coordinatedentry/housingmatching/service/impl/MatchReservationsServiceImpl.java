@@ -9,6 +9,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
@@ -87,8 +89,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 
 	@Override
-	public Set<MatchReservationModel> findAll() {
-		return matchReservationTranslator.translate(new HashSet<Match>(repository.findAll()));
+	public Page<Match> findAll(Pageable pageable) {
+		return repository.findAll(pageable);
 	}
 
 	@Override
