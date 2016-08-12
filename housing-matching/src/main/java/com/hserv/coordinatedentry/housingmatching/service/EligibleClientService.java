@@ -3,6 +3,9 @@ package com.hserv.coordinatedentry.housingmatching.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 
@@ -12,7 +15,7 @@ public interface EligibleClientService {
 
 	EligibleClientModel getEligibleClientDetail(UUID clientID);
 
-	List<EligibleClientModel> getEligibleClients();
+	Page<EligibleClient> getEligibleClients(Pageable pageable);
 
 	boolean updateEligibleClient(UUID clientID , EligibleClientModel eligibleClientModel);
 

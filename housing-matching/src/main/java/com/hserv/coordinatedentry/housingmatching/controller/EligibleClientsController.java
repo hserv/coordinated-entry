@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
+import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 
 /**
  * Controller for eligible-clients.
@@ -28,6 +35,31 @@ public class EligibleClientsController {
 
 	@Autowired
 	EligibleClientService eligibleClientService;
+	
+	
+	@Autowired
+	private PagedResourcesAssembler assembler;
+	
+	@Autowired
+	private EligibleClientsTranslator eligibleClientsTranslator;
+	
+
+	private ResourceAssembler<EligibleClient, Resource<EligibleClientModel>> housingInventoryAssembler = new EligibleClientsController.HousingInventoryAssembler();
+	
+	private class HousingInventoryAssembler implements ResourceAssembler<EligibleClient, Resource<EligibleClientModel>> {
+
+		@Override
+		public Resource<EligibleClientModel> toResource(EligibleClient arg0) {
+			Resource<EligibleClientModel> resource = new Resource<EligibleClientModel>(eligibleClientsTranslator.translate(arg0));
+			/*resource.add(
+					linkTo(methodOn(HousingInventoryResource.class).getHousingInverntoryByID(arg0.getHousingInventoryId())).withSelfRel());*/
+			return resource;
+		}
+	}	
+
+	
+	
+	
 
 	/**
 	 * Returns the most eligible clients.
@@ -35,8 +67,9 @@ public class EligibleClientsController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@APIMapping(value="get-eligible-clients")
-	public List<EligibleClientModel> getEligibleClients() {
-		return eligibleClientService.getEligibleClients();
+	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable) {
+		return new ResponseEntity<>(assembler.toResource(eligibleClientService.getEligibleClients(pageable), housingInventoryAssembler),
+				HttpStatus.OK);
 	}
 
 	/**

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.external.SurveyMSService;
+import com.hserv.coordinatedentry.housingmatching.model.ClientSurveyScore;
+import com.hserv.coordinatedentry.housingmatching.model.ClientsSurveyScores;
 import com.hserv.coordinatedentry.housingmatching.model.CommunityType;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.SurveyResponseModel;
@@ -76,38 +78,24 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Override
 	public void calculateScore() {
 		
-		SurveyResponseModel surveyResponseModel = surveyMSService.fetchSurveyResponse();
+		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponse();
 		
-		//Iterate and total the sectional scores into a map
-		Map<String,Integer> scoreMap = new HashMap<String,Integer>();
-		for(SurveySectionModel m : surveyResponseModel.getSurveySectionList()){
-			String clientId = m.getClientId();
-			Integer sectionalScore = m.getSectionScore();
-			if(scoreMap.get(clientId)!=null){
-				Integer updatedScore = scoreMap.get(clientId)+sectionalScore;
-				scoreMap.put(clientId, updatedScore);
-			}else{
-				scoreMap.put(clientId, sectionalScore);
-			}
-		}
-		
-		//Iterate and create eligible client entities
 		List<EligibleClient> eligibleClients = new ArrayList<EligibleClient>();
 		MatchStrategy strategy;
-		for(SurveySectionModel m : surveyResponseModel.getSurveySectionList()){
+		for(ClientSurveyScore clientSurveyScore : surveyResponseModel.getClientsSurveyScores()){
 			EligibleClient eligibleClient = new EligibleClient();
-			int spdatScore = scoreMap.get(m.getClientId());
-			//hardcoding community for now;should be fetched from user/client
+			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
-			//hardcoding params for now;should be fetched from client info service
 			int additionalScore = strategy.getAdditionalScore(true, false, 19, false, true, false);
-			eligibleClient.setClientId(UUID.fromString(m.getClientId()));
+			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			eligibleClient.setMatched(false);
-			eligibleClient.setProgramType(strategy.getProgramType(spdatScore, true, false));
-			eligibleClient.setSpdatLabel(m.getSpdatLabel());
-			eligibleClient.setSurveyScore(spdatScore+additionalScore);
+			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(), true, false));
+		//	eligibleClient.setSpdatLabel(m.getSpdatLabel());
+			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
+			eligibleClientsRepository.saveAndFlush(eligibleClient);
 			eligibleClients.add(eligibleClient);
+			
 		}
-		
+
 	}
 }
