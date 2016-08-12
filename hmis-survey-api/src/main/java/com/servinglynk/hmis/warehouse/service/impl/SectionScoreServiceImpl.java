@@ -11,6 +11,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.servinglynk.hmis.warehouse.core.model.ClientSurveyScore;
+import com.servinglynk.hmis.warehouse.core.model.ClientsSurveyScores;
 import com.servinglynk.hmis.warehouse.core.model.SectionScores;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
@@ -94,6 +96,16 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 			}
 
 		return score;		
+	}
+
+	@Transactional
+	public ClientsSurveyScores calculateClientSurveyScore() {
+		ClientsSurveyScores clientsSurveyScores = new ClientsSurveyScores();
+		List<ClientSurveyScore> clientSurveyScores = daoFactory.getSectionScoreDao().calculateClientSurveyScore();
+		for(ClientSurveyScore clientSurveyScore : clientSurveyScores){
+			clientsSurveyScores.add(clientSurveyScore);
+		}
+		return clientsSurveyScores;
 	}
 	
 }

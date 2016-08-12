@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.rest;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
+import com.servinglynk.hmis.warehouse.core.model.ClientSurveyScore;
+import com.servinglynk.hmis.warehouse.core.model.ClientsSurveyScores;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SectionScore;
@@ -161,5 +164,11 @@ public class ClientsController extends BaseController {
            if (maxItems == null || maxItems > 30) maxItems =30;
 		   
 		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, null);
+	   }
+	   
+	   @RequestMapping(method=RequestMethod.GET)
+	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
+	   public ClientsSurveyScores getAllClientsSurveyScores(HttpServletRequest request){
+		 return serviceFactory.getSectionScoreService().calculateClientSurveyScore();
 	   }
 }
