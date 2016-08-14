@@ -4,6 +4,8 @@ package com.hserv.coordinatedentry.housingmatching.controller;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -19,9 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.external.impl.ClientServiceImpl;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.model.Session;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 
@@ -31,7 +36,7 @@ import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTran
  */
 @RestController
 @RequestMapping(value = "/eligible-clients", produces = "application/json")
-public class EligibleClientsController {
+public class EligibleClientsController extends BaseController {
 
 	@Autowired
 	EligibleClientService eligibleClientService;
@@ -39,6 +44,9 @@ public class EligibleClientsController {
 	
 	@Autowired
 	private PagedResourcesAssembler assembler;
+	
+	@Autowired
+	private ClientServiceImpl clientService;
 	
 	@Autowired
 	private EligibleClientsTranslator eligibleClientsTranslator;
@@ -67,7 +75,8 @@ public class EligibleClientsController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@APIMapping(value="get-eligible-clients")
-	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable) {
+	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable,HttpServletRequest request) {
+		Session session = sessionHelper.getSession(request);
 		return new ResponseEntity<>(assembler.toResource(eligibleClientService.getEligibleClients(pageable), housingInventoryAssembler),
 				HttpStatus.OK);
 	}

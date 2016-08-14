@@ -4,6 +4,8 @@ package com.hserv.coordinatedentry.housingmatching.controller;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Resource;
@@ -23,13 +25,14 @@ import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
+import com.hserv.coordinatedentry.housingmatching.model.Session;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 
 @RestController
 @ResponseBody
 @RequestMapping(value = "/scores", produces = "application/json")
-public class ScoreController {
+public class ScoreController extends BaseController {
 
 	@Autowired
 	SurveyScoreService surveyScoreService;
@@ -65,10 +68,11 @@ public class ScoreController {
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	@APIMapping(value="trigger-score-calculation")
-	public DeferredResult<String> calculateScore() throws Exception {
+	public DeferredResult<String> calculateScore(HttpServletRequest request) throws Exception {
+		Session session = sessionHelper.getSession(request);
 		DeferredResult<String> deferredResult = new DeferredResult<>();
 		try {
-			surveyScoreService.calculateScore();
+			surveyScoreService.calculateScore(session);
 			deferredResult.setResult("triggered: 'ok'");
 		} catch (Exception ex) {
 			deferredResult.setResult(new String("{\"failed\": \"true\"}\""));

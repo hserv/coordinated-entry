@@ -17,6 +17,7 @@ import com.hserv.coordinatedentry.housingmatching.model.ClientSurveyScore;
 import com.hserv.coordinatedentry.housingmatching.model.ClientsSurveyScores;
 import com.hserv.coordinatedentry.housingmatching.model.CommunityType;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.model.Session;
 import com.hserv.coordinatedentry.housingmatching.model.SurveyResponseModel;
 import com.hserv.coordinatedentry.housingmatching.model.SurveySectionModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
@@ -78,9 +79,9 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 
 	@Override
 	@Transactional
-	public void calculateScore() throws Exception {
+	public void calculateScore(Session session) throws Exception {
 		
-		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponse();
+		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponse(session);
 		
 		List<EligibleClient> eligibleClients = new ArrayList<EligibleClient>();
 		MatchStrategy strategy;

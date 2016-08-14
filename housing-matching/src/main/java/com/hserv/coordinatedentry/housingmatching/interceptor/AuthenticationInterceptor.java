@@ -1,5 +1,6 @@
 package com.hserv.coordinatedentry.housingmatching.interceptor;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,10 +23,13 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.hserv.coordinatedentry.housingmatching.model.AuthResponseWrapper;
 import com.hserv.coordinatedentry.housingmatching.model.HousingInventoryModel;
-import com.servinglynk.hmis.warehouse.client.model.ApiMethodAuthorizationCheck;
+import com.hserv.coordinatedentry.housingmatching.model.Session;
+import com.hserv.coordinatedentry.housingmatching.helper.SessionHelper;
+import com.hserv.coordinatedentry.housingmatching.model.ApiMethodAuthorizationCheck;
 
 /**
  * This is CES intercepter. It intercepts all the requests that 
@@ -39,43 +43,49 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	@Value("${AUTH_SERVICE_URL}")
 	private String authServieUrl;
 	
-	@Autowired
+	@Resource(name="restTemplateWithMapper")
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private SessionHelper sessionHelper;
+	
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		System.out.println("pre handle");
-		
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);
 		String apiMethodId=null;
 		
 		if(apiMapping!=null) {
 			apiMethodId  = apiMapping.value();
-			apiMethodId = "CLIENT_API_CREATE_SEXUALORIENTATION";//TODO - remove this line once our api mappings are added to hmis db
+			apiMethodId = "USR_CREATE_SESSION";//TODO - remove this line once our api mappings are added to hmis db
 		}
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("X-HMIS-TrustedApp-Id", request.getHeader("X-HMIS-TrustedApp-Id"));
-		headers.set("Authorization", request.getHeader("Authorization"));
+		headers.add("Accept","application/json");
+		headers.add("Content-Type","application/json");
+		headers.add("X-HMIS-TrustedApp-Id", request.getHeader("X-HMIS-TrustedApp-Id"));
+		headers.add("Authorization",request.getHeader("Authorization"));
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
+				
+		ResponseEntity<ApiMethodAuthorizationCheck> authResponse =
+		        restTemplate.exchange(authServieUrl+apiMethodId,HttpMethod.GET, entity, ApiMethodAuthorizationCheck.class);
 		
-		restTemplate.setErrorHandler(new DefaultResponseErrorHandler(){
-		    protected boolean hasError(HttpStatus statusCode) {
-		        return false;
-		    }});
-		
-		ResponseEntity<AuthResponseWrapper> authResponse =
-		        restTemplate.exchange(authServieUrl+apiMethodId,HttpMethod.GET, entity, AuthResponseWrapper.class);
-
+		Session session = new Session();
+		session.setToken(authResponse.getBody().getAccessToken());
+		session.setAccount(authResponse.getBody().getAccount());
+		session.setTrustedAppId(request.getHeader("X-HMIS-TrustedApp-Id"));
+		this.sessionHelper.setSession(session, request);
+	
 		if (null != authResponse && HttpStatus.OK.equals(authResponse.getStatusCode())) {
 			return true;
 		}else{
 			response.setStatus(authResponse.getStatusCode().value());
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-			String json = new Gson().toJson(authResponse.getBody().getErrors());
+			String json = new Gson().toJson(authResponse.getBody());
 		    response.getWriter().write(json);
 			return false;
 		}

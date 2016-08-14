@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.UUID;
 
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.model.Session;
 
 public interface SurveyScoreService {
 	
-	public void calculateScore() throws Exception ;
+	public void calculateScore(Session session) throws Exception ;
 
 	public List<EligibleClientModel> getScores();
 	
