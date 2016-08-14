@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
+import com.servinglynk.hmis.warehouse.client.model.BaseClient;
+import com.servinglynk.hmis.warehouse.client.model.BaseClients;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveyScore;
 import com.servinglynk.hmis.warehouse.core.model.ClientsSurveyScores;
 import com.servinglynk.hmis.warehouse.core.model.Response;
@@ -168,7 +171,15 @@ public class ClientsController extends BaseController {
 	   
 	   @RequestMapping(method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public ClientsSurveyScores getAllClientsSurveyScores(HttpServletRequest request){
-		 return serviceFactory.getSectionScoreService().calculateClientSurveyScore();
+	   public ClientsSurveyScores getAllClientsSurveyScores(HttpServletRequest request) throws Exception {
+		   Session session = sessionHelper.getSession(request);
+		   com.servinglynk.hmis.warehouse.client.model.Session clientSession = new com.servinglynk.hmis.warehouse.client.model.Session();
+		   clientSession.setToken(session.getToken());
+		   BaseClients clients = baseClientService.getClients(clientSession);
+		   List<UUID> clientIds = new ArrayList<UUID>();
+		   for(BaseClient client : clients.getClients()){
+			   clientIds.add(client.getClientId());
+		   }
+		 return serviceFactory.getSectionScoreService().calculateClientSurveyScore(clientIds);
 	   }
 }

@@ -16,5 +16,5 @@ public interface SectionScoreService {
 	 
 	 void updateSectionScores(UUID clientId,UUID surveyId,UUID sectionId);
 	 void deleteSectionScores(UUID clientId,UUID surveyId,UUID sectionId);
-	 ClientsSurveyScores calculateClientSurveyScore();
+	 ClientsSurveyScores calculateClientSurveyScore(List<UUID> clientIds);
 }

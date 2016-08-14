@@ -1,8 +1,11 @@
 package com.servinglynk.hmis.warehouse.dao;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
@@ -53,7 +56,7 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		return countRows(criteria);
 	}
 
-	public List<ClientSurveyScore> calculateClientSurveyScore() {
+	public List<ClientSurveyScore> calculateClientSurveyScore(List<UUID> clientIds) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(SectionScoreEntity.class);
 		criteria.createAlias("surveyEntity", "surveyEntity");
 		
@@ -65,7 +68,8 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		projectionList.add(Projections.groupProperty("surveyEntity.id"));
 		projectionList.add(Projections.groupProperty("clientId"));
 		criteria.setProjection(projectionList);
+		criteria.add(Restrictions.in("clientId",clientIds));
 		criteria.setResultTransformer(Transformers.aliasToBean(ClientSurveyScore.class));
-		return (List<ClientSurveyScore>) findByCriteria(criteria);
+		return (List<ClientSurveyScore>) findByCriteria(criteria,0,50);
 	}
 }

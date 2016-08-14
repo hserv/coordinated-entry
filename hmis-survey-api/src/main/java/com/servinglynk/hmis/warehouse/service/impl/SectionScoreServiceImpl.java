@@ -99,9 +99,9 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 	}
 
 	@Transactional
-	public ClientsSurveyScores calculateClientSurveyScore() {
+	public ClientsSurveyScores calculateClientSurveyScore(List<UUID> clientIds) {
 		ClientsSurveyScores clientsSurveyScores = new ClientsSurveyScores();
-		List<ClientSurveyScore> clientSurveyScores = daoFactory.getSectionScoreDao().calculateClientSurveyScore();
+		List<ClientSurveyScore> clientSurveyScores = daoFactory.getSectionScoreDao().calculateClientSurveyScore(clientIds);
 		for(ClientSurveyScore clientSurveyScore : clientSurveyScores){
 			clientsSurveyScores.add(clientSurveyScore);
 		}

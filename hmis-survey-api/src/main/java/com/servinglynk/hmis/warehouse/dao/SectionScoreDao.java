@@ -11,5 +11,5 @@ public interface SectionScoreDao {
 	void deleteSectionScore(SectionScoreEntity sectionScoreEntity);   
 	List<SectionScoreEntity> getAllSectionScores(UUID surveyId,UUID sectionId,Integer startIndex,Integer maxItems);
 	long getAllSectionScoresCount(UUID surveyId,UUID sectionId);
-	List<ClientSurveyScore> calculateClientSurveyScore();
+	List<ClientSurveyScore> calculateClientSurveyScore(List<UUID> clientIds);
 }

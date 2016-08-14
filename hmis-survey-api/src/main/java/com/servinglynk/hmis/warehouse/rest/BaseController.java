@@ -16,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.servinglynk.hmis.warehouse.client.baseclients.BaseClientService;
 import com.servinglynk.hmis.warehouse.core.model.Error;
 import com.servinglynk.hmis.warehouse.core.model.Errors;
 import com.servinglynk.hmis.warehouse.rest.common.ExceptionMapper;
@@ -36,6 +37,10 @@ public abstract class BaseController {
 	
 	@Autowired
 	ParentServiceFactory serviceFactory;
+	
+	@Autowired
+	BaseClientService baseClientService;
+	
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
