@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 
 @Component
@@ -39,7 +40,7 @@ public class SurveyScoreTranslator {
 		eligibleClients.setClientId(clientModel.getClientId());
 		eligibleClients.setSurveyScore(clientModel.getSurveyScore());
 		eligibleClients.setProgramType(clientModel.getProgramType());
-		eligibleClients.setSpdatLabel(clientModel.getSpdatLabel());
+		eligibleClients.setSpdatLabel(clientModel.getSpdatLabel().getValue());
 		eligibleClients.setSurveyType(clientModel.getSurveyType());
 		eligibleClients.setSurveyDate(clientModel.getSurveyDate());
 		
@@ -58,7 +59,7 @@ public class SurveyScoreTranslator {
 		clientModel.setClientId(eligibleClient.getClientId());
 		clientModel.setSurveyScore(eligibleClient.getSurveyScore());
 		clientModel.setProgramType(eligibleClient.getProgramType());
-		clientModel.setSpdatLabel(eligibleClient.getSpdatLabel());
+		clientModel.setSpdatLabel(SpdatLabelEnum.lookupEnum(eligibleClient.getSpdatLabel()));
 		clientModel.setSurveyType(eligibleClient.getSurveyType());
 		clientModel.setSurveyDate(eligibleClient.getSurveyDate());
 		

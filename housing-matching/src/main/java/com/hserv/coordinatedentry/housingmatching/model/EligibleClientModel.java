@@ -3,7 +3,10 @@ package com.hserv.coordinatedentry.housingmatching.model;
 import java.util.Date;
 import java.util.UUID;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
 
 public class EligibleClientModel {
 
@@ -14,8 +17,9 @@ public class EligibleClientModel {
 	private Boolean matched;
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="EST")
 	private Date surveyDate;
-	private String spdatLabel;
-	private String zipcode;
+	private SpdatLabelEnum spdatLabel;
+	@Length(min=5,max=5,message="Invalid zip code")
+	private Integer zipcode;
 	
 	public UUID getClientId() {
 		return clientId;
@@ -53,16 +57,16 @@ public class EligibleClientModel {
 	public void setSurveyDate(Date surveyDate) {
 		this.surveyDate = surveyDate;
 	}
-	public String getSpdatLabel() {
+	public SpdatLabelEnum getSpdatLabel() {
 		return spdatLabel;
 	}
-	public void setSpdatLabel(String spdatLabel) {
+	public void setSpdatLabel(SpdatLabelEnum spdatLabel) {
 		this.spdatLabel = spdatLabel;
 	}
-	public String getZipcode() {
+	public Integer getZipcode() {
 		return zipcode;
 	}
-	public void setZipcode(String zipcode) {
+	public void setZipcode(Integer zipcode) {
 		this.zipcode = zipcode;
 	}
 	

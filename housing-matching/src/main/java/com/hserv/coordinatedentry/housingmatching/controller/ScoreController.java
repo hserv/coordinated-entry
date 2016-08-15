@@ -7,9 +7,11 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,13 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
-import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
-import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
-import com.hserv.coordinatedentry.housingmatching.model.Session;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
+import com.servinglynk.hmis.warehouse.client.model.Session;
 
 @RestController
 @ResponseBody
@@ -98,10 +98,11 @@ public class ScoreController extends BaseController {
 	 * Get the list of clients and their survey scores.
 	 * 
 	 */
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	@APIMapping(value="get-scores")
-	public List<EligibleClientModel> getScores() {
-		return surveyScoreService.getScores();
+	public ResponseEntity<Resources<Resource>> getScores(HttpServletRequest request,Pageable pageable) {
+		return new ResponseEntity<>(assembler.toResource(surveyScoreService.getScores(pageable), housingInventoryAssembler),
+				HttpStatus.OK);
 	}
 
 	/**

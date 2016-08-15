@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -21,21 +22,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.external.impl.ClientServiceImpl;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
-import com.hserv.coordinatedentry.housingmatching.model.Session;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
+import com.servinglynk.hmis.warehouse.client.model.Session;
 
 /**
  * Controller for eligible-clients.
  * 
  */
 @RestController
-@RequestMapping(value = "/eligible-clients", produces = "application/json")
+@RequestMapping(value = "/eligibleclients", produces = "application/json")
 public class EligibleClientsController extends BaseController {
 
 	@Autowired
@@ -59,8 +59,6 @@ public class EligibleClientsController extends BaseController {
 		@Override
 		public Resource<EligibleClientModel> toResource(EligibleClient arg0) {
 			Resource<EligibleClientModel> resource = new Resource<EligibleClientModel>(eligibleClientsTranslator.translate(arg0));
-			/*resource.add(
-					linkTo(methodOn(HousingInventoryResource.class).getHousingInverntoryByID(arg0.getHousingInventoryId())).withSelfRel());*/
 			return resource;
 		}
 	}	
@@ -120,15 +118,10 @@ public class EligibleClientsController extends BaseController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	@APIMapping(value="create-eligible-clients")
 	public ResponseEntity<String> createEligibleClients(
-			@Validated @RequestBody List<EligibleClientModel> eligibleClientModels) {
+			@Valid @RequestBody List<EligibleClientModel> eligibleClientModels) throws Exception {
 		ResponseEntity<String> responseEntity = null;
-		try {
 			boolean status = eligibleClientService.createEligibleClients(eligibleClientModels);
 			responseEntity = ResponseEntity.ok("{\"added\": \""+ status +"\"}\"");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			responseEntity = new ResponseEntity<String>("fail", HttpStatus.EXPECTATION_FAILED);
-		}
 		return responseEntity;
 	}
 

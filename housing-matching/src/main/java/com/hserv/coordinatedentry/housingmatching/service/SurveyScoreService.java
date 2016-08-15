@@ -1,16 +1,18 @@
 package com.hserv.coordinatedentry.housingmatching.service;
 
-import java.util.List;
 import java.util.UUID;
 
-import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
-import com.hserv.coordinatedentry.housingmatching.model.Session;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.servinglynk.hmis.warehouse.client.model.Session;
 
 public interface SurveyScoreService {
 	
 	public void calculateScore(Session session) throws Exception ;
 
-	public List<EligibleClientModel> getScores();
+	public Page<EligibleClient> getScores(Pageable pageable);
 	
 	public boolean deleteScores();
 	

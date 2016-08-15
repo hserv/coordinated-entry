@@ -1,7 +1,6 @@
 
 package com.hserv.coordinatedentry.housingmatching.controller;
 
-import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
-import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;

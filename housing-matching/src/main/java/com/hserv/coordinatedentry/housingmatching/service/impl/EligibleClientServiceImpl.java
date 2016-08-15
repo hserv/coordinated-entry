@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -63,11 +64,11 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Override
 	public boolean updateEligibleClient(UUID clientID, EligibleClientModel eligibleClientModel) {
 		boolean status = false;
-		if(!StringUtils.isEmpty(eligibleClientModel.getClientId())&&
-				eligibleClientsRepository.exists(clientID)){
-			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel));
+		EligibleClient eligibleClient = eligibleClientsRepository.findOne(eligibleClientModel.getClientId());
+		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible Client Not Found");
+
+			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel,eligibleClient));
 			status = true;
-		}
 		return status;
 	}
 
@@ -86,7 +87,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		boolean status = false;
 		if(!StringUtils.isEmpty(eligibleClientModel.getClientId()) &&
 				!eligibleClientsRepository.exists(eligibleClientModel.getClientId())){
-			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel));
+			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel,null));
 			status = true;
 		}
 		return status;

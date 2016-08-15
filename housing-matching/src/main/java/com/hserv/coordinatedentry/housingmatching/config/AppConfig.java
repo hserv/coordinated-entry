@@ -30,6 +30,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 		objectMapper.constructType(DefaultPrettyPrinter.class);
 		objectMapper.writerWithDefaultPrettyPrinter();
 		jsonConverter.setObjectMapper(objectMapper);
@@ -52,15 +53,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		//registry.addInterceptor(new LoggingInterceptor());
 		registry.addInterceptor(getAuthenticationInterceptor());
 	}
-
-/*	@Bean
-	public RestTemplate getRestTemplate() {
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-		return restTemplate;
-
-	}*/
 	
 	private HttpMessageConverter<Object> createXmlHttpMessageConverter() {
         MarshallingHttpMessageConverter xmlConverter = 

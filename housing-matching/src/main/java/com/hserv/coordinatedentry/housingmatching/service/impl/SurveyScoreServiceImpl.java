@@ -1,12 +1,12 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +16,11 @@ import com.hserv.coordinatedentry.housingmatching.external.SurveyMSService;
 import com.hserv.coordinatedentry.housingmatching.model.ClientSurveyScore;
 import com.hserv.coordinatedentry.housingmatching.model.ClientsSurveyScores;
 import com.hserv.coordinatedentry.housingmatching.model.CommunityType;
-import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
-import com.hserv.coordinatedentry.housingmatching.model.Session;
-import com.hserv.coordinatedentry.housingmatching.model.SurveyResponseModel;
-import com.hserv.coordinatedentry.housingmatching.model.SurveySectionModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.SurveyScoreTranslator;
+import com.servinglynk.hmis.warehouse.client.model.Session;
 
 
 
@@ -47,8 +44,8 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	
 	
 	@Override
-	public List<EligibleClientModel> getScores() {
-		return surveyScoreTranslator.translate(eligibleClientsRepository.findAll());
+	public Page<EligibleClient> getScores(Pageable pageable) {
+		return eligibleClientsRepository.findAll(pageable);
 	}
 
 	@Override
@@ -95,7 +92,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(), true, false));
 			
 			// Hard coded value 
-			eligibleClient.setSpdatLabel("youth");
+			eligibleClient.setSpdatLabel("YOUTH");
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
 			eligibleClientsRepository.save(eligibleClient);
 			//eligibleClients.add(eligibleClient);

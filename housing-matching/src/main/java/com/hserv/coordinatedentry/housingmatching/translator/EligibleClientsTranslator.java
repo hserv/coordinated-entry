@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 
 @Component
@@ -20,7 +21,7 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setProgramType(eligibleClient.getProgramType());
 			eligibleClientModel.setClientId(eligibleClient.getClientId());
 			eligibleClientModel.setMatched(eligibleClient.getMatched());
-			eligibleClientModel.setSpdatLabel(eligibleClient.getSpdatLabel());
+			eligibleClientModel.setSpdatLabel(SpdatLabelEnum.lookupEnum(eligibleClient.getSpdatLabel()));
 			eligibleClientModel.setSurveyScore(eligibleClient.getSurveyScore());
 			eligibleClientModel.setSurveyDate(eligibleClient.getSurveyDate());
 
@@ -28,21 +29,23 @@ public class EligibleClientsTranslator {
 		return eligibleClientModel;
 	}
 
-	public EligibleClient translate(EligibleClientModel eligibleClientModel) {
-		EligibleClient eligibleClients = new EligibleClient();
+	public EligibleClient translate(EligibleClientModel eligibleClientModel,EligibleClient eligibleClient) {
 
-		eligibleClients.setClientId(eligibleClientModel.getClientId());
-		eligibleClients.setProgramType(eligibleClientModel.getProgramType());
-		eligibleClients.setMatched(eligibleClientModel.getMatched());
-		eligibleClients.setSpdatLabel(eligibleClientModel.getSpdatLabel());
-		eligibleClients.setSurveyScore(eligibleClientModel.getSurveyScore());
-		eligibleClients.setSurveyDate(eligibleClientModel.getSurveyDate());
-		if(eligibleClientModel.getZipcode()!=null)
-			eligibleClients.setZipCode(Integer.parseInt(eligibleClientModel.getZipcode()));
-		if(eligibleClients.getSurveyType()!=null)
-			eligibleClientModel.setSurveyType(eligibleClientModel.getSurveyType());
+		if(eligibleClient==null){
+			 eligibleClient = new EligibleClient();
+			 eligibleClient.setClientId(eligibleClientModel.getClientId());
+		}
 
-		return eligibleClients;
+		
+		eligibleClient.setProgramType(eligibleClientModel.getProgramType());
+		eligibleClient.setMatched(eligibleClientModel.getMatched());
+		eligibleClient.setSpdatLabel(eligibleClientModel.getSpdatLabel().getValue());
+		eligibleClient.setSurveyScore(eligibleClientModel.getSurveyScore());
+		eligibleClient.setSurveyDate(eligibleClientModel.getSurveyDate());
+		eligibleClient.setZipCode(eligibleClientModel.getZipcode());
+		eligibleClient.setSurveyType(eligibleClientModel.getSurveyType());
+
+		return eligibleClient;
 	}
 
 }

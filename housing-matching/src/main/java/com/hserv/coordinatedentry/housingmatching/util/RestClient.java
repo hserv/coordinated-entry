@@ -1,7 +1,5 @@
 package com.hserv.coordinatedentry.housingmatching.util;
 
-import org.apache.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
