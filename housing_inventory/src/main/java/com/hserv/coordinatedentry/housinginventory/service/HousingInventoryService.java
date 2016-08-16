@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Example;
@@ -11,6 +17,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,11 +83,28 @@ public class HousingInventoryService  {
 	}
 	
 	@SuppressWarnings("unchecked") 
-	public List<HousingInventory> getAllHousingInventory(HousingInventory housingInventory){
-		Example filter=Example.create(housingInventory);
-		DetachedCriteria crit=DetachedCriteria.forClass(HousingInventory.class).add(filter);
-		List<HousingInventory> housingInventories=(List<HousingInventory>)hibernateTemplate.findByCriteria(crit);
-		return  housingInventories;//housingInventoryRepository.findAll();
+	public Page<HousingInventory> getAllHousingInventory(HousingInventory housingInventory,Pageable pageable){
+		
+		Specification<HousingInventory> specification = Specifications.where(new Specification<HousingInventory>() {
+
+			@Override
+			public Predicate toPredicate(Root<HousingInventory> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				
+				return cb.and(cb.equal(root.get("projectId"), housingInventory.getProjectId()));
+/*			List<Predicate> predicates =  new ArrayList<Predicate>();
+			if(housingInventory.getProjectId()!=null)
+				predicates.add(cb.equal(root.get("projectId"), housingInventory.getProjectId()));
+
+				return cb.and(
+					cb.equal(root.get("vacant"), housingInventory.getVacant()),
+					cb.equal(root.get("inactive"), housingInventory.getInactive())
+				);
+	*/
+			}
+			
+			
+		});
+		return housingInventoryRepository.findAll(specification,pageable);
 	}
 	
 	public Page<HousingInventory> findAll(Pageable pageable){

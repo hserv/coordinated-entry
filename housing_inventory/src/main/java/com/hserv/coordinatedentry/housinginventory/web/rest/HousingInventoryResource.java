@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -102,16 +103,20 @@ public class HousingInventoryResource extends BaseResource{
 	
 	@APIMapping(value="GET_ALL_HOUSING_INVENTORY")
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public ResponseEntity<Resources<Resource>> findAll(@RequestParam(value="inactive" ,required=false) Boolean inactive ,
+	public ResponseEntity<Resources<Resource>> findAll(@RequestParam(value="inactive" ,required=false,defaultValue="false") Boolean inactive ,
 			@RequestParam(value="userId", required=false) String userId,
 			@RequestParam(value="projectId", required=false) String projectId,
+			@RequestParam(value="vacant", required=false,defaultValue="true") Boolean vacant,
 			@PageableDefault(size=30)  Pageable pageable) {
 		HousingInventory housingInventory=new HousingInventory();
 		housingInventory.setUserId(userId);
 		housingInventory.setProjectId(projectId);
+		housingInventory.setInactive(inactive);
+		housingInventory.setVacant(vacant);
 		
 //		List<HousingInventory> housingInventories = housingInventoryService.getAllHousingInventory(housingInventory);
-		return new ResponseEntity<>(assembler.toResource(housingInventoryService.findAll(pageable), housingInventoryAssembler),
+		
+		return new ResponseEntity<>(assembler.toResource(housingInventoryService.getAllHousingInventory(housingInventory, pageable), housingInventoryAssembler),
 				HttpStatus.OK);
 	}
 
