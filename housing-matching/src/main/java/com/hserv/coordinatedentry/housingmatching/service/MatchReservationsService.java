@@ -1,17 +1,14 @@
 package com.hserv.coordinatedentry.housingmatching.service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.ResponseEntity;
 
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
+import com.servinglynk.hmis.warehouse.client.model.Session;
 
 public interface MatchReservationsService {
 
@@ -33,5 +30,5 @@ public interface MatchReservationsService {
 	
 	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel);
 	
-	public void createMatch();
+	public void createMatch(Session session) throws Exception ;
  }

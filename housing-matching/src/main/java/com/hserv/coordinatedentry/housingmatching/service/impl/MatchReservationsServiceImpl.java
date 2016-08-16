@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
@@ -25,6 +26,7 @@ import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
+import com.servinglynk.hmis.warehouse.client.model.Session;
 
 @Service
 public class MatchReservationsServiceImpl implements MatchReservationsService {
@@ -140,7 +142,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 
 	@Override
-	public void createMatch() {
+	@Async
+	public void createMatch(Session session)  {
 		String[] programTypes = new String[]{"PSH", "TH","RRH"};
 		
 		List<EligibleClient> clients;
@@ -152,7 +155,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			clients = eligibleClientService.getEligibleClients(numberOfClients , programType);
 			
 			//Get vacant housing units for programType
-			units = housingUnitService.getHousingInventoryList("token", programType);
+			units = housingUnitService.getHousingInventoryList(programType,session);
 	        
 			//Make sure clients are in desc order of priority
 	        //Allocate house to first member in the list and then to second and so on.
@@ -173,7 +176,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	                    count++;
 	                    continue;
 	                }
-	                int diff = Math.abs(u.getAddress().getZipCode()-cc);
+//	                int diff = Math.abs(u.getAddress().getZipCode()-cc);
+	                int diff=0;
 	                if(diff==0){
 	                	first = false;
 	                    leastIndex = count;
@@ -196,7 +200,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
                 match.setHousingUnitId(UUID.fromString(units.get(leastIndex).getHousingUnitId()));
                 match.setManualMatch(false);
                 match.setMatchDate(new Date());
-                match.setMatchStatus("Proposed");
+                match.setMatchStatus("PROPOSED");
                 matches.add(match);
                 units.get(leastIndex).setVacant(false);
 	        }

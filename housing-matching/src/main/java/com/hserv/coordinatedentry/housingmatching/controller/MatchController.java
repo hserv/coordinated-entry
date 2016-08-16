@@ -3,6 +3,8 @@ package com.hserv.coordinatedentry.housingmatching.controller;
 
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -23,10 +25,11 @@ import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
+import com.servinglynk.hmis.warehouse.client.model.Session;
 
 @RestController
 @RequestMapping(value = "/matches", produces = "application/json")
-public class MatchController {
+public class MatchController extends BaseController {
 
 	@Autowired
 	MatchReservationsService matchReservationsService;
@@ -62,9 +65,12 @@ public class MatchController {
 	 * 
 	 * 
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST)
+	@RequestMapping( method = RequestMethod.POST)
 	@APIMapping(value="trigger-match-process")
-	public ResponseEntity<String> createMatch() {
+	public ResponseEntity<String> createMatch(HttpServletRequest request) throws Exception {
+		Session session  = sessionHelper.getSession(request);
+		
+		matchReservationsService.createMatch(session);
 		return ResponseEntity.ok("{\"triggered\": \"success\"}\"");
 	}
 

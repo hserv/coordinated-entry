@@ -5,32 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HousingInventory {
-
-	@JsonProperty(value="housing_unit_id")
+	@JsonProperty("housingInventoryId")
 	private String housingUnitId;
 	
-	@JsonProperty(value="project_uuid")
 	private String projectUuid;
 	
-	@JsonProperty(value="address")
 	private Address address;
 	
-	@JsonProperty(value="beds_current")
 	private String bedsCurrent;
 	
-	@JsonProperty(value="beds_capacity")
 	private String bedsCapacity;
 	
-	@JsonProperty(value="in_service")
 	private boolean inService;
 	
-	@JsonProperty(value="family_unit")
 	private boolean familyUnit;
 	
-	@JsonProperty(value="vacant")
 	private boolean vacant;
 	
-	@JsonProperty(value="inactive")
 	private boolean inactive;
 	
 	public String getHousingUnitId() {
