@@ -106,13 +106,14 @@ public class HousingInventoryResource extends BaseResource{
 	public ResponseEntity<Resources<Resource>> findAll(@RequestParam(value="inactive" ,required=false,defaultValue="false") Boolean inactive ,
 			@RequestParam(value="userId", required=false) String userId,
 			@RequestParam(value="projectId", required=false) String projectId,
-			@RequestParam(value="vacant", required=false,defaultValue="true") Boolean vacant,
+			@RequestParam(value="vacant", required=false) Boolean vacant,
 			@PageableDefault(size=30)  Pageable pageable) {
 		HousingInventory housingInventory=new HousingInventory();
 		housingInventory.setUserId(userId);
 		housingInventory.setProjectId(projectId);
 		housingInventory.setInactive(inactive);
 		housingInventory.setVacant(vacant);
+//		housingInventory.setInactive(false);
 		
 //		List<HousingInventory> housingInventories = housingInventoryService.getAllHousingInventory(housingInventory);
 		

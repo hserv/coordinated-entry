@@ -48,7 +48,7 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	private Boolean inService;
 	
 	@Column(name = "vacant")
-	private Boolean vacant;
+	private Boolean vacant=true;
 	
 	@Column(name="alias_name")
 	private String aliasName;

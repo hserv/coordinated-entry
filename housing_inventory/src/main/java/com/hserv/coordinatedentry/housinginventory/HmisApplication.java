@@ -22,7 +22,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableEntityLinks
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
-@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+@EnableAutoConfiguration
 public class HmisApplication extends SpringBootServletInitializer {
 
 	@Inject

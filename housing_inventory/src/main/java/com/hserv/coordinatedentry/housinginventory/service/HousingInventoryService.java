@@ -84,26 +84,41 @@ public class HousingInventoryService  {
 	
 	@SuppressWarnings("unchecked") 
 	public Page<HousingInventory> getAllHousingInventory(HousingInventory housingInventory,Pageable pageable){
+		Specification<HousingInventory> specification = null;
 		
-		Specification<HousingInventory> specification = Specifications.where(new Specification<HousingInventory>() {
+		Specification<HousingInventory> projectIdSpec = Specifications.where(new Specification<HousingInventory>() {
 
 			@Override
 			public Predicate toPredicate(Root<HousingInventory> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				
 				return cb.and(cb.equal(root.get("projectId"), housingInventory.getProjectId()));
-/*			List<Predicate> predicates =  new ArrayList<Predicate>();
-			if(housingInventory.getProjectId()!=null)
-				predicates.add(cb.equal(root.get("projectId"), housingInventory.getProjectId()));
-
-				return cb.and(
-					cb.equal(root.get("vacant"), housingInventory.getVacant()),
-					cb.equal(root.get("inactive"), housingInventory.getInactive())
-				);
-	*/
 			}
 			
+		});
+
+		Specification<HousingInventory> userIdSpec = Specifications.where(new Specification<HousingInventory>() {
+
+			@Override
+			public Predicate toPredicate(Root<HousingInventory> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				
+				return cb.and(cb.equal(root.get("createdBy"), housingInventory.getUserId()));
+			}
 			
 		});
+		
+		Specification<HousingInventory> vacantSpec = Specifications.where(new Specification<HousingInventory>() {
+
+			@Override
+			public Predicate toPredicate(Root<HousingInventory> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				
+				return cb.and(cb.equal(root.get("vacant"), housingInventory.getVacant()));
+			}
+			
+		});
+		
+		if(housingInventory.getProjectId()!=null) specification = Specifications.where(specification).and(projectIdSpec);
+		if(housingInventory.getUserId()!=null) specification = Specifications.where(specification).and(userIdSpec);
+		if(housingInventory.getVacant()!=null) specification = Specifications.where(specification).and(vacantSpec);
 		return housingInventoryRepository.findAll(specification,pageable);
 	}
 	
