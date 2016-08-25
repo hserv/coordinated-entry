@@ -72,4 +72,16 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		criteria.setResultTransformer(Transformers.aliasToBean(ClientSurveyScore.class));
 		return (List<ClientSurveyScore>) findByCriteria(criteria,0,50);
 	}
+
+	public SectionScoreEntity getSectionScoreById(UUID sectionScoreId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(SectionScoreEntity.class);
+			criteria.add(Restrictions.eq("id", sectionScoreId));
+			List<SectionScoreEntity> scoreEntities = (List<SectionScoreEntity>) findByCriteria(criteria);
+			if(!scoreEntities.isEmpty()) return scoreEntities.get(0);
+		return null;
+	}
+
+	public void updateSectionScore(SectionScoreEntity sectionScoreEntity) {
+				update(sectionScoreEntity);
+	}
 }

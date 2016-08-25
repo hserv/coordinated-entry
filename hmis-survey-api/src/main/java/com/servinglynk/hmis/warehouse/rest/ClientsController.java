@@ -87,7 +87,7 @@ public class ClientsController extends BaseController {
 	   }
 	   
 	   
-	   @RequestMapping(value="/clients/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.GET)
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_ALL_SECTION_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
 	   public SectionScore getAllSectionScores(@PathVariable("clientid") UUID clientid,
 			   				@PathVariable("surveyid")  UUID surveyid,
@@ -101,7 +101,7 @@ public class ClientsController extends BaseController {
 	   }
 	   
 	   
-	   @RequestMapping(value="/clients/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.DELETE)
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.DELETE)
 	   @APIMapping(value="SURVEY_API_DELETE_SECTION_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
 	   public SectionScores getDeleteSectionScores(@PathVariable("clientid") UUID clientid,
 			   				@PathVariable("surveyid")  UUID surveyid,
@@ -115,22 +115,55 @@ public class ClientsController extends BaseController {
 		   return serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, sectionid, startIndex, maxItems);
 	   }
 	   
-	   @RequestMapping(value="/clients/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.PUT)
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.PUT)
 	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
 	   public void getUpdateSectionScores(@PathVariable("clientid") UUID clientid,
 			   				@PathVariable("surveyid")  UUID surveyid,
 			   				@PathVariable("sectionid")  UUID sectionid,
-	                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
-	                       @RequestParam(value="maxItems", required=false) Integer maxItems,
 	                       HttpServletRequest request) throws Exception {
-           if (startIndex == null) startIndex =0;
-           if (maxItems == null || maxItems > 30) maxItems =30;
 		   
 		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, sectionid);
 	   }
 	   
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.POST)
+	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
+	   public SectionScore createSectionScores(@PathVariable("clientid") UUID clientid,
+			   				@PathVariable("surveyid")  UUID surveyid,
+			   				@PathVariable("sectionid")  UUID sectionid,
+			   				@RequestBody SectionScore sectionScore,
+	                       HttpServletRequest request) throws Exception {
+		   
+		   
+		   sectionScore.setClientId(clientid);
+		   sectionScore.setSectionId(sectionid);
+		   sectionScore.setSurveyId(surveyid);
+		    serviceFactory.getSectionScoreService().createSectionScores(sectionScore);
+		    SectionScore score = new SectionScore();
+		    score.setSectionScoreId(sectionScore.getSectionScoreId());
+		    score.setSectionScore(sectionScore.getSectionScore());
+		    return score;
+	   }
 	   
-	   @RequestMapping(value="/clients/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.GET)
+	   
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores/{scoreid}",method=RequestMethod.PUT)
+	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
+	   public void updateSectionScores(@PathVariable("clientid") UUID clientid,
+			   				@PathVariable("surveyid")  UUID surveyid,
+			   				@PathVariable("sectionid")  UUID sectionid,
+			   				@PathVariable("scoreid") UUID scoreid  ,
+			   				@RequestBody SectionScore sectionScore,
+	                       HttpServletRequest request) throws Exception {
+		   
+		   
+		   sectionScore.setClientId(clientid);
+		   sectionScore.setSectionId(sectionid);
+		   sectionScore.setSurveyId(surveyid);
+		   sectionScore.setSectionScoreId(scoreid);
+		    serviceFactory.getSectionScoreService().updateSectionScores(sectionScore);
+	   }
+	   
+	   
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_ALL_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
 	   public SectionScores getAllSurveyScores(@PathVariable("clientid") UUID clientid,
 			   				@PathVariable("surveyid")  UUID surveyid,
@@ -143,7 +176,7 @@ public class ClientsController extends BaseController {
 		   return serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, null, startIndex, maxItems);
 	   }
 	   
-	   @RequestMapping(value="/clients/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.DELETE)
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.DELETE)
 	   @APIMapping(value="SURVEY_API_DELETE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
 	   public void getDeleteSurveyScores(@PathVariable("clientid") UUID clientid,
 			   				@PathVariable("surveyid")  UUID surveyid,
@@ -156,7 +189,7 @@ public class ClientsController extends BaseController {
 		    serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, null, startIndex, maxItems);
 	   }
 	   
-	   @RequestMapping(value="/clients/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.PUT)
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.PUT)
 	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
 	   public void getUpdateSurveyScores(@PathVariable("clientid") UUID clientid,
 			   				@PathVariable("surveyid")  UUID surveyid,
