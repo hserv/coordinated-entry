@@ -3,6 +3,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -26,6 +27,7 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
+import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 
 @Component
 public class HousingInventoryService  {
@@ -43,6 +45,7 @@ public class HousingInventoryService  {
 	 @Autowired
 	 HibernateTemplate hibernateTemplate;
 	
+	 
 	 @Transactional
 	 public HousingInventory saveHousingInventory(HousingInventory housingInventory) {
 			housingInventory.setInactive(false);

@@ -8,7 +8,9 @@ import java.net.URISyntaxException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.Resources;
@@ -39,6 +42,9 @@ import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.service.HousingInventoryService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
+import com.servinglynk.hmis.warehouse.client.model.BaseProject;
+import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
+import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 
 @RestController
 @RequestMapping("/housing-units")
@@ -46,6 +52,9 @@ public class HousingInventoryResource extends BaseResource{
 
 	@Autowired
 	HousingInventoryService housingInventoryService;
+	
+	 @Autowired
+	 ISearchServiceClient searchServiceClient;
 	
 	@Autowired
 	private PagedResourcesAssembler assembler;
@@ -58,8 +67,8 @@ public class HousingInventoryResource extends BaseResource{
 		@Override
 		public Resource<HousingInventory> toResource(HousingInventory arg0) {
 			Resource<HousingInventory> resource = new Resource<HousingInventory>(arg0);
-			/*resource.add(
-					linkTo(methodOn(HousingInventoryResource.class).getHousingInverntoryByID(arg0.getHousingInventoryId())).withSelfRel());*/
+			 if(arg0.getSchemaYear()!=null)
+				 resource.add(new Link("/hmis-clientapi/rest/v"+arg0.getSchemaYear()+"/projects/"+arg0.getProjectId()).withRel("project"));
 			return resource;
 		}
 	}
@@ -70,20 +79,17 @@ public class HousingInventoryResource extends BaseResource{
 
 	@APIMapping(value="CREATE_HOUSING_INVENTORIES")
 	@RequestMapping(method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<HousingInventory>> createHousingInventory(@RequestBody List<HousingInventory> housingInventories)
+	public ResponseEntity<List<HousingInventory>> createHousingInventory(@RequestBody List<HousingInventory> housingInventories,HttpServletRequest request)
 			throws Exception {
 		 log.debug("REST request to save HousingInventory : {}", housingInventories);
-		 if(housingInventories.size()==1){
-		HousingInventory result=housingInventoryService.saveHousingInventory(housingInventories.get(0));
-		List<HousingInventory> lHousingInventory  = new ArrayList<HousingInventory>();
-		lHousingInventory.add(result);
-		return new ResponseEntity<List<HousingInventory>>(
-				lHousingInventory, HttpStatus.OK);
-		 }else{
-		 List<HousingInventory> lresult=housingInventoryService.saveHousingInventories(housingInventories);
-		 return new ResponseEntity<List<HousingInventory>>(lresult, HttpStatus.OK);
+		 
+		 List<HousingInventory> lHousingInventory  = new ArrayList<HousingInventory>();		 
+		 for(HousingInventory inventory : housingInventories){
+			 populateProjectSchemaYear(inventory,request);
+			 HousingInventory result=housingInventoryService.saveHousingInventory(inventory);
+			 lHousingInventory.add(result);
 		 }
-		
+		 return new ResponseEntity<List<HousingInventory>>(lHousingInventory, HttpStatus.OK);
 	}
 
 	@APIMapping(value="UPDATE_HOUSING_INVENTORIES")
@@ -149,4 +155,21 @@ public class HousingInventoryResource extends BaseResource{
 	        housingInventoryService.delete(id);
 	        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("housingInventory", id.toString())).build();
 	    }
+	
+	
+	
+	public void populateProjectSchemaYear(HousingInventory inventory,HttpServletRequest request) throws Exception {
+		 
+	 			UUID projectId = UUID.fromString(inventory.getProjectId());
+	 			Map<String,Object> searchParams = new HashMap<>();
+	 			searchParams.put("q", projectId);
+	 			SearchRequest searchRequest = new SearchRequest();
+	 			searchRequest.setSearchParams(searchParams);
+	 			searchRequest.setSessionToken(getAuthorizationHeader(request));
+	 			searchRequest.setTrustedAppId(getTrustedApp(request));
+	 			List<BaseProject> projects =  (List<BaseProject>) searchServiceClient.search(searchRequest);
+	 			if(!projects.isEmpty())
+	 				inventory.setSchemaYear(projects.get(0).getSchemaYear());
+	 	
+	}
 }

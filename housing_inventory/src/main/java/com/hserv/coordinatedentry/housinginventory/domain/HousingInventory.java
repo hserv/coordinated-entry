@@ -53,6 +53,10 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	@Column(name="alias_name")
 	private String aliasName;
 	
+	@Column(name="schema_year")
+	private Integer schemaYear;
+	
+	
 	@OneToMany(mappedBy = "housingInventory",cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonIgnore
     private Set<HousingUnitAddress> housingUnitAddresss = new HashSet<HousingUnitAddress>();
@@ -180,6 +184,14 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 
 	public void setAliasName(String aliasName) {
 		this.aliasName = aliasName;
+	}
+
+	public Integer getSchemaYear() {
+		return schemaYear;
+	}
+
+	public void setSchemaYear(Integer schemaYear) {
+		this.schemaYear = schemaYear;
 	}
 
 	@Override

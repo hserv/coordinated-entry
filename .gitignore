@@ -12,3 +12,10 @@ hmis-survey-api/.settings/.jsdtscope
 hmis-survey-api/.project
 hmis-survey-api/.settings/org.eclipse.wst.common.component
 hmis-survey-api/.settings/org.eclipse.wst.common.project.facet.core.xml
+*.class
+hmis-survey-api-old/target/classes/keystore.jks
+*.MF
+hmis-survey-api-old/target/classes/META-INF/maven/com.poc/survey-poc/pom.properties
+hmis-survey-api-old/target/classes/application.properties
+*.xml
+hmis-survey-api-old/target/test-classes/application.properties

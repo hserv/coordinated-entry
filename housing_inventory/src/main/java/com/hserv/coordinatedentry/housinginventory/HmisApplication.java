@@ -15,6 +15,8 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.servinglynk.hmis.warehouse.client.config.SpringConfig;
+
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -32,7 +34,7 @@ public class HmisApplication extends SpringBootServletInitializer {
 	
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(HmisApplication.class);
+        return application.sources(HmisApplication.class,SpringConfig.class);
     }
   	
 	public static void main(String[] args) {
