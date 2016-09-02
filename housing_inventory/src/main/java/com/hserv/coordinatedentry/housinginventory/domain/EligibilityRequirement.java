@@ -29,6 +29,9 @@ public class EligibilityRequirement extends HousingInventoryBaseEntity {
 	@Column(name="eligibility")
 	private String eligibility;
 	
+	@Column(name="project_group_code")
+	private String projectGroupCode;
+	
 	
 	public UUID getEligibilityId() {
 		return eligibilityId;
@@ -47,5 +50,11 @@ public class EligibilityRequirement extends HousingInventoryBaseEntity {
 	}
 	public void setEligibility(String eligibility) {
 		this.eligibility = eligibility;
+	}
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
 	}	
 }

@@ -8,11 +8,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,6 +32,7 @@ public class HousingUnitAssignment extends HousingInventoryBaseEntity  {
 	@Column(name = "assignment_id")
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
+    @org.hibernate.annotations.Type(type="pg-uuid")
     private UUID assignmentId;
 
     @Column(name = "client_id")
@@ -40,16 +43,14 @@ public class HousingUnitAssignment extends HousingInventoryBaseEntity  {
 
     @Column(name = "checkout_date")
     @JsonFormat(pattern="MM-dd-yyyy")
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
     private LocalDateTime checkoutDate;
 
     @ManyToOne(cascade=CascadeType.PERSIST)
     @JsonIgnore
+	@JoinColumn(name="housing_inventory_id")
     private HousingInventory housingInventory;
-    
-    @Transient
-    private String housingInventoryId;
-
-   
+       
     public HousingUnitAssignment() {
     	
 	}
@@ -93,15 +94,7 @@ public class HousingUnitAssignment extends HousingInventoryBaseEntity  {
     public void setHousingInventory(HousingInventory housingInventory) {
         this.housingInventory = housingInventory;
     }
-
-	public String getHousingInventoryId() {
-		return housingInventoryId;
-	}
-
-	public void setHousingInventoryId(String housingInventoryId) {
-		this.housingInventoryId = housingInventoryId;
-	}
-
+    
 	@Override
 	public int hashCode() {
 		final int prime = 31;

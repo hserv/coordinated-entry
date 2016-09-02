@@ -1,105 +1,73 @@
 package com.hserv.coordinatedentry.housinginventory.enums;
+
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.HashMap;
-/**
- * Defines the EnrollmentResidencepriorEnum enumeration.
- * 
- * @author Sandeep Dolia
- *
- */
+
 public enum ResidencepriorEnum {
 
-	/** Enum Constant. */
-	ONE("1"),
-	/** Enum Constant. */
-	TWO("2"),
-	/** Enum Constant. */
-	THREE("3"),
-	/** Enum Constant. */
-	FOUR("4"),
-	/** Enum Constant. */
-	FIVE("5"),
-	/** Enum Constant. */
-	SIX("6"),
-	/** Enum Constant. */
-	SEVEN("7"),
-	/** Enum Constant. */
-	EIGHT("8"),
-	/** Enum Constant. */
-	NINE("9"),
-	/** Enum Constant. */
-	TWELVE("12"),
-	/** Enum Constant. */
-	THIRTEEN("13"),
-	/** Enum Constant. */
-	FOURTEEN("14"),
-	/** Enum Constant. */
-	FIFTEEN("15"),
-	/** Enum Constant. */
-	SIXTEEN("16"),
-	/** Enum Constant. */
-	SEVENTEEN("17"),
-	/** Enum Constant. */
-	EIGHTEEN("18"),
-	/** Enum Constant. */
-	NINTEEN("19"),
-	/** Enum Constant. */
-	TWENTY("20"),
-	/** Enum Constant. */
-	TWENTY_ONE("21"),
-	/** Enum Constant. */
-	TWENTY_TWO("22"),
-	/** Enum Constant. */
-	TWENTY_THREE("23"),
-	/** Enum Constant. */
-	TWENTY_FOUR("24"),
-	/** Enum Constant. */
-	TWENTY_FIVE("25"),
-	/** Enum Constant. */
-	TWENTY_SIX("26"),
-	/** Enum Constant. */
-	NINTY_NINE("99");
-	/**
-	 * Internal storage of status field value, see the Enum spec for
- 	 * clarification.
- 	 */
-	private final String status;
-	
-	/**
-	 * Enum constructor for ActiveState.
-	 * @param state Value.
-	 */
-	ResidencepriorEnum(final String state) {
+	ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TWELVE(12), THIRTEEN(13), FOURTEEN(
+			14), FIFTEEN(15), SIXTEEN(16), SEVENTEEN(17), EIGHTEEN(18), NINTEEN(19), TWENTY(
+					20), TWENTY_ONE(21), TWENTY_TWO(
+							22), TWENTY_THREE(23), TWENTY_FOUR(24), TWENTY_FIVE(25), TWENTY_SIX(26), NINTY_NINE(99);
+
+	private final Integer status;
+
+	ResidencepriorEnum(final Integer state) {
 		this.status = state;
 	}
-	
-	/** Construct a map for reverse lookup. */
-	private static Map<String, ResidencepriorEnum> valueMap = new HashMap<String, ResidencepriorEnum>();
 
-    static {
-    	// construct hashmap for later possible use.
-        for (ResidencepriorEnum unit : values()) {
-            valueMap.put(unit.getValue(), unit);
-        }
-    }
-    
-	/**
-	 * Current string value stored in the enum.
-	 * 
-	 * @return string value.
-	 */
-	public String getValue() {
+	public int getValue() {
 		return this.status;
 	}
 
-	/**
-     * Perform a reverse lookup (given a value, obtain the enum).
-     * 
-     * @param value to search
-     * @return Enum object.
-     */
-    public static ResidencepriorEnum lookupEnum(String value) {
-        return ResidencepriorEnum.valueMap.get(value);
-    }
+	private static Map<Integer, ResidencepriorEnum> namesMap = new HashMap<Integer, ResidencepriorEnum>();
 
+	static {
+
+		namesMap.put(1, ONE);
+		namesMap.put(2, TWO);
+		namesMap.put(3, THREE);
+		namesMap.put(4, FOUR);
+		namesMap.put(5, FIVE);
+		namesMap.put(6, SIX);
+		namesMap.put(7, SEVEN);
+		namesMap.put(8, EIGHT);
+		namesMap.put(9, NINE);
+		namesMap.put(12, TWELVE);
+		namesMap.put(13, THIRTEEN);
+		namesMap.put(14, FOURTEEN);
+		namesMap.put(15, FIFTEEN);
+		namesMap.put(16, SIXTEEN);
+		namesMap.put(17, SEVENTEEN);
+		namesMap.put(18, EIGHTEEN);
+		namesMap.put(19, NINTEEN);
+		namesMap.put(20, TWENTY);
+		namesMap.put(21, TWENTY_ONE);
+		namesMap.put(22, TWENTY_TWO);
+		namesMap.put(23, TWENTY_THREE);
+		namesMap.put(24, TWENTY_FOUR);
+		namesMap.put(25, TWENTY_FIVE);
+		namesMap.put(26, TWENTY_SIX);
+		namesMap.put(99, NINTY_NINE);
+
+	}
+
+	@JsonCreator
+	public static ResidencepriorEnum forValue(Integer value) {
+		return namesMap.get(value);
+	}
+
+	@JsonValue
+	public Integer toValue() {
+		for (Entry<Integer, ResidencepriorEnum> entry : namesMap.entrySet()) {
+			if (entry.getValue() == this)
+				return entry.getKey();
+		}
+		return null;
+	}
 }

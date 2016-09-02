@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -34,6 +36,9 @@ import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 @RequestMapping("/housing-units")
 public class HousingUnitAssignmentResource extends BaseResource{
 
+	
+	Logger log = LoggerFactory.getLogger(HousingUnitAssignmentResource.class);
+	
 	@Autowired
 	HousingUnitAssignmentService housingUnitAssignmentService;
 	
@@ -58,20 +63,9 @@ public class HousingUnitAssignmentResource extends BaseResource{
 	@RequestMapping(value = "/{housingUnitId}/assignments",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE/*, produces = MediaType.APPLICATION_JSON_VALUE*/)
 	public ResponseEntity<List<HousingUnitAssignment>> createHousingUnitAssignment(@RequestBody List<HousingUnitAssignment> housingUnitAssignments, @PathVariable UUID housingUnitId )
 			throws URISyntaxException {
-		// log.debug("REST request to save HousingUnitAssignment : {}",
-		List<HousingUnitAssignment> housingUnitAssignmentsList=new ArrayList<HousingUnitAssignment>(); 
-		HousingInventory housingInventory=new HousingInventory();
-		housingInventory.setHousingInventoryId(housingUnitId);
-		for(HousingUnitAssignment assignment: housingUnitAssignments){
-			assignment.setDateCreated((new Date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-			assignment.setDateUpdated((new Date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-			assignment.setHousingInventory(housingInventory);
-			assignment.setInactive(false);
-			assignment.setHousingInventoryId(housingUnitId.toString());
-			housingUnitAssignmentsList.add(assignment);
-		}
-		//List<HousingUnitAssignment> result=new ArrayList<HousingUnitAssignment>();
-		List<HousingUnitAssignment> result = housingUnitAssignmentService.saveHousingUnitAssignments(housingUnitAssignmentsList);
+		log.debug("REST request to save HousingUnitAssignment : {}");
+	
+		List<HousingUnitAssignment> result = housingUnitAssignmentService.saveHousingUnitAssignments(housingUnitAssignments,housingUnitId);
 		//HousingUnitAssignment result1 = housingUnitAssignmentService.saveHousingUnitAssignment(housingUnitAssignmentsList.get(0));
 		//result.add(result1);
 		return new ResponseEntity<List<HousingUnitAssignment>>(result,HttpStatus.OK); 
@@ -80,10 +74,11 @@ public class HousingUnitAssignmentResource extends BaseResource{
 	@APIMapping(value="UPDATE_ASSIGNMENT_BY_HOUSINGUNIT_ID")
 	   @RequestMapping(value = "/{housingUnitId}/assignments",
 	        method = RequestMethod.PUT,
-	        produces = MediaType.APPLICATION_JSON_VALUE)
+	        produces = MediaType.APPLICATION_JSON_VALUE,
+	        consumes= MediaType.APPLICATION_JSON_VALUE)
 	    public ResponseEntity<List<HousingUnitAssignment>> updateHousingInventory(@RequestBody List<HousingUnitAssignment> housingUnitAssignments, @PathVariable UUID housingUnitId) throws URISyntaxException {
-	        //log.debug("REST request to update HousingUnitAssignment : {}", housingUnitAssignment);
-	        List<HousingUnitAssignment> result = housingUnitAssignmentService.saveHousingUnitAssignments(housingUnitAssignments);
+	        log.debug("REST request to update HousingUnitAssignment : {}", housingUnitAssignments);
+	        List<HousingUnitAssignment> result = housingUnitAssignmentService.saveHousingUnitAssignments(housingUnitAssignments,housingUnitId);
 	        return new ResponseEntity<List<HousingUnitAssignment>>(result,HttpStatus.OK);
 	    }
 	
@@ -116,11 +111,11 @@ public class HousingUnitAssignmentResource extends BaseResource{
 	    }*/
 	
 	@APIMapping(value="DELETE_ASSIGNMENT_BY_ID")
-	@RequestMapping(value = "/assignments/{id}",
+	@RequestMapping(value = "/{housingUnitId}/assignments/{id}",
 	        method = RequestMethod.DELETE,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    //@Timed
-	    public ResponseEntity<Void> deleteHousingUnitAddress( @PathVariable UUID id) {
+	    public ResponseEntity<Void> deleteHousingUnitAddress(@PathVariable UUID housingUnitId, @PathVariable UUID id) {
 	        housingUnitAssignmentService.delete(id);
 	        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("housingUnitAssignment", id.toString())).build();
 	    }

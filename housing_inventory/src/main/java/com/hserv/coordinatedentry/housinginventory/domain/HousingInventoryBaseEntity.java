@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
-import org.hibernate.envers.Audited;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -18,7 +18,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @MappedSuperclass
-@Audited
 @EntityListeners(AuditingEntityListener.class)
 public class HousingInventoryBaseEntity implements Serializable {
 
@@ -31,12 +30,14 @@ public class HousingInventoryBaseEntity implements Serializable {
 	@Column(name="date_created")
 	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
 	@JsonIgnore
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
 	private LocalDateTime dateCreated;
 
 	@LastModifiedDate
 	@Column(name="date_updated")
 	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")	
 	@JsonIgnore
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
 	private LocalDateTime dateUpdated;
 
 	@CreatedBy

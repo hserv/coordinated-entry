@@ -1,65 +1,47 @@
 package com.hserv.coordinatedentry.housinginventory.enums;
-import java.util.Map;
+
 import java.util.HashMap;
-/**
- * Defines the ClientEthnicityEnum enumeration.
- * 
- * @author Sandeep Dolia
- *
- */
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum EthnicityEnum {
 
-	/** Enum Constant. */
-	ZERO("0"),
-	/** Enum Constant. */
-	ONE("1"),
-	/** Enum Constant. */
-	EIGHT("8"),
-	/** Enum Constant. */
-	NINE("9"),
-	/** Enum Constant. */
-	NINTY_NINE("99");
-	/**
-	 * Internal storage of status field value, see the Enum spec for
- 	 * clarification.
- 	 */
-	private final String status;
-	
-	/**
-	 * Enum constructor for ActiveState.
-	 * @param state Value.
-	 */
-	EthnicityEnum(final String state) {
+	ZERO(0), ONE(1), EIGHT(8), NINE(9), NINTY_NINE(99);
+
+	private final Integer status;
+
+	EthnicityEnum(final Integer state) {
 		this.status = state;
 	}
-	
-	/** Construct a map for reverse lookup. */
-	private static Map<String, EthnicityEnum> valueMap = new HashMap<String, EthnicityEnum>();
 
-    static {
-    	// construct hashmap for later possible use.
-        for (EthnicityEnum unit : values()) {
-            valueMap.put(unit.getValue(), unit);
-        }
-    }
-    
-	/**
-	 * Current string value stored in the enum.
-	 * 
-	 * @return string value.
-	 */
-	public String getValue() {
+	public int getValue() {
 		return this.status;
 	}
 
-	/**
-     * Perform a reverse lookup (given a value, obtain the enum).
-     * 
-     * @param value to search
-     * @return Enum object.
-     */
-    public static EthnicityEnum lookupEnum(String value) {
-        return EthnicityEnum.valueMap.get(value);
-    }
+	private static Map<Integer, EthnicityEnum> namesMap = new HashMap<Integer, EthnicityEnum>();
 
+	static {
+		namesMap.put(0, ZERO);
+		namesMap.put(1, ONE);
+		namesMap.put(8, EIGHT);
+		namesMap.put(9, NINE);
+		namesMap.put(99, NINTY_NINE);
+	}
+
+	@JsonCreator
+	public static EthnicityEnum forValue(Integer value) {
+		return namesMap.get(value);
+	}
+
+	@JsonValue
+	public Integer toValue() {
+		for (Entry<Integer, EthnicityEnum> entry : namesMap.entrySet()) {
+			if (entry.getValue() == this)
+				return entry.getKey();
+		}
+		return null;
+	}
 }

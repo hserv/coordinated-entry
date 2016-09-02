@@ -27,6 +27,7 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	@Column(name = "housing_unit_id")
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
+    @org.hibernate.annotations.Type(type="pg-uuid")
 	private UUID housingInventoryId;
 	
 	@Column(name = "beds_current")
@@ -55,6 +56,9 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	
 	@Column(name="schema_year")
 	private Integer schemaYear;
+	
+	@Column(name="project_group_code")
+	private String projectGroupCode;
 	
 	
 	@OneToMany(mappedBy = "housingInventory",cascade=CascadeType.ALL, fetch=FetchType.LAZY)
@@ -192,6 +196,14 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 
 	public void setSchemaYear(Integer schemaYear) {
 		this.schemaYear = schemaYear;
+	}
+
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
 	}
 
 	@Override

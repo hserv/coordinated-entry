@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
+
 @Configuration
 public class JacksonConfig {
 
@@ -15,6 +18,16 @@ public class JacksonConfig {
 	    Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
 	    builder.indentOutput(true).dateFormat(new SimpleDateFormat("MM/dd/yyyy"));
 	    return builder;
+	}
+	
+	@Bean
+	public SessionHelper sessionHelper(){
+		return new SessionHelper();
+	}
+	
+	@Bean
+	public TrustedAppHelper trustedAppHelper(){
+		return new TrustedAppHelper();
 	}
 }
 

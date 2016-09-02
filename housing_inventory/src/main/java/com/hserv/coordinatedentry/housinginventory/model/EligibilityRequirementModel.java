@@ -19,6 +19,7 @@ import com.hserv.coordinatedentry.housinginventory.enums.VeteranStatusEnum;
 public class EligibilityRequirementModel {
 	
 	private UUID eligibilityRequirementId;
+	private UUID projectId;
 	
 	private String type;
 	private GenderEnum gender;
@@ -206,5 +207,11 @@ public class EligibilityRequirementModel {
 	}
 	public void setResidencePrior(ResidencepriorEnum residencePrior) {
 		this.residencePrior = residencePrior;
+	}
+	public UUID getProjectId() {
+		return projectId;
+	}
+	public void setProjectId(UUID projectId) {
+		this.projectId = projectId;
 	}
 }

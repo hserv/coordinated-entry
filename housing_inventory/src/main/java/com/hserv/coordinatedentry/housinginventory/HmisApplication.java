@@ -20,7 +20,7 @@ import com.servinglynk.hmis.warehouse.client.config.SpringConfig;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableJpaRepositories("com.hserv.coordinatedentry.housinginventory.repository")
+@EnableJpaRepositories
 @EnableEntityLinks
 @EnableTransactionManagement
 @EnableSpringDataWebSupport

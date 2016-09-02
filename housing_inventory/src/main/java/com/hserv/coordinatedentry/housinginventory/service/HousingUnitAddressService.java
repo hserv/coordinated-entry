@@ -32,14 +32,18 @@ public class HousingUnitAddressService  {
 	private HousingInventoryRepository housingInventoryRepository;
 	
 	
-	 @Autowired
-	 HibernateTemplate hibernateTemplate;
+//	 @Autowired
+//	 HibernateTemplate hibernateTemplate;
 	
 	 public HousingUnitAddress saveHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
-		 DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAddress.class)
+/*		 DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAddress.class)
 				 .add(Restrictions.eq("housingInventory.housingInventoryId",housingUnitAddress.getHousingInventory().getHousingInventoryId()))
 				 .addOrder(Order.asc("dateUpdated"));
-		 List<HousingUnitAddress> addresses= (List<HousingUnitAddress>)hibernateTemplate.findByCriteria(crit);
+		 List<HousingUnitAddress> addresses= (List<HousingUnitAddress>)hibernateTemplate.findByCriteria(crit);*/
+		 
+		 HousingInventory housingInventory = housingInventoryRepository.findOne(housingUnitAddress.getHousingInventory().getHousingInventoryId());
+		 List<HousingUnitAddress> addresses = housingUnitAddressRepository.findByHousingInventory(housingInventory);
+		 
 		 if(addresses!=null&&addresses.size()!=0)
 		 {
 			 HousingUnitAddress address=addresses.get(0);

@@ -27,6 +27,7 @@ public class HousingUnitAddress  extends HousingInventoryBaseEntity {
 	@Column(name="address_id")
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
+    @org.hibernate.annotations.Type(type="pg-uuid")
 	private UUID addressId;
 	
 	@Column(name="addressline_1")
@@ -45,7 +46,7 @@ public class HousingUnitAddress  extends HousingInventoryBaseEntity {
 	private Integer zipCode;
 	
 	@ManyToOne
-	@JoinColumn(name="housing_inventory_housing_unit_id")
+	@JoinColumn(name="housing_inventory_id")
 	private HousingInventory housingInventory;
 	
 /*	@Transient

@@ -42,8 +42,8 @@ public class HousingInventoryService  {
     private HousingInventoryRepository housingInventoryRepository;*/
 	
 	
-	 @Autowired
-	 HibernateTemplate hibernateTemplate;
+//	 @Autowired
+//	 HibernateTemplate hibernateTemplate;
 	
 	 
 	 @Transactional
@@ -98,6 +98,16 @@ public class HousingInventoryService  {
 			}
 			
 		});
+		
+		Specification<HousingInventory> projectGroupCodeSpec = Specifications.where(new Specification<HousingInventory>() {
+
+			@Override
+			public Predicate toPredicate(Root<HousingInventory> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				
+				return cb.and(cb.equal(root.get("projectGroupCode"), housingInventory.getProjectGroupCode()));
+			}
+			
+		});
 
 		Specification<HousingInventory> userIdSpec = Specifications.where(new Specification<HousingInventory>() {
 
@@ -119,9 +129,11 @@ public class HousingInventoryService  {
 			
 		});
 		
+		
 		if(housingInventory.getProjectId()!=null) specification = Specifications.where(specification).and(projectIdSpec);
 		if(housingInventory.getUserId()!=null) specification = Specifications.where(specification).and(userIdSpec);
 		if(housingInventory.getVacant()!=null) specification = Specifications.where(specification).and(vacantSpec);
+		specification = Specifications.where(specification).and(projectGroupCodeSpec);
 		return housingInventoryRepository.findAll(specification,pageable);
 	}
 	

@@ -27,12 +27,16 @@ public class HousingUnitAssignmentService  {
 	@Autowired
 	HousingInventoryRepository HousingInventoryRepository;
 	
-	 @Autowired
-	 HibernateTemplate hibernateTemplate;
+	// @Autowired
+	// HibernateTemplate hibernateTemplate;
 	
 	 @Transactional
-	 public List<HousingUnitAssignment> saveHousingUnitAssignments(List<HousingUnitAssignment> housingUnitAssignments) {
+	 public List<HousingUnitAssignment> saveHousingUnitAssignments(List<HousingUnitAssignment> housingUnitAssignments, UUID housingUnitId) {
+		 
+		 HousingInventory housingInventory = HousingInventoryRepository.findOne(housingUnitId);
+		 
 		 for(HousingUnitAssignment housingUnitAssignment: housingUnitAssignments ){
+			 housingUnitAssignment.setHousingInventory(housingInventory);
 			housingUnitAssignment.setAssignmentId(UUID.randomUUID());
 			housingUnitAssignment=housingUnitAssignmentRepository.save(housingUnitAssignment);
 		 }

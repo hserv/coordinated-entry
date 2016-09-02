@@ -1,5 +1,7 @@
 package com.hserv.coordinatedentry.housinginventory.web.rest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,9 @@ import com.hserv.coordinatedentry.housinginventory.model.EligibilityRequirementM
 import com.hserv.coordinatedentry.housinginventory.repository.EligibilityRequirementRepository;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.JsonUtil;
+import com.servinglynk.hmis.warehouse.core.model.BaseProject;
+import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 
 @RestController
 @RequestMapping("/projects")
@@ -48,7 +53,11 @@ public class EligibilityRequirementResource extends BaseResource {
 			
 			Resource<EligibilityRequirementModel> resource=null;
 			try {
-				resource = new Resource<EligibilityRequirementModel>(JsonUtil.fromJSON(arg0.getEligibility(), EligibilityRequirementModel.class));
+				EligibilityRequirementModel model = JsonUtil.fromJSON(arg0.getEligibility(), EligibilityRequirementModel.class);
+				model.setProjectId(arg0.getProjectId());
+				model.setEligibilityRequirementId(arg0.getEligibilityId());
+				resource = new Resource<EligibilityRequirementModel>(model);
+			
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -66,9 +75,12 @@ public class EligibilityRequirementResource extends BaseResource {
 	@RequestMapping(value="/{projectId}/eligibilityrequirements",method=RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EligibilityRequirementModel> createEligibility(@PathVariable UUID projectId,
 			@Valid @RequestBody EligibilityRequirementModel eligibilityModel, HttpServletRequest request) throws Exception {
+
+		Session session = sessionHelper.getSession(request);
 		EligibilityRequirement eligibility = new EligibilityRequirement();
 		eligibility.setProjectId(projectId);
 		eligibility.setEligibility(JsonUtil.toJSON(eligibilityModel));
+		eligibility.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
 		housingUnitEligibilityRepository.save(eligibility);
 		 
 		EligibilityRequirementModel lresult = JsonUtil.fromJSON(eligibility.getEligibility(), EligibilityRequirementModel.class);
@@ -82,9 +94,10 @@ public class EligibilityRequirementResource extends BaseResource {
 	@RequestMapping(value="/{projectId}/eligibilityrequirements/{eligibilityId}",method=RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity updateEligibility(@PathVariable UUID projectId,
 			@PathVariable UUID eligibilityId,@RequestBody EligibilityRequirementModel eligibilityModel,HttpServletRequest request) throws Exception {
-		
+		Session session = sessionHelper.getSession(request);
 		EligibilityRequirement eligibility =  housingUnitEligibilityRepository.findOne(eligibilityId);
 		eligibility.setEligibility(JsonUtil.toJSON(eligibilityModel));
+		eligibility.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
 		housingUnitEligibilityRepository.save(eligibility);
 		return new ResponseEntity<>(HttpStatus.ACCEPTED);
 	}
@@ -113,6 +126,15 @@ public class EligibilityRequirementResource extends BaseResource {
 	public ResponseEntity<Resources<Resource>> getEligibilities(@PathVariable UUID projectId, HttpServletRequest request,Pageable pageable) throws Exception {
 		
 	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectId(projectId, pageable);
+		return new ResponseEntity<>(assembler.toResource(page, housingInventoryAssembler),
+				HttpStatus.OK);
+	}
+	@APIMapping(value="CREATE_HOUSING_INVENTORIES")
+	@RequestMapping(value="/eligibilityrequirements",method=RequestMethod.GET,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Resources<Resource>> getAllEligibilities(HttpServletRequest request,Pageable pageable) throws Exception {
+		Session session = sessionHelper.getSession(request);
+			
+	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode(), pageable);
 		return new ResponseEntity<>(assembler.toResource(page, housingInventoryAssembler),
 				HttpStatus.OK);
 	}

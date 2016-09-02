@@ -1,70 +1,51 @@
 package com.hserv.coordinatedentry.housinginventory.enums;
+
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.HashMap;
-/**
- * Defines the ClientGenderEnum enumeration.
- * 
- * @author Sandeep Dolia
- *
- */
+
+
 public enum GenderEnum {
-	/** Enum Constant. */
-	ZERO("0"),
-	/** Enum Constant. */
-	ONE("1"),
-	/** Enum Constant. */
-	TWO("2"),
-	/** Enum Constant. */
-	THREE("3"),
-	/** Enum Constant. */
-	FOUR("4"),
-	/** Enum Constant. */
-	EIGHT("8"),
-	/** Enum Constant. */
-	NINE("9"),
-	/** Enum Constant. */
-	NINTY_NINE("99");
-	/**
-	 * Internal storage of status field value, see the Enum spec for
- 	 * clarification.
- 	 */
-	private final String status;
-	
-	/**
-	 * Enum constructor for ActiveState.
-	 * @param state Value.
-	 */
-	GenderEnum(final String state) {
+	ZERO(0), ONE(1), TWO(2), THREE(3), FOUR(4), EIGHT(8), NINE(9), NINTY_NINE(9);
+
+	private final Integer status;
+
+	GenderEnum(final Integer state) {
 		this.status = state;
 	}
-	
-	/** Construct a map for reverse lookup. */
-	private static Map<String, GenderEnum> valueMap = new HashMap<String, GenderEnum>();
 
-    static {
-    	// construct hashmap for later possible use.
-        for (GenderEnum unit : values()) {
-            valueMap.put(unit.getValue(), unit);
-        }
-    }
-    
-	/**
-	 * Current string value stored in the enum.
-	 * 
-	 * @return string value.
-	 */
-	public String getValue() {
+	public int getValue() {
 		return this.status;
 	}
 
-	/**
-     * Perform a reverse lookup (given a value, obtain the enum).
-     * 
-     * @param value to search
-     * @return Enum object.
-     */
-    public static GenderEnum lookupEnum(String value) {
-        return GenderEnum.valueMap.get(value);
-    }
+	private static Map<Integer, GenderEnum> namesMap = new HashMap<Integer, GenderEnum>();
 
+	static {
+		namesMap.put(0, ZERO);
+		namesMap.put(1, ONE);
+		namesMap.put(2, TWO);
+		namesMap.put(3, THREE);
+		namesMap.put(4, FOUR);
+		namesMap.put(8, EIGHT);
+		namesMap.put(9, NINE);
+		namesMap.put(99, NINTY_NINE);
+	}
+
+	@JsonCreator
+	public static GenderEnum forValue(Integer value) {
+		return namesMap.get(value);
+	}
+
+	@JsonValue
+	public Integer toValue() {
+		for (Entry<Integer, GenderEnum> entry : namesMap.entrySet()) {
+			if (entry.getValue() == this)
+				return entry.getKey();
+		}
+		return null;
+	}
 }

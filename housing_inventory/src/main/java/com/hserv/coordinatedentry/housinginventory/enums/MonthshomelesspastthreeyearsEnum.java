@@ -1,6 +1,13 @@
 package com.hserv.coordinatedentry.housinginventory.enums;
+
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.HashMap;
+
 /**
  * Defines the EnrollmentMonthshomelesspastthreeyearsEnum enumeration.
  * 
@@ -9,81 +16,55 @@ import java.util.HashMap;
  */
 public enum MonthshomelesspastthreeyearsEnum {
 
-	/** Enum Constant. */
-	HUNDRED("100"),
-	/** Enum Constant. */
-	SEVEN("7"),
-	/** Enum Constant. */
-	EIGHT("8"),
-	/** Enum Constant. */
-	NINE("9"),
-	/** Enum Constant. */
-	ONE_HUNDRED_ONE("101"),
-	/** Enum Constant. */
-	ONE_HUNDRED_TWO("102"),
-	/** Enum Constant. */
-	ONE_HUNDRED_THREE("103"),
-	/** Enum Constant. */
-	ONE_HUNDRED_FOUR("104"),
-	/** Enum Constant. */
-	ONE_HUNDRED_FIVE("105"),
-	/** Enum Constant. */
-	ONE_HUNDRED_SIX("106"),
-	/** Enum Constant. */
-	ONE_HUNDRED_SEVEN("107"),
-	/** Enum Constant. */
-	ONE_HUNDRED_EIGHT("108"),
-	/** Enum Constant. */
-	ONE_HUNDRED_NINE("109"),
-	/** Enum Constant. */
-	ONE_HUNDRED_TEN("110"),
-	/** Enum Constant. */
-	ONE_HUNDRED_TWELVE("112"),
-	/** Enum Constant. */
-	ONE_HUNDRED_ELEVEN("111"),
-	/** Enum Constant. */
-	NINTY_NINE("99");
-	/**
-	 * Internal storage of status field value, see the Enum spec for
- 	 * clarification.
- 	 */
-	private final String status;
-	
-	/**
-	 * Enum constructor for ActiveState.
-	 * @param state Value.
-	 */
-	MonthshomelesspastthreeyearsEnum(final String state) {
+	HUNDRED(100), SEVEN(7), EIGHT(8), NINE(9), ONE_HUNDRED_ONE(101), ONE_HUNDRED_TWO(102), ONE_HUNDRED_THREE(
+			103), ONE_HUNDRED_FOUR(104), ONE_HUNDRED_FIVE(105), ONE_HUNDRED_SIX(106), ONE_HUNDRED_SEVEN(
+					107), ONE_HUNDRED_EIGHT(108), ONE_HUNDRED_NINE(109), ONE_HUNDRED_TEN(
+							110), ONE_HUNDRED_TWELVE(112), ONE_HUNDRED_ELEVEN(111), NINTY_NINE(99);
+
+	private final Integer status;
+
+	MonthshomelesspastthreeyearsEnum(final Integer state) {
 		this.status = state;
 	}
-	
-	/** Construct a map for reverse lookup. */
-	private static Map<String, MonthshomelesspastthreeyearsEnum> valueMap = new HashMap<String, MonthshomelesspastthreeyearsEnum>();
 
-    static {
-    	// construct hashmap for later possible use.
-        for (MonthshomelesspastthreeyearsEnum unit : values()) {
-            valueMap.put(unit.getValue(), unit);
-        }
-    }
-    
-	/**
-	 * Current string value stored in the enum.
-	 * 
-	 * @return string value.
-	 */
-	public String getValue() {
+	public int getValue() {
 		return this.status;
 	}
 
-	/**
-     * Perform a reverse lookup (given a value, obtain the enum).
-     * 
-     * @param value to search
-     * @return Enum object.
-     */
-    public static MonthshomelesspastthreeyearsEnum lookupEnum(String value) {
-        return MonthshomelesspastthreeyearsEnum.valueMap.get(value);
-    }
+	private static Map<Integer, MonthshomelesspastthreeyearsEnum> namesMap = new HashMap<Integer, MonthshomelesspastthreeyearsEnum>();
 
+	static {
+
+		namesMap.put(100, HUNDRED);
+		namesMap.put(7, SEVEN);
+		namesMap.put(8, EIGHT);
+		namesMap.put(9, NINE);
+		namesMap.put(101, ONE_HUNDRED_ONE);
+		namesMap.put(102, ONE_HUNDRED_TWO);
+		namesMap.put(103, ONE_HUNDRED_THREE);
+		namesMap.put(104, ONE_HUNDRED_FOUR);
+		namesMap.put(105, ONE_HUNDRED_FIVE);
+		namesMap.put(106, ONE_HUNDRED_SIX);
+		namesMap.put(107, ONE_HUNDRED_SEVEN);
+		namesMap.put(108, ONE_HUNDRED_EIGHT);
+		namesMap.put(109, ONE_HUNDRED_NINE);
+		namesMap.put(110, ONE_HUNDRED_TEN);
+		namesMap.put(111, ONE_HUNDRED_TWELVE);
+		namesMap.put(112, ONE_HUNDRED_ELEVEN);
+		namesMap.put(99, NINTY_NINE);
+	}
+
+	@JsonCreator
+	public static MonthshomelesspastthreeyearsEnum forValue(Integer value) {
+		return namesMap.get(value);
+	}
+
+	@JsonValue
+	public Integer toValue() {
+		for (Entry<Integer, MonthshomelesspastthreeyearsEnum> entry : namesMap.entrySet()) {
+			if (entry.getValue() == this)
+				return entry.getKey();
+		}
+		return null;
+	}
 }

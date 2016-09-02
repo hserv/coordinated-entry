@@ -1,71 +1,53 @@
 package com.hserv.coordinatedentry.housinginventory.enums;
+
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.HashMap;
-/**
- * Defines the ClientRaceEnum enumeration.
- * 
- * @author Sandeep Dolia
- *
- */
+
+
 public enum RaceEnum {
 
-	/** Enum Constant. */
-	ONE("1"),
-	/** Enum Constant. */
-	TWO("2"),
-	/** Enum Constant. */
-	THREE("3"),
-	/** Enum Constant. */
-	FOUR("4"),
-	/** Enum Constant. */
-	FIVE("5"),
-	/** Enum Constant. */
-	EIGHT("8"),
-	/** Enum Constant. */
-	NINE("9"),
-	/** Enum Constant. */
-	NINTY_NINE("99");
-	/**
-	 * Internal storage of status field value, see the Enum spec for
- 	 * clarification.
- 	 */
-	private final String status;
-	
-	/**
-	 * Enum constructor for ActiveState.
-	 * @param state Value.
-	 */
-	RaceEnum(final String state) {
+	ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), EIGHT(8), NINE(9), NINTY_NINE(99);
+
+	private final Integer status;
+
+	RaceEnum(final Integer state) {
 		this.status = state;
 	}
-	
-	/** Construct a map for reverse lookup. */
-	private static Map<String, RaceEnum> valueMap = new HashMap<String, RaceEnum>();
 
-    static {
-    	// construct hashmap for later possible use.
-        for (RaceEnum unit : values()) {
-            valueMap.put(unit.getValue(), unit);
-        }
-    }
-    
-	/**
-	 * Current string value stored in the enum.
-	 * 
-	 * @return string value.
-	 */
-	public String getValue() {
+	public int getValue() {
 		return this.status;
 	}
 
-	/**
-     * Perform a reverse lookup (given a value, obtain the enum).
-     * 
-     * @param value to search
-     * @return Enum object.
-     */
-    public static RaceEnum lookupEnum(String value) {
-        return RaceEnum.valueMap.get(value);
-    }
+	private static Map<Integer, RaceEnum> namesMap = new HashMap<Integer, RaceEnum>();
 
+	static {
+
+		namesMap.put(1, ONE);
+		namesMap.put(2, TWO);
+		namesMap.put(3, THREE);
+		namesMap.put(4, FOUR);
+		namesMap.put(5, FIVE);
+		namesMap.put(8, EIGHT);
+		namesMap.put(9, NINE);
+		namesMap.put(99, NINTY_NINE);
+	}
+
+	@JsonCreator
+	public static RaceEnum forValue(Integer value) {
+		return namesMap.get(value);
+	}
+
+	@JsonValue
+	public Integer toValue() {
+		for (Entry<Integer, RaceEnum> entry : namesMap.entrySet()) {
+			if (entry.getValue() == this)
+				return entry.getKey();
+		}
+		return null;
+	}
 }
