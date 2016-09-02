@@ -12,6 +12,6 @@ public interface SurveyEntityDao {
    SurveyEntity updateSurveyEntity(SurveyEntity surveyEntity);
    void deleteSurveyEntity(SurveyEntity surveyEntity);
    SurveyEntity getSurveyEntityById(UUID surveyEntityId);
-   List<SurveyEntity> getAllSurveyEntitys(Integer startIndex, Integer maxItems);
-   long getSurveyEntitysCount();
+   List<SurveyEntity> getAllSurveyEntitys(Integer startIndex, Integer maxItems, String projectGroupCode);
+   long getSurveyEntitysCount(String projectGroupCode);
 }

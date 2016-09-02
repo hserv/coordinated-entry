@@ -1,6 +1,5 @@
 package com.servinglynk.hmis.warehouse.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.servinglynk.hmis.warehouse.core.model.ClientsSurveyScores;
@@ -16,7 +15,7 @@ public interface SectionScoreService {
 	 
 	 void updateSectionScores(UUID clientId,UUID surveyId,UUID sectionId);
 	 void deleteSectionScores(UUID clientId,UUID surveyId,UUID sectionId);
-	 ClientsSurveyScores calculateClientSurveyScore(List<UUID> clientIds);
+	 ClientsSurveyScores calculateClientSurveyScore(Integer startIndex,Integer maxItems,String projectGroupCode);
 	 SectionScore createSectionScores(SectionScore sectionScore);
 	void updateSectionScores(SectionScore sectionScore);
 }

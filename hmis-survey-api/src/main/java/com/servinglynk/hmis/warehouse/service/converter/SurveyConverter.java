@@ -10,7 +10,6 @@ public class SurveyConverter{
        entity.setSurveyTitle(model.getSurveyTitle());
        entity.setSurveyOwner(model.getSurveyOwner());
        entity.setTagValue(model.getTagValue());
-       entity.setProjectGroupId(model.getProjectGroupId());
        entity.setLocked(model.getLocked());
        entity.setCopySurveyId(model.getCopySurveyId());
        entity.setLocked(model.getLocked());
@@ -24,7 +23,7 @@ public class SurveyConverter{
        model.setSurveyTitle(entity.getSurveyTitle());
        model.setSurveyOwner(entity.getSurveyOwner());
        model.setTagValue(entity.getTagValue());
-       model.setProjectGroupId(entity.getProjectGroupId());
+       model.setProjectGroupCode(entity.getProjectGroupCode());
        model.setLocked(entity.isLocked());
        model.setCopySurveyId(entity.isCopySurveyId());
        return model;

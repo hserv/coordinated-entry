@@ -23,7 +23,7 @@ public class Survey extends ClientModel{
 
       private String tagValue;
 
-      private String projectGroupId;
+      private String projectGroupCode;
 
       private boolean locked;
 
@@ -55,11 +55,11 @@ public class Survey extends ClientModel{
       public void setTagValue(String tagValue){
           this.tagValue = tagValue;
       }
-      public String getProjectGroupId(){
-          return projectGroupId;
+      public String getProjectGroupCode(){
+          return projectGroupCode;
       }
-      public void setProjectGroupId(String projectGroupId){
-          this.projectGroupId = projectGroupId;
+      public void setProjectGroupCode(String projectGroupCode){
+          this.projectGroupCode = projectGroupCode;
       }
    
       public boolean getCopySurveyId(){

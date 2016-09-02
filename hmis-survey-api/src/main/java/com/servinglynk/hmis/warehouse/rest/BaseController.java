@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.servinglynk.hmis.warehouse.client.baseclients.BaseClientService;
 import com.servinglynk.hmis.warehouse.core.model.Error;
 import com.servinglynk.hmis.warehouse.core.model.Errors;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 import com.servinglynk.hmis.warehouse.rest.common.ExceptionMapper;
-import com.servinglynk.hmis.warehouse.rest.common.SessionHelper;
 import com.servinglynk.hmis.warehouse.service.core.ParentServiceFactory;
 
 

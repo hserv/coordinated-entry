@@ -29,7 +29,7 @@ public class SurveysController extends BaseController {
    @APIMapping(value="SURVEY_API_CREATE_SURVEY",checkTrustedApp=true,checkSessionToken=true)
    public Survey createSurvey(@Valid @RequestBody Survey survey,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
-         serviceFactory.getSurveyService().createSurvey(survey,session.getAccount().getUsername()); 
+         serviceFactory.getSurveyService().createSurvey(survey,session); 
          Survey returnsurvey = new Survey();
          returnsurvey.setSurveyId(survey.getSurveyId());
          return returnsurvey;
@@ -64,8 +64,8 @@ public class SurveysController extends BaseController {
                        HttpServletRequest request) throws Exception {
            if (startIndex == null) startIndex =0;
            if (maxItems == null || maxItems > 30) maxItems =30;
- 
-        return serviceFactory.getSurveyService().getAllSurveys(startIndex,maxItems); 
+           Session session = sessionHelper.getSession(request);
+        return serviceFactory.getSurveyService().getAllSurveys(startIndex,maxItems,session.getAccount().getProjectGroup().getProjectGroupCode()); 
    }
 
    

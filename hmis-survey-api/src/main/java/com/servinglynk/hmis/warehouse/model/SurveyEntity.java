@@ -36,8 +36,8 @@ public class SurveyEntity extends BaseEntity {
 	private String surveyOwner;
 	@Column(name="TAG_VALUE")	
 	private String tagValue;
-	@Column(name="PROJECT_GROUP_ID")	
-	private String projectGroupId;
+	@Column(name="PROJECT_GROUP_CODE")	
+	private String projectGroupCode;
 	@Column(name="LOCKED")	
 	private boolean locked;
 	@Column(name="IS_COPY_SURVEY_ID")	
@@ -71,11 +71,11 @@ public class SurveyEntity extends BaseEntity {
 	public void setTagValue(String tagValue) {
 		this.tagValue = tagValue;
 	}
-	public String getProjectGroupId() {
-		return projectGroupId;
+	public String getProjectGroupCode() {
+		return projectGroupCode;
 	}
-	public void setProjectGroupId(String projectGroupId) {
-		this.projectGroupId = projectGroupId;
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
 	}
 	public boolean isLocked() {
 		return locked;

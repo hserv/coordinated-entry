@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
@@ -28,12 +29,14 @@ public class SurveyEntityDaoImpl extends QueryExecutorImpl implements SurveyEnti
        return (SurveyEntity) get(SurveyEntity.class, surveyEntityId);
    }
    @SuppressWarnings("unchecked")
-   public List<SurveyEntity> getAllSurveyEntitys(Integer startIndex, Integer maxItems){
+   public List<SurveyEntity> getAllSurveyEntitys(Integer startIndex, Integer maxItems,String projectGroupCode){
        DetachedCriteria criteria=DetachedCriteria.forClass(SurveyEntity.class);
+       criteria.add(Restrictions.eq("projectGroupCode", projectGroupCode));
        return (List<SurveyEntity>) findByCriteria(criteria,startIndex,maxItems);
    }
-   public long getSurveyEntitysCount(){
+   public long getSurveyEntitysCount(String projectGroupCode){
        DetachedCriteria criteria=DetachedCriteria.forClass(SurveyEntity.class);
+       criteria.add(Restrictions.eq("projectGroupCode", projectGroupCode));
        return countRows(criteria);
    }
 }

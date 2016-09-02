@@ -9,10 +9,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
 import com.servinglynk.hmis.warehouse.client.authorizationservice.AuthorizationServiceClient;
-import com.servinglynk.hmis.warehouse.client.model.ApiMethodAuthorizationCheck;
-import com.servinglynk.hmis.warehouse.client.model.Session;
-import com.servinglynk.hmis.warehouse.rest.common.SessionHelper;
-import com.servinglynk.hmis.warehouse.rest.common.TrustedAppHelper;
+import com.servinglynk.hmis.warehouse.core.model.ApiMethodAuthorizationCheck;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 
 public class ApiAuthCheckInterceptor extends HandlerInterceptorAdapter {
 	
@@ -41,6 +40,7 @@ public class ApiAuthCheckInterceptor extends HandlerInterceptorAdapter {
 		
 			com.servinglynk.hmis.warehouse.core.model.Session session = new com.servinglynk.hmis.warehouse.core.model.Session();
 			session.setToken(clientresponse.getAccessToken());
+			session.setAccount(clientresponse.getAccount());
 			this.sessionHelper.setSession(session, request);
 			
 			return true;

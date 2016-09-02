@@ -20,9 +20,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 import com.servinglynk.hmis.warehouse.rest.SurveysController;
-import com.servinglynk.hmis.warehouse.rest.common.SessionHelper;
-import com.servinglynk.hmis.warehouse.rest.common.TrustedAppHelper;
 import com.servinglynk.hmis.warehouse.rest.interceptor.ApiAuthCheckInterceptor;
 
 @Configuration

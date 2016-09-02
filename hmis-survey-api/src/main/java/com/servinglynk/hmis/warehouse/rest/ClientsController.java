@@ -16,15 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
-import com.servinglynk.hmis.warehouse.client.model.BaseClient;
-import com.servinglynk.hmis.warehouse.client.model.BaseClients;
-import com.servinglynk.hmis.warehouse.core.model.ClientSurveyScore;
 import com.servinglynk.hmis.warehouse.core.model.ClientsSurveyScores;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SectionScore;
 import com.servinglynk.hmis.warehouse.core.model.SectionScores;
 import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.BaseClient;
+import com.servinglynk.hmis.warehouse.core.model.BaseClients;
 
 @RestController
 @RequestMapping("/clients")
@@ -204,15 +203,11 @@ public class ClientsController extends BaseController {
 	   
 	   @RequestMapping(method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public ClientsSurveyScores getAllClientsSurveyScores(HttpServletRequest request) throws Exception {
-		   Session session = sessionHelper.getSession(request);
-		   com.servinglynk.hmis.warehouse.client.model.Session clientSession = new com.servinglynk.hmis.warehouse.client.model.Session();
-		   clientSession.setToken(session.getToken());
-		   BaseClients clients = baseClientService.getClients(clientSession);
-		   List<UUID> clientIds = new ArrayList<UUID>();
-		   for(BaseClient client : clients.getClients()){
-			   clientIds.add(client.getClientId());
-		   }
-		 return serviceFactory.getSectionScoreService().calculateClientSurveyScore(clientIds);
+	   public ClientsSurveyScores getAllClientsSurveyScores(@RequestParam(value="startIndex", required=false,defaultValue="0") Integer startIndex, 
+               							@RequestParam(value="maxItems", required=false,defaultValue="30") Integer maxItems,
+               							HttpServletRequest request) throws Exception {
+		   				Session session = sessionHelper.getSession(request);
+		   				if(maxItems>50) maxItems=50;
+		 return serviceFactory.getSectionScoreService().calculateClientSurveyScore(startIndex,maxItems,session.getAccount().getProjectGroup().getProjectGroupCode());
 	   }
 }

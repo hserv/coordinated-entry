@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.core.model.Survey;
 import com.servinglynk.hmis.warehouse.core.model.Surveys;
@@ -20,10 +21,11 @@ import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
 public class SurveyServiceImpl extends ServiceBase implements SurveyService  {
 
    @Transactional
-   public Survey createSurvey(Survey survey,String caller){
+   public Survey createSurvey(Survey survey,Session session){
        SurveyEntity pSurvey = SurveyConverter.modelToEntity(survey, null);
        pSurvey.setCreatedAt(LocalDateTime.now());
-       pSurvey.setUser(caller);
+       pSurvey.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
+       pSurvey.setUser(session.getAccount().getUsername());
        daoFactory.getSurveyEntityDao().createSurveyEntity(pSurvey);
        survey.setSurveyId(pSurvey.getId());
        return survey;
@@ -31,7 +33,7 @@ public class SurveyServiceImpl extends ServiceBase implements SurveyService  {
 
 
    @Transactional
-   public Survey updateSurvey(Survey survey,UUID enrollmentId,String caller){
+   public Survey updateSurvey(Survey survey,String caller){
        SurveyEntity pSurvey = daoFactory.getSurveyEntityDao().getSurveyEntityById(survey.getSurveyId());
        if(pSurvey==null) throw new SurveyNotFoundException();
 
@@ -65,13 +67,13 @@ public class SurveyServiceImpl extends ServiceBase implements SurveyService  {
 
 
    @Transactional
-   public Surveys getAllSurveys(Integer startIndex, Integer maxItems){
+   public Surveys getAllSurveys(Integer startIndex, Integer maxItems,String projectGroupCode){
        Surveys surveys = new Surveys();
-        List<SurveyEntity> entities = daoFactory.getSurveyEntityDao().getAllSurveyEntitys(startIndex,maxItems);
+        List<SurveyEntity> entities = daoFactory.getSurveyEntityDao().getAllSurveyEntitys(startIndex,maxItems,projectGroupCode);
         for(SurveyEntity entity : entities){
            surveys.addSurvey(SurveyConverter.entityToModel(entity));
         }
-        long count = daoFactory.getSurveyEntityDao().getSurveyEntitysCount();
+        long count = daoFactory.getSurveyEntityDao().getSurveyEntitysCount(projectGroupCode);
         SortedPagination pagination = new SortedPagination();
  
         pagination.setFrom(startIndex);
@@ -80,12 +82,4 @@ public class SurveyServiceImpl extends ServiceBase implements SurveyService  {
         surveys.setPagination(pagination);
         return surveys; 
    }
-
-
-public Survey updateSurvey(Survey survey, String caller) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-
 }
