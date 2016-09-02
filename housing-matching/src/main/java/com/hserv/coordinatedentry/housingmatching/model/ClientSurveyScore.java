@@ -1,12 +1,25 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateDeserializer;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateTimeSerializer;
 
 public class ClientSurveyScore {
 
 	private UUID surveyId;
 	private UUID clientId;
 	private Long surveyScore;
+	@JsonProperty("projectGroupCode")
+	private String programType;
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateTimeSerializer.class)
+	private LocalDateTime surveyDate;
+	
 	public UUID getSurveyId() {
 		return surveyId;
 	}
@@ -25,4 +38,17 @@ public class ClientSurveyScore {
 	public void setSurveyScore(Long surveyScore) {
 		this.surveyScore = surveyScore;
 	}
+	public String getProgramType() {
+		return programType;
+	}
+	public void setProgramType(String programType) {
+		this.programType = programType;
+	}
+	public LocalDateTime getSurveyDate() {
+		return surveyDate;
+	}
+	public void setSurveyDate(LocalDateTime surveyDate) {
+		this.surveyDate = surveyDate;
+	}
+	
 }

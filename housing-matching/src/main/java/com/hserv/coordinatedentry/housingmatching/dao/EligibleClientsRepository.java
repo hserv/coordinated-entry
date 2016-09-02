@@ -21,6 +21,8 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	@Query("select ec from EligibleClient as ec where ec.matched=false and ec.programType<>?1")
 	List<EligibleClient> findTopEligibleClients(String programType, Pageable pageable);
 	
+	List<EligibleClient> findByProgramTypeAndMatched(String programType,Boolean mathed);
+	
 	public List<EligibleClient> findAll();
 	
 	@Transactional(readOnly = false)
@@ -40,4 +42,6 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClient as ec set ec.surveyScore = ?1 where ec.clientId = ?2")
 	void updateScoreByClientId(int score, UUID clientId);
+
+	List<EligibleClient> findByProgramTypeAndMatched(String string, boolean b);
 }

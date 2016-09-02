@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hserv.coordinatedentry.housingmatching.interceptor.AuthenticationInterceptor;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 
 @Configuration
 public class AppConfig extends WebMvcConfigurerAdapter {
@@ -52,6 +54,16 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	public void addInterceptors(InterceptorRegistry registry) {
 		//registry.addInterceptor(new LoggingInterceptor());
 		registry.addInterceptor(getAuthenticationInterceptor());
+	}
+	
+	@Bean
+	public SessionHelper sessionHelper(){
+		return new SessionHelper();
+	}
+	
+	@Bean
+	public TrustedAppHelper trustedAppHelper(){
+		return new TrustedAppHelper();
 	}
 	
 	private HttpMessageConverter<Object> createXmlHttpMessageConverter() {

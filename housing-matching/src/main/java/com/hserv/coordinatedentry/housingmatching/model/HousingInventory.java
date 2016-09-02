@@ -1,20 +1,22 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HousingInventory {
 	@JsonProperty("housingInventoryId")
-	private String housingUnitId;
+	private UUID housingUnitId;
 	
-	private String projectUuid;
+	private String projectId;
 	
 	private Address address;
 	
-	private String bedsCurrent;
+	private Integer bedsCurrent;
 	
-	private String bedsCapacity;
+	private Integer bedsCapacity;
 	
 	private boolean inService;
 	
@@ -24,20 +26,20 @@ public class HousingInventory {
 	
 	private boolean inactive;
 	
-	public String getHousingUnitId() {
+	public UUID getHousingUnitId() {
 		return housingUnitId;
 	}
 
-	public void setHousingUnitId(String housingUnitId) {
+	public void setHousingUnitId(UUID housingUnitId) {
 		this.housingUnitId = housingUnitId;
 	}
 
-	public String getProjectUuid() {
-		return projectUuid;
+	public String getProjectId() {
+		return projectId;
 	}
 
-	public void setProjectUuid(String projectUuid) {
-		this.projectUuid = projectUuid;
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
 
 	public Address getAddress() {
@@ -48,19 +50,19 @@ public class HousingInventory {
 		this.address = address;
 	}
 
-	public String getBedsCurrent() {
+	public Integer getBedsCurrent() {
 		return bedsCurrent;
 	}
 
-	public void setBedsCurrent(String bedsCurrent) {
+	public void setBedsCurrent(Integer bedsCurrent) {
 		this.bedsCurrent = bedsCurrent;
 	}
 
-	public String getBedsCapacity() {
+	public Integer getBedsCapacity() {
 		return bedsCapacity;
 	}
 
-	public void setBedsCapacity(String bedsCapacity) {
+	public void setBedsCapacity(Integer bedsCapacity) {
 		this.bedsCapacity = bedsCapacity;
 	}
 
@@ -98,7 +100,7 @@ public class HousingInventory {
 
 	@Override
 	public String toString() {
-		return "HousingInventory [housingUnitId=" + housingUnitId + ", projectUuid=" + projectUuid + ", address="
+		return "HousingInventory [housingUnitId=" + housingUnitId + ", projectId=" + projectId + ", address="
 				+ address + ", bedsCurrent=" + bedsCurrent + ", bedsCapacity=" + bedsCapacity + ", inService="
 				+ inService + ", familyUnit=" + familyUnit + ", vacant=" + vacant + ", inactive=" + inactive + "]";
 	}

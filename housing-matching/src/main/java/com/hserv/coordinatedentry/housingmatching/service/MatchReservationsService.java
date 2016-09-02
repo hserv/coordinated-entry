@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
-import com.servinglynk.hmis.warehouse.client.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 public interface MatchReservationsService {
 
@@ -30,5 +30,7 @@ public interface MatchReservationsService {
 	
 	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel);
 	
-	public void createMatch(Session session) throws Exception ;
+	public void createMatch(Session session, String trustedAppId) throws Exception ;
+	
+	public void create(Session session, String trustedAppId) throws Exception ;
  }

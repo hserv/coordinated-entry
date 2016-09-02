@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -21,6 +22,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 @Table(name = "eligible_clients", schema = "housing_match")
 public class EligibleClient implements Serializable {
@@ -30,7 +33,7 @@ public class EligibleClient implements Serializable {
 	private Integer surveyScore;
 	private String programType;
 	private Boolean matched;
-	private Date surveyDate;
+	private LocalDateTime surveyDate;
 	private String spdatLabel;
 	private int zipCode;
 	
@@ -44,7 +47,7 @@ public class EligibleClient implements Serializable {
 	}
 
 	public EligibleClient(UUID clientId, String surveyType, Integer surveyScore, String programType,
-			Boolean matched, Date surveyDate, String spdatLabel, Set<Match> matchReservations
+			Boolean matched, LocalDateTime surveyDate, String spdatLabel, Set<Match> matchReservations
 			,int zipCode) {
 		this.clientId = clientId;
 		this.surveyType = surveyType;
@@ -103,13 +106,13 @@ public class EligibleClient implements Serializable {
 		this.matched = matched;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
 	@Column(name = "survey_date", length = 13)
-	public Date getSurveyDate() {
+	public LocalDateTime getSurveyDate() {
 		return this.surveyDate;
 	}
 
-	public void setSurveyDate(Date surveyDate) {
+	public void setSurveyDate(LocalDateTime surveyDate) {
 		this.surveyDate = surveyDate;
 	}
 

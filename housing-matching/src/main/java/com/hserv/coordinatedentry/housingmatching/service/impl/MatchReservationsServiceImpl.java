@@ -1,6 +1,9 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -21,12 +24,18 @@ import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.external.NotificationService;
 import com.hserv.coordinatedentry.housingmatching.external.UserService;
+import com.hserv.coordinatedentry.housingmatching.model.ClientInfoModel;
+import com.hserv.coordinatedentry.housingmatching.model.EligibilityRequirementModel;
 import com.hserv.coordinatedentry.housingmatching.model.HousingInventory;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
-import com.servinglynk.hmis.warehouse.client.model.Session;
+import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
+import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
+import com.servinglynk.hmis.warehouse.core.model.BaseClient;
+import com.servinglynk.hmis.warehouse.core.model.BaseProject;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Service
 public class MatchReservationsServiceImpl implements MatchReservationsService {
@@ -54,6 +63,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	
 	@Autowired
 	EligibleClientsRepository eligibleClientsRepository;
+	
+	@Autowired
+	ISearchServiceClient searchServiceClient;
 	
 	@Value("${TOP_N_CLIENTS}")
 	private int numberOfClients;
@@ -140,22 +152,104 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			notificationService.notifyClient();
 		}
 	}
+	
+	
+	@Async
+	public void create(Session session,String trustedAppId) throws Exception {
+		List<Match> matches = new ArrayList<Match>();
+		List<EligibleClient> matchedEligibleClients = new ArrayList<EligibleClient>();
+		List<EligibleClient> eligibleClients = eligibleClientsRepository.findByProgramTypeAndMatched(session.getAccount().getProjectGroup().getProjectGroupCode(), false);
+		List<HousingInventory> housingInventories = housingUnitService.getHousingInventoryList(session,trustedAppId);
+		List<EligibilityRequirementModel> eligibilityRequirements=housingUnitService.getEligibilityRequirements(session,trustedAppId);
+		
+		for(EligibleClient eligibleClient : eligibleClients){
+			
+			SearchRequest request = new SearchRequest();
+			request.setTrustedAppId(trustedAppId);
+			request.setSearchEntity("clients");
+			request.setSessionToken(session.getToken());
+			request.addSearchParam("q", eligibleClient.getClientId());
+			List<BaseClient> clients = (List<BaseClient>) searchServiceClient.search(request);
+			BaseClient client = clients.get(0);
+			UUID projectId = validateClientEligibility(client,eligibilityRequirements);		
+			if(projectId!=null) {
+					for(HousingInventory housingInventory : housingInventories){
+						if(UUID.fromString(housingInventory.getProjectId()).equals(projectId)) // Need to add with client zip code & housing unit zip code
+						{
+							if(housingInventory.getBedsCapacity() != housingInventory.getBedsCurrent()) {
+									Match match = new Match();
+									match.setDateCreated(new Date());
+									match.setEligibleClient(eligibleClient);
+									match.setHousingUnitId(housingInventory.getHousingUnitId());
+									match.setManualMatch(false);
+									match.setMatchDate(new Date());
+									match.setMatchStatus("PROPOSED");
+									matches.add(match);
+									matchedEligibleClients.add(eligibleClient);
+									housingInventory.setBedsCurrent(housingInventory.getBedsCurrent()+1);
+							}
+						}
+					}
+			}
+		} 
+		
+		for(Match match : matches){
+            repository.saveAndFlush(match);
+            
+            //store eligible client and set match flag to true
+            EligibleClient eligibleClient = match.getEligibleClient();
+            eligibleClient.setMatched(true);
+            eligibleClientsRepository.saveAndFlush(eligibleClient);
+		}
+		
+	}
+
+	private UUID validateClientEligibility(BaseClient client, List<EligibilityRequirementModel> eligibilityRequirements) {
+		
+		boolean eligible = true;
+
+		for(EligibilityRequirementModel model : eligibilityRequirements){
+			if(model.getGender()!=null){
+				if(client.getGender()==null) eligible = false;	
+				if(client.getGender()!=null &&  model.getGender()!=client.getGender()) eligible = false;
+			}
+			if(model.getEthnicity()!=null){
+				if(client.getEthnicity()==null) eligible =false;
+				if(client.getEthnicity()!=null && model.getEthnicity()!= client.getEthnicity()) eligible =false;
+			}
+			if(model.getRace()!=null){
+				if(client.getRace()==null) eligible = false;
+				if(client.getRace()!=null &&  model.getRace()!=client.getRace()) eligible =false;
+			}
+			if(model.getMinAge()!=null){
+				if(client.getDob()==null) eligible = false;
+				if(client.getDob()!=null && model.getAge(client.getDob()) < model.getMinAge()) eligible =false;
+			}
+			if(model.getMaxAge()!=null){
+				if(client.getDob()==null) eligible = false;
+				if(client.getDob()!=null && model.getAge(client.getDob()) > model.getMaxAge()) eligible =false;
+			}
+			if(eligible)
+				return model.getProjectId();
+		}
+		
+		return null;
+	}
+		
 
 	@Override
-	@Async
-	public void createMatch(Session session)  {
+	public void createMatch(Session session,String trustedAppId)  {
 		String[] programTypes = new String[]{"PSH", "TH","RRH"};
 		
 		List<EligibleClient> clients;
-		List<HousingInventory>  units;
+		List<HousingInventory>  units = new ArrayList<>();
 		List<Match> matches = new ArrayList<>();
 		
-		for(String programType : programTypes){
 			//Get clients for each program type
-			clients = eligibleClientService.getEligibleClients(numberOfClients , programType);
+			clients = eligibleClientsRepository.findByProgramTypeAndMatched(session.getAccount().getProjectGroup().getProjectGroupCode(), false);
 			
 			//Get vacant housing units for programType
-			units = housingUnitService.getHousingInventoryList(programType,session);
+			units  = housingUnitService.getHousingInventoryList(session,trustedAppId);
 	        
 			//Make sure clients are in desc order of priority
 	        //Allocate house to first member in the list and then to second and so on.
@@ -197,7 +291,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	            }
             	Match match = new Match();
 	            match.setEligibleClient(c);
-                match.setHousingUnitId(UUID.fromString(units.get(leastIndex).getHousingUnitId()));
+                match.setHousingUnitId((units.get(leastIndex).getHousingUnitId()));
                 match.setManualMatch(false);
                 match.setMatchDate(new Date());
                 match.setMatchStatus("PROPOSED");
@@ -207,7 +301,6 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 	        clients.clear();
 	        units.clear();
-		}
 		
 		for(Match m :matches){
             repository.saveAndFlush(m);

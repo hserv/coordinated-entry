@@ -11,10 +11,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.hserv.coordinatedentry.housingmatching.helper.SessionHelper;
+
 import com.servinglynk.hmis.warehouse.client.authorizationservice.AuthorizationServiceClient;
-import com.servinglynk.hmis.warehouse.client.model.ApiMethodAuthorizationCheck;
-import com.servinglynk.hmis.warehouse.client.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.ApiMethodAuthorizationCheck;
+import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.TrustedApp;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 
 /**
  * This is CES intercepter. It intercepts all the requests that 
@@ -34,6 +37,9 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	private SessionHelper sessionHelper;
 	
+	@Autowired
+	private TrustedAppHelper trustedAppHelper;
+	
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -45,19 +51,19 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 		String apiMethodId=null;
 		
 		String accessToken = this.sessionHelper.retrieveSessionToken(request);
-		String trustedApp = request.getHeader("X-HMIS-TrustedApp-Id");
+		String trustedAppId = this.trustedAppHelper.retrieveTrustedAppId(request);
 		if(apiMapping!=null) {
 			ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
 			apiMethodAuthorizationCheck.setApiMethodId("USR_CREATE_SESSION");  //TODO - remove this line once our api mappings are added to hmis db
 			apiMethodAuthorizationCheck.setAccessToken(accessToken);
-			apiMethodAuthorizationCheck.setTrustedAppId(trustedApp);
+			apiMethodAuthorizationCheck.setTrustedAppId(trustedAppId);
 			AuthorizationServiceClient client = new AuthorizationServiceClient();
 			ApiMethodAuthorizationCheck clientresponse = client.checkApiAuthorization(apiMethodAuthorizationCheck);
 		
 			Session session = new Session();
 			session.setToken(clientresponse.getAccessToken());
+			session.setAccount(clientresponse.getAccount());
 			this.sessionHelper.setSession(session, request);
-			
 			return true;
 		}else{
 			

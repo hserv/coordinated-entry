@@ -20,7 +20,7 @@ import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.SurveyScoreTranslator;
-import com.servinglynk.hmis.warehouse.client.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 
 
@@ -89,8 +89,8 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			int additionalScore = strategy.getAdditionalScore(true, false, 19, false, true, false);
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			eligibleClient.setMatched(false);
-			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(), true, false));
-			
+			eligibleClient.setProgramType(clientSurveyScore.getProgramType());
+			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 			// Hard coded value 
 			eligibleClient.setSpdatLabel("YOUTH");
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);

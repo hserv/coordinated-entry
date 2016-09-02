@@ -1,12 +1,15 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateDeserializer;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateTimeSerializer;
 
 public class EligibleClientModel {
 
@@ -15,8 +18,9 @@ public class EligibleClientModel {
 	private Integer surveyScore;
 	private String programType;
 	private Boolean matched;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="EST")
-	private Date surveyDate;
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateTimeSerializer.class)
+	private LocalDateTime surveyDate;
 	private SpdatLabelEnum spdatLabel;
 	@Length(min=5,max=5,message="Invalid zip code")
 	private Integer zipcode;
@@ -51,10 +55,10 @@ public class EligibleClientModel {
 	public void setMatched(Boolean matched) {
 		this.matched = matched;
 	}
-	public Date getSurveyDate() {
+	public LocalDateTime getSurveyDate() {
 		return surveyDate;
 	}
-	public void setSurveyDate(Date surveyDate) {
+	public void setSurveyDate(LocalDateTime surveyDate) {
 		this.surveyDate = surveyDate;
 	}
 	public SpdatLabelEnum getSpdatLabel() {

@@ -25,7 +25,9 @@ import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
-import com.servinglynk.hmis.warehouse.client.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.TrustedApp;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 
 @RestController
 @RequestMapping(value = "/matches", produces = "application/json")
@@ -69,8 +71,9 @@ public class MatchController extends BaseController {
 	@APIMapping(value="trigger-match-process")
 	public ResponseEntity<String> createMatch(HttpServletRequest request) throws Exception {
 		Session session  = sessionHelper.getSession(request);
+		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
 		
-		matchReservationsService.createMatch(session);
+		matchReservationsService.create(session,trustedAppId);
 		return ResponseEntity.ok("{\"triggered\": \"success\"}\"");
 	}
 

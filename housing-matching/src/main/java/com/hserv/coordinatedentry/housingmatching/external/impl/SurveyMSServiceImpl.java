@@ -19,7 +19,7 @@ import com.hserv.coordinatedentry.housingmatching.model.ClientsSurveyScores;
 import com.hserv.coordinatedentry.housingmatching.model.SurveyResponseModel;
 import com.hserv.coordinatedentry.housingmatching.model.SurveySectionModel;
 import com.hserv.coordinatedentry.housingmatching.util.RestClient;
-import com.servinglynk.hmis.warehouse.client.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Service
 public class SurveyMSServiceImpl implements SurveyMSService {
