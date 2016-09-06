@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.service.core;
 
+import com.servinglynk.hmis.warehouse.service.HealthService;
 import com.servinglynk.hmis.warehouse.service.PickListGroupService;
 import com.servinglynk.hmis.warehouse.service.PickListValueService;
 import com.servinglynk.hmis.warehouse.service.QuestionGroupService;
@@ -30,5 +31,6 @@ public interface ParentServiceFactory  {
 	
 	SectionScoreService getSectionScoreService();
 
+	HealthService getHealthService();
 }
 

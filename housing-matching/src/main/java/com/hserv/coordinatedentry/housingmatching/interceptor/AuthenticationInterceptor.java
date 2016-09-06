@@ -53,6 +53,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 		String accessToken = this.sessionHelper.retrieveSessionToken(request);
 		String trustedAppId = this.trustedAppHelper.retrieveTrustedAppId(request);
 		if(apiMapping!=null) {
+			 if(apiMapping.value().equalsIgnoreCase("HEALTH_CHECK")) return true;
 			ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
 			apiMethodAuthorizationCheck.setApiMethodId("USR_CREATE_SESSION");  //TODO - remove this line once our api mappings are added to hmis db
 			apiMethodAuthorizationCheck.setAccessToken(accessToken);

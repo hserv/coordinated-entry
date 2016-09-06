@@ -31,6 +31,7 @@ public class ApiAuthCheckInterceptor extends HandlerInterceptorAdapter {
 
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);
 		if(apiMapping!=null) {
+			if(apiMapping.value().equalsIgnoreCase("HEALTH_CHECK")) return true;
 			ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
 			apiMethodAuthorizationCheck.setApiMethodId(apiMapping.value());
 			apiMethodAuthorizationCheck.setAccessToken(accessToken);

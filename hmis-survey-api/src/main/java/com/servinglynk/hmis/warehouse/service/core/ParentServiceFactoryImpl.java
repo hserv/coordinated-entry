@@ -3,6 +3,7 @@ package com.servinglynk.hmis.warehouse.service.core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.servinglynk.hmis.warehouse.service.HealthService;
 import com.servinglynk.hmis.warehouse.service.PickListGroupService;
 import com.servinglynk.hmis.warehouse.service.PickListValueService;
 import com.servinglynk.hmis.warehouse.service.QuestionGroupService;
@@ -111,5 +112,13 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 		this.sectionScoreService = sectionScoreService;
 	}
 	
-	
+	@Autowired HealthService healthService;
+
+	public HealthService getHealthService() {
+		return healthService;
+	}
+
+	public void setHealthService(HealthService healthService) {
+		this.healthService = healthService;
+	}
 }

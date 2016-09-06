@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -35,6 +37,8 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 		handlerMethod = (HandlerMethod) handler;
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);		
 		if(apiMapping!=null) {
+			if(apiMapping.value().equalsIgnoreCase("HEALTH_CHECK")) return true;
+			
 			ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
 			apiMethodAuthorizationCheck.setApiMethodId(apiMapping.value());
 			apiMethodAuthorizationCheck.setAccessToken(sessionHelper.retrieveSessionToken(request));
@@ -47,8 +51,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 			this.sessionHelper.setSession(session, request);
 			return true;
 		}else{
-			
-			return false;
+			throw new HttpClientErrorException(HttpStatus.FORBIDDEN);
 		}
 	}
 }

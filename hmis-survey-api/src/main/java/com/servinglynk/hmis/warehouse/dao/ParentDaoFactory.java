@@ -22,6 +22,8 @@ public interface ParentDaoFactory  {
 	 SurveySectionEntityDao getSurveySectionEntityDao();
 	 
 	 SectionScoreDao getSectionScoreDao();
+	 
+	 HealthDao getHealthDao();
 
 }
 

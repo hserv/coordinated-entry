@@ -107,4 +107,14 @@ public class ParentDaoFactoryImpl  implements ParentDaoFactory {
 	public void setSectionScoreDao(SectionScoreDao sectionScoreDao) {
 		this.sectionScoreDao = sectionScoreDao;
 	}
+	
+	@Autowired HealthDao healthDao;
+
+	public HealthDao getHealthDao() {
+		return healthDao;
+	}
+
+	public void setHealthDao(HealthDao healthDao) {
+		this.healthDao = healthDao;
+	}
 }

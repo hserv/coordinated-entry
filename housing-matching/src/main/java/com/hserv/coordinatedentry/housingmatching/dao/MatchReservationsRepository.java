@@ -26,5 +26,8 @@ public interface MatchReservationsRepository extends JpaRepository<Match, Serial
 	void deleteByEligibleClientClientId(UUID clientId);
 	
 	List<Match> findByEligibleClient(EligibleClient clientId);
+
+	@Query(value="select 1",nativeQuery=true)
+	Integer validateConnection();
 	
 }
