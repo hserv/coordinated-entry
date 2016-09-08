@@ -7,7 +7,7 @@ public enum QuestionTypeEnum {
 
 	TEXT("TEXT"),
 	CHECKBOX("CHECKBOX"),
-	REDIO("REDIO"),
+	RADIO("RADIO"),
 	DROPDOWN("DROPDOWN");
 	
 	
@@ -29,7 +29,7 @@ public enum QuestionTypeEnum {
             valueMap.put(unit.getValue(), unit);
         }
         pickListMap.put(QuestionTypeEnum.CHECKBOX.getValue(), QuestionTypeEnum.CHECKBOX);
-        pickListMap.put(QuestionTypeEnum.REDIO.getValue(), QuestionTypeEnum.REDIO);
+        pickListMap.put(QuestionTypeEnum.RADIO.getValue(), QuestionTypeEnum.RADIO);
         pickListMap.put(QuestionTypeEnum.DROPDOWN.getValue(), QuestionTypeEnum.DROPDOWN);
         
     }
