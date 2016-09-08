@@ -6,7 +6,7 @@ import java.util.Map;
 public enum QuestionDataTypeEnum {
    NUMBER("NUMBER"),
    BOOLEAN("BOOLEAN"),
-   CHAR("CHAR");
+   STRING("STRING");
 	
 	
 	
