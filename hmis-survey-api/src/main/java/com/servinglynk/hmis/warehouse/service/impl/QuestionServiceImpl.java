@@ -10,10 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.servinglynk.hmis.warehouse.core.model.Question;
 import com.servinglynk.hmis.warehouse.core.model.Questions;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.PickListGroupEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionGroupEntity;
 import com.servinglynk.hmis.warehouse.service.QuestionService;
 import com.servinglynk.hmis.warehouse.service.converter.QuestionConverter;
+import com.servinglynk.hmis.warehouse.service.exception.PickListGroupNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionGroupNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundException;
 
@@ -28,6 +30,12 @@ public class QuestionServiceImpl extends ServiceBase implements QuestionService 
 	   
        QuestionEntity pQuestion = QuestionConverter.modelToEntity(question, null);
        pQuestion.setQuestionGroupEntity(questionGroupEntity);
+     
+       if(question.getPickListGroupId()!=null) {
+    	   PickListGroupEntity pickListGroupEntity = daoFactory.getPickListGroupEntityDao().getPickListGroupEntityById(question.getPickListGroupId());
+    	   	if(pickListGroupEntity==null) throw new PickListGroupNotFoundException();
+    	   pQuestion.setPickListGroupEntity(pickListGroupEntity);
+       }
        pQuestion.setCreatedAt(LocalDateTime.now());
        pQuestion.setUser(caller);
        daoFactory.getQuestionEntityDao().createQuestionEntity(pQuestion);
@@ -42,6 +50,13 @@ public class QuestionServiceImpl extends ServiceBase implements QuestionService 
        if(pQuestion==null) throw new QuestionNotFoundException();
 
        QuestionConverter.modelToEntity(question, pQuestion);
+
+       if(question.getPickListGroupId()!=null) {
+    	   PickListGroupEntity pickListGroupEntity = daoFactory.getPickListGroupEntityDao().getPickListGroupEntityById(question.getPickListGroupId());
+    	   	if(pickListGroupEntity==null) throw new PickListGroupNotFoundException();
+    	   pQuestion.setPickListGroupEntity(pickListGroupEntity);
+       }
+
        pQuestion.setUpdatedAt(LocalDateTime.now());
        pQuestion.setUser(caller);
        daoFactory.getQuestionEntityDao().updateQuestionEntity(pQuestion);
