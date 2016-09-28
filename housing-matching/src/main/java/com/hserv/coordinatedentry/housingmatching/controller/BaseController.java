@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hserv.coordinatedentry.housingmatching.helper.ExceptionMapper;
-import com.hserv.coordinatedentry.housingmatching.model.Error;
-import com.hserv.coordinatedentry.housingmatching.model.Errors;
+import com.servinglynk.hmis.warehouse.core.model.Errors;
+import com.servinglynk.hmis.warehouse.core.model.Error;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 
 @Repository
-public interface EligibleClientsRepository extends JpaRepository<EligibleClient, Serializable> {
+public interface EligibleClientsRepository extends JpaRepository<EligibleClient, Serializable>,JpaSpecificationExecutor<EligibleClient> {
 	
 	public EligibleClient findByClientId(UUID clientID);
 
@@ -44,4 +45,7 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	void updateScoreByClientId(int score, UUID clientId);
 
 	List<EligibleClient> findByProgramTypeAndMatched(String string, boolean b);
+	
+//	List<EligibleClient> findByProgramTypeAndMatchedObderBySurveyScoreAscSurveyDate(String projectGroup,boolean match);
+	
 }

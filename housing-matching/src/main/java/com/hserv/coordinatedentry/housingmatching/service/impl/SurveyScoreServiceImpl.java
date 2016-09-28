@@ -74,6 +74,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			return true;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	@Transactional
 	public void calculateScore(Session session) throws Exception {
@@ -89,11 +90,15 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			int additionalScore = strategy.getAdditionalScore(true, false, 19, false, true, false);
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			eligibleClient.setMatched(false);
-			eligibleClient.setProgramType(clientSurveyScore.getProgramType());
+			//  Get survey tag value : SINGLE_AUDULT pass individual true
+			//                         FAMILY pass family true
+			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(), true, false));
 			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
-			// Hard coded value 
-			eligibleClient.setSpdatLabel("YOUTH");
-			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
+			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagvalue());
+			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
+			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
+			eligibleClient.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
+			
 			eligibleClientsRepository.save(eligibleClient);
 			//eligibleClients.add(eligibleClient);
 			

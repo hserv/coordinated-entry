@@ -2,11 +2,9 @@ package com.hserv.coordinatedentry.housingmatching;
 
 import java.util.Calendar;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -14,7 +12,6 @@ import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.hserv.coordinatedentry.housingmatching.model.ClientInfoModel;
 import com.hserv.coordinatedentry.housingmatching.model.EligibilityRequirementModel;
 import com.servinglynk.hmis.warehouse.client.config.SpringConfig;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;

@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS housing_match.eligible_clients;
 
 /* Create Tables */
 
-CREATE TABLE housing_match.eligible_clients
+CREATE TABLE housing_inventory.eligible_clients
 (
 	client_id uuid NOT NULL,
 	survey_type varchar,
@@ -21,7 +21,7 @@ CREATE TABLE housing_match.eligible_clients
 ) WITHOUT OIDS;
 
 
-CREATE TABLE housing_match.match_reservations
+CREATE TABLE housing_inventory.match_reservations
 (
 	reservation_id uuid NOT NULL,
 	note_id varchar,
@@ -40,7 +40,7 @@ CREATE TABLE housing_match.match_reservations
 ) WITHOUT OIDS;
 
 
-CREATE TABLE housing_match.note
+CREATE TABLE housing_inventory.note
 (
 	note_id varchar NOT NULL,
 	note_string varchar,
@@ -52,7 +52,7 @@ CREATE TABLE housing_match.note
 
 /* Create Foreign Keys */
 
-ALTER TABLE housing_match.match_reservations
+ALTER TABLE housing_inventory.match_reservations
 	ADD FOREIGN KEY (client_id)
 	REFERENCES housing_match.eligible_clients (client_id)
 	ON UPDATE RESTRICT
@@ -60,7 +60,7 @@ ALTER TABLE housing_match.match_reservations
 ;
 
 
-ALTER TABLE housing_match.note
+ALTER TABLE housing_inventory.note
 	ADD FOREIGN KEY (reservation_id)
 	REFERENCES housing_match.match_reservations (reservation_id)
 	ON UPDATE RESTRICT

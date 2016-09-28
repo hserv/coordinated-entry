@@ -13,7 +13,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.hserv.coordinatedentry.housingmatching.model.Error;
+import com.servinglynk.hmis.warehouse.core.model.Error;
 
 
 public class ExceptionMapper {
@@ -58,7 +58,14 @@ public class ExceptionMapper {
 			r.setErrorCode("REQUEST_AUTHOTICATION_FAILED");
 			r.setErrorMessage("REQUEST_AUTHOTICATION_FAILED");
 			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
-		}catch(InvalidParameterException ex){
+		}catch(InvalidMatchStatus ex){
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("ERR_CODE_INVALID_STATUS");
+			r.setErrorMessage(ex.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);			
+		}
+		catch(InvalidParameterException ex){
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);
 			r.setErrorCode(ERR_CODE_INVALID_PARAMETER);

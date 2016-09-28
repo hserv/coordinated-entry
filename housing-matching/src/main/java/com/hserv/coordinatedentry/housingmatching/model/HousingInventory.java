@@ -12,8 +12,6 @@ public class HousingInventory {
 	
 	private String projectId;
 	
-	private Address address;
-	
 	private Integer bedsCurrent;
 	
 	private Integer bedsCapacity;
@@ -40,14 +38,6 @@ public class HousingInventory {
 
 	public void setProjectId(String projectId) {
 		this.projectId = projectId;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
 	}
 
 	public Integer getBedsCurrent() {
@@ -100,8 +90,8 @@ public class HousingInventory {
 
 	@Override
 	public String toString() {
-		return "HousingInventory [housingUnitId=" + housingUnitId + ", projectId=" + projectId + ", address="
-				+ address + ", bedsCurrent=" + bedsCurrent + ", bedsCapacity=" + bedsCapacity + ", inService="
+		return "HousingInventory [housingUnitId=" + housingUnitId + ", projectId=" + projectId + ", "
+				+ " bedsCurrent=" + bedsCurrent + ", bedsCapacity=" + bedsCapacity + ", inService="
 				+ inService + ", familyUnit=" + familyUnit + ", vacant=" + vacant + ", inactive=" + inactive + "]";
 	}
 	

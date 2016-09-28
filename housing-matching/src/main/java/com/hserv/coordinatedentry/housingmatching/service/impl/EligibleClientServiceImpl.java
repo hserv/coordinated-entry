@@ -4,20 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
+import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
+import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
+import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
+import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 
 @Service
 public class EligibleClientServiceImpl implements EligibleClientService {
@@ -27,6 +38,13 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 
 	@Autowired
 	private EligibleClientsTranslator eligibleClientsTranslator;
+	
+	
+	@Autowired
+	ISearchServiceClient searchServiceClient;
+	
+	@Autowired
+	RepositoryFactory repositoryFactory;
 
 	
 	public List<EligibleClientModel> getEligibleClientsBack(int num , String programType) {
@@ -144,4 +162,32 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		return new Sort(Sort.Direction.ASC, "surveyDate");
 	}
 	
+	
+	public List<EligibleClient> getEligibleClients(String projectGroup,String spdatLabel) {
+		
+		Specification<EligibleClient> specification = Specifications.where(new Specification<EligibleClient>() {
+
+			@Override
+			public Predicate toPredicate(Root<EligibleClient> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				
+			return criteriaBuilder.and(
+							criteriaBuilder.equal(root.get("projectGroupCode"),projectGroup),
+						criteriaBuilder.equal(root.get("spdatLabel"),spdatLabel),
+						criteriaBuilder.equal(root.get("matched"),false));
+			}	
+		});
+		return repositoryFactory.getEligibleClientsRepository().findAll(specification);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken) throws Exception  {
+		SearchRequest request = new SearchRequest();
+		request.setTrustedAppId(trustedAppId);
+		request.setSearchEntity("clients");
+		request.setSessionToken(sessionToken);
+		request.addSearchParam("q", clientId);
+		List<BaseClient> clients = (List<BaseClient>) searchServiceClient.search(request);
+		if(clients.isEmpty()) return clients.get(0);
+		return null;
+	}	
 }

@@ -1,11 +1,9 @@
 package com.hserv.coordinatedentry.housingmatching.external;
 
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
+import com.servinglynk.hmis.warehouse.core.model.Recipients;
+
 public interface NotificationService {
 	
-	public void notifyHousingUnit();
-	
-	public void notifyUser();
-	
-	public void notifyClient();
-
+	void notifyStatusUpdate(Match match,Recipients recipients);
 }

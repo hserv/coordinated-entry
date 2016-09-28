@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
-import com.hserv.coordinatedentry.housingmatching.external.impl.ClientServiceImpl;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
@@ -45,9 +44,6 @@ public class EligibleClientsController extends BaseController {
 	
 	@Autowired
 	private PagedResourcesAssembler assembler;
-	
-	@Autowired
-	private ClientServiceImpl clientService;
 	
 	@Autowired
 	private EligibleClientsTranslator eligibleClientsTranslator;

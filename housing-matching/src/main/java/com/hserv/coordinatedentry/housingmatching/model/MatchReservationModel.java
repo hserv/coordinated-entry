@@ -12,15 +12,14 @@ public class MatchReservationModel {
 	private UUID housingUnitId;
 	private String noteId;
 	private Date matchDate;
-	private String matchStatus;
+	private Integer matchStatus;
 	private Integer reservationAdults;
 	private Integer reservationChildren;
 	private Boolean manualMatch;
 	private Boolean inactive;
 	private Date dateCreated;
 	private Date dateUpdated;
-	private Set<NoteModel> notes = new HashSet(0);
-	
+
 	public UUID getReservationId() {
 		return reservationId;
 	}
@@ -51,10 +50,10 @@ public class MatchReservationModel {
 	public void setMatchDate(Date matchDate) {
 		this.matchDate = matchDate;
 	}
-	public String getMatchStatus() {
+	public Integer getMatchStatus() {
 		return matchStatus;
 	}
-	public void setMatchStatus(String matchStatus) {
+	public void setMatchStatus(Integer matchStatus) {
 		this.matchStatus = matchStatus;
 	}
 	public Integer getReservationAdults() {
@@ -93,14 +92,6 @@ public class MatchReservationModel {
 	public void setDateUpdated(Date dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
-	public Set<NoteModel> getNotes() {
-		return notes;
-	}
-	public void setNotes(Set<NoteModel> notes) {
-		this.notes = notes;
-	}
-	
-	
 	public UUID getHousingUnitId() {
 		return housingUnitId;
 	}
@@ -113,7 +104,7 @@ public class MatchReservationModel {
 				+ ", housingInventory=" + housingInventory + ", noteId=" + noteId + ", matchDate=" + matchDate
 				+ ", matchStatus=" + matchStatus + ", reservationAdults=" + reservationAdults + ", reservationChildren="
 				+ reservationChildren + ", manualMatch=" + manualMatch + ", inactive=" + inactive + ", dateCreated="
-				+ dateCreated + ", dateUpdated=" + dateUpdated + ", notes=" + notes + "]";
+				+ dateCreated + ", dateUpdated=" + dateUpdated + " ]";
 	}
 	
 }

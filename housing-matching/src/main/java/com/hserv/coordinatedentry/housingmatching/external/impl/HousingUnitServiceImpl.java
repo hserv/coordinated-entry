@@ -11,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,8 +25,6 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.model.EligibilityRequirementModel;
 import com.hserv.coordinatedentry.housingmatching.model.HousingInventory;
-import com.hserv.coordinatedentry.housingmatching.model.HousingInventoryModel;
-import com.hserv.coordinatedentry.housingmatching.model.UnitWrapper;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Service

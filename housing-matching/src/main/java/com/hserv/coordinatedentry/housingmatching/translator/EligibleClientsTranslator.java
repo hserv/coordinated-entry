@@ -10,8 +10,8 @@ import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 @Component
 public class EligibleClientsTranslator {
 
-	@Autowired
-	MatchReservationTranslator matchReservationTranslator;
+/*	@Autowired
+	MatchReservationTranslator matchReservationTranslator;*/
 
 	public EligibleClientModel translate(EligibleClient eligibleClient) {
 		EligibleClientModel eligibleClientModel = null;

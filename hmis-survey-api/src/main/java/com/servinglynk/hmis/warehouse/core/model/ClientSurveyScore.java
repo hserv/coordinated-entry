@@ -15,6 +15,8 @@ public class ClientSurveyScore {
 	@JsonSerialize(using=JsonDateTimeSerializer.class)
 	@JsonDeserialize(using=JsonDateDeserializer.class)
 	private LocalDateTime surveyDate;
+	private String surveyTagValue;
+	
 	public UUID getSurveyId() {
 		return surveyId;
 	}
@@ -45,4 +47,11 @@ public class ClientSurveyScore {
 	public void setSurveyDate(LocalDateTime surveyDate) {
 		this.surveyDate = surveyDate;
 	}
+	public String getSurveyTagValue() {
+		return surveyTagValue;
+	}
+	public void setSurveyTagValue(String surveyTagValue) {
+		this.surveyTagValue = surveyTagValue;
+	}
+	
 }

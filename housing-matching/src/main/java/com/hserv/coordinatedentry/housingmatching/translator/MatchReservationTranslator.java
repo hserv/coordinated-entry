@@ -5,13 +5,19 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.hserv.coordinatedentry.housingmatching.controller.EligibleClientsController;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 
 @Component
 public class MatchReservationTranslator {
+	
+	@Autowired
+	EligibleClientsTranslator eligibleClientsTranslator;
 
 	public Set<MatchReservationModel> translate(Set<Match> matchReservations) {
 		Set<MatchReservationModel> matchReservationModelSet = null;
@@ -43,6 +49,7 @@ public class MatchReservationTranslator {
 	}
 
 	public MatchReservationModel translate(Match matchReserve) {
+		
 		MatchReservationModel matchReservationModel = new MatchReservationModel();
 		matchReservationModel.setReservationId(matchReserve.getReservationId());
 		matchReservationModel.setMatchStatus(matchReserve.getMatchStatus());
@@ -53,7 +60,8 @@ public class MatchReservationTranslator {
 		matchReservationModel.setReservationAdults(matchReserve.getReservationAdults());
 		matchReservationModel.setReservationChildren(matchReserve.getReservationChildren());
 		matchReservationModel.setInactive(matchReserve.getInactive());
-		matchReservationModel.setNoteId(matchReserve.getNoteId());
+		matchReservationModel.setEligibleClients(eligibleClientsTranslator.translate(matchReserve.getEligibleClient()));
+	//	matchReservationModel.setNoteId(matchReserve.getNoteId());
 		return matchReservationModel;
 	}
 

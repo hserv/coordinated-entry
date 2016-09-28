@@ -1,6 +1,7 @@
 
 package com.hserv.coordinatedentry.housingmatching.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.Resources;
@@ -17,17 +19,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
+import com.hserv.coordinatedentry.housingmatching.model.MatchStatusModel;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
 import com.servinglynk.hmis.warehouse.core.model.Session;
-import com.servinglynk.hmis.warehouse.core.model.TrustedApp;
-import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 
 @RestController
 @RequestMapping(value = "/matches", produces = "application/json")
@@ -52,9 +54,10 @@ public class MatchController extends BaseController {
 
 		@Override
 		public Resource<MatchReservationModel> toResource(Match arg0) {
-			Resource<MatchReservationModel> resource = new Resource<MatchReservationModel>(matchReservationTranslator.translate(arg0));
-			/*resource.add(
-					linkTo(methodOn(HousingInventoryResource.class).getHousingInverntoryByID(arg0.getHousingInventoryId())).withSelfRel());*/
+			MatchReservationModel model =matchReservationTranslator.translate(arg0);
+
+			Resource<MatchReservationModel> resource = new Resource<MatchReservationModel>(model);
+			resource.add(new Link("/housing-matching/matches/client/"+model.getEligibleClients().getClientId()+"/status").withRel("history"));
 			return resource;
 		}
 	}	
@@ -73,7 +76,7 @@ public class MatchController extends BaseController {
 		Session session  = sessionHelper.getSession(request);
 		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
 		
-		matchReservationsService.create(session,trustedAppId);
+		matchReservationsService.matchingProcess(session,trustedAppId);
 		return ResponseEntity.ok("{\"triggered\": \"success\"}\"");
 	}
 
@@ -83,8 +86,10 @@ public class MatchController extends BaseController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@APIMapping(value="get-proposed-matches")
-	public ResponseEntity<Resources<Resource>> getMatches(Pageable pageable) {
-		return new ResponseEntity<>(assembler.toResource(matchReservationsService.findAll(pageable), housingInventoryAssembler),
+	public ResponseEntity<Resources<Resource>> getMatches(@RequestParam(name="q",required=false) String q,
+			Pageable pageable,HttpServletRequest request) throws Exception {
+		Session session = sessionHelper.getSession(request);
+		return new ResponseEntity<>(assembler.toResource(matchReservationsService.findAll(q,pageable,session.getAccount().getProjectGroup().getProjectGroupCode()), housingInventoryAssembler),
 				HttpStatus.OK);
 	}
 
@@ -166,5 +171,18 @@ public class MatchController extends BaseController {
 
 		return responseEntity;
 	}
-
+	
+	
+	@RequestMapping(value="/client/{id}/status",method=RequestMethod.PUT)
+	@APIMapping(value="UPDATE_MATCH_STATUS")
+	public void updateMatchStatus(@PathVariable("id") UUID clientId,@RequestBody MatchStatusModel matchStatusModel,HttpServletRequest request) throws Exception {
+		Session session = sessionHelper.getSession(request);
+		matchReservationsService.updateMatchStatus(clientId, matchStatusModel,session.getAccount().getUsername());
+	}
+	
+	@RequestMapping(value="/client/{id}/status",method=RequestMethod.GET)
+	@APIMapping(value="GET_MATCH_STATUS_UPDATES")
+	public List<MatchStatusModel> getMatchStatusDtls(@PathVariable("id") UUID clientId,HttpServletRequest request) throws Exception {
+		return	matchReservationsService.getMatchStatusHistory(clientId);
+	}
 }

@@ -65,6 +65,7 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		projectionList.add(Projections.property("surveyEntity.createdAt"),"surveyDate");
 		projectionList.add(Projections.groupProperty("surveyEntity.id"));
 		projectionList.add(Projections.groupProperty("clientId"));
+		projectionList.add(Projections.groupProperty("surveyEntity.tagValue"),"surveyTagValue");
 		criteria.setProjection(projectionList);
 		criteria.add(Restrictions.eq("surveyEntity.projectGroupCode",projectGroupCode));
 		criteria.setResultTransformer(Transformers.aliasToBean(ClientSurveyScore.class));

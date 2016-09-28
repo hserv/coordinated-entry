@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 
 public interface EligibleClientService {
 
@@ -30,4 +31,8 @@ public interface EligibleClientService {
 	boolean createEligibleClients(List<EligibleClientModel> eligibleClientModels);
 
 	boolean updateEligibleClientScore(UUID clientID, int scoreTotal);
+	
+	List<EligibleClient> getEligibleClients(String projectGroup,String spdatLabel);
+	
+	BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken) throws Exception;
 }

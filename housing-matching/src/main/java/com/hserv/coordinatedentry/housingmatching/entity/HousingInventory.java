@@ -1,28 +1,30 @@
-package com.hserv.coordinatedentry.housinginventory.domain;
+package com.hserv.coordinatedentry.housingmatching.entity;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="housing_unit",schema="housing_inventory")
-public class HousingInventory extends HousingInventoryBaseEntity  {
+public class HousingInventory implements Serializable {
 	
-	private static final long serialVersionUID = -5909795577794623031L;
+	private static final long serialVersionUID = 4758637074635988540L;
+
 	@Id
 	@Column(name = "housing_unit_id")
 	@GeneratedValue(generator = "uuid")
@@ -61,46 +63,33 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	@Column(name="project_group_code")
 	private String projectGroupCode;
 	
-	
-	@OneToMany(mappedBy = "housingInventory",cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JsonIgnore
-    private Set<HousingUnitAddress> housingUnitAddresss = new HashSet<HousingUnitAddress>();
-	
-	@OneToMany(mappedBy = "housingInventory", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JsonIgnore
-    private Set<HousingUnitAssignment> housingUnitAssignments = new HashSet<HousingUnitAssignment>();
+	@CreatedDate
+	@Column(name="date_created")
+	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
+	@JsonIgnore
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+	private LocalDateTime dateCreated;
 
-	@Transient
-	private HousingUnitAddress housingUnitAddress; //housingUnitAddress
-	
-	
-	public HousingInventory(){
+	@LastModifiedDate
+	@Column(name="date_updated")
+	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")	
+	@JsonIgnore
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+	private LocalDateTime dateUpdated;
+
+	@CreatedBy
+	@Column(name="created_by")
+	@JsonIgnore
+	private String createdBy;
+
+	@LastModifiedBy
+	@Column(name="last_modified_by")
+	@JsonIgnore
+	private String lastModifiedBy;
+
+	@Column(name="inactive")
+	private Boolean inactive;	
 		
-	}
-	
-	public HousingInventory(UUID housingInventoryId, Integer bedsCurrent, UUID projectId, String userId,
-			Integer bedsCapacity, Boolean familyUnit, Boolean inService, Boolean vacant,LocalDateTime dateCreated,
-			LocalDateTime dateUpdated, Boolean inactive,HousingUnitAddress housingUnitAddress) {
-		super(dateCreated, dateUpdated,inactive);
-		this.housingInventoryId = housingInventoryId;
-		this.bedsCurrent = bedsCurrent;
-		this.projectId = projectId;
-		this.userId = userId;
-		this.bedsCapacity = bedsCapacity;
-		this.familyUnit = familyUnit;
-		this.inService = inService;
-		this.vacant = vacant;
-		this.housingUnitAddress=housingUnitAddress;
-	}
-
-	public Set<HousingUnitAddress> getHousingUnitAddresss() {
-		return housingUnitAddresss;
-	}
-
-	public void setHousingUnitAddresss(Set<HousingUnitAddress> housingUnitAddresss) {
-		this.housingUnitAddresss = housingUnitAddresss;
-	}
-
 	public UUID getHousingInventoryId() {
 		return housingInventoryId;
 	}
@@ -167,22 +156,6 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 		this.userId = userId;
 	}
 
-	public HousingUnitAddress getHousingUnitAddress() {
-		return housingUnitAddress;
-	}
-
-	public void setHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
-		this.housingUnitAddress = housingUnitAddress;
-	}
-
-	public Set<HousingUnitAssignment> getHousingUnitAssignments() {
-		return housingUnitAssignments;
-	}
-
-	public void setHousingUnitAssignments(Set<HousingUnitAssignment> housingUnitAssignments) {
-		this.housingUnitAssignments = housingUnitAssignments;
-	}
-
 	public String getAliasName() {
 		return aliasName;
 	}
@@ -207,6 +180,30 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 		this.projectGroupCode = projectGroupCode;
 	}
 
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public LocalDateTime getDateUpdated() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdated(LocalDateTime dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+
+	public Boolean getInactive() {
+		return inactive;
+	}
+
+	public void setInactive(Boolean inactive) {
+		this.inactive = inactive;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

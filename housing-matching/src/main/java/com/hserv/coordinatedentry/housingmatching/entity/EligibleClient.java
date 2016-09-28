@@ -3,8 +3,6 @@ package com.hserv.coordinatedentry.housingmatching.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -12,21 +10,17 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "eligible_clients", schema = "housing_match")
+@Table(name = "eligible_clients", schema = "housing_inventory")
 public class EligibleClient implements Serializable {
+
+	private static final long serialVersionUID = 5256856995847711631L;
 
 	private UUID clientId;
 	private String surveyType;
@@ -35,7 +29,9 @@ public class EligibleClient implements Serializable {
 	private Boolean matched;
 	private LocalDateTime surveyDate;
 	private String spdatLabel;
+	private String projectGroupCode;
 	private int zipCode;
+	private Integer cocScore;
 	
 	private List<Match> matchs = new ArrayList<>(); 
 	
@@ -143,4 +139,23 @@ public class EligibleClient implements Serializable {
 	public void setMatchs(List<Match> matchs) {
 		this.matchs = matchs;
 	}
+
+	@Column(name="project_group_code")
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
+	}
+
+	@Column(name="coc_score")
+	public Integer getCocScore() {
+		return cocScore;
+	}
+
+	public void setCocScore(Integer cocScore) {
+		this.cocScore = cocScore;
+	}
+	
 }

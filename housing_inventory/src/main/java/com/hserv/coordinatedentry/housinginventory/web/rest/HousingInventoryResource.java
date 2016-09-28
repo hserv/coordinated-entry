@@ -128,7 +128,7 @@ public class HousingInventoryResource extends BaseResource{
 		Session session = sessionHelper.getSession(request);
 		HousingInventory housingInventory=new HousingInventory();
 		housingInventory.setUserId(userId);
-		housingInventory.setProjectId(projectId);
+		housingInventory.setProjectId(UUID.fromString(projectId));
 		housingInventory.setInactive(inactive);
 		housingInventory.setVacant(vacant);
 		housingInventory.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
@@ -172,7 +172,7 @@ public class HousingInventoryResource extends BaseResource{
 	
 	public void populateProjectSchemaYear(HousingInventory inventory,Session session,String trustedAppId) throws Exception {
 		 
-	 			UUID projectId = UUID.fromString(inventory.getProjectId());
+	 			UUID projectId = inventory.getProjectId();
 	 			Map<String,Object> searchParams = new HashMap<>();
 	 			searchParams.put("q", projectId);
 	 			SearchRequest searchRequest = new SearchRequest();

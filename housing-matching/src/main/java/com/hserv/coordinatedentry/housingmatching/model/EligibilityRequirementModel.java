@@ -1,7 +1,9 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class EligibilityRequirementModel  {
@@ -34,6 +36,9 @@ public class EligibilityRequirementModel  {
 	private Integer monthsHomelessPastThreeYears;
 	private Integer residencePrior;
 		
+	List<EligibilityRequirement> requirements = new ArrayList<EligibilityRequirement>();
+	
+	
 	public UUID getEligibilityRequirementId() {
 		return eligibilityRequirementId;
 	}
@@ -240,6 +245,21 @@ public class EligibilityRequirementModel  {
 
 	public void setResidencePrior(Integer residencePrior) {
 		this.residencePrior = residencePrior;
+	}
+	
+	public List<EligibilityRequirement> getRequirements() {
+		return requirements;
+	}
+
+	public void setRequirements(List<EligibilityRequirement> requirements) {
+		this.requirements = requirements;
+	}
+
+	public void addRequirement(String name,String value){
+		EligibilityRequirement req= new EligibilityRequirement();
+		req.setName(name);
+		req.setValue(value);
+		this.requirements.add(req);
 	}
 	
 	public int getAge(Date dateOfBirth) {
