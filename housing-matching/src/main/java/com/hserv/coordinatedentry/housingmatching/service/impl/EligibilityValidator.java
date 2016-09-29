@@ -13,6 +13,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
@@ -38,7 +39,9 @@ public class EligibilityValidator {
 		
 				List<Requirement> requirements= new ArrayList<Requirement>();
 				try {
-					requirements = mapper.readValue(eligibilityRequirement.getEligibility(), TypeFactory.defaultInstance().constructCollectionType(List.class, Requirement.class));
+					JsonNode node =mapper.readTree(eligibilityRequirement.getEligibility());
+					
+					requirements = mapper.readValue(node.get("requirements").traverse(), TypeFactory.defaultInstance().constructCollectionType(List.class, Requirement.class));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -48,6 +51,7 @@ public class EligibilityValidator {
 						String req=generateExpression(requirement.getName(), requirement.getValue()+"");
 						Expression expression = parser.parseExpression(req);
 						result = (boolean) expression.getValue(context);
+						System.out.println("  result "+result +" client id "+client.getClientId() + "race "+client.getRace() +" gender "+client.getGender());
  					}
 					System.out.println("  result "+result);
 			}
@@ -55,20 +59,23 @@ public class EligibilityValidator {
 	}
 	
 	public String generateExpression(String name,String value){
-		 value = value.replaceAll("==",name +" == ");
-		 value = value.replaceAll("and", name+ " and ");
-		 value = value.replaceAll("&&", name+ " and ");
-		 value = value.replaceAll("&", name+ " and ");
-		 value = value.replaceAll("or", name+ " or ");
-		 value = value.replaceAll("||", name+ " or ");
-		 value = value.replaceAll("eq",name +" eq ");
-		 value = value.replaceAll("!=",name +" != ");
-		 value = value.replaceAll("lt",name +" lt ");
+//		 value = value.replaceAll("eq",name +" eq ");
+		 value = value.replaceAll("==",name +" eq ");
+		 value = value.replaceAll("=",name +" eq ");
+		 //value = value.replaceAll("and", name+ " and ");
+		 //value = value.replaceAll("&&", name+ " and ");
+		 //value = value.replaceAll("&", name+ " and ");
+		// value = value.replaceAll("or", name+ " or ");
+		// value = value.replaceAll("||", name+ " or ");
+
+		 value = value.replaceAll("!=",name +" ne ");
+//		 value = value.replaceAll("lt",name +" lt ");
 		 value = value.replaceAll("<=",name +" le ");
 		 value = value.replaceAll(">=",name +" ge ");
 		 value = value.replaceAll(">",name +" gt ");
 		 value = value.replaceAll("<",name +" lt ");
 		 
+		 value = "( " + value +" ) ? true : false";
 
 		return value;
 	}
@@ -80,9 +87,13 @@ public class EligibilityValidator {
 	
 	public Integer validateBedsAvailability(UUID clientId,Integer bedsCount){
 		Integer bedsRequired = 0;
+		Integer members =0;
 		HouseholdMembership membership =  repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientId(clientId);
-		Integer members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.getGlobalHousehold());
-		
+		if(membership!=null){
+			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.getGlobalHousehold());
+		}else{
+			return 0;
+		}
 		if(members == bedsCount ){
 			bedsRequired = members;
 			return bedsRequired;
@@ -113,7 +124,7 @@ public class EligibilityValidator {
 		
 	}*/
 	
-	
+/*	
 	public static void main(String ags[]){
 		for(int i=0; i< 10 ; i++){
 			for(int j=0;j<10; j++){
@@ -126,5 +137,5 @@ public class EligibilityValidator {
 				
 			}
 		}
-	}
+	}*/
 }

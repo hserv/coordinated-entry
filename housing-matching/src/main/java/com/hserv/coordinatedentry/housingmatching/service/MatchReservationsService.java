@@ -38,5 +38,5 @@ public interface MatchReservationsService {
 	List<MatchStatusModel> getMatchStatusHistory(UUID clientId) throws Exception;
 	
 	
-	void matchingProcess(Session session , String trustedAppId) throws Exception;
+	void matchingProcess(Integer maxClients, Session session , String trustedAppId);
  }

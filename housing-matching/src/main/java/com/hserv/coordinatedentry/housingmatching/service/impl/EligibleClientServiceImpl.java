@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -163,7 +164,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 	
 	
-	public List<EligibleClient> getEligibleClients(String projectGroup,String spdatLabel) {
+	public List<EligibleClient> getEligibleClients(Integer programType, String projectGroup,String spdatLabel) {
 		
 		Specification<EligibleClient> specification = Specifications.where(new Specification<EligibleClient>() {
 
@@ -171,23 +172,31 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 			public Predicate toPredicate(Root<EligibleClient> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				
 			return criteriaBuilder.and(
+							criteriaBuilder.equal(root.get("programType"),programType+""),
 							criteriaBuilder.equal(root.get("projectGroupCode"),projectGroup),
 						criteriaBuilder.equal(root.get("spdatLabel"),spdatLabel),
 						criteriaBuilder.equal(root.get("matched"),false));
 			}	
 		});
-		return repositoryFactory.getEligibleClientsRepository().findAll(specification);
+		
+		Sort sort = new Sort(Direction.ASC,"cocScore","surveyDate");
+		return repositoryFactory.getEligibleClientsRepository().findAll(specification,sort);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken) throws Exception  {
+	public BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken)  {
 		SearchRequest request = new SearchRequest();
 		request.setTrustedAppId(trustedAppId);
 		request.setSearchEntity("clients");
 		request.setSessionToken(sessionToken);
 		request.addSearchParam("q", clientId);
-		List<BaseClient> clients = (List<BaseClient>) searchServiceClient.search(request);
-		if(clients.isEmpty()) return clients.get(0);
+		List<BaseClient> clients=new ArrayList<BaseClient>();
+		try {
+			clients = (List<BaseClient>) searchServiceClient.search(request);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(!clients.isEmpty()) return clients.get(0);
 		return null;
 	}	
 }

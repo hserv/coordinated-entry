@@ -17,4 +17,14 @@ public class SanJoseCommunityStrategy implements MatchStrategy{
 			boolean vet, boolean frailHealth) {
 		return 0;
 	}
+
+	@Override
+	public String getProgramType(int spdatScore, String spdatLabel) {
+		return null;
+	}
+
+	@Override
+	public int getAdditionalScore(int age, String spdatLabel) {
+		return 0;
+	}
 }

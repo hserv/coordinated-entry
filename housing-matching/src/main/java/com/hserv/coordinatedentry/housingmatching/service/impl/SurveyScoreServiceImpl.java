@@ -87,12 +87,12 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			EligibleClient eligibleClient = new EligibleClient();
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
-			int additionalScore = strategy.getAdditionalScore(true, false, 19, false, true, false);
+			int additionalScore = strategy.getAdditionalScore(19,clientSurveyScore.getSurveyTagvalue());
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			eligibleClient.setMatched(false);
 			//  Get survey tag value : SINGLE_AUDULT pass individual true
 			//                         FAMILY pass family true
-			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(), true, false));
+			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagvalue()));
 			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagvalue());
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());

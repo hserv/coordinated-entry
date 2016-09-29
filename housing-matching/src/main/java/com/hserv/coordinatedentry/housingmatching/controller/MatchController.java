@@ -72,11 +72,13 @@ public class MatchController extends BaseController {
 	 */
 	@RequestMapping( method = RequestMethod.POST)
 	@APIMapping(value="trigger-match-process")
-	public ResponseEntity<String> createMatch(HttpServletRequest request) throws Exception {
+	public ResponseEntity<String> createMatch(
+			@RequestParam (name="",defaultValue="3",required=false) Integer maxClients,
+			HttpServletRequest request) throws Exception {
 		Session session  = sessionHelper.getSession(request);
 		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
 		
-		matchReservationsService.matchingProcess(session,trustedAppId);
+		matchReservationsService.matchingProcess(maxClients,session,trustedAppId);
 		return ResponseEntity.ok("{\"triggered\": \"success\"}\"");
 	}
 

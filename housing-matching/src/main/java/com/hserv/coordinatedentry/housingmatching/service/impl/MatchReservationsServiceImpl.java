@@ -30,9 +30,11 @@ import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.entity.MatchStatus;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.external.NotificationService;
+import com.hserv.coordinatedentry.housingmatching.external.ProjectService;
 import com.hserv.coordinatedentry.housingmatching.helper.InvalidMatchStatus;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchStatusModel;
+import com.hserv.coordinatedentry.housingmatching.model.Project;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.service.ServiceFactory;
@@ -257,36 +259,45 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		return matchStatusModel;
 	}
 	
+	@Autowired
+	ProjectService projectService;
+	
 	
 	@Async
-	public void matchingProcess(Session session , String trustedAppId) throws Exception {
+	public void matchingProcess(Integer maxClients,Session session , String trustedAppId) {
 
 		String projectGroup = session.getAccount().getProjectGroup().getProjectGroupCode();
 		List<HousingInventory> housingInventories = repositoryFactory.getHousingUnitsRepository().findByProjectGroupCode(projectGroup);
 
 		for(HousingInventory housingInventory : housingInventories ){
 			Integer matchCount =0;
-			List<EligibleClient> clients= new ArrayList<>();
-				if(housingInventory.getFamilyUnit()){
-					  clients = eligibleClientService.getEligibleClients(projectGroup, "FAMILY");
-				}else{
-					 clients = eligibleClientService.getEligibleClients(projectGroup, "SINGLE_ADULT");					
-				}
-				
-				List<EligibilityRequirement> requirements = repositoryFactory.getEligibilityRequirementRepository().findByProjectId(housingInventory.getProjectId());
-					
-				for(EligibleClient client : clients) {
-					boolean validClient= false;
-					BaseClient baseClient = eligibleClientService.getClientInfo(client.getClientId(), trustedAppId, session.getToken());
-					Integer bedsRequired = eligibilityValidator.validateBedsAvailability(baseClient.getClientId(), housingInventory.getBedsCurrent());
-					if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(baseClient, requirements);					
+			Project project = projectService.getProjectInfo(housingInventory.getProjectId(), session, trustedAppId);
+			if(project!=null) {
+					List<EligibleClient> clients= new ArrayList<>();
+						if(housingInventory.getFamilyUnit()){
+							  clients = eligibleClientService.getEligibleClients(project.getProjectType(),projectGroup, "FAMILY");
+						}else{
+							 clients = eligibleClientService.getEligibleClients(project.getProjectType(),projectGroup, "SINGLE_ADULT");					
+						}
 						
-					if(validClient){
-						this.matchClient(client, housingInventory);
-							break;
-					}
-				}
-				if(matchCount==3) break;
+						List<EligibilityRequirement> requirements = repositoryFactory.getEligibilityRequirementRepository().findByProjectId(housingInventory.getProjectId());
+							
+						for(EligibleClient client : clients) {
+							System.out.println("  Project id "+project.getProjectId() +" housing unit id "+housingInventory.getHousingInventoryId() +" client id "+client.getClientId());
+							boolean validClient= false;
+							BaseClient baseClient = eligibleClientService.getClientInfo(client.getClientId(), trustedAppId, session.getToken());
+							if(baseClient!=null){
+										Integer bedsRequired = eligibilityValidator.validateBedsAvailability(baseClient.getClientId(), housingInventory.getBedsCurrent());
+										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(baseClient, requirements);						
+										if(validClient){
+											this.matchClient(client, housingInventory);
+											matchCount++;
+												break;
+										}
+							}
+						}
+						if(matchCount==maxClients) break;
+			}
 		}
 	}
 	
@@ -301,7 +312,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		client.setMatched(true);
 		repositoryFactory.getEligibleClientsRepository().save(client);
 		housingInventory.setVacant(false);
-		housingInventory.setBedsCurrent(housingInventory.getBedsCurrent()-1);							
+//		housingInventory.setBedsCurrent(housingInventory.getBedsCurrent()-1);							
 		repositoryFactory.getHousingUnitsRepository().save(housingInventory);
 	}
 }

@@ -32,7 +32,7 @@ public interface EligibleClientService {
 
 	boolean updateEligibleClientScore(UUID clientID, int scoreTotal);
 	
-	List<EligibleClient> getEligibleClients(String projectGroup,String spdatLabel);
+	List<EligibleClient> getEligibleClients(Integer programType ,String projectGroup,String spdatLabel);
 	
-	BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken) throws Exception;
+	BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken);
 }
