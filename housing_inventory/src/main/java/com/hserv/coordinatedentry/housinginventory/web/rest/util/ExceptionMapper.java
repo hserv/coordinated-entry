@@ -38,7 +38,14 @@ public class ExceptionMapper {
 			r.setErrorCode("REQUEST_AUTHENTICATION_FAILED");
 			r.setErrorMessage("REQUEST_AUTHENTICATION_FAILED");
 			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
-		}  catch (Throwable t) {
+		}catch (org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("INVALID REQUEST PARAMETER");
+			r.setErrorMessage("Invalid request parameter");
+			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+		}
+		catch (Throwable t) {
     	
 		logger.error(t.getMessage(), t);
 
