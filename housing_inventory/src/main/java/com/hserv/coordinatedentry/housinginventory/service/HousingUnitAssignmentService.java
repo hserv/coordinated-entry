@@ -37,7 +37,7 @@ public class HousingUnitAssignmentService  {
 		 
 		 for(HousingUnitAssignment housingUnitAssignment: housingUnitAssignments ){
 			 housingUnitAssignment.setHousingInventory(housingInventory);
-			housingUnitAssignment.setAssignmentId(UUID.randomUUID());
+		//	housingUnitAssignment.setAssignmentId(UUID.randomUUID());
 			housingUnitAssignment=housingUnitAssignmentRepository.save(housingUnitAssignment);
 		 }
 		return housingUnitAssignments;
@@ -45,7 +45,7 @@ public class HousingUnitAssignmentService  {
 	 
 	 @Transactional
 	 public HousingUnitAssignment saveHousingUnitAssignment(HousingUnitAssignment housingUnitAssignments) {
-		 housingUnitAssignments.setAssignmentId(UUID.randomUUID());
+		// housingUnitAssignments.setAssignmentId(UUID.randomUUID());
 		 housingUnitAssignments=housingUnitAssignmentRepository.save(housingUnitAssignments);
 		return housingUnitAssignments;
 	}
@@ -74,6 +74,7 @@ public class HousingUnitAssignmentService  {
 	}
 	
 	public void delete(UUID id) {
-        housingUnitAssignmentRepository.delete(housingUnitAssignmentRepository.findOne(id));
+		HousingUnitAssignment assignment =   housingUnitAssignmentRepository.findOne(id);
+        housingUnitAssignmentRepository.delete(assignment);
     }
 }

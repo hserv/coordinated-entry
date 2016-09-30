@@ -44,6 +44,13 @@ public class ExceptionMapper {
 			r.setErrorCode("INVALID REQUEST PARAMETER");
 			r.setErrorMessage("Invalid request parameter");
 			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+		}catch (org.springframework.http.converter.HttpMessageNotReadableException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("INVALID_REQUEST_DATA");
+			r.setErrorMessage("Invalid request data");
+			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+
 		}
 		catch (Throwable t) {
     	
