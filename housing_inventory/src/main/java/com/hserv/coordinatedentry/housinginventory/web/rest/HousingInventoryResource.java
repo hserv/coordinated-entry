@@ -120,7 +120,7 @@ public class HousingInventoryResource extends BaseResource{
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<Resources<Resource>> findAll(@RequestParam(value="inactive" ,required=false,defaultValue="false") Boolean inactive ,
 			@RequestParam(value="userId", required=false) String userId,
-			@RequestParam(value="projectId", required=false) String projectId,
+			@RequestParam(value="projectId", required=false) UUID projectId,
 			@RequestParam(value="vacant", required=false) Boolean vacant,
 			@PageableDefault(size=30)  Pageable pageable,
 			HttpServletRequest request) {
@@ -128,7 +128,7 @@ public class HousingInventoryResource extends BaseResource{
 		Session session = sessionHelper.getSession(request);
 		HousingInventory housingInventory=new HousingInventory();
 		housingInventory.setUserId(userId);
-		housingInventory.setProjectId(UUID.fromString(projectId));
+		housingInventory.setProjectId(projectId);
 		housingInventory.setInactive(inactive);
 		housingInventory.setVacant(vacant);
 		housingInventory.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
