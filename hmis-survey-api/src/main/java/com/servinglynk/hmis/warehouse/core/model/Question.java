@@ -2,6 +2,8 @@ package com.servinglynk.hmis.warehouse.core.model;
 
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -27,6 +29,8 @@ public class Question extends ClientModel{
 
       private QuestionTypeEnum questionType;
 
+  	  @NotNull
+  	  @NotEmpty
       private String correctValueForAssessment;
 
       private boolean copyQuestionId;

@@ -125,7 +125,15 @@ public class ExceptionMapper {
 			r.setErrorCode(ERR_CODE_SURVEY_SECTION_NOT_FOUND);
 			r.setErrorMessage(ex.getMessage());
 			r.setStatusCode(HttpServletResponse.SC_NOT_FOUND);
-		}catch (Throwable t) {
+		}
+/*		catch (org.springframework.expression.spel.SpelEvaluationException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode(ERR_CODE_SURVEY_SECTION_NOT_FOUND);
+			r.setErrorMessage(ex.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_NOT_FOUND);
+		}*/
+		catch (Throwable t) {
         	t.printStackTrace();
 			logger.info(t.getMessage(), t);
 

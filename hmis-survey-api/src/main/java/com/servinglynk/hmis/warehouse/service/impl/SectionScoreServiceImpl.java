@@ -93,11 +93,16 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 		boolean result;
 		EvaluationContext context = new StandardEvaluationContext(responseEntity);
 		ExpressionParser parser = new SpelExpressionParser();
+		if(questionEntity.getCorrectValueForAssessment()!=null) {
+			try{
 			Expression expression = parser.parseExpression(questionEntity.getCorrectValueForAssessment());
 			 result =  expression.getValue(context,boolean.class);
 			if(result) {
 					score = questionEntity.getQuestionWeight();
 			}
+			}catch (Exception e) {
+			}
+		}
 
 		return score;		
 	}

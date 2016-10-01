@@ -35,8 +35,8 @@ public class ResponseEntityDaoImpl extends QueryExecutorImpl implements Response
        criteria.createAlias("surveyEntity", "surveyEntity");
        criteria.add(Restrictions.eq("surveyEntity.id", surveyid));
        
-       criteria.createAlias("surveySectionEntity", "surveySectionEntity");
-       criteria.add(Restrictions.eq("surveySectionEntity.id", sectionId));
+      // criteria.createAlias("surveySectionEntity", "surveySectionEntity");
+      // criteria.add(Restrictions.eq("surveySectionEntity.id", sectionId));
        
        if(startIndex==0 && maxItems==0)        return (List<ResponseEntity>) findByCriteria(criteria);
        

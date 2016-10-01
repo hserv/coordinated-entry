@@ -5,13 +5,19 @@ import org.springframework.stereotype.Component;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
+import com.hserv.coordinatedentry.housingmatching.model.CommunityType;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
+import com.hserv.coordinatedentry.housingmatching.service.impl.CommunityServiceLocator;
 
 @Component
 public class EligibleClientsTranslator {
 
 /*	@Autowired
 	MatchReservationTranslator matchReservationTranslator;*/
+	
+	@Autowired
+	CommunityServiceLocator communityServiceLocator;
 
 	public EligibleClientModel translate(EligibleClient eligibleClient) {
 		EligibleClientModel eligibleClientModel = null;
@@ -44,7 +50,11 @@ public class EligibleClientsTranslator {
 		eligibleClient.setSurveyDate(eligibleClientModel.getSurveyDate());
 		eligibleClient.setZipCode(eligibleClientModel.getZipcode());
 		eligibleClient.setSurveyType(eligibleClientModel.getSurveyType());
-
+		
+		MatchStrategy strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
+		int additionalScore = strategy.getAdditionalScore(19,eligibleClientModel.getSpdatLabel().getValue());
+		eligibleClient.setCocScore(eligibleClientModel.getSurveyScore().intValue()+additionalScore);
+		
 		return eligibleClient;
 	}
 
