@@ -29,8 +29,8 @@ public class Question extends ClientModel{
 
       private QuestionTypeEnum questionType;
 
-  	  @NotNull
-  	  @NotEmpty
+  	  @NotNull(message="Correct Value for Assessment is required.")
+  	  @NotEmpty(message="Correct Value for Assessment is required.")
       private String correctValueForAssessment;
 
       private boolean copyQuestionId;

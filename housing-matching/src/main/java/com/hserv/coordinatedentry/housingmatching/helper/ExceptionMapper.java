@@ -55,8 +55,8 @@ public class ExceptionMapper {
 		}catch (HttpClientErrorException ex) {
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);
-			r.setErrorCode("REQUEST_AUTHOTICATION_FAILED");
-			r.setErrorMessage("REQUEST_AUTHOTICATION_FAILED");
+			r.setErrorCode("REQUEST_AUTHENTICATION_FAILED");
+			r.setErrorMessage("REQUEST_AUTHENTICATION_FAILED");
 			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
 		}catch(InvalidMatchStatus ex){
 			logger.info(ex.getMessage());
