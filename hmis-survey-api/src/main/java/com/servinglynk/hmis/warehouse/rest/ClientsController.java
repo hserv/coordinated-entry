@@ -1,7 +1,5 @@
 package com.servinglynk.hmis.warehouse.rest;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +20,6 @@ import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SectionScore;
 import com.servinglynk.hmis.warehouse.core.model.SectionScores;
 import com.servinglynk.hmis.warehouse.core.model.Session;
-import com.servinglynk.hmis.warehouse.core.model.BaseClient;
-import com.servinglynk.hmis.warehouse.core.model.BaseClients;
 
 @RestController
 @RequestMapping("/clients")

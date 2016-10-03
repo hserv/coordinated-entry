@@ -35,13 +35,13 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 	public SectionScores getAllSectionScores(UUID clientId,UUID surveyId,UUID sectionId,Integer startIndex,Integer maxItems){
 		SectionScores scores = new SectionScores();
 		
-		List<SectionScoreEntity> entities = daoFactory.getSectionScoreDao().getAllSectionScores(surveyId, sectionId, startIndex, maxItems);
+		List<SectionScoreEntity> entities = daoFactory.getSectionScoreDao().getClientScores(clientId,surveyId, sectionId, startIndex, maxItems);
 		for(SectionScoreEntity entity : entities){
 			scores.addSectionScore(SectionScoreConverter.entityToModel(entity));
 		}
 		
         SortedPagination pagination = new SortedPagination();
-        long count = daoFactory.getSectionScoreDao().getAllSectionScoresCount(surveyId, sectionId);
+        long count = daoFactory.getSectionScoreDao().getClientScoresCount(clientId,surveyId, sectionId);
         pagination.setFrom(startIndex);
         pagination.setReturned(scores.getSectionScores().size());
         pagination.setTotal((int)count);

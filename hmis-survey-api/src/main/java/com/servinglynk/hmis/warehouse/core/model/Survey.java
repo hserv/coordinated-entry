@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.servinglynk.hmis.warehouse.core.annotations.AllowedValues;
 
 @JsonRootName("survey")
 public class Survey extends ClientModel{
@@ -21,6 +22,7 @@ public class Survey extends ClientModel{
       @NotEmpty(message="Survey Owner is required")
       private String surveyOwner;
 
+      @AllowedValues(values={"SINGLE_ADULT","FAMILY","YOUTH"},message="Allowed values for tag value are SINGLE_ADULT,FAMILY,YOUTH")
       private String tagValue;
 
       private String projectGroupCode;
@@ -49,6 +51,7 @@ public class Survey extends ClientModel{
       public void setSurveyOwner(String surveyOwner){
           this.surveyOwner = surveyOwner;
       }
+
       public String getTagValue(){
           return tagValue;
       }

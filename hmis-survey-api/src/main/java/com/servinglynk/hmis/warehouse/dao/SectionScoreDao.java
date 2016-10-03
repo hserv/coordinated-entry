@@ -16,4 +16,8 @@ public interface SectionScoreDao {
 	void updateSectionScore(SectionScoreEntity sectionScoreEntity);
 	List<ClientSurveyScore> calculateClientSurveyScore(Integer startIndex,Integer maxItems,String projectGroupCode);
 	Long countOfClientSurveyScore(String projectGroupCode);
+	
+	
+	List<SectionScoreEntity> getClientScores(UUID clientId,UUID surveyId, UUID sectionId,Integer startIndex,Integer maxItems);
+	long getClientScoresCount(UUID clientId,UUID surveyId, UUID sectionId);
 }

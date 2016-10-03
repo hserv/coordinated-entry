@@ -40,6 +40,32 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		if(startIndex==0 && maxItems ==0) return (List<SectionScoreEntity>) findByCriteria(criteria);
 		return (List<SectionScoreEntity>) findByCriteria(criteria, startIndex, maxItems);
 	}
+	
+	
+	public List<SectionScoreEntity> getClientScores(UUID clientId,UUID surveyId, UUID sectionId,Integer startIndex,Integer maxItems){
+		DetachedCriteria criteria = DetachedCriteria.forClass(SectionScoreEntity.class);
+		criteria.createAlias("sectionEntity", "sectionEntity");
+		criteria.createAlias("surveyEntity", "surveyEntity");
+		criteria.add(Restrictions.eq("clientId", clientId));
+		if (surveyId != null)
+			criteria.add(Restrictions.eq("surveyEntity.id", surveyId));
+		if (sectionId != null)
+			criteria.add(Restrictions.eq("sectionEntity.id", sectionId));
+		if(startIndex==0 && maxItems ==0) return (List<SectionScoreEntity>) findByCriteria(criteria);
+		return (List<SectionScoreEntity>) findByCriteria(criteria, startIndex, maxItems);
+	}
+	
+	public long getClientScoresCount(UUID clientId,UUID surveyId, UUID sectionId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(SectionScoreEntity.class);
+		criteria.createAlias("sectionEntity", "sectionEntity");
+		criteria.createAlias("surveyEntity", "surveyEntity");
+		criteria.add(Restrictions.eq("clientId", clientId));
+		if (surveyId != null)
+			criteria.add(Restrictions.eq("surveyEntity.id", surveyId));
+		if (sectionId != null)
+			criteria.add(Restrictions.eq("sectionEntity.id", sectionId));
+		return countRows(criteria);
+	}
 
 
 	public long getAllSectionScoresCount(UUID surveyId, UUID sectionId) {

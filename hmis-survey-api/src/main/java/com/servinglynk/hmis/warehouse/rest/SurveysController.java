@@ -39,6 +39,7 @@ public class SurveysController extends BaseController {
    @APIMapping(value="SURVEY_API_UPDATE_SURVEY",checkTrustedApp=true,checkSessionToken=true)
    public void updateSurvey(@PathVariable( "surveyid" ) UUID surveyId,@Valid @RequestBody Survey survey,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
+        survey.setSurveyId(surveyId);
         serviceFactory.getSurveyService().updateSurvey(survey,session.getAccount().getUsername()); 
    }
 
