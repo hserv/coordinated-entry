@@ -49,7 +49,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
        pResponse.setUser(caller);
 //       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
        daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
-       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, pResponse));
+    //   pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, pResponse));
        daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
        returnResponses.addResponse(new Response(pResponse.getId()));
 	   }
@@ -67,7 +67,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
        ResponseConverter.modelToEntity(response, pResponse);
        pResponse.setUpdatedAt(LocalDateTime.now());
        pResponse.setUser(caller);
-       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(pResponse.getQuestionEntity(), pResponse));
+   //    pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(pResponse.getQuestionEntity(), pResponse));
        daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
        response.setResponseId(pResponse.getId());
 	   serviceFactory.getSectionScoreService().updateSectionScores(pResponse.getClientId(), pResponse.getSurveyEntity().getId(), null);
