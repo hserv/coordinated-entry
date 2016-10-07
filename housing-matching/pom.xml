@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hserv.coordinatedentry</groupId>
-	<artifactId>housing-matching</artifactId>
+	<artifactId>house-matching-api</artifactId>
 	<version>0.1.0</version>
 	<packaging>war</packaging>
 

@@ -57,7 +57,7 @@ public class MatchController extends BaseController {
 			MatchReservationModel model =matchReservationTranslator.translate(arg0);
 
 			Resource<MatchReservationModel> resource = new Resource<MatchReservationModel>(model);
-			resource.add(new Link("/housing-matching/matches/client/"+model.getEligibleClients().getClientId()+"/status").withRel("history"));
+			resource.add(new Link("/matches/client/"+model.getEligibleClients().getClientId()+"/status").withRel("history"));
 			return resource;
 		}
 	}	
