@@ -59,7 +59,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		return eligibleClientModels;
 	}
 
-	@Override
+
 	public List<EligibleClient> getEligibleClients(int num , String programType) {
 		List<EligibleClient> eligibleClients = eligibleClientsRepository
 				.findTopEligibleClients(programType ,new PageRequest(0, num, eligibleClientSortClause()));
@@ -76,8 +76,8 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 	
 	@Override
-	public Page<EligibleClient> getEligibleClients(Pageable pageable) {
-		Page<EligibleClient> clients = eligibleClientsRepository.findAll(pageable);
+	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable) {
+		Page<EligibleClient> clients = eligibleClientsRepository.findByProjectGroupCode(projectGroupCode , pageable);
 		return clients;
 	}
 

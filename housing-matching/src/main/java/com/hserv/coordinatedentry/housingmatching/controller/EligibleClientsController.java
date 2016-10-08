@@ -76,7 +76,8 @@ public class EligibleClientsController extends BaseController {
 	@APIMapping(value="get-eligible-clients")
 	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable,HttpServletRequest request) {
 		Session session = sessionHelper.getSession(request);
-		return new ResponseEntity<>(assembler.toResource(eligibleClientService.getEligibleClients(pageable), housingInventoryAssembler),
+		String projectGroupCode = session.getAccount().getProjectGroup().getProjectGroupCode();
+		return new ResponseEntity<>(assembler.toResource(eligibleClientService.getEligibleClients(projectGroupCode,pageable), housingInventoryAssembler),
 				HttpStatus.OK);
 	}
 

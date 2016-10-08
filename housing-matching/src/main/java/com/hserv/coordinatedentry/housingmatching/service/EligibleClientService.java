@@ -12,11 +12,11 @@ import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 
 public interface EligibleClientService {
 
-	List<EligibleClient> getEligibleClients(int num , String programType);
+//	List<EligibleClient> getEligibleClients( Pageable pageable);
 
 	EligibleClientModel getEligibleClientDetail(UUID clientID);
 
-	Page<EligibleClient> getEligibleClients(Pageable pageable);
+	Page<EligibleClient> getEligibleClients(String projectGroupCode ,Pageable pageable);
 
 	boolean updateEligibleClient(UUID clientID , EligibleClientModel eligibleClientModel);
 
