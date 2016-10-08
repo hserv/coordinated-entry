@@ -30,6 +30,7 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setSpdatLabel(SpdatLabelEnum.lookupEnum(eligibleClient.getSpdatLabel()));
 			eligibleClientModel.setSurveyScore(eligibleClient.getSurveyScore());
 			eligibleClientModel.setSurveyDate(eligibleClient.getSurveyDate());
+			eligibleClientModel.setLink(eligibleClient.getClientLink());
 
 		}
 		return eligibleClientModel;

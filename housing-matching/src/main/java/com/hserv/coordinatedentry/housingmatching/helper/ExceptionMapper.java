@@ -28,7 +28,7 @@ public class ExceptionMapper {
 	public static final String ERR_CODE_PICK_LIST_VALUE_NOT_FOUND 		    = "PICK_LIST_VALUE_NOT_FOUND";
 	public static final String ERR_CODE_QUESTION_GROUP_NOT_FOUND 		    = "QUESTION_GROUP_NOT_FOUND";	
 	public static final String ERR_CODE_QUESTION_NOT_FOUND 		            = "QUESTION_NOT_FOUND";	
-	public static final String ERR_CODE_RESPONSE_NOT_FOUND 		            = "RESPONSE_NOT_FOUND";	
+	public static final String ERR_CODE_RESOURCE_NOT_FOUND 		            = "RESOURCE_NOT_FOUND";	
 	public static final String ERR_CODE_SECTION_QUESTION_MAPPING_NOT_FOUND 	= "SECTION_QUESTION_MAPPING_NOT_FOUND";	
 	public static final String ERR_CODE_SECTION_SCORE_NOT_FOUND 		    = "SECTION_SCORE_NOT_FOUND";	
 	public static final String ERR_CODE_SURVEY_NOT_FOUND 		            = "SURVEY_NOT_FOUND";	
@@ -74,7 +74,7 @@ public class ExceptionMapper {
 		}catch(ResourceNotFoundException ex){
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);
-			r.setErrorCode(ERR_CODE_RESPONSE_NOT_FOUND);
+			r.setErrorCode(ERR_CODE_RESOURCE_NOT_FOUND);
 			r.setErrorMessage(ex.getMessage());
 			r.setStatusCode(HttpServletResponse.SC_NOT_FOUND);
 		}catch (InvalidFormatException e) {

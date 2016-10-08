@@ -70,6 +70,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Override
 	public EligibleClientModel getEligibleClientDetail(UUID clientID) {
 		EligibleClient eligibleClient = eligibleClientsRepository.findByClientId(clientID);
+		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible not found "+clientID);
 		EligibleClientModel eligibleClientModel=  eligibleClientsTranslator.translate(eligibleClient);
 		return eligibleClientModel;
 	}

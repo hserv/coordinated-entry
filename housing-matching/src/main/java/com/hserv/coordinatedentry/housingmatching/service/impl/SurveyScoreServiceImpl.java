@@ -20,6 +20,7 @@ import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.SurveyScoreTranslator;
+import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 
@@ -86,6 +87,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		for(ClientSurveyScore clientSurveyScore : surveyResponseModel.getClientsSurveyScores()){
 			EligibleClient eligibleClient = new EligibleClient();
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
+			BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
 			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 			int additionalScore = strategy.getAdditionalScore(19,clientSurveyScore.getSurveyTagvalue());
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
@@ -98,7 +100,8 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
 			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
 			eligibleClient.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
-			
+			if(client!=null)
+				eligibleClient.setClientLink(client.getLink());			
 			eligibleClientsRepository.save(eligibleClient);
 			//eligibleClients.add(eligibleClient);
 			

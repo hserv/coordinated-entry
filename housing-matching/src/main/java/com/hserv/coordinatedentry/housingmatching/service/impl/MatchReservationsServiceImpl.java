@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -76,18 +77,18 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	@Autowired
 	ISearchServiceClient searchServiceClient;
 	
-	Map<String, String[]> statusMap =new HashMap<String,String[]>();
+	Map<Integer, Integer[]> statusMap =new HashMap<Integer,Integer[]>();
 	
 	@PostConstruct
 	public void init(){
-		statusMap.put("PROPOSED", new String[]{"1","10"});
-		statusMap.put("1", new String[]{"2","5","10"});
-		statusMap.put("2", new String[]{"3","10"});
-		statusMap.put("3", new String[]{"4","10"});
-		statusMap.put("4", new String[]{"5","10"});
-		statusMap.put("5", new String[]{"6","10"});
-		statusMap.put("6", new String[]{"7","10"});
-		statusMap.put("7", new String[]{"10"});	
+		statusMap.put(0, new Integer[]{1,10});
+		statusMap.put(1, new Integer[]{2,5,10});
+		statusMap.put(2, new Integer[]{3,10});
+		statusMap.put(3, new Integer[]{4,10});
+		statusMap.put(4, new Integer[]{5,10});
+		statusMap.put(5, new Integer[]{6,10});
+		statusMap.put(6, new Integer[]{7,10});
+		statusMap.put(7, new Integer[]{10});	
 	}
 		
 	@Override
@@ -210,10 +211,11 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		EligibleClient client = new EligibleClient();
 		client.setClientId(clientId);
 		List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClient(client);
+		if(matches.isEmpty()) throw new ResourceNotFoundException("No match reservation found for this client");
 		Match match = matches.get(0);
-		String[] newStatus =  statusMap.get(match.getMatchStatus());
+		Integer[] newStatus =  statusMap.get(match.getMatchStatus());
 		System.out.println(statusModel.getStatus());
-		if(!Arrays.asList(newStatus).contains(statusModel.getStatus()+"")){
+		if(!Arrays.asList(newStatus).contains(statusModel.getStatus())){
 			throw new InvalidMatchStatus("Invalid status. Current status "+match.getMatchStatus());
 		}
 		
@@ -225,7 +227,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		matchStatus.setClientId(clientId);
 		matchStatus.setUserId(auditUser);
 		repositoryFactory.getMatchStatusRepository().save(matchStatus);
-		match.setMatchStatus(Integer.parseInt(statusModel.getStatus()));
+		match.setMatchStatus(statusModel.getStatus());
 		repositoryFactory.getMatchReservationsRepository().save(match);
 		if(!statusModel.getRecipients().getToRecipients().isEmpty())
 			notificationService.notifyStatusUpdate(match, statusModel.getRecipients());

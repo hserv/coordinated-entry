@@ -3,6 +3,8 @@ package com.hserv.coordinatedentry.housingmatching.model;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
+
 import com.hserv.coordinatedentry.housingmatching.enums.MatchStatusUpdateEnum;
 import com.servinglynk.hmis.warehouse.core.model.Recipients;
 
@@ -10,7 +12,7 @@ public class MatchStatusModel {
 
 	private UUID id;
 	private UUID clientId;
-	private String status;
+	private Integer status;
 	private String comments;
 	private Recipients recipients = new Recipients();
 	private boolean acitve;
@@ -31,10 +33,10 @@ public class MatchStatusModel {
 	public void setClientId(UUID clientId) {
 		this.clientId = clientId;
 	}
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	public String getComments() {

@@ -32,6 +32,7 @@ public class EligibleClient implements Serializable {
 	private String projectGroupCode;
 	private int zipCode;
 	private Integer cocScore;
+	private String clientLink;
 	
 	private List<Match> matchs = new ArrayList<>(); 
 	
@@ -157,5 +158,13 @@ public class EligibleClient implements Serializable {
 	public void setCocScore(Integer cocScore) {
 		this.cocScore = cocScore;
 	}
-	
+
+	@Column(name="client_link")
+	public String getClientLink() {
+		return clientLink;
+	}
+
+	public void setClientLink(String clientLink) {
+		this.clientLink = clientLink;
+	}
 }

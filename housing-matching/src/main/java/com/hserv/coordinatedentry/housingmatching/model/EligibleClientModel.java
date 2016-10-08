@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
@@ -24,6 +26,9 @@ public class EligibleClientModel {
 	private SpdatLabelEnum spdatLabel;
 	@Length(min=5,max=5,message="Invalid zip code")
 	private Integer zipcode;
+	
+	@JsonProperty(access=Access.WRITE_ONLY)
+	private String link;
 	
 	public UUID getClientId() {
 		return clientId;
@@ -73,5 +78,10 @@ public class EligibleClientModel {
 	public void setZipcode(Integer zipcode) {
 		this.zipcode = zipcode;
 	}
-	
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
+	}
 }

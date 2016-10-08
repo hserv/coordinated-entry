@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.Resources;
@@ -56,6 +57,8 @@ public class EligibleClientsController extends BaseController {
 		@Override
 		public Resource<EligibleClientModel> toResource(EligibleClient arg0) {
 			Resource<EligibleClientModel> resource = new Resource<EligibleClientModel>(eligibleClientsTranslator.translate(arg0));
+			if(arg0.getClientLink()!=null)
+				resource.add(new Link(arg0.getClientLink()).withRel("client"));
 			return resource;
 		}
 	}	
@@ -147,8 +150,14 @@ public class EligibleClientsController extends BaseController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@APIMapping(value="get-eligible-client-by-id")
-	public EligibleClientModel getEligibleClientById(@PathVariable String id) {
-		return eligibleClientService.getEligibleClientDetail(UUID.fromString(id));
+	public ResponseEntity<Resource>  getEligibleClientById(@PathVariable UUID id) {
+		EligibleClientModel client =  eligibleClientService.getEligibleClientDetail(id);
+		Resource<EligibleClientModel> resource =null;
+		if(client.getLink()!=null)
+			resource = new Resource<EligibleClientModel>(client,new Link(client.getLink()).withRel("client")); 
+		else
+			resource = new Resource<EligibleClientModel>(client);
+		return new ResponseEntity<Resource>(resource,HttpStatus.OK);
 	}
 
 	/**
