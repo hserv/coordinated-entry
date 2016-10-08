@@ -14,6 +14,7 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 	@Autowired private MatchStatusRepository matchStatusRepository;
 	@Autowired private GlobalHouseholdRepository globalHouseholdRepository;
 	@Autowired private HouseholdMembershipRepository householdMembershipRepository;
+	@Autowired private MatchStatuLevelsRepository matchStatuLevelsRepository;
 	
 	
 	public EligibilityRequirementRepository getEligibilityRequirementRepository() {
@@ -57,5 +58,11 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 	}
 	public void setHouseholdMembershipRepository(HouseholdMembershipRepository householdMembershipRepository) {
 		this.householdMembershipRepository = householdMembershipRepository;
-	}	
+	}
+	public MatchStatuLevelsRepository getMatchStatuLevelsRepository() {
+		return matchStatuLevelsRepository;
+	}
+	public void setMatchStatuLevelsRepository(MatchStatuLevelsRepository matchStatuLevelsRepository) {
+		this.matchStatuLevelsRepository = matchStatuLevelsRepository;
+	}		
 }

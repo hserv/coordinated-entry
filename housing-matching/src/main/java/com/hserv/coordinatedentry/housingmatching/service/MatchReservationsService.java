@@ -31,11 +31,10 @@ public interface MatchReservationsService {
 	
 	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel);
 	
-	public void create(Session session, String trustedAppId) throws Exception ;
 	
 	public void updateMatchStatus(UUID clientId,MatchStatusModel statusModel,String auditUser) throws Exception;
 	
-	List<MatchStatusModel> getMatchStatusHistory(UUID clientId) throws Exception;
+	List<MatchStatusModel> getMatchStatusHistory(UUID clientId,String projectGroupCode) throws Exception;
 	
 	
 	void matchingProcess(Integer maxClients, Session session , String trustedAppId);

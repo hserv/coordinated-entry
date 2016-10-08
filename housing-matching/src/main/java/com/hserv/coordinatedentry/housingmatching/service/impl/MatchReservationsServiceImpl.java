@@ -29,6 +29,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.entity.MatchStatus;
+import com.hserv.coordinatedentry.housingmatching.entity.MatchStatusLevels;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.external.NotificationService;
 import com.hserv.coordinatedentry.housingmatching.external.ProjectService;
@@ -40,7 +41,6 @@ import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.service.ServiceFactory;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
-import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Session;
@@ -158,54 +158,6 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Async
-	public void create(Session session,String trustedAppId) throws Exception {
-		List<Match> matches = new ArrayList<Match>();
-		List<EligibleClient> matchedEligibleClients = new ArrayList<EligibleClient>();
-		List<EligibleClient> eligibleClients = repositoryFactory.getEligibleClientsRepository().findByProgramTypeAndMatched(session.getAccount().getProjectGroup().getProjectGroupCode(), false);
-		
-		List<EligibilityRequirement> eligibilityRequirements=repositoryFactory.getEligibilityRequirementRepository().findByProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
-		
-		for(EligibleClient eligibleClient : eligibleClients){
-			
-			SearchRequest request = new SearchRequest();
-			request.setTrustedAppId(trustedAppId);
-			request.setSearchEntity("clients");
-			request.setSessionToken(session.getToken());
-			request.addSearchParam("q", eligibleClient.getClientId());
-			List<BaseClient> clients = (List<BaseClient>) searchServiceClient.search(request);
-			BaseClient client = clients.get(0);
-			UUID projectId =null;
-					eligibilityValidator.validateProjectEligibility(client, eligibilityRequirements);		
-			if(projectId!=null) {
-				List<HousingInventory> housingInventories = repositoryFactory.getHousingUnitsRepository().findByProjectId(projectId+"");
-					for(HousingInventory housingInventory : housingInventories){
-							if(housingInventory.getBedsCapacity() != housingInventory.getBedsCurrent()) {
-									Match match = new Match();
-									match.setDateCreated(new Date());
-									match.setEligibleClient(eligibleClient);
-									match.setHousingUnitId(housingInventory.getHousingInventoryId());
-									match.setManualMatch(false);
-									match.setMatchDate(new Date());
-									match.setMatchStatus(0);
-									matches.add(match);
-									matchedEligibleClients.add(eligibleClient);
-									housingInventory.setBedsCurrent(housingInventory.getBedsCurrent()-1);
-						}
-					}
-			}
-		} 
-		
-		for(Match match : matches){
-            repositoryFactory.getMatchReservationsRepository().saveAndFlush(match);
-            EligibleClient eligibleClient = match.getEligibleClient();
-            eligibleClient.setMatched(true);
-            repositoryFactory.getEligibleClientsRepository().saveAndFlush(eligibleClient);
-		}
-		
-	}
-	
 	@Override
 	public void updateMatchStatus(UUID clientId, MatchStatusModel statusModel,String auditUser) throws Exception {
 		EligibleClient client = new EligibleClient();
@@ -213,9 +165,14 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClient(client);
 		if(matches.isEmpty()) throw new ResourceNotFoundException("No match reservation found for this client");
 		Match match = matches.get(0);
-		Integer[] newStatus =  statusMap.get(match.getMatchStatus());
-		System.out.println(statusModel.getStatus());
-		if(!Arrays.asList(newStatus).contains(statusModel.getStatus())){
+		List<MatchStatusLevels> nextLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(match.getProgramType(), match.getMatchStatus()+"");
+		
+		
+		List newStatus = new ArrayList();
+				for(MatchStatusLevels level : nextLevels){
+					newStatus.addAll(Arrays.asList(level.getNextStatusCode().split(",")));
+				}
+		if(!newStatus.contains(statusModel.getStatus()+"")){
 			throw new InvalidMatchStatus("Invalid status. Current status "+match.getMatchStatus());
 		}
 		
@@ -233,12 +190,15 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			notificationService.notifyStatusUpdate(match, statusModel.getRecipients());
 	}
 	
-	public List<MatchStatusModel> getMatchStatusHistory(UUID clientId) throws Exception {
+	public List<MatchStatusModel> getMatchStatusHistory(UUID clientId,String projectGroupCode) throws Exception {
 		List<MatchStatusModel> history = new ArrayList<MatchStatusModel>();
 		List<MatchStatus> statusHistory = repositoryFactory.getMatchStatusRepository().findByClientId(clientId);
 		for(MatchStatus matchStatus : statusHistory){
 			MatchStatusModel matchStatusModel = new MatchStatusModel();
 			BeanUtils.copyProperties(matchStatus, matchStatusModel,"recipients");
+			List<MatchStatusLevels> matchStatusLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(projectGroupCode,(matchStatus.getStatus()+""));
+			if(!matchStatusLevels.isEmpty())
+			   matchStatusModel.setStatusDescription(matchStatusLevels.get(0).getStatusDescription());
 			//matchStatusModel.setStatusCode(MatchStatusUpdateEnum.lookupEnum(matchStatus.getStatus()+"").getValue());
 		//	if(matchStatus.getRecipients()!=null)
 		//			matchStatusModel.setRecipients(objectMapper.readValue(matchStatus.getRecipients(), Recipients.class));

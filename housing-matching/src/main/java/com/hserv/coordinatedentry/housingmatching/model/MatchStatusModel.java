@@ -14,9 +14,10 @@ public class MatchStatusModel {
 	private UUID id;
 	private UUID clientId;
 	private Integer status;
+	private String statusDescription;
 	private String comments;
 	private Recipients recipients = new Recipients();
-	private boolean acitve;
+	private boolean active;
 	
 	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonSerialize(using=JsonDateTimeSerializer.class)
@@ -58,11 +59,11 @@ public class MatchStatusModel {
 	public void setRecipients(Recipients recipients) {
 		this.recipients = recipients;
 	}
-	public boolean isAcitve() {
-		return acitve;
+	public boolean isActive() {
+		return active;
 	}
-	public void setAcitve(boolean acitve) {
-		this.acitve = acitve;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
@@ -87,5 +88,11 @@ public class MatchStatusModel {
 	}
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
+	}
+	public String getStatusDescription() {
+		return statusDescription;
+	}
+	public void setStatusDescription(String statusDescription) {
+		this.statusDescription = statusDescription;
 	}
 }

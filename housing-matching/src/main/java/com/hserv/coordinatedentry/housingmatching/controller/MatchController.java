@@ -185,6 +185,7 @@ public class MatchController extends BaseController {
 	@RequestMapping(value="/client/{id}/status",method=RequestMethod.GET)
 	@APIMapping(value="GET_MATCH_STATUS_UPDATES")
 	public List<MatchStatusModel> getMatchStatusDtls(@PathVariable("id") UUID clientId,HttpServletRequest request) throws Exception {
-		return	matchReservationsService.getMatchStatusHistory(clientId);
+		Session session = sessionHelper.getSession(request);
+		return	matchReservationsService.getMatchStatusHistory(clientId,session.getAccount().getProjectGroup().getProjectGroupCode());
 	}
 }

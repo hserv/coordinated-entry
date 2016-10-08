@@ -45,7 +45,7 @@ public class MatchStatus implements Serializable {
 	private String recipients;
 	
 	@Column(name="active")
-	private boolean acitve;
+	private boolean active;
 	
 
 	@Column(name = "date_created")
@@ -88,11 +88,11 @@ public class MatchStatus implements Serializable {
 	public void setRecipients(String recipients) {
 		this.recipients = recipients;
 	}
-	public boolean isAcitve() {
-		return acitve;
+	public boolean isActive() {
+		return active;
 	}
-	public void setAcitve(boolean acitve) {
-		this.acitve = acitve;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
