@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientsModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 import com.servinglynk.hmis.warehouse.core.model.Session;
@@ -87,10 +88,10 @@ public class EligibleClientsController extends BaseController {
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	@APIMapping(value="update-eligible-clients")
 	public ResponseEntity<String> updateEligibleClients(
-			@Validated @RequestBody List<EligibleClientModel> eligibleClientModels) {
+			@Valid @RequestBody EligibleClientsModel eligibleClientModels) {
 		ResponseEntity<String> responseEntity = null;
 		try {
-			boolean status = eligibleClientService.updateEligibleClients(eligibleClientModels);
+			boolean status = eligibleClientService.updateEligibleClients(eligibleClientModels.getEligibleClients());
 			responseEntity = ResponseEntity.ok("{\"updated\": \""+ status +"\"}\"");
 		} catch (Exception ex) {
 			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
@@ -118,9 +119,9 @@ public class EligibleClientsController extends BaseController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	@APIMapping(value="create-eligible-clients")
 	public ResponseEntity<String> createEligibleClients(
-			@Valid @RequestBody List<EligibleClientModel> eligibleClientModels) throws Exception {
+			@Valid @RequestBody EligibleClientsModel eligibleClientModels) throws Exception {
 		ResponseEntity<String> responseEntity = null;
-			boolean status = eligibleClientService.createEligibleClients(eligibleClientModels);
+			boolean status = eligibleClientService.createEligibleClients(eligibleClientModels.getEligibleClients());
 			responseEntity = ResponseEntity.ok("{\"added\": \""+ status +"\"}\"");
 		return responseEntity;
 	}
@@ -133,7 +134,7 @@ public class EligibleClientsController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	@APIMapping(value="create-eligible-client")
 	public ResponseEntity<String> createEligibleClient(
-			@Validated @RequestBody EligibleClientModel eligibleClientModel) {
+			@Valid @RequestBody EligibleClientModel eligibleClientModel) {
 		ResponseEntity<String> responseEntity = null;
 		try {
 			boolean status = eligibleClientService.createEligibleClient(eligibleClientModel);

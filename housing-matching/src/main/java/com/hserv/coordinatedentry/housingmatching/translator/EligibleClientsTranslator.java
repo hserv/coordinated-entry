@@ -51,7 +51,8 @@ public class EligibleClientsTranslator {
 		eligibleClient.setSurveyDate(eligibleClientModel.getSurveyDate());
 		eligibleClient.setZipCode(eligibleClientModel.getZipcode());
 		eligibleClient.setSurveyType(eligibleClientModel.getSurveyType());
-		
+		eligibleClient.setClientLink(eligibleClientModel.getLink());
+		eligibleClient.setProjectGroupCode("MO0010");
 		MatchStrategy strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 		int additionalScore = strategy.getAdditionalScore(19,eligibleClientModel.getSpdatLabel().getValue());
 		eligibleClient.setCocScore(eligibleClientModel.getSurveyScore().intValue()+additionalScore);

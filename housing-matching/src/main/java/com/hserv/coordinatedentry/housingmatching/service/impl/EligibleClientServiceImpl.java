@@ -85,8 +85,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	public boolean updateEligibleClient(UUID clientID, EligibleClientModel eligibleClientModel) {
 		boolean status = false;
 		EligibleClient eligibleClient = eligibleClientsRepository.findOne(eligibleClientModel.getClientId());
-		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible Client Not Found");
-
+	
 			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel,eligibleClient));
 			status = true;
 		return status;

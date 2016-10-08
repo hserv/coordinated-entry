@@ -1,11 +1,12 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
-
-import com.hserv.coordinatedentry.housingmatching.enums.MatchStatusUpdateEnum;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateDeserializer;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateTimeSerializer;
 import com.servinglynk.hmis.warehouse.core.model.Recipients;
 
 public class MatchStatusModel {
@@ -16,8 +17,14 @@ public class MatchStatusModel {
 	private String comments;
 	private Recipients recipients = new Recipients();
 	private boolean acitve;
-	private Date dateCreated;
-	private Date dateUpdated;
+	
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateTimeSerializer.class)
+	private LocalDateTime dateCreated;
+	
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateTimeSerializer.class)
+	private LocalDateTime dateUpdated;
 	private String userId;
 	private String statusCode;
 
@@ -57,16 +64,16 @@ public class MatchStatusModel {
 	public void setAcitve(boolean acitve) {
 		this.acitve = acitve;
 	}
-	public Date getDateCreated() {
+	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(LocalDateTime dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-	public Date getDateUpdated() {
+	public LocalDateTime getDateUpdated() {
 		return dateUpdated;
 	}
-	public void setDateUpdated(Date dateUpdated) {
+	public void setDateUpdated(LocalDateTime dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
 	public String getUserId() {

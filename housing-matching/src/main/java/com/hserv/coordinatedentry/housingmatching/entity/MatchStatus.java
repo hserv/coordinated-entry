@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "match_status", schema = "housing_inventory")
@@ -45,13 +47,14 @@ public class MatchStatus implements Serializable {
 	@Column(name="active")
 	private boolean acitve;
 	
-	@Temporal(TemporalType.DATE)
+
 	@Column(name = "date_created")
-	private Date dateCreated;
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+	private LocalDateTime dateCreated;
 	
-	@Temporal(TemporalType.DATE)
 	@Column(name = "date_updated")
-	private Date dateUpdated;
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+	private LocalDateTime dateUpdated;
 	
 	@Column(name="user_id")
 	private String userId;
@@ -91,16 +94,16 @@ public class MatchStatus implements Serializable {
 	public void setAcitve(boolean acitve) {
 		this.acitve = acitve;
 	}
-	public Date getDateCreated() {
+	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(LocalDateTime dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-	public Date getDateUpdated() {
+	public LocalDateTime getDateUpdated() {
 		return dateUpdated;
 	}
-	public void setDateUpdated(Date dateUpdated) {
+	public void setDateUpdated(LocalDateTime dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
 	public String getUserId() {
@@ -112,11 +115,11 @@ public class MatchStatus implements Serializable {
 	
 	@PrePersist
 	protected void onCreate() {
-		dateCreated = dateUpdated = new Date();
+		dateCreated = dateUpdated = LocalDateTime.now();
 	}
 
 	@PreUpdate
 	protected void onUpdate() {
-		dateUpdated = new Date();
+		dateUpdated = LocalDateTime.now();
 	}
 }

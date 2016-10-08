@@ -64,6 +64,12 @@ public class ExceptionMapper {
 			r.setErrorCode("ERR_CODE_INVALID_STATUS");
 			r.setErrorMessage(ex.getMessage());
 			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);			
+		}catch (org.springframework.http.converter.HttpMessageNotReadableException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("ERR_CODE_INVALID_REQUEST");
+			r.setErrorMessage("Invalid request body");
+			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);			
 		}
 		catch(InvalidParameterException ex){
 			logger.info(ex.getMessage());

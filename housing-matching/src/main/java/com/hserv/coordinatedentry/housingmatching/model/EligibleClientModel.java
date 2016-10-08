@@ -9,10 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.hserv.coordinatedentry.housingmatching.annotations.ValidateClient;
 import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
 import com.servinglynk.hmis.warehouse.core.model.JsonDateDeserializer;
 import com.servinglynk.hmis.warehouse.core.model.JsonDateTimeSerializer;
 
+@ValidateClient(clientIdField="clientId",linkField="link")
 public class EligibleClientModel {
 
 	private UUID clientId;
@@ -25,7 +27,7 @@ public class EligibleClientModel {
 	private LocalDateTime surveyDate;
 	private SpdatLabelEnum spdatLabel;
 	@Length(min=5,max=5,message="Invalid zip code")
-	private Integer zipcode;
+	private String zipcode;
 	
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String link;
@@ -72,10 +74,10 @@ public class EligibleClientModel {
 	public void setSpdatLabel(SpdatLabelEnum spdatLabel) {
 		this.spdatLabel = spdatLabel;
 	}
-	public Integer getZipcode() {
+	public String getZipcode() {
 		return zipcode;
 	}
-	public void setZipcode(Integer zipcode) {
+	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
 	public String getLink() {

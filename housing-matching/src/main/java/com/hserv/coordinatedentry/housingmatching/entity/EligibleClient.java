@@ -30,7 +30,7 @@ public class EligibleClient implements Serializable {
 	private LocalDateTime surveyDate;
 	private String spdatLabel;
 	private String projectGroupCode;
-	private int zipCode;
+	private String zipCode;
 	private Integer cocScore;
 	private String clientLink;
 	
@@ -45,7 +45,7 @@ public class EligibleClient implements Serializable {
 
 	public EligibleClient(UUID clientId, String surveyType, Integer surveyScore, String programType,
 			Boolean matched, LocalDateTime surveyDate, String spdatLabel, Set<Match> matchReservations
-			,int zipCode) {
+			,String zipCode) {
 		this.clientId = clientId;
 		this.surveyType = surveyType;
 		this.surveyScore = surveyScore;
@@ -124,11 +124,11 @@ public class EligibleClient implements Serializable {
 
 	//@Transient
 	@Column(name = "zip_code")
-	public int getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
 
-	public void setZipCode(int zipCode) {
+	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 
