@@ -61,7 +61,7 @@ public class MatchController extends BaseController {
 			List<Link> links = new ArrayList<>();
 			links.add(new Link("/matches/client/"+model.getEligibleClients().getClientId()+"/status").withRel("history"));
 			if(model.getEligibleClients().getLink()!=null)
-				links.add(new Link("client",model.getEligibleClients().getLink()));
+				links.add(new Link(model.getEligibleClients().getLink()).withRel("client"));
 //			resource.add(new Link("/matches/client/"+model.getEligibleClients().getClientId()+"/status").withRel("history"));
 			//if(model.getEligibleClients().getLink()!=null)
 //				resource.add(new Link(model.getEligibleClients().getLink()).withRel("client"));
