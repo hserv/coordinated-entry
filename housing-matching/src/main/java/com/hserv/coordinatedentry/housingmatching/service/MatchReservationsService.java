@@ -32,7 +32,7 @@ public interface MatchReservationsService {
 	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel);
 	
 	
-	public void updateMatchStatus(UUID clientId,MatchStatusModel statusModel,String auditUser) throws Exception;
+	public void updateMatchStatus(UUID clientId,MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception;
 	
 	List<MatchStatusModel> getMatchStatusHistory(UUID clientId,String projectGroupCode) throws Exception;
 	

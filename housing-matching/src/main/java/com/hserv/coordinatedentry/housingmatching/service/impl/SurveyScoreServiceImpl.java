@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
+import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.external.SurveyMSService;
 import com.hserv.coordinatedentry.housingmatching.model.ClientSurveyScore;
 import com.hserv.coordinatedentry.housingmatching.model.ClientsSurveyScores;
@@ -42,6 +45,9 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	
 	@Autowired
 	EligibleClientService eligibleClientService;
+	
+	@Autowired
+	RepositoryFactory repositoryFactory;
 	
 	
 	@Override
@@ -85,13 +91,16 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		List<EligibleClient> eligibleClients = new ArrayList<EligibleClient>();
 		MatchStrategy strategy;
 		for(ClientSurveyScore clientSurveyScore : surveyResponseModel.getClientsSurveyScores()){
-			EligibleClient eligibleClient = new EligibleClient();
+			EligibleClient eligibleClient = eligibleClientsRepository.findOne(clientSurveyScore.getClientId());
+			if(eligibleClient==null){
+				eligibleClient = new EligibleClient();
+				eligibleClient.setMatched(false);
+			}
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
 			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 			int additionalScore = strategy.getAdditionalScore(19,clientSurveyScore.getSurveyTagvalue());
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
-			eligibleClient.setMatched(false);
 			//  Get survey tag value : SINGLE_AUDULT pass individual true
 			//                         FAMILY pass family true
 			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagvalue()));
@@ -101,8 +110,20 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
 			eligibleClient.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
 			if(client!=null)
-				eligibleClient.setClientLink(client.getLink());			
-			eligibleClientsRepository.save(eligibleClient);
+				eligibleClient.setClientLink(client.getLink());		
+			if(!eligibleClient.getMatched())
+				eligibleClientsRepository.save(eligibleClient);
+			
+		    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClient(eligibleClient);
+			if(matches.isEmpty()){
+				Match  match = new Match();
+				match.setEligibleClient(eligibleClient);
+				match.setManualMatch(false);
+		//		match.setMatchDate(new Date());
+				match.setMatchStatus(0);
+				match.setProgramType(session.getAccount().getProjectGroup().getProjectGroupCode());
+	//			repositoryFactory.getMatchReservationsRepository().save(match);
+			}
 			//eligibleClients.add(eligibleClient);
 			
 		}

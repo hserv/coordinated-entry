@@ -13,5 +13,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.MatchStatus;
 public interface MatchStatusRepository extends JpaRepository<MatchStatus, Serializable>{
 
   List<MatchStatus> findByClientId(UUID clientId);
+  
+  List<MatchStatus> findByClientIdOrderByDateCreatedDesc(UUID clientId);
 	
 }

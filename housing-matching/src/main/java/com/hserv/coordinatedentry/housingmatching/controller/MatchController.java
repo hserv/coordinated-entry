@@ -187,7 +187,8 @@ public class MatchController extends BaseController {
 	@APIMapping(value="UPDATE_MATCH_STATUS")
 	public void updateMatchStatus(@PathVariable("id") UUID clientId,@RequestBody MatchStatusModel matchStatusModel,HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
-		matchReservationsService.updateMatchStatus(clientId, matchStatusModel,session.getAccount().getUsername());
+		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
+		matchReservationsService.updateMatchStatus(clientId, matchStatusModel,session.getAccount().getUsername(),session,trustedAppId);
 	}
 	
 	@RequestMapping(value="/client/{id}/status",method=RequestMethod.GET)

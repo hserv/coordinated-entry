@@ -14,6 +14,8 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -76,8 +78,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	
 	@Autowired
 	ISearchServiceClient searchServiceClient;
-	
+		
 	Map<Integer, Integer[]> statusMap =new HashMap<Integer,Integer[]>();
+	
 	
 	@PostConstruct
 	public void init(){
@@ -159,7 +162,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 	
 	@Override
-	public void updateMatchStatus(UUID clientId, MatchStatusModel statusModel,String auditUser) throws Exception {
+	public void updateMatchStatus(UUID clientId, MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception {
 		EligibleClient client = new EligibleClient();
 		client.setClientId(clientId);
 		List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClient(client);
@@ -187,12 +190,12 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		match.setMatchStatus(statusModel.getStatus());
 		repositoryFactory.getMatchReservationsRepository().save(match);
 		if(!statusModel.getRecipients().getToRecipients().isEmpty())
-			notificationService.notifyStatusUpdate(match, statusModel.getRecipients());
+			notificationService.notifyStatusUpdate(match, statusModel.getRecipients(),session,trustedApp);
 	}
 	
 	public List<MatchStatusModel> getMatchStatusHistory(UUID clientId,String projectGroupCode) throws Exception {
 		List<MatchStatusModel> history = new ArrayList<MatchStatusModel>();
-		List<MatchStatus> statusHistory = repositoryFactory.getMatchStatusRepository().findByClientId(clientId);
+		List<MatchStatus> statusHistory = repositoryFactory.getMatchStatusRepository().findByClientIdOrderByDateCreatedDesc(clientId);
 		for(MatchStatus matchStatus : statusHistory){
 			MatchStatusModel matchStatusModel = new MatchStatusModel();
 			BeanUtils.copyProperties(matchStatus, matchStatusModel,"recipients");
@@ -230,9 +233,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 		String projectGroup = session.getAccount().getProjectGroup().getProjectGroupCode();
 		List<HousingInventory> housingInventories = repositoryFactory.getHousingUnitsRepository().findByProjectGroupCode(projectGroup);
-
+		Integer matchCount =0;
 		for(HousingInventory housingInventory : housingInventories ){
-			Integer matchCount =0;
+
 			Project project = projectService.getProjectInfo(housingInventory.getProjectId(), session, trustedAppId);
 			if(project!=null) {
 					List<EligibleClient> clients= new ArrayList<>();
@@ -252,7 +255,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 										Integer bedsRequired = eligibilityValidator.validateBedsAvailability(baseClient.getClientId(), housingInventory.getBedsCurrent());
 										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(baseClient, requirements);						
 										if(validClient){
-											this.matchClient(client, housingInventory);
+											this.matchClient(client, housingInventory,projectGroup);
 											matchCount++;
 												break;
 										}
@@ -263,13 +266,21 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		}
 	}
 	
-	public void matchClient(EligibleClient client,HousingInventory housingInventory){
-		Match match = new Match();
-		match.setEligibleClient(client);
+	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode){
+		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClient(client);
+		Match match =null;
+		if(matches.isEmpty()) {
+			 match = new Match();
+			 match.setEligibleClient(client);
+		}else{
+			match = matches.get(0);
+		}
+	
 		match.setHousingUnitId(housingInventory.getHousingInventoryId());
 		match.setManualMatch(false);
 		match.setMatchDate(new Date());
 		match.setMatchStatus(0);
+		match.setProgramType(projectGroupCode);
 		repositoryFactory.getMatchReservationsRepository().save(match);
 		client.setMatched(true);
 		repositoryFactory.getEligibleClientsRepository().save(client);

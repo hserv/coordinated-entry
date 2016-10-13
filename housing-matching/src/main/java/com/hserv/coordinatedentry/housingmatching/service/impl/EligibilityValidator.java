@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -27,10 +28,19 @@ public class EligibilityValidator {
 	
 	@Autowired
 	RepositoryFactory repositoryFactory;
+	
+	
+	@Value(value = "${apply_project_eligibility}")
+	boolean applyProjectEligibility;
 
 	public boolean validateProjectEligibility(BaseClient client,List<com.hserv.coordinatedentry.housingmatching.entity.EligibilityRequirement> eligibilityRequirementModels){
 		
+		
+		
 			boolean result=false;
+			if(!applyProjectEligibility)
+				return true;
+			
 			EvaluationContext context = new StandardEvaluationContext(client);
 			ExpressionParser parser = new SpelExpressionParser();
 			ObjectMapper mapper = new ObjectMapper();
@@ -49,8 +59,11 @@ public class EligibilityValidator {
 				for( Requirement requirement :  requirements){
 						
 						String req=generateExpression(requirement.getName(), requirement.getValue()+"");
-						Expression expression = parser.parseExpression(req);
-						result = (boolean) expression.getValue(context);
+						try{
+							Expression expression = parser.parseExpression(req);
+							result = (boolean) expression.getValue(context);
+						}catch (Exception e) {
+						}
 						System.out.println("  result "+result +" client id "+client.getClientId() + "race "+client.getRace() +" gender "+client.getGender());
  					}
 					System.out.println("  result "+result);
@@ -88,9 +101,9 @@ public class EligibilityValidator {
 	public Integer validateBedsAvailability(UUID clientId,Integer bedsCount){
 		Integer bedsRequired = 0;
 		Integer members =0;
-		HouseholdMembership membership =  repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientId(clientId);
+		List<HouseholdMembership> membership =  repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientId(clientId);
 		if(membership!=null){
-			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.getGlobalHousehold());
+			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.get(0).getGlobalHousehold());
 		}else{
 			return 0;
 		}

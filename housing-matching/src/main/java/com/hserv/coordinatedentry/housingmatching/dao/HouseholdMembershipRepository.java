@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.dao;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -17,7 +18,7 @@ public interface HouseholdMembershipRepository extends JpaRepository<HouseholdMe
 	
    Page<HouseholdMembership> findByGlobalHousehold(GlobalHousehold globalHousehold,Pageable pageable);
 
-   HouseholdMembership findByGlobalClientId(UUID clientId);
+   List<HouseholdMembership> findByGlobalClientId(UUID clientId);
 
    Integer countByGlobalHousehold(GlobalHousehold globalHousehold);
 
