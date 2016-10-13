@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibilityRequirement;
 import com.hserv.coordinatedentry.housingmatching.entity.HouseholdMembership;
+import com.hserv.coordinatedentry.housingmatching.model.ClientDEModel;
 import com.hserv.coordinatedentry.housingmatching.model.Requirement;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 
@@ -33,14 +34,13 @@ public class EligibilityValidator {
 	@Value(value = "${apply_project_eligibility}")
 	boolean applyProjectEligibility;
 
-	public boolean validateProjectEligibility(BaseClient client,List<com.hserv.coordinatedentry.housingmatching.entity.EligibilityRequirement> eligibilityRequirementModels){
-		
-		
-		
+	public boolean validateProjectEligibility(ClientDEModel client,UUID projectId) {
 			boolean result=false;
+			
 			if(!applyProjectEligibility)
 				return true;
 			
+			List<EligibilityRequirement> eligibilityRequirementModels = repositoryFactory.getEligibilityRequirementRepository().findByProjectId(projectId);
 			EvaluationContext context = new StandardEvaluationContext(client);
 			ExpressionParser parser = new SpelExpressionParser();
 			ObjectMapper mapper = new ObjectMapper();
@@ -62,12 +62,14 @@ public class EligibilityValidator {
 						try{
 							Expression expression = parser.parseExpression(req);
 							result = (boolean) expression.getValue(context);
+							System.out.println(" attribute "+ requirement.getName() +" with expression "+requirement.getValue()+" evaluation "+result);
 						}catch (Exception e) {
+							System.out.println(" attribute "+ requirement.getName() +" with expression "+requirement.getValue()+" "+e.getMessage());
+							result = true;
 						}
-						System.out.println("  result "+result +" client id "+client.getClientId() + "race "+client.getRace() +" gender "+client.getGender());
  					}
-					System.out.println("  result "+result);
 			}
+			System.out.println("  Project eligibility validation result "+result);
 			return result;
 	}
 	
@@ -105,16 +107,16 @@ public class EligibilityValidator {
 		if(membership!=null){
 			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.get(0).getGlobalHousehold());
 		}else{
-			return 0;
+			bedsRequired = 0;
 		}
 		if(members == bedsCount ){
 			bedsRequired = members;
-			return bedsRequired;
 		}
 		if( (members-1) == bedsCount){
 			bedsRequired = bedsCount;
-			return bedsRequired;
 		}
+		
+		System.out.println("Requeired beds are "+bedsRequired);
 		return bedsRequired;
 	}
 	

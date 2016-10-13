@@ -36,6 +36,7 @@ import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.external.NotificationService;
 import com.hserv.coordinatedentry.housingmatching.external.ProjectService;
 import com.hserv.coordinatedentry.housingmatching.helper.InvalidMatchStatus;
+import com.hserv.coordinatedentry.housingmatching.model.ClientDEModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchStatusModel;
 import com.hserv.coordinatedentry.housingmatching.model.Project;
@@ -244,16 +245,17 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 						}else{
 							 clients = eligibleClientService.getEligibleClients(project.getProjectType(),projectGroup, "SINGLE_ADULT");					
 						}
-						
-						List<EligibilityRequirement> requirements = repositoryFactory.getEligibilityRequirementRepository().findByProjectId(housingInventory.getProjectId());
-							
+													
 						for(EligibleClient client : clients) {
-							System.out.println("  Project id "+project.getProjectId() +" housing unit id "+housingInventory.getHousingInventoryId() +" client id "+client.getClientId());
+							System.out.println("  Project id "+project.getProjectId() +" ||  housing unit id "+housingInventory.getHousingInventoryId() +" || client id "+client.getClientId());
 							boolean validClient= false;
 							BaseClient baseClient = eligibleClientService.getClientInfo(client.getClientId(), trustedAppId, session.getToken());
 							if(baseClient!=null){
+										ClientDEModel model = new ClientDEModel();
+										model.populateValues(baseClient);
+										model.populateValues(client);
 										Integer bedsRequired = eligibilityValidator.validateBedsAvailability(baseClient.getClientId(), housingInventory.getBedsCurrent());
-										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(baseClient, requirements);						
+										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(model, project.getProjectId());						
 										if(validClient){
 											this.matchClient(client, housingInventory,projectGroup);
 											matchCount++;
