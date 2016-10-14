@@ -23,6 +23,7 @@ import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.SurveyScoreTranslator;
+import com.hserv.coordinatedentry.housingmatching.util.DateUtil;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
@@ -99,7 +100,11 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
 			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
-			int additionalScore = strategy.getAdditionalScore(19,clientSurveyScore.getSurveyTagvalue());
+			int additionalScore =0;
+			if(client!=null && client.getDob()!=null){
+					additionalScore = strategy.getAdditionalScore(DateUtil.calculateAge(client.getDob()),clientSurveyScore.getSurveyTagvalue());
+			}
+		 
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			//  Get survey tag value : SINGLE_AUDULT pass individual true
 			//                         FAMILY pass family true
