@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.servinglynk.hmis.warehouse.core.model.JsonDateDeserializer;
-import com.servinglynk.hmis.warehouse.core.model.JsonDateTimeSerializer;
 import com.servinglynk.hmis.warehouse.core.model.Recipients;
 
 public class MatchStatusModel {
@@ -19,11 +17,11 @@ public class MatchStatusModel {
 	private Recipients recipients = new Recipients();
 	private boolean active;
 	
-	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonSerialize(using=JsonDateTimeSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	private LocalDateTime dateCreated;
 	
-	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)	
 	@JsonSerialize(using=JsonDateTimeSerializer.class)
 	private LocalDateTime dateUpdated;
 	private String userId;
