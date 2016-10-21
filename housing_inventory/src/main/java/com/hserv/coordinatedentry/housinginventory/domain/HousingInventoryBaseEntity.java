@@ -14,8 +14,11 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateDeserializer;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateTimeSerializer;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -28,16 +31,16 @@ public class HousingInventoryBaseEntity implements Serializable {
 
 	@CreatedDate
 	@Column(name="date_created")
-	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
-	@JsonIgnore
+	@JsonDeserialize(using=JsonDateDeserializer.class)	
+	@JsonSerialize(using=JsonDateTimeSerializer.class)
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
 	private LocalDateTime dateCreated;
 
 	@LastModifiedDate
 	@Column(name="date_updated")
-	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")	
-	@JsonIgnore
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+	@JsonDeserialize(using=JsonDateDeserializer.class)	
+	@JsonSerialize(using=JsonDateTimeSerializer.class)
 	private LocalDateTime dateUpdated;
 
 	@CreatedBy
