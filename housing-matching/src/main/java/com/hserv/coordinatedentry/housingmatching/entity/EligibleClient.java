@@ -1,6 +1,5 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,24 +15,45 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "eligible_clients", schema = "housing_inventory")
-public class EligibleClient implements Serializable {
-
-	private static final long serialVersionUID = 5256856995847711631L;
-
+public class EligibleClient extends BaseEntity {
+	@Id
+	@Column(name = "client_id", unique = true, nullable = false)
+	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
 	private UUID clientId;
+	@Column(name = "survey_type")	
 	private String surveyType;
-	private Integer surveyScore;
-	private String programType;
-	private Boolean matched;
-	private LocalDateTime surveyDate;
-	private String spdatLabel;
-	private String projectGroupCode;
-	private String zipCode;
-	private Integer cocScore;
-	private String clientLink;
 	
+
+	@Column(name = "survey_score")
+	private Integer surveyScore;
+	
+
+	@Column(name = "program_type")
+	private String programType;
+	
+	@Column(name = "matched")
+	private Boolean matched;
+	
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+	@Column(name = "survey_date")
+	private LocalDateTime surveyDate;
+	
+	@Column(name = "spdat_label")
+	private String spdatLabel;
+		
+	@Column(name = "zip_code")
+	private String zipCode;
+	
+	@Column(name="coc_score")
+	private Integer cocScore;
+	
+	@Column(name="client_link")
+	private String clientLink;
+
+	@OneToMany(mappedBy="eligibleClient",cascade= CascadeType.REMOVE)
 	private List<Match> matchs = new ArrayList<>(); 
 	
 	public EligibleClient() {
@@ -56,9 +76,6 @@ public class EligibleClient implements Serializable {
 		this.zipCode = zipCode;
 	}
 
-	@Id
-	@Column(name = "client_id", unique = true, nullable = false)
-	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
 	public UUID getClientId() {
 		return this.clientId;
 	}
@@ -67,7 +84,7 @@ public class EligibleClient implements Serializable {
 		this.clientId = clientId;
 	}
 
-	@Column(name = "survey_type")
+
 	public String getSurveyType() {
 		return this.surveyType;
 	}
@@ -76,7 +93,7 @@ public class EligibleClient implements Serializable {
 		this.surveyType = surveyType;
 	}
 
-	@Column(name = "survey_score")
+
 	public Integer getSurveyScore() {
 		return this.surveyScore;
 	}
@@ -85,7 +102,7 @@ public class EligibleClient implements Serializable {
 		this.surveyScore = surveyScore;
 	}
 
-	@Column(name = "program_type")
+
 	public String getProgramType() {
 		return this.programType;
 	}
@@ -94,7 +111,7 @@ public class EligibleClient implements Serializable {
 		this.programType = programType;
 	}
 
-	@Column(name = "matched")
+
 	public Boolean getMatched() {
 		return this.matched;
 	}
@@ -103,8 +120,7 @@ public class EligibleClient implements Serializable {
 		this.matched = matched;
 	}
 
-	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
-	@Column(name = "survey_date", length = 13)
+
 	public LocalDateTime getSurveyDate() {
 		return this.surveyDate;
 	}
@@ -113,7 +129,7 @@ public class EligibleClient implements Serializable {
 		this.surveyDate = surveyDate;
 	}
 
-	@Column(name = "spdat_label")
+
 	public String getSpdatLabel() {
 		return this.spdatLabel;
 	}
@@ -123,7 +139,7 @@ public class EligibleClient implements Serializable {
 	}
 
 	//@Transient
-	@Column(name = "zip_code")
+
 	public String getZipCode() {
 		return zipCode;
 	}
@@ -132,7 +148,7 @@ public class EligibleClient implements Serializable {
 		this.zipCode = zipCode;
 	}
 
-	@OneToMany(mappedBy="eligibleClient",cascade= CascadeType.REMOVE)
+
 	public List<Match> getMatchs() {
 		return matchs;
 	}
@@ -140,17 +156,7 @@ public class EligibleClient implements Serializable {
 	public void setMatchs(List<Match> matchs) {
 		this.matchs = matchs;
 	}
-
-	@Column(name="project_group_code")
-	public String getProjectGroupCode() {
-		return projectGroupCode;
-	}
-
-	public void setProjectGroupCode(String projectGroupCode) {
-		this.projectGroupCode = projectGroupCode;
-	}
-
-	@Column(name="coc_score")
+	
 	public Integer getCocScore() {
 		return cocScore;
 	}
@@ -159,7 +165,7 @@ public class EligibleClient implements Serializable {
 		this.cocScore = cocScore;
 	}
 
-	@Column(name="client_link")
+
 	public String getClientLink() {
 		return clientLink;
 	}

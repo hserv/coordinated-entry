@@ -1,5 +1,4 @@
 package com.hserv.coordinatedentry.housinginventory.domain;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -18,11 +17,11 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name="housing_unit",schema="housing_inventory")
 public class HousingInventory extends HousingInventoryBaseEntity  {
 	
-	private static final long serialVersionUID = -5909795577794623031L;
 	@Id
 	@Column(name = "housing_unit_id")
 	@GeneratedValue(generator = "uuid")
@@ -36,9 +35,6 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	@Column(name = "project_id")
     @org.hibernate.annotations.Type(type="pg-uuid")
 	private UUID projectId;
-	
-	@Column(name = "user_id")
-	private String userId;
 	
 	@Column(name = "beds_capacity")
 	private Integer bedsCapacity;
@@ -58,9 +54,6 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	@Column(name="schema_year")
 	private Integer schemaYear;
 	
-	@Column(name="project_group_code")
-	private String projectGroupCode;
-	
 	
 	@OneToMany(mappedBy = "housingInventory",cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonIgnore
@@ -78,21 +71,6 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 		
 	}
 	
-	public HousingInventory(UUID housingInventoryId, Integer bedsCurrent, UUID projectId, String userId,
-			Integer bedsCapacity, Boolean familyUnit, Boolean inService, Boolean vacant,LocalDateTime dateCreated,
-			LocalDateTime dateUpdated, Boolean inactive,HousingUnitAddress housingUnitAddress) {
-		super(dateCreated, dateUpdated,inactive);
-		this.housingInventoryId = housingInventoryId;
-		this.bedsCurrent = bedsCurrent;
-		this.projectId = projectId;
-		this.userId = userId;
-		this.bedsCapacity = bedsCapacity;
-		this.familyUnit = familyUnit;
-		this.inService = inService;
-		this.vacant = vacant;
-		this.housingUnitAddress=housingUnitAddress;
-	}
-
 	public Set<HousingUnitAddress> getHousingUnitAddresss() {
 		return housingUnitAddresss;
 	}
@@ -159,14 +137,6 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 		this.projectId = projectId;
 	}
 
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
 	public HousingUnitAddress getHousingUnitAddress() {
 		return housingUnitAddress;
 	}
@@ -198,15 +168,6 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	public void setSchemaYear(Integer schemaYear) {
 		this.schemaYear = schemaYear;
 	}
-
-	public String getProjectGroupCode() {
-		return projectGroupCode;
-	}
-
-	public void setProjectGroupCode(String projectGroupCode) {
-		this.projectGroupCode = projectGroupCode;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

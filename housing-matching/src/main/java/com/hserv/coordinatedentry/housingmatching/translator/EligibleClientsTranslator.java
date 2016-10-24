@@ -31,7 +31,8 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setSurveyScore(eligibleClient.getSurveyScore());
 			eligibleClientModel.setSurveyDate(eligibleClient.getSurveyDate());
 			eligibleClientModel.setLink(eligibleClient.getClientLink());
-
+			eligibleClientModel.setDateCreated(eligibleClient.getDateCreated());
+			eligibleClientModel.setDateUpdated(eligibleClient.getDateUpdated());
 		}
 		return eligibleClientModel;
 	}
@@ -52,7 +53,6 @@ public class EligibleClientsTranslator {
 		eligibleClient.setZipCode(eligibleClientModel.getZipcode());
 		eligibleClient.setSurveyType(eligibleClientModel.getSurveyType());
 		eligibleClient.setClientLink(eligibleClientModel.getLink());
-		eligibleClient.setProjectGroupCode("MO0010");
 		MatchStrategy strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 		int additionalScore = strategy.getAdditionalScore(19,eligibleClientModel.getSpdatLabel().getValue());
 		eligibleClient.setCocScore(eligibleClientModel.getSurveyScore().intValue()+additionalScore);

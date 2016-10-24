@@ -3,14 +3,11 @@ package com.hserv.coordinatedentry.housingmatching.translator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hserv.coordinatedentry.housingmatching.controller.EligibleClientsController;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
-import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 
 @Component
@@ -62,7 +59,6 @@ public class MatchReservationTranslator {
 		matchReservationModel.setInactive(matchReserve.getInactive());
 		matchReservationModel.setHousingUnitId(matchReserve.getHousingUnitId());
 		matchReservationModel.setEligibleClients(eligibleClientsTranslator.translate(matchReserve.getEligibleClient()));
-	//	matchReservationModel.setNoteId(matchReserve.getNoteId());
 		return matchReservationModel;
 	}
 

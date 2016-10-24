@@ -1,7 +1,5 @@
 package com.hserv.coordinatedentry.housinginventory.web.rest;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
@@ -29,9 +28,7 @@ import com.hserv.coordinatedentry.housinginventory.model.EligibilityRequirementM
 import com.hserv.coordinatedentry.housinginventory.repository.EligibilityRequirementRepository;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.JsonUtil;
-import com.servinglynk.hmis.warehouse.core.model.BaseProject;
 import com.servinglynk.hmis.warehouse.core.model.Session;
-import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 
 @RestController
 @RequestMapping("/projects")
@@ -107,6 +104,7 @@ public class EligibilityRequirementResource extends BaseResource {
 	public ResponseEntity<Void> deleteEligibility(@PathVariable UUID projectId,
 			@PathVariable UUID eligibilityId, HttpServletRequest request) throws Exception {
 		EligibilityRequirement eligibility = housingUnitEligibilityRepository.findOne(eligibilityId);
+		if(eligibility==null) throw new ResourceNotFoundException("Eligibility requirement not found "+eligibilityId);
 		housingUnitEligibilityRepository.delete(eligibility);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("housingEligibility", eligibilityId.toString())).build();
 	}
@@ -115,17 +113,16 @@ public class EligibilityRequirementResource extends BaseResource {
 	@RequestMapping(value="/{projectId}/eligibilityrequirements/{eligibilityId}",method=RequestMethod.GET,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public EligibilityRequirementModel getEligibilityById(@PathVariable UUID projectId,
 			@PathVariable UUID eligibilityId, HttpServletRequest request) throws Exception {
-
-		EligibilityRequirement eligibility = housingUnitEligibilityRepository.findOne(eligibilityId);
-		
+		Session session = sessionHelper.getSession(request);
+		EligibilityRequirement eligibility = housingUnitEligibilityRepository.findByEligibilityIdAndProjectGroupCode(eligibilityId,session.getAccount().getProjectGroup().getProjectGroupCode());		
 		return JsonUtil.fromJSON(eligibility.getEligibility(), EligibilityRequirementModel.class);
 	}
 	
 	@APIMapping(value="CREATE_HOUSING_INVENTORIES")
 	@RequestMapping(value="/{projectId}/eligibilityrequirements",method=RequestMethod.GET,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Resources<Resource>> getEligibilities(@PathVariable UUID projectId, HttpServletRequest request,Pageable pageable) throws Exception {
-		
-	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectId(projectId, pageable);
+		Session session = sessionHelper.getSession(request);
+	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectIdAndProjectGroupCode(projectId,session.getAccount().getProjectGroup().getProjectGroupCode(), pageable);
 		return new ResponseEntity<>(assembler.toResource(page, housingInventoryAssembler),
 				HttpStatus.OK);
 	}

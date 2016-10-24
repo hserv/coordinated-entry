@@ -12,6 +12,8 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 public interface HousingInventoryRepository extends JpaRepository<HousingInventory,
 Serializable> , JpaSpecificationExecutor<HousingInventory>{
 
+	HousingInventory findByHousingInventoryIdAndProjectGroupCode(UUID inventoryId, String projectgroup);
+	
 	
 	@Query(value="select 1",nativeQuery=true)
 	Integer validateConnection();

@@ -1,13 +1,13 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +24,7 @@ import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.SurveyScoreTranslator;
 import com.hserv.coordinatedentry.housingmatching.util.DateUtil;
+import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
@@ -53,7 +54,8 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	
 	@Override
 	public Page<EligibleClient> getScores(Pageable pageable) {
-		return eligibleClientsRepository.findAll(pageable);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		return eligibleClientsRepository.findByProjectGroupCode(projectGroup,pageable);
 	}
 
 	@Override
@@ -64,7 +66,8 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 
 	@Override
 	public int getScoreByClientId(UUID clientId) {
-			EligibleClient eligibleClients = eligibleClientsRepository.findByClientId(clientId);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+			EligibleClient eligibleClients = eligibleClientsRepository.findByClientIdAndProjectGroupCode(clientId,projectGroup);
 			if(eligibleClients!=null)
 				return eligibleClients.getSurveyScore();
 		     return 0;
@@ -78,7 +81,10 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 
 	@Override
 	public boolean updateScoreByClientId(int score, UUID clientId) {
-			eligibleClientsRepository.updateScoreByClientId(score, clientId);
+			EligibleClient client =	eligibleClientsRepository.findOne(clientId);
+			if(client==null) throw new ResourceNotFoundException("client not found "+clientId);
+			client.setSurveyScore(score);
+			eligibleClientsRepository.save(client);
 			return true;
 	}
 
@@ -113,7 +119,6 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagvalue());
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
 			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
-			eligibleClient.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
 			if(client!=null)
 				eligibleClient.setClientLink(client.getLink());		
 			if(!eligibleClient.getMatched())

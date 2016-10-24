@@ -10,41 +10,61 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "match_reservations", schema = "housing_inventory")
-public class Match implements java.io.Serializable {
+public class Match extends BaseEntity {
 
-	private static final long serialVersionUID = 2155758869863436437L;
-
-	private UUID reservationId;
-	private EligibleClient eligibleClient;
-	private String noteId;
-	private Date matchDate;
-	private Integer matchStatus;
-	private Integer reservationAdults;
-	private Integer reservationChildren;
-	private Boolean manualMatch;
-	private Boolean inactive;
-	private Date dateCreated;
-	private Date dateUpdated;
-	private String userId;
-	private UUID housingUnitId;
-	private String programType;
-	private UUID statusId;
-	
 	@Id
 	@Column(name = "reservation_id", unique = true, nullable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	private UUID reservationId;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "client_id", nullable = false)
+	private EligibleClient eligibleClient;
+
+	@Column(name = "note_id")
+	private String noteId;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "match_date", length = 13)
+	private Date matchDate;
+
+	@Column(name = "match_status")
+	private Integer matchStatus;
+
+	@Column(name = "reservation_adults")
+	private Integer reservationAdults;
+
+	@Column(name = "reservation_children")
+	private Integer reservationChildren;
+
+	@Column(name = "manual_match")
+	private Boolean manualMatch;
+
+	@Column(name = "inactive")
+	private Boolean inactive;
+
+	@Column(name = "housing_unit_id", nullable = false)
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID housingUnitId;
+
+	@Column(name = "program_type")
+	private String programType;
+
+	@Column(name = "status_id")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID statusId;
+
 	public UUID getReservationId() {
 		return this.reservationId;
 	}
@@ -53,8 +73,6 @@ public class Match implements java.io.Serializable {
 		this.reservationId = reservationId;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "client_id", nullable = false)
 	public EligibleClient getEligibleClient() {
 		return this.eligibleClient;
 	}
@@ -63,7 +81,6 @@ public class Match implements java.io.Serializable {
 		this.eligibleClient = eligibleClient;
 	}
 
-	@Column(name = "note_id")
 	public String getNoteId() {
 		return this.noteId;
 	}
@@ -72,8 +89,6 @@ public class Match implements java.io.Serializable {
 		this.noteId = noteId;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "match_date", length = 13)
 	public Date getMatchDate() {
 		return this.matchDate;
 	}
@@ -82,7 +97,6 @@ public class Match implements java.io.Serializable {
 		this.matchDate = matchDate;
 	}
 
-	@Column(name = "match_status")
 	public Integer getMatchStatus() {
 		return this.matchStatus;
 	}
@@ -91,7 +105,6 @@ public class Match implements java.io.Serializable {
 		this.matchStatus = matchStatus;
 	}
 
-	@Column(name = "reservation_adults")
 	public Integer getReservationAdults() {
 		return this.reservationAdults;
 	}
@@ -100,7 +113,6 @@ public class Match implements java.io.Serializable {
 		this.reservationAdults = reservationAdults;
 	}
 
-	@Column(name = "reservation_children")
 	public Integer getReservationChildren() {
 		return this.reservationChildren;
 	}
@@ -109,7 +121,6 @@ public class Match implements java.io.Serializable {
 		this.reservationChildren = reservationChildren;
 	}
 
-	@Column(name = "manual_match")
 	public Boolean getManualMatch() {
 		return this.manualMatch;
 	}
@@ -118,7 +129,6 @@ public class Match implements java.io.Serializable {
 		this.manualMatch = manualMatch;
 	}
 
-	@Column(name = "inactive")
 	public Boolean getInactive() {
 		return this.inactive;
 	}
@@ -127,37 +137,6 @@ public class Match implements java.io.Serializable {
 		this.inactive = inactive;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "date_created", length = 13)
-	public Date getDateCreated() {
-		return this.dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	@Temporal(TemporalType.DATE)
-	@Column(name = "date_updated", length = 13)
-	public Date getDateUpdated() {
-		return this.dateUpdated;
-	}
-
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
-
-	@Column(name = "user_id")
-	public String getUserId() {
-		return this.userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	@Column(name = "housing_unit_id", nullable = false)
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	public UUID getHousingUnitId() {
 		return this.housingUnitId;
 	}
@@ -166,17 +145,6 @@ public class Match implements java.io.Serializable {
 		this.housingUnitId = housingUnitId;
 	}
 
-	@PrePersist
-	protected void onCreate() {
-		dateCreated = dateUpdated = new Date();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		dateUpdated = new Date();
-	}
-
-	@Column(name = "program_type")
 	public String getProgramType() {
 		return this.programType;
 	}
@@ -185,8 +153,6 @@ public class Match implements java.io.Serializable {
 		this.programType = programType;
 	}
 
-	@Column(name="status_id")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	public UUID getStatusId() {
 		return statusId;
 	}

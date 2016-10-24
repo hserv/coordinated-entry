@@ -52,23 +52,6 @@ public class HousingUnitAddress  extends HousingInventoryBaseEntity {
 /*	@Transient
 	private UUID housingInventoryId;*/
 	
-    public HousingUnitAddress(){
-		
-	}
-	
-	public HousingUnitAddress(UUID addressId, String line1, String line2,
-			String state, String city, Integer zipCode,HousingInventory housingInventory,  LocalDateTime dateCreated,
-			LocalDateTime dateUpdated, Boolean inactive) {
-		super(dateCreated, dateUpdated, inactive);
-		this.addressId = addressId;
-		this.line1 = line1;
-		this.line2 = line2;
-		this.state = state;
-		this.city = city;
-		this.zipCode = zipCode;
-		this.housingInventory=housingInventory;
-	}
-
 	public UUID getAddressId() {
 		return addressId;
 	}

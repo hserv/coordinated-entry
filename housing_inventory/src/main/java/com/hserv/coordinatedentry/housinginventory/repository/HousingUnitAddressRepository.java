@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housinginventory.repository;
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,4 +15,6 @@ public interface HousingUnitAddressRepository extends JpaRepository<HousingUnitA
 
 	Page<HousingUnitAddress> findByHousingInventory(HousingInventory housingInventory,Pageable pageable);
 	List<HousingUnitAddress> findByHousingInventory(HousingInventory housingInventory);
+	HousingUnitAddress findByAddressIdAndProjectGroupCode(UUID id,
+			String projectGroup);
 }

@@ -1,9 +1,7 @@
 package com.hserv.coordinatedentry.housinginventory.service;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -11,23 +9,21 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.FetchMode;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.orm.hibernate4.HibernateTemplate;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
-import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
+import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
 
 @Component
 public class HousingInventoryService  {
@@ -81,11 +77,14 @@ public class HousingInventoryService  {
 	
 	@Transactional
 	public List<HousingInventory> updateHousingInentories(List<HousingInventory> housingInventories) {
-			housingInventoryRepository.save(housingInventories);
+			for(HousingInventory housingInventory : housingInventories){
+				HousingInventory unit = housingInventoryRepository.findOne(housingInventory.getHousingInventoryId());
+				BeanUtils.copyProperties(housingInventory, unit, "dateCreated");
+				housingInventoryRepository.save(unit);				
+			}
 		return housingInventories;
 	}
 	
-	@SuppressWarnings("unchecked") 
 	public Page<HousingInventory> getAllHousingInventory(HousingInventory housingInventory,Pageable pageable){
 		Specification<HousingInventory> specification = null;
 		
@@ -141,22 +140,17 @@ public class HousingInventoryService  {
 		return housingInventoryRepository.findAll(pageable);
 	}
 
-	@SuppressWarnings("unchecked")
 	public HousingInventory getHousingInventoryById(UUID housingInventoryId) {
-		/*List<HousingInventory> list=new ArrayList<HousingInventory>(0);
-		DetachedCriteria crit=DetachedCriteria.forClass(HousingInventory.class);
-		crit.add(Restrictions.eq("housingInventoryId", housingInventoryId));
-		crit.setFetchMode("address", FetchMode.JOIN);
-		list=(List<HousingInventory>)hibernateTemplate.findByCriteria(crit);
-		if(list.size()!=0)
-			return list.get(0);
-		else 
-		return null;*/
-		return housingInventoryRepository.findOne(housingInventoryId);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		HousingInventory inventory =housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCode(housingInventoryId,projectGroup);
+		if(inventory==null) throw new ResourceNotFoundException("Housing unit not found "+housingInventoryId);
+		return inventory;
 	}
 	
 	public void delete(UUID id) {
-		HousingInventory inventory = housingInventoryRepository.findOne(id);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		HousingInventory inventory =housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCode(id,projectGroup);
+		if(inventory==null) throw new ResourceNotFoundException("Housing unit not found "+id);
         housingInventoryRepository.delete(inventory);
     }
 	

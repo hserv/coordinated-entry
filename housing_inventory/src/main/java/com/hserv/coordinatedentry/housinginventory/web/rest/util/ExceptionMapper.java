@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.client.HttpClientErrorException;
 
 public class ExceptionMapper {
@@ -32,7 +33,14 @@ public class ExceptionMapper {
 			th.printStackTrace();
 
 			throw th;
-		} catch (HttpClientErrorException ex) {
+		}catch (ResourceNotFoundException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("RESOURCE_NOT_FOUND");
+			r.setErrorMessage(ex.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_NOT_FOUND);
+		}
+		catch (HttpClientErrorException ex) {
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);
 			r.setErrorCode("REQUEST_AUTHENTICATION_FAILED");

@@ -46,35 +46,9 @@ public class HousingUnitAddressResource extends BaseResource{
 		@Override
 		public Resource<HousingUnitAddress> toResource(HousingUnitAddress arg0) {
 			Resource<HousingUnitAddress> resource = new Resource<HousingUnitAddress>(arg0);
-			
-/*			resource.add(
-					linkTo(methodOn(HousingUnitAddressResource.class).getHousingInverntoryByID(arg0.getHousingInventory().getHousingInventoryId(),arg0.getAddressId())).withSelfRel());*/
 			return resource;
 		}
 	}
-	
-
-	/*@APIMapping(value="CREATE_ADDRESSES")
-	@RequestMapping(value = "/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<HousingUnitAddress> createHousingUnitAddress(@RequestBody HousingUnitAddress housingUnitAddress)
-			throws URISyntaxException {
-		// log.debug("REST request to save HousingUnitAddress : {}",
-		if (housingUnitAddress.getAddressId() != null) {
-			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("housingUnitAddress", "idexists",
-					"A new housingUnitAddress cannot already have an ID")).body(null);
-		}
-		HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress);
-		return ResponseEntity
-				.created(new URI("/api/housing-units/" + result.getAddressId())).headers(HeaderUtil
-						.createEntityCreationAlert("housingUnitAddress", result.getAddressId().toString()))
-				.body(result);
-	}
-	
-	@APIMapping(value="UPDATE_ADDRESSES")
-	@RequestMapping(value = "/addresses", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public List<HousingUnitAddress> getAlladdresses() {
-		return housingUnitAddressService.findAll();
-	}*/
 	
 	@APIMapping(value="CREATE_ADDRESSES")
 	@RequestMapping(value = "/{housingUnitId}/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE/*, produces = MediaType.APPLICATION_JSON_VALUE*/)

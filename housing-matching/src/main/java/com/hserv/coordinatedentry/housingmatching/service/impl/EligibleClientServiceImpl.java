@@ -27,6 +27,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
+import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
@@ -69,7 +70,8 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	
 	@Override
 	public EligibleClientModel getEligibleClientDetail(UUID clientID) {
-		EligibleClient eligibleClient = eligibleClientsRepository.findByClientId(clientID);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		EligibleClient eligibleClient = eligibleClientsRepository.findByClientIdAndProjectGroupCode(clientID,projectGroup);
 		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible not found "+clientID);
 		EligibleClientModel eligibleClientModel=  eligibleClientsTranslator.translate(eligibleClient);
 		return eligibleClientModel;

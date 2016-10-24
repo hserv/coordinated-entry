@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housinginventory.repository;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,4 +13,6 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAssignment;
 public interface HousingUnitAssignmentRepository extends JpaRepository<HousingUnitAssignment, Serializable>{
 
 	Page<HousingUnitAssignment> findByHousingInventory(HousingInventory housingInventory,Pageable pageable);
+	
+	HousingUnitAssignment findByAssignmentIdAndProjectGroupCode(UUID assignmentId,String projectGroupCode);
 }

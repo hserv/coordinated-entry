@@ -13,6 +13,8 @@ import com.hserv.coordinatedentry.housingmatching.annotations.ValidateClient;
 import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
 import com.servinglynk.hmis.warehouse.core.model.JsonDateDeserializer;
 import com.servinglynk.hmis.warehouse.core.model.JsonDateTimeSerializer;
+import com.servinglynk.hmis.warehouse.core.model.JsonTimestampDeserializer;
+import com.servinglynk.hmis.warehouse.core.model.JsonTimestampSerializer;
 
 @ValidateClient(clientIdField="clientId",linkField="link")
 public class EligibleClientModel {
@@ -28,6 +30,13 @@ public class EligibleClientModel {
 	private SpdatLabelEnum spdatLabel;
 	@Length(min=5,max=5,message="Invalid zip code")
 	private String zipcode;
+	
+	@JsonDeserialize(using=JsonTimestampDeserializer.class)
+	@JsonSerialize(using=JsonTimestampSerializer.class)
+	private LocalDateTime dateCreated;
+	@JsonDeserialize(using=JsonTimestampDeserializer.class)
+	@JsonSerialize(using=JsonTimestampSerializer.class)
+	private LocalDateTime dateUpdated;
 	
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String link;
@@ -85,5 +94,17 @@ public class EligibleClientModel {
 	}
 	public void setLink(String link) {
 		this.link = link;
+	}
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public LocalDateTime getDateUpdated() {
+		return dateUpdated;
+	}
+	public void setDateUpdated(LocalDateTime dateUpdated) {
+		this.dateUpdated = dateUpdated;
 	}
 }

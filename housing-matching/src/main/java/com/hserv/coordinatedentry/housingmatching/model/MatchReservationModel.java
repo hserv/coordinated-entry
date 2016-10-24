@@ -1,8 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class MatchReservationModel {
@@ -17,8 +16,8 @@ public class MatchReservationModel {
 	private Integer reservationChildren;
 	private Boolean manualMatch;
 	private Boolean inactive;
-	private Date dateCreated;
-	private Date dateUpdated;
+	private LocalDateTime dateCreated;
+	private LocalDateTime dateUpdated;
 
 	public UUID getReservationId() {
 		return reservationId;
@@ -80,16 +79,16 @@ public class MatchReservationModel {
 	public void setInactive(Boolean inactive) {
 		this.inactive = inactive;
 	}
-	public Date getDateCreated() {
+	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(LocalDateTime dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-	public Date getDateUpdated() {
+	public LocalDateTime getDateUpdated() {
 		return dateUpdated;
 	}
-	public void setDateUpdated(Date dateUpdated) {
+	public void setDateUpdated(LocalDateTime dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
 	public UUID getHousingUnitId() {
@@ -98,13 +97,4 @@ public class MatchReservationModel {
 	public void setHousingUnitId(UUID housingUnitId) {
 		this.housingUnitId = housingUnitId;
 	}
-	@Override
-	public String toString() {
-		return "MatchReservationModel [reservationId=" + reservationId + ", eligibleClients=" + eligibleClients
-				+ ", housingInventory=" + housingInventory + ", noteId=" + noteId + ", matchDate=" + matchDate
-				+ ", matchStatus=" + matchStatus + ", reservationAdults=" + reservationAdults + ", reservationChildren="
-				+ reservationChildren + ", manualMatch=" + manualMatch + ", inactive=" + inactive + ", dateCreated="
-				+ dateCreated + ", dateUpdated=" + dateUpdated + " ]";
-	}
-	
 }

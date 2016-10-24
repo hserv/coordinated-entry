@@ -1,26 +1,20 @@
 package com.hserv.coordinatedentry.housinginventory.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-import org.hibernate.FetchMode;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.hibernate4.HibernateTemplate;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
+import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
 
 @Component
 public class HousingUnitAddressService  {
@@ -31,33 +25,25 @@ public class HousingUnitAddressService  {
 	@Autowired
 	private HousingInventoryRepository housingInventoryRepository;
 	
-	
-//	 @Autowired
-//	 HibernateTemplate hibernateTemplate;
-	
+
 	 public HousingUnitAddress saveHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
-/*		 DetachedCriteria crit=DetachedCriteria.forClass(HousingUnitAddress.class)
-				 .add(Restrictions.eq("housingInventory.housingInventoryId",housingUnitAddress.getHousingInventory().getHousingInventoryId()))
-				 .addOrder(Order.asc("dateUpdated"));
-		 List<HousingUnitAddress> addresses= (List<HousingUnitAddress>)hibernateTemplate.findByCriteria(crit);*/
 		 
-		 HousingInventory housingInventory = housingInventoryRepository.findOne(housingUnitAddress.getHousingInventory().getHousingInventoryId());
-		 List<HousingUnitAddress> addresses = housingUnitAddressRepository.findByHousingInventory(housingInventory);
+			String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		 HousingInventory housingInventory = housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCode(housingUnitAddress.getHousingInventory().getHousingInventoryId(),projectGroup);
 		 
-		 if(addresses!=null&&addresses.size()!=0)
-		 {
-			 HousingUnitAddress address=addresses.get(0);
-			 if(!(housingUnitAddressEqualsExistingAddress(address,housingUnitAddress))){
-				 housingUnitAddress=housingUnitAddressRepository.save(housingUnitAddress);
-			 }
-		 }else{
-			 housingUnitAddress=housingUnitAddressRepository.save(housingUnitAddress);
-		 }
+		 if(housingInventory==null) throw new ResourceNotFoundException("Housing unit not found "+housingUnitAddress.getHousingInventory().getHousingInventoryId());
+		 
+		 housingUnitAddress.setHousingInventory(housingInventory);
+		 housingUnitAddressRepository.save(housingUnitAddress);
+		
 		return housingUnitAddress;
 	}
 
 	public HousingUnitAddress updateHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
-		return 	housingUnitAddressRepository.save(housingUnitAddress);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		 HousingUnitAddress add = housingUnitAddressRepository.findByAddressIdAndProjectGroupCode(housingUnitAddress.getAddressId(),projectGroup);
+		 if(add!=null) BeanUtils.copyProperties(housingUnitAddress, add,"dateCreated");
+		return 	housingUnitAddressRepository.save(add);
 		
 	}
 	
@@ -65,20 +51,24 @@ public class HousingUnitAddressService  {
 		return housingUnitAddressRepository.findAll();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Page<HousingUnitAddress> getAllHousingUnitAddress(UUID housingUnitId,Pageable pageable){
-		HousingInventory housingInventory=housingInventoryRepository.findOne(housingUnitId);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		HousingInventory housingInventory=housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCode(housingUnitId,projectGroup);
 		return housingUnitAddressRepository.findByHousingInventory(housingInventory,pageable);
 	}
 
-	@SuppressWarnings("unchecked")
 	public HousingUnitAddress getHousingUnitAddressById(UUID id) {
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		HousingUnitAddress address = housingUnitAddressRepository.findByAddressIdAndProjectGroupCode(id,projectGroup);
+		if(address==null) throw new ResourceNotFoundException("Housing unit address not found "+id);
 		return housingUnitAddressRepository.findOne(id);
 	}
 	
 	public void delete(UUID id) {
-		HousingUnitAddress housingUnitAddress = housingUnitAddressRepository.findOne(id);
-        housingUnitAddressRepository.delete(housingUnitAddress);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		HousingUnitAddress address = housingUnitAddressRepository.findByAddressIdAndProjectGroupCode(id,projectGroup);
+		if(address==null) throw new ResourceNotFoundException("Housing unit address not found "+id);
+        housingUnitAddressRepository.delete(address);
     }
 	
 	//this mehtod ll return false if the housingunit address is not equals to previous one.

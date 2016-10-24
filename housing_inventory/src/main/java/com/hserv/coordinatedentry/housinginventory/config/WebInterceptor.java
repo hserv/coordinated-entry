@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -49,6 +51,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 			session.setAccount(clientresponse.getAccount());
 			session.setToken(clientresponse.getAccessToken());
 			this.sessionHelper.setSession(session, request);
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
 			return true;
 		}else{
 			throw new HttpClientErrorException(HttpStatus.FORBIDDEN);

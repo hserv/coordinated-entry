@@ -1,28 +1,24 @@
-package com.hserv.coordinatedentry.housinginventory.domain;
+package com.hserv.coordinatedentry.housingmatching.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
 import org.hibernate.annotations.Type;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
+import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.core.model.JsonTimestampDeserializer;
 import com.servinglynk.hmis.warehouse.core.model.JsonTimestampSerializer;
 
-
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-public class HousingInventoryBaseEntity implements Serializable {
+public class BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,10 +40,6 @@ public class HousingInventoryBaseEntity implements Serializable {
 	@Column(name="user_id")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID userId;
-	
-	@Column(name="inactive")
-	private boolean inactive;
-
 
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
@@ -82,9 +74,6 @@ public class HousingInventoryBaseEntity implements Serializable {
 		if(SecurityContextUtil.getUserAccount()!=null) {
 			userId = SecurityContextUtil.getUserAccount().getAccountId();
 		}
-		if(SecurityContextUtil.getUserProjectGroup()!=null){
-			projectGroupCode=SecurityContextUtil.getUserProjectGroup();
-		}
 	}
 	
 	public UUID getUserId() {
@@ -93,23 +82,5 @@ public class HousingInventoryBaseEntity implements Serializable {
 
 	public void setUserId(UUID userId) {
 		this.userId = userId;
-	}
-
-	public String getProjectGroupCode() {
-		return projectGroupCode;
-	}
-
-	public void setProjectGroupCode(String projectGroupCode) {
-		this.projectGroupCode = projectGroupCode;
 	}	
-	
-
-	public boolean isInactive() {
-		return inactive;
-	}
-
-	public void setInactive(boolean inactive) {
-		this.inactive = inactive;
-	}
-
 }

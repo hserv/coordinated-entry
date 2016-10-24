@@ -6,25 +6,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-
 import com.servinglynk.hmis.warehouse.client.authorizationservice.AuthorizationServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.ApiMethodAuthorizationCheck;
 import com.servinglynk.hmis.warehouse.core.model.Session;
-import com.servinglynk.hmis.warehouse.core.model.TrustedApp;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 
-/**
- * This is CES intercepter. It intercepts all the requests that 
- * the micro service receives and also calls HMIS Authorization intercepter (through Client SDK)
- * for authorization purposes.
- *
- */
 @Component
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	
@@ -65,6 +59,8 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 			session.setToken(clientresponse.getAccessToken());
 			session.setAccount(clientresponse.getAccount());
 			this.sessionHelper.setSession(session, request);
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
+			
 			return true;
 		}else{
 			

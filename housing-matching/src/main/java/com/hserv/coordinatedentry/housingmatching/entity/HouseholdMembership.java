@@ -1,17 +1,19 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * A HouseholdMembership.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "household_membership",schema="housing_inventory")
-public class HouseholdMembership implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class HouseholdMembership extends BaseEntity {
 
     @Id
     //@GeneratedValue(strategy = GenerationType.AUTO)

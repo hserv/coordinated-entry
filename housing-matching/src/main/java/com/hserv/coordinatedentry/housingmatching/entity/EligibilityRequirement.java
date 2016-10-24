@@ -1,7 +1,5 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -11,20 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+@SuppressWarnings("serial")
 @Entity
 @Table(name="housing_unit_eligibility",schema="housing_inventory")
-public class EligibilityRequirement implements Serializable {
-
-	private static final long serialVersionUID = 4217545997779297226L;
+public class EligibilityRequirement extends BaseEntity {
 
 	@Id
 	@Column(name = "eligibility_id")
@@ -40,33 +29,6 @@ public class EligibilityRequirement implements Serializable {
 	@Column(name="eligibility")
 	private String eligibility;
 	
-	@Column(name="project_group_code")
-	private String projectGroupCode;
-	
-	@CreatedDate
-	@Column(name="date_created")
-	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
-	@JsonIgnore
-	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
-	private LocalDateTime dateCreated;
-
-	@LastModifiedDate
-	@Column(name="date_updated")
-	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")	
-	@JsonIgnore
-	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
-	private LocalDateTime dateUpdated;
-
-	@CreatedBy
-	@Column(name="created_by")
-	@JsonIgnore
-	private String createdBy;
-
-	@LastModifiedBy
-	@Column(name="last_modified_by")
-	@JsonIgnore
-	private String lastModifiedBy;
-
 	@Column(name="inactive")
 	private Boolean inactive;	
 	
@@ -89,29 +51,6 @@ public class EligibilityRequirement implements Serializable {
 	public void setEligibility(String eligibility) {
 		this.eligibility = eligibility;
 	}
-	public String getProjectGroupCode() {
-		return projectGroupCode;
-	}
-	public void setProjectGroupCode(String projectGroupCode) {
-		this.projectGroupCode = projectGroupCode;
-	}	
-	
-	public LocalDateTime getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(LocalDateTime dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public LocalDateTime getDateUpdated() {
-		return dateUpdated;
-	}
-
-	public void setDateUpdated(LocalDateTime dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
-
 	public Boolean getInactive() {
 		return inactive;
 	}

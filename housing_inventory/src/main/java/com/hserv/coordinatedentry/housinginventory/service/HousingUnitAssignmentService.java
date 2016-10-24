@@ -1,22 +1,21 @@
 package com.hserv.coordinatedentry.housinginventory.service;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import javax.transaction.Transactional;
 
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.hibernate4.HibernateTemplate;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAssignment;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAssignmentRepository;
+import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
 
 @Component
 public class HousingUnitAssignmentService  {
@@ -27,9 +26,6 @@ public class HousingUnitAssignmentService  {
 	@Autowired
 	HousingInventoryRepository HousingInventoryRepository;
 	
-	// @Autowired
-	// HibernateTemplate hibernateTemplate;
-	
 	 @Transactional
 	 public List<HousingUnitAssignment> saveHousingUnitAssignments(List<HousingUnitAssignment> housingUnitAssignments, UUID housingUnitId) {
 		 
@@ -37,7 +33,6 @@ public class HousingUnitAssignmentService  {
 		 
 		 for(HousingUnitAssignment housingUnitAssignment: housingUnitAssignments ){
 			 housingUnitAssignment.setHousingInventory(housingInventory);
-		//	housingUnitAssignment.setAssignmentId(UUID.randomUUID());
 			housingUnitAssignment=housingUnitAssignmentRepository.save(housingUnitAssignment);
 		 }
 		return housingUnitAssignments;
@@ -45,36 +40,40 @@ public class HousingUnitAssignmentService  {
 	 
 	 @Transactional
 	 public HousingUnitAssignment saveHousingUnitAssignment(HousingUnitAssignment housingUnitAssignments) {
-		// housingUnitAssignments.setAssignmentId(UUID.randomUUID());
 		 housingUnitAssignments=housingUnitAssignmentRepository.save(housingUnitAssignments);
 		return housingUnitAssignments;
 	}
 
 	public List<HousingUnitAssignment> updateHousingUnitAssignments(List<HousingUnitAssignment> housingUnitAssignments) {
-			housingUnitAssignmentRepository.save(housingUnitAssignments);
-		return housingUnitAssignments;
+		for(HousingUnitAssignment assignment : housingUnitAssignments){
+			HousingUnitAssignment unitAssignment = housingUnitAssignmentRepository.findOne(assignment.getAssignmentId());
+			if(unitAssignment!=null){ 
+				BeanUtils.copyProperties(assignment, unitAssignment,"dateCreated");
+				housingUnitAssignmentRepository.save(unitAssignment);
+			}else{
+				housingUnitAssignmentRepository.save(assignment);
+			}
+		}		return housingUnitAssignments;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Page<HousingUnitAssignment> getAllHousingUnitAssignments(UUID housingUnitId,Pageable pageable){
-		List<HousingUnitAssignment> assignments=new ArrayList<HousingUnitAssignment>(0);
-		HousingInventory housingInventory= HousingInventoryRepository.findOne(housingUnitId);
-/*		for(HousingUnitAssignment assignment: housingInventory.getHousingUnitAssignments()){
-			assignment.setHousingInventory(null);
-			assignment.setHousingInventoryId(housingUnitId.toString());
-			assignments.add(assignment);
-		}
-	    return assignments;	*/
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		HousingInventory housingInventory= HousingInventoryRepository.findByHousingInventoryIdAndProjectGroupCode(housingUnitId, projectGroup);
+		if(housingInventory==null) throw new ResourceNotFoundException("Housing unit not found "+housingUnitId);
 		return housingUnitAssignmentRepository.findByHousingInventory(housingInventory, pageable);
 	}
 
-	@SuppressWarnings("unchecked")
 	public HousingUnitAssignment getHousingUnitAssignmentById(UUID id) {
-		return housingUnitAssignmentRepository.findOne(id);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		HousingUnitAssignment assignment = housingUnitAssignmentRepository.findByAssignmentIdAndProjectGroupCode(id,projectGroup);
+		if(assignment==null) throw new ResourceNotFoundException("Housing assignment not found "+id);
+		return assignment; 
 	}
 	
 	public void delete(UUID id) {
-		HousingUnitAssignment assignment =   housingUnitAssignmentRepository.findOne(id);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		HousingUnitAssignment assignment = housingUnitAssignmentRepository.findByAssignmentIdAndProjectGroupCode(id,projectGroup);
+		if(assignment==null) throw new ResourceNotFoundException("Housing assignment not found "+id);
         housingUnitAssignmentRepository.delete(assignment);
     }
 }

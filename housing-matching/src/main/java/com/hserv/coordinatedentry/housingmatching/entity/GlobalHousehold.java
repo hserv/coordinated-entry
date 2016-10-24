@@ -1,6 +1,5 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,14 +14,10 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/**
- * A GlobalHousehold.
- */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "global_household",schema="housing_inventory")
-public class GlobalHousehold implements Serializable {
-	
-	private static final long serialVersionUID = 1573515448747014869L;
+public class GlobalHousehold extends BaseEntity {
 
 	@Id
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")

@@ -18,7 +18,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 @Repository
 public interface EligibleClientsRepository extends JpaRepository<EligibleClient, Serializable>,JpaSpecificationExecutor<EligibleClient> {
 	
-	public EligibleClient findByClientId(UUID clientID);
+	public EligibleClient findByClientIdAndProjectGroupCode(UUID clientID,String projectGroup);
 
 	@Query("select ec from EligibleClient as ec where ec.matched=false and ec.programType<>?1")
 	List<EligibleClient> findTopEligibleClients(String programType, Pageable pageable);
@@ -48,6 +48,8 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	void updateScoreByClientId(int score, UUID clientId);
 
 	List<EligibleClient> findByProgramTypeAndMatched(String string, boolean b);
+	
+	
 	
 //	List<EligibleClient> findByProgramTypeAndMatchedObderBySurveyScoreAscSurveyDate(String projectGroup,boolean match);
 	

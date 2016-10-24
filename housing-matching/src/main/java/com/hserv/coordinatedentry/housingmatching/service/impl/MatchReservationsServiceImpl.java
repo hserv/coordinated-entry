@@ -10,12 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -26,7 +22,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
-import com.hserv.coordinatedentry.housingmatching.entity.EligibilityRequirement;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
@@ -44,6 +39,7 @@ import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.service.ServiceFactory;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
+import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Session;
@@ -81,20 +77,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	ISearchServiceClient searchServiceClient;
 		
 	Map<Integer, Integer[]> statusMap =new HashMap<Integer,Integer[]>();
-	
-	
-	@PostConstruct
-	public void init(){
-		statusMap.put(0, new Integer[]{1,10});
-		statusMap.put(1, new Integer[]{2,5,10});
-		statusMap.put(2, new Integer[]{3,10});
-		statusMap.put(3, new Integer[]{4,10});
-		statusMap.put(4, new Integer[]{5,10});
-		statusMap.put(5, new Integer[]{6,10});
-		statusMap.put(6, new Integer[]{7,10});
-		statusMap.put(7, new Integer[]{10});	
-	}
-		
+			
 	@Override
 	public boolean createMatchReservation(MatchReservationModel matchReservationModel) {
 	    repositoryFactory.getMatchReservationsRepository().saveAndFlush(matchReservationTranslator.translate(matchReservationModel));
@@ -141,7 +124,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 	@Override
 	public MatchReservationModel findByClientId(UUID clientId) {
-		EligibleClient eligibleClient = repositoryFactory.getEligibleClientsRepository().findOne(clientId);
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		EligibleClient eligibleClient = repositoryFactory.getEligibleClientsRepository().findByClientIdAndProjectGroupCode(clientId, projectGroup);
 		if (eligibleClient!=null) 
 			return matchReservationTranslator
 					.translate(repositoryFactory.getMatchReservationsRepository().findByEligibleClient(eligibleClient).get(0));
@@ -186,7 +170,6 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		if(!statusModel.getRecipients().getToRecipients().isEmpty())
 			matchStatus.setRecipients(statusModel.getRecipients().toJSONString());
 		matchStatus.setClientId(clientId);
-		matchStatus.setUserId(auditUser);
 		repositoryFactory.getMatchStatusRepository().save(matchStatus);
 		match.setMatchStatus(statusModel.getStatus());
 		repositoryFactory.getMatchReservationsRepository().save(match);

@@ -1,6 +1,4 @@
 package com.hserv.coordinatedentry.housingmatching.entity;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -10,20 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+@SuppressWarnings("serial")
 @Entity
 @Table(name="housing_unit",schema="housing_inventory")
-public class HousingInventory implements Serializable {
-	
-	private static final long serialVersionUID = 4758637074635988540L;
+public class HousingInventory extends BaseEntity {
 
 	@Id
 	@Column(name = "housing_unit_id")
@@ -38,10 +27,7 @@ public class HousingInventory implements Serializable {
 	@Column(name = "project_id")
     @org.hibernate.annotations.Type(type="pg-uuid")
 	private UUID projectId;
-	
-	@Column(name = "user_id")
-	private String userId;
-	
+		
 	@Column(name = "beds_capacity")
 	private Integer bedsCapacity;
 	
@@ -60,33 +46,6 @@ public class HousingInventory implements Serializable {
 	@Column(name="schema_year")
 	private Integer schemaYear;
 	
-	@Column(name="project_group_code")
-	private String projectGroupCode;
-	
-	@CreatedDate
-	@Column(name="date_created")
-	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")
-	@JsonIgnore
-	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
-	private LocalDateTime dateCreated;
-
-	@LastModifiedDate
-	@Column(name="date_updated")
-	@JsonFormat(pattern="MM-dd-yyyy HH:mm:ss")	
-	@JsonIgnore
-	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
-	private LocalDateTime dateUpdated;
-
-	@CreatedBy
-	@Column(name="created_by")
-	@JsonIgnore
-	private String createdBy;
-
-	@LastModifiedBy
-	@Column(name="last_modified_by")
-	@JsonIgnore
-	private String lastModifiedBy;
-
 	@Column(name="inactive")
 	private Boolean inactive;	
 		
@@ -148,14 +107,6 @@ public class HousingInventory implements Serializable {
 		this.projectId = projectId;
 	}
 
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
 	public String getAliasName() {
 		return aliasName;
 	}
@@ -172,30 +123,6 @@ public class HousingInventory implements Serializable {
 		this.schemaYear = schemaYear;
 	}
 
-	public String getProjectGroupCode() {
-		return projectGroupCode;
-	}
-
-	public void setProjectGroupCode(String projectGroupCode) {
-		this.projectGroupCode = projectGroupCode;
-	}
-
-	public LocalDateTime getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(LocalDateTime dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public LocalDateTime getDateUpdated() {
-		return dateUpdated;
-	}
-
-	public void setDateUpdated(LocalDateTime dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
-
 	public Boolean getInactive() {
 		return inactive;
 	}
@@ -203,34 +130,4 @@ public class HousingInventory implements Serializable {
 	public void setInactive(Boolean inactive) {
 		this.inactive = inactive;
 	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((housingInventoryId == null) ? 0 : housingInventoryId.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HousingInventory other = (HousingInventory) obj;
-		if (housingInventoryId == null) {
-			if (other.housingInventoryId != null)
-				return false;
-		} else if (!housingInventoryId.equals(other.housingInventoryId))
-			return false;
-		return true;
-	}
-
-	
-	
-	
-
 }

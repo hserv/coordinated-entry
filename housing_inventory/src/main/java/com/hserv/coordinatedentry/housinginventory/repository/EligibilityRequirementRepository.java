@@ -17,5 +17,10 @@ public interface EligibilityRequirementRepository extends JpaRepository<Eligibil
 	Page<EligibilityRequirement> findByProjectIdIn(List projectIds, Pageable pageable);
 	
 	Page<EligibilityRequirement> findByProjectGroupCode(String projectGroupCode,Pageable pageable);
+
+	EligibilityRequirement findByEligibilityIdAndProjectGroupCode(UUID eligibilityId, String projectGroupCode);
+
+	Page<EligibilityRequirement> findByProjectIdAndProjectGroupCode(UUID projectId, String projectGroupCode,
+			Pageable pageable);
 	
 }

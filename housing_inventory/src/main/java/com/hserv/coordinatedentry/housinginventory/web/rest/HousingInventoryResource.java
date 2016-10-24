@@ -104,22 +104,13 @@ public class HousingInventoryResource extends BaseResource{
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    public ResponseEntity<List<HousingInventory>> updateHousingInventory(@RequestBody List<HousingInventory> housingInventories,HttpServletRequest request) throws URISyntaxException {
-		List<HousingInventory> lhousinginventories=new ArrayList<HousingInventory>();
-		Session session = sessionHelper.getSession(request);
-	        for(HousingInventory housingInventory: housingInventories)
-	        {
-	        	housingInventory.setDateUpdated((new Date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-	        	housingInventory.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
-	        	lhousinginventories.add(housingInventory);
-	        }
-	        List<HousingInventory> lresult = housingInventoryService.updateHousingInentories(lhousinginventories);
+	        List<HousingInventory> lresult = housingInventoryService.updateHousingInentories(housingInventories);
 	        return new  ResponseEntity<List<HousingInventory>>(lresult, HttpStatus.OK);
 	    }
 	
 	@APIMapping(value="GET_ALL_HOUSING_INVENTORY")
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<Resources<Resource>> findAll(@RequestParam(value="inactive" ,required=false,defaultValue="false") Boolean inactive ,
-			@RequestParam(value="userId", required=false) String userId,
 			@RequestParam(value="projectId", required=false) UUID projectId,
 			@RequestParam(value="vacant", required=false) Boolean vacant,
 			@PageableDefault(size=30)  Pageable pageable,
@@ -127,7 +118,6 @@ public class HousingInventoryResource extends BaseResource{
 		
 		Session session = sessionHelper.getSession(request);
 		HousingInventory housingInventory=new HousingInventory();
-		housingInventory.setUserId(userId);
 		housingInventory.setProjectId(projectId);
 		housingInventory.setInactive(inactive);
 		housingInventory.setVacant(vacant);
