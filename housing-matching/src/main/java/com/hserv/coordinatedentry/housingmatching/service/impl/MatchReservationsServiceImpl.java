@@ -234,7 +234,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 						}
 													
 						for(EligibleClient client : clients) {
-							System.out.println("  Project id "+project.getProjectId() +" ||  housing unit id "+housingInventory.getHousingInventoryId() +" || client id "+client.getClientId());
+							System.out.println("  Project id "+project.getProjectId() +" ||  housing unit id "+housingInventory.getHousingInventoryId() +" || client id "+client.getClientId() +" || project group code "+client.getProjectGroupCode());
 							boolean validClient= false;
 							BaseClient baseClient = eligibleClientService.getClientInfo(client.getClientId(), trustedAppId, session.getToken());
 							if(baseClient!=null){

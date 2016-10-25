@@ -82,5 +82,15 @@ public class BaseEntity implements Serializable {
 
 	public void setUserId(UUID userId) {
 		this.userId = userId;
+	}
+
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
 	}	
+	
+	
 }
