@@ -104,7 +104,7 @@ public class EligibilityValidator {
 		Integer bedsRequired = 0;
 		Integer members =0;
 		List<HouseholdMembership> membership =  repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientId(clientId);
-		if(membership!=null){
+		if(!membership.isEmpty()){
 			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.get(0).getGlobalHousehold());
 		}else{
 			bedsRequired = 0;

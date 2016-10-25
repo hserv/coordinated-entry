@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -214,7 +216,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	
 	@Async
 	public void matchingProcess(Integer maxClients,Session session , String trustedAppId) {
-
+		
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
+		
 		String projectGroup = session.getAccount().getProjectGroup().getProjectGroupCode();
 		List<HousingInventory> housingInventories = repositoryFactory.getHousingUnitsRepository().findByProjectGroupCode(projectGroup);
 		Integer matchCount =0;
