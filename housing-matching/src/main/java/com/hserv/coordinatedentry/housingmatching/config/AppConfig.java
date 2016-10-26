@@ -32,7 +32,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 		objectMapper.constructType(DefaultPrettyPrinter.class);
 		objectMapper.writerWithDefaultPrettyPrinter();
 		jsonConverter.setObjectMapper(objectMapper);
