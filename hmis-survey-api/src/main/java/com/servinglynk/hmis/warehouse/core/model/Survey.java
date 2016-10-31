@@ -22,7 +22,7 @@ public class Survey extends ClientModel{
       @NotEmpty(message="Survey Owner is required")
       private String surveyOwner;
 
-      @AllowedValues(values={"SINGLE_ADULT","FAMILY","YOUTH"},message="Allowed values for tag value are SINGLE_ADULT,FAMILY,YOUTH")
+      @AllowedValues(values={"SINGLE_ADULT","FAMILY","YOUTH","HUD"},message="Allowed values for tag value are SINGLE_ADULT,FAMILY,YOUTH,HUD")
       private String tagValue;
 
       private String projectGroupCode;
