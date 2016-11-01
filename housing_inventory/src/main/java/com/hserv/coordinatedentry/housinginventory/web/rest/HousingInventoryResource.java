@@ -132,8 +132,15 @@ public class HousingInventoryResource extends BaseResource{
 
 	@APIMapping(value="GET_HOUSING_INVENTORY_BY_ID")
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public HousingInventory getHousingInverntoryByID(@PathVariable UUID id) {
-		return housingInventoryService.getHousingInventoryById(id);
+	public ResponseEntity<Resource<HousingInventory>> getHousingInverntoryByID(@PathVariable UUID id) {
+		HousingInventory housingInventory = housingInventoryService.getHousingInventoryById(id);
+		Resource resource =null;
+		if(housingInventory.getSchemaYear()!=null)
+			resource = new Resource(housingInventory, (new Link("/hmis-clientapi/rest/v"+housingInventory.getSchemaYear()+"/projects/"+housingInventory.getProjectId()).withRel("project")));
+		else
+			resource = new Resource(housingInventory);
+		return new ResponseEntity<Resource<HousingInventory>>(resource,HttpStatus.OK);
+	//	return housingInventoryService.getHousingInventoryById(id);
 	}
 	
 	@APIMapping(value="UPDATE_HOUSING_INVENTORY_BY_ID")

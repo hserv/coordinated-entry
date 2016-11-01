@@ -53,6 +53,12 @@ public class ResponseEntity extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name="QUESTION_ID")
 	private QuestionEntity questionEntity;
+	
+    @org.hibernate.annotations.Type(type="pg-uuid")
+	@Column(name="submission_id")
+	private UUID submissionId;
+	
+	
 	public UUID getId() {
 		return id;
 	}
@@ -117,5 +123,11 @@ public class ResponseEntity extends BaseEntity {
 	}
 	public void setRefused(boolean refused) {
 		this.refused = refused;
+	}
+	public UUID getSubmissionId() {
+		return submissionId;
+	}
+	public void setSubmissionId(UUID submissionId) {
+		this.submissionId = submissionId;
 	}
 }

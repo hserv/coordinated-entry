@@ -28,7 +28,7 @@ public class ClientsController extends BaseController {
 	
 	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses",method=RequestMethod.POST)
 	   @APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	   public Responses createResponse(@PathVariable("clientid") UUID clientid,
+	   public Response createResponse(@PathVariable("clientid") UUID clientid,
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @Valid  @RequestBody Responses response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request);
@@ -47,6 +47,17 @@ public class ClientsController extends BaseController {
 	        response.setClientId(clientid);
 	        serviceFactory.getResponseService().updateResponse(response,session.getAccount().getUsername()); 
 	   }
+	   
+	   
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.PUT)
+	   @APIMapping(value="SURVEY_API_UPDATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
+	   public void updateResponsesBySubmission(@PathVariable("clientid") UUID clientid,
+			   @PathVariable("surveyid")  UUID surveyid,@PathVariable( "submissionid" ) UUID submissionid,
+			   @Valid  @RequestBody Responses response,HttpServletRequest request) throws Exception{
+	        Session session = sessionHelper.getSession(request); 
+	        serviceFactory.getResponseService().updateResponsesBySubmissionId(submissionid, response, session.getAccount().getUsername()); 
+	   }
+
 
 	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses/{responseid}",method=RequestMethod.DELETE)
 	   @APIMapping(value="SURVEY_API_DELETE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
@@ -59,6 +70,18 @@ public class ClientsController extends BaseController {
 	        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
 	   }
 
+	   
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.DELETE)
+	   @APIMapping(value="SURVEY_API_DELETE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
+	   public void deleteResponsesBySubmission(@PathVariable("clientid") UUID clientid,
+			   @PathVariable("surveyid")  UUID surveyid,
+			   @PathVariable( "submissionid" ) UUID submissionid,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	        Session session = sessionHelper.getSession(request); 
+	        serviceFactory.getSurveyService().getSurveyById(surveyid);
+	        serviceFactory.getResponseService().deleteResponsesBySubmissionId(surveyid,submissionid,session.getAccount().getUsername()); 
+	        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
+	   }
+	   
 	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses/{responseid}",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_RESPONSE_BY_ID",checkTrustedApp=true,checkSessionToken=true)
 	   public Response getResponseById(@PathVariable("clientid") UUID clientid,
@@ -68,6 +91,20 @@ public class ClientsController extends BaseController {
 		   return serviceFactory.getResponseService().getResponseById(responseId); 
 	   }
 
+	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.GET)
+	   @APIMapping(value="SURVEY_API_GET_RESPONSE_BY_ID",checkTrustedApp=true,checkSessionToken=true)
+	   public Responses getResponseBySubmissionId(@PathVariable("clientid") UUID clientid,
+			   @PathVariable("surveyid")  UUID surveyid,
+			   @PathVariable( "submissionid" ) UUID submissionid,	               
+			   @RequestParam(value="startIndex", required=false,defaultValue="0") Integer startIndex, 
+               @RequestParam(value="maxItems", required=false,defaultValue="30") Integer maxItems,
+               HttpServletRequest request) throws Exception {
+
+		   serviceFactory.getSurveyService().getSurveyById(surveyid);
+		   return serviceFactory.getResponseService().getResponsesBySubmissionId(surveyid,submissionid, startIndex, maxItems); 
+	   }
+
+	   
 	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_ALL_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
 	   public Responses getAllSurveyResponses(

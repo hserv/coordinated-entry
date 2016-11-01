@@ -26,6 +26,9 @@ public class Response extends ClientModel{
       
       private boolean refused;
       
+      private UUID submissionId;
+      
+      
     public Response() {
 		super();
 	}
@@ -89,4 +92,10 @@ public class Response extends ClientModel{
 	public void setRefused(boolean refused) {
 		this.refused = refused;
 	}
- }
+	public UUID getSubmissionId() {
+		return submissionId;
+	}
+	public void setSubmissionId(UUID submissionId) {
+		this.submissionId = submissionId;
+	}	
+}

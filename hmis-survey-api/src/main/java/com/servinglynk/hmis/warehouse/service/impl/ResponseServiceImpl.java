@@ -26,8 +26,11 @@ import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundExc
 public class ResponseServiceImpl extends ServiceBase implements ResponseService  {
 
    @Transactional
-   public Responses createResponse(UUID clientId,UUID surveyId,Responses responses,String caller){
-	   Responses returnResponses = new Responses();
+   public Response createResponse(UUID clientId,UUID surveyId,Responses responses,String caller){
+	   Response returnResponse = new Response();
+	   
+	   UUID submissionId = UUID.randomUUID();
+	   
 	   
 	   SurveyEntity surveyEntity = daoFactory.getSurveyEntityDao().getSurveyEntityById(surveyId);
 	   if(surveyEntity==null) throw new SurveyNotFoundException();
@@ -47,15 +50,15 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
        pResponse.setQuestionEntity(questionEntity);
        pResponse.setCreatedAt(LocalDateTime.now());
        pResponse.setUser(caller);
+       pResponse.setSubmissionId(submissionId);
 //       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
        daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
     //   pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, pResponse));
-       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
-       returnResponses.addResponse(new Response(pResponse.getId()));
+//       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
 	   }
 	   
-	 //  serviceFactory.getSectionScoreService().updateSectionScores(clientId, surveyId, null);
-       return returnResponses;
+	   returnResponse.setSubmissionId(submissionId);
+       return returnResponse;
    }
 
 
@@ -73,7 +76,48 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 	   serviceFactory.getSectionScoreService().updateSectionScores(pResponse.getClientId(), pResponse.getSurveyEntity().getId(), null);
        return response;
    }
+   
+   @Transactional
+   public void updateResponsesBySubmissionId(UUID submissionId,Responses responses,String caller){
 
+	   for(Response response : responses.getResponses()){
+		   ResponseEntity entity = daoFactory.getResponseEntityDao().getResponseBySubmission(submissionId,response.getResponseId());
+		   if(entity!=null){
+			   this.updateResponse(response, caller);
+		   }
+	   }
+   }
+   
+   @Transactional
+   public void deleteResponsesBySubmissionId(UUID surveyId,UUID submissionId,String caller){
+	   
+	   List<ResponseEntity> responses = daoFactory.getResponseEntityDao().getAllSubmissionResponses(surveyId, submissionId, null, null);
+	   for(ResponseEntity entity : responses){
+	       daoFactory.getResponseEntityDao().deleteResponseEntity(entity);
+	   }
+   }
+
+   @Transactional
+   public Responses getResponsesBySubmissionId(UUID surveyId,UUID submissionId,Integer startIndex,Integer maxItems){
+	
+	   Responses responses = new Responses();
+	   
+	   List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSubmissionResponses(surveyId, submissionId, startIndex, maxItems);
+   
+	   for(ResponseEntity entity:entities){
+		   responses.addResponse(ResponseConverter.entityToModel(entity));
+	   }
+	   
+       long count = daoFactory.getResponseEntityDao().getSubmissionResponsesCount(surveyId,submissionId);
+       SortedPagination pagination = new SortedPagination();
+
+       pagination.setFrom(startIndex);
+       pagination.setReturned(responses.getResponses().size());
+       pagination.setTotal((int)count);
+       responses.setPagination(pagination);
+       return responses; 
+
+   }
 
    @Transactional
    public Response deleteResponse(UUID ResponseId,String caller){

@@ -14,4 +14,7 @@ public interface ResponseEntityDao {
    ResponseEntity getResponseEntityById(UUID ResponseEntityId);
    List<ResponseEntity> getAllSurveyResponses(UUID surveyid,UUID sectionId, Integer startIndex, Integer maxItems);
    long getSurveyResponsesCount(UUID surveyid);
+ResponseEntity getResponseBySubmission(UUID submissionId, UUID responseId);
+List<ResponseEntity> getAllSubmissionResponses(UUID surveyId, UUID submissionId, Integer startIndex, Integer maxItems);
+long getSubmissionResponsesCount(UUID surveyId, UUID submissionId);
 }
