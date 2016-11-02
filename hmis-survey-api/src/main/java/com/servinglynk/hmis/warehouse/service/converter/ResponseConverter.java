@@ -26,6 +26,7 @@ public class ResponseConverter {
        model.setQuestionId(entity.getQuestionEntity().getId());
        model.setClientId(entity.getClientId());
        model.setSurveyId(entity.getSurveyEntity().getId());
+       model.setSubmissionId(entity.getSubmissionId());
        return model;
    }
 
