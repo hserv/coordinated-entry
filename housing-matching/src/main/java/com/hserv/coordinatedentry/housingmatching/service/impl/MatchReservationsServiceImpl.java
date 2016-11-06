@@ -44,6 +44,7 @@ import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTra
 import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
+import com.servinglynk.hmis.warehouse.core.model.BaseProject;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Service
@@ -224,7 +225,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		Integer matchCount =0;
 		for(HousingInventory housingInventory : housingInventories ){
 
-			Project project = projectService.getProjectInfo(housingInventory.getProjectId(), session, trustedAppId);
+			BaseProject project = projectService.getProjectInfo(housingInventory.getProjectId(), session, trustedAppId);
 			if(project!=null) {
 					List<EligibleClient> clients= new ArrayList<>();
 						if(housingInventory.getFamilyUnit()){

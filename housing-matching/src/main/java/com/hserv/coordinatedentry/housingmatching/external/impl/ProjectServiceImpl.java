@@ -1,49 +1,42 @@
 package com.hserv.coordinatedentry.housingmatching.external.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import com.hserv.coordinatedentry.housingmatching.external.ProjectService;
-import com.hserv.coordinatedentry.housingmatching.model.Project;
+import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
+import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
+import com.servinglynk.hmis.warehouse.core.model.BaseProject;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Component("projectService")
 public class ProjectServiceImpl implements ProjectService{
-	
-	@Value(value = "${PROJECT_REST_SERVICE_URL}")
-	private String PROJECT_REST_SERVICE_URL;
-
-	@Resource(name="restTemplateWithMapper")
-	RestTemplate restTemplate;
-
+		
+	 @Autowired
+	 ISearchServiceClient searchServiceClient;
 
 	
-	public Project getProjectInfo(UUID projectId,Session session, String trustedAppId){
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Accept","application/json");
-		headers.add("Content-Type","application/json");
-		headers.add("X-HMIS-TrustedApp-Id", trustedAppId);
-		headers.add("Authorization","HMISUserAuth session_token="+session.getToken());
+	public BaseProject getProjectInfo(UUID projectId,Session session, String trustedAppId){
 		
-		HttpEntity<Object> entity = new HttpEntity<Object>(headers);
-		ResponseEntity<Project> responseEntity = null;
-		try{
-				responseEntity = restTemplate.exchange(PROJECT_REST_SERVICE_URL+"/"+projectId, HttpMethod.GET,entity,Project.class);
-				return responseEntity.getBody();
-		}catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		
+			Map<String,Object> searchParams = new HashMap<>();
+			searchParams.put("q", projectId);
+			SearchRequest searchRequest = new SearchRequest();
+			searchRequest.setSearchParams(searchParams);
+			searchRequest.setSessionToken(session.getToken());
+			searchRequest.setTrustedAppId(trustedAppId);
+			searchRequest.setSearchEntity("projects");
+			try {
+				List<BaseProject> projects =  (List<BaseProject>) searchServiceClient.search(searchRequest);
+				if(!projects.isEmpty()) return projects.get(0);
+				return null;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}	
 	}
-
 }

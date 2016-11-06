@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
@@ -180,6 +181,8 @@ public class HousingInventoryResource extends BaseResource{
 	 			List<BaseProject> projects =  (List<BaseProject>) searchServiceClient.search(searchRequest);
 	 			if(!projects.isEmpty())
 	 				inventory.setSchemaYear(projects.get(0).getSchemaYear());
+	 			else
+	 				throw new ResourceNotFoundException("Invalid Project Identification "+projectId);
 	 	
 	}
 }

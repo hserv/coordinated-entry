@@ -11,6 +11,7 @@ import com.hserv.coordinatedentry.housingmatching.external.NotificationService;
 import com.hserv.coordinatedentry.housingmatching.external.ProjectService;
 import com.hserv.coordinatedentry.housingmatching.model.Project;
 import com.servinglynk.hmis.warehouse.client.notificationservice.NotificationServiceClient;
+import com.servinglynk.hmis.warehouse.core.model.BaseProject;
 import com.servinglynk.hmis.warehouse.core.model.Notification;
 import com.servinglynk.hmis.warehouse.core.model.Parameter;
 import com.servinglynk.hmis.warehouse.core.model.Recipients;
@@ -32,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 	public void notifyStatusUpdate(Match match,Recipients recipients,Session session,String trustedApp){
 		HousingInventory unit = repositoryFactory.getHousingUnitsRepository().findOne(match.getHousingUnitId());
 		
-		Project project = projectService.getProjectInfo(unit.getProjectId(), session, trustedApp);
+		BaseProject project = projectService.getProjectInfo(unit.getProjectId(), session, trustedApp);
 
 		Notification notification = new Notification();
 		notification.setType("HOUSING_MATCHING_STATUS_UPDATE");
