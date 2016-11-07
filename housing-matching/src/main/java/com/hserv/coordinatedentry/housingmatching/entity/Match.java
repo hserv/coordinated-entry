@@ -28,7 +28,7 @@ public class Match extends BaseEntity {
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID reservationId;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "client_id", nullable = false)
 	private EligibleClient eligibleClient;
 
