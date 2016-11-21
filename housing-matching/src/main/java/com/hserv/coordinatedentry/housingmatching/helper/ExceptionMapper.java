@@ -52,6 +52,12 @@ public class ExceptionMapper {
 		try {
 
 			throw th;
+		}catch (ProcessAlreadyRunningException e) {
+			logger.info(e.getMessage());
+			logger.error(e.getMessage());
+			r.setErrorCode("SCORE_PROCESSING_IN_PROGRESS");
+			r.setErrorMessage(e.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_CONFLICT);
 		}catch (HttpClientErrorException ex) {
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);

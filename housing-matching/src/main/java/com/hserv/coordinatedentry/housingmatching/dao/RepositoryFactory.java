@@ -10,4 +10,5 @@ public interface RepositoryFactory {
 	HouseholdMembershipRepository getHouseholdMembershipRepository();
 	GlobalHouseholdRepository getGlobalHouseholdRepository();
 	MatchStatuLevelsRepository getMatchStatuLevelsRepository();
+	BatchProcessRepository getBatchProcessRepository();
 }

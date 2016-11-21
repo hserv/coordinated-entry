@@ -7,9 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.Resources;
@@ -29,7 +31,8 @@ import com.hserv.coordinatedentry.housingmatching.model.EligibleClientsModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 import com.servinglynk.hmis.warehouse.core.model.Session;
-
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * Controller for eligible-clients.
@@ -73,10 +76,17 @@ public class EligibleClientsController extends BaseController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@APIMapping(value="get-eligible-clients")
-	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable,HttpServletRequest request) {
+	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable,HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
 		String projectGroupCode = session.getAccount().getProjectGroup().getProjectGroupCode();
-		return new ResponseEntity<>(assembler.toResource(eligibleClientService.getEligibleClients(projectGroupCode,pageable), housingInventoryAssembler),
+		Link statusLink = linkTo(methodOn(BatchProcessController.class).getCurrentStatus(request)).withRel("scoreprocessingstatus");
+		PageRequest page= new PageRequest(0,20);
+		Link historyLink = linkTo(methodOn(BatchProcessController.class).getBatchProcessHistory(page, request)).withRel("scoreprocessinghistory");
+		
+		PagedResources resources = assembler.toResource(eligibleClientService.getEligibleClients(projectGroupCode,pageable), housingInventoryAssembler);
+		resources.getLinks().add(statusLink);
+		resources.getLinks().add(historyLink);
+		return new ResponseEntity<>(resources,
 				HttpStatus.OK);
 	}
 

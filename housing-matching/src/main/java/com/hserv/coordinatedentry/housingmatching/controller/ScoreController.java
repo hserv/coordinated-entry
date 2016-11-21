@@ -24,6 +24,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
+import com.hserv.coordinatedentry.housingmatching.service.BatchProcessService;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 import com.servinglynk.hmis.warehouse.core.model.Session;
@@ -41,6 +42,9 @@ public class ScoreController extends BaseController {
 	
 	@Autowired
 	private EligibleClientsTranslator eligibleClientsTranslator;
+	
+	@Autowired
+	private BatchProcessService batchProcessService;
 	
 
 	private ResourceAssembler<EligibleClient, Resource<EligibleClientModel>> housingInventoryAssembler = new ScoreController.HousingInventoryAssembler();
@@ -70,13 +74,10 @@ public class ScoreController extends BaseController {
 	public DeferredResult<String> calculateScore(HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
 		DeferredResult<String> deferredResult = new DeferredResult<>();
-		try {
+		//	surveyScoreService.checkAnyProcessRunning(session.getAccount().getProjectGroup().getProjectGroupCode());
+			batchProcessService.startBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), session.getAccount().getEmailAddress());
 			surveyScoreService.calculateScore(session);
 			deferredResult.setResult("triggered: 'ok'");
-		} catch (Exception ex) {
-			deferredResult.setResult(new String("{\"failed\": \"true\"}\""));
-			ex.printStackTrace();
-		}
 		return deferredResult;
 	}
 	

@@ -8,21 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
+import com.hserv.coordinatedentry.housingmatching.entity.BatchProcessEntity;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.external.SurveyMSService;
+import com.hserv.coordinatedentry.housingmatching.helper.ProcessAlreadyRunningException;
 import com.hserv.coordinatedentry.housingmatching.model.ClientSurveyScore;
 import com.hserv.coordinatedentry.housingmatching.model.ClientsSurveyScores;
 import com.hserv.coordinatedentry.housingmatching.model.CommunityType;
+import com.hserv.coordinatedentry.housingmatching.service.BatchProcessService;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
 import com.hserv.coordinatedentry.housingmatching.service.SurveyScoreService;
 import com.hserv.coordinatedentry.housingmatching.translator.SurveyScoreTranslator;
+import com.hserv.coordinatedentry.housingmatching.util.Constants;
 import com.hserv.coordinatedentry.housingmatching.util.DateUtil;
 import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
@@ -50,6 +57,9 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	
 	@Autowired
 	RepositoryFactory repositoryFactory;
+	
+	@Autowired
+	BatchProcessService batchProcessService;
 	
 	
 	@Override
@@ -87,13 +97,23 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClientsRepository.save(client);
 			return true;
 	}
+	
+	
+	public void checkAnyProcessRunning(String projectGroupCode){
+		
+		List<BatchProcessEntity> entities = repositoryFactory.getBatchProcessRepository().findByProjectGroupCodeAndStatus(projectGroupCode, Constants.BATCH_STATUS_INPROGRESS);
+			if(!entities.isEmpty())
+				throw new ProcessAlreadyRunningException();
+	}
 
 	@SuppressWarnings("unused")
 	@Override
 	@Transactional
+	@Async
 	public void calculateScore(Session session) throws Exception {
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
 		
-		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponse(session);
+		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponses(session.getAccount().getProjectGroup().getProjectGroupCode());
 		
 		List<EligibleClient> eligibleClients = new ArrayList<EligibleClient>();
 		MatchStrategy strategy;
@@ -108,15 +128,15 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 			int additionalScore =0;
 			if(client!=null && client.getDob()!=null){
-					additionalScore = strategy.getAdditionalScore(DateUtil.calculateAge(client.getDob()),clientSurveyScore.getSurveyTagvalue());
+					additionalScore = strategy.getAdditionalScore(DateUtil.calculateAge(client.getDob()),clientSurveyScore.getSurveyTagValue());
 			}
 		 
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			//  Get survey tag value : SINGLE_AUDULT pass individual true
 			//                         FAMILY pass family true
-			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagvalue()));
+			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagValue()));
 			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
-			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagvalue());
+			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
 			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
 			if(client!=null)
@@ -135,8 +155,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	//			repositoryFactory.getMatchReservationsRepository().save(match);
 			}
 			//eligibleClients.add(eligibleClient);
-			
 		}
-
+		batchProcessService.endBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), true);
 	}
 }

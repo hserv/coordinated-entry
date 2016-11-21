@@ -11,4 +11,7 @@ public interface SurveyMSService {
 	List<SurveySectionModel> fetchSurveyResponse(String clientId);
 
 	ClientsSurveyScores fetchSurveyResponse(Session session);
+	
+	
+	ClientsSurveyScores fetchSurveyResponses(String projectGroup);
 }

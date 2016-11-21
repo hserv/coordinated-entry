@@ -24,4 +24,8 @@ public class ClientsSurveyScores {
 	public void add(ClientSurveyScore clientSurveyScore){
 		this.clientsSurveyScores.add(clientSurveyScore);
 	}
+	
+	public void addAll(List<ClientSurveyScore> scores){
+		this.clientsSurveyScores.addAll(scores);
+	}
 }

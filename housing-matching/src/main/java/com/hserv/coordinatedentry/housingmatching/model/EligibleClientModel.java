@@ -38,6 +38,10 @@ public class EligibleClientModel {
 	@JsonSerialize(using=JsonTimestampSerializer.class)
 	private LocalDateTime dateUpdated;
 	
+	@JsonProperty("status")
+	private BatchProcessModel batchProcessModel;
+	
+	
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String link;
 	
@@ -106,5 +110,11 @@ public class EligibleClientModel {
 	}
 	public void setDateUpdated(LocalDateTime dateUpdated) {
 		this.dateUpdated = dateUpdated;
+	}
+	public BatchProcessModel getBatchProcessModel() {
+		return batchProcessModel;
+	}
+	public void setBatchProcessModel(BatchProcessModel batchProcessModel) {
+		this.batchProcessModel = batchProcessModel;
 	}
 }

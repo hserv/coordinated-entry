@@ -18,8 +18,8 @@ public class ClientSurveyScore {
 	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonSerialize(using=JsonDateTimeSerializer.class)
 	private LocalDateTime surveyDate;
-	@JsonProperty("surveyTagValue")
-	private String surveyTagvalue;
+	private String surveyTagValue;
+	private String projectGroupCode;
 	
 	public UUID getSurveyId() {
 		return surveyId;
@@ -51,10 +51,16 @@ public class ClientSurveyScore {
 	public void setSurveyDate(LocalDateTime surveyDate) {
 		this.surveyDate = surveyDate;
 	}
-	public String getSurveyTagvalue() {
-		return surveyTagvalue;
+	public String getSurveyTagValue() {
+		return surveyTagValue;
 	}
-	public void setSurveyTagvalue(String surveyTagvalue) {
-		this.surveyTagvalue = surveyTagvalue;
+	public void setSurveyTagValue(String surveyTagValue) {
+		this.surveyTagValue = surveyTagValue;
+	}
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
 	}
 }

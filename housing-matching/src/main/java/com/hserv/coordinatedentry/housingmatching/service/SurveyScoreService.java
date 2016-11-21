@@ -22,4 +22,6 @@ public interface SurveyScoreService {
 	
 	public boolean updateScoreByClientId(int score, UUID clientId);
 	
+	void checkAnyProcessRunning(String projectGroupCode);
+	
 }
