@@ -22,6 +22,7 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		insert(sectionScoreEntity);
 		return sectionScoreEntity;
 	}
+	
 
 	public void deleteSectionScore(SectionScoreEntity sectionScoreEntity) {
 		delete(sectionScoreEntity);
@@ -40,7 +41,6 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		if(startIndex==0 && maxItems ==0) return (List<SectionScoreEntity>) findByCriteria(criteria);
 		return (List<SectionScoreEntity>) findByCriteria(criteria, startIndex, maxItems);
 	}
-	
 	
 	public List<SectionScoreEntity> getClientScores(UUID clientId,UUID surveyId, UUID sectionId,Integer startIndex,Integer maxItems){
 		DetachedCriteria criteria = DetachedCriteria.forClass(SectionScoreEntity.class);

@@ -124,14 +124,28 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 		SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao().getSurveySectionEntityById(sectionScore.getSectionId());
 		if(sectionEntity==null) throw new SurveySectionNotFoundException();
 		
-		SectionScoreEntity sectionScoreEntity = new SectionScoreEntity();
-		sectionScoreEntity.setActive(true);
-		sectionScoreEntity.setSurveyEntity(surveyEntity);
-		sectionScoreEntity.setSectionEntity(sectionEntity);
-		sectionScoreEntity.setClientId(sectionScore.getClientId());
-		sectionScoreEntity.setCreatedAt(LocalDateTime.now());
-		sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
-		daoFactory.getSectionScoreDao().createSectionScore(sectionScoreEntity);
+		List<SectionScoreEntity> scoreEntities = daoFactory.getSectionScoreDao().getClientScores(sectionScore.getClientId(), sectionScore.getSurveyId(), sectionScore.getSectionId(), 0, 0);
+		SectionScoreEntity sectionScoreEntity =null;
+		if(!scoreEntities.isEmpty()){
+			sectionScoreEntity = scoreEntities.get(0);
+			sectionScoreEntity.setActive(true);
+			sectionScoreEntity.setSurveyEntity(surveyEntity);
+			sectionScoreEntity.setSectionEntity(sectionEntity);
+			sectionScoreEntity.setClientId(sectionScore.getClientId());
+			sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
+			sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
+			daoFactory.getSectionScoreDao().updateSectionScore(sectionScoreEntity);
+		}else{
+			sectionScoreEntity = new SectionScoreEntity();
+			sectionScoreEntity.setActive(true);
+			sectionScoreEntity.setSurveyEntity(surveyEntity);
+			sectionScoreEntity.setSectionEntity(sectionEntity);
+			sectionScoreEntity.setClientId(sectionScore.getClientId());
+			sectionScoreEntity.setCreatedAt(LocalDateTime.now());
+			sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
+			daoFactory.getSectionScoreDao().createSectionScore(sectionScoreEntity);
+		}
+		
 		sectionScore.setSectionScoreId(sectionScoreEntity.getId());
 		return sectionScore;
 	}
