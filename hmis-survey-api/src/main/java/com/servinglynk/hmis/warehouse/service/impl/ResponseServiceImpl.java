@@ -50,6 +50,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
        pResponse.setQuestionEntity(questionEntity);
        pResponse.setCreatedAt(LocalDateTime.now());
        pResponse.setUser(caller);
+       pResponse.setClientId(clientId);
        pResponse.setSubmissionId(submissionId);
 //       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
        daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
