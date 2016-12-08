@@ -126,7 +126,7 @@ public class EligibilityRequirementResource extends BaseResource {
 		return new ResponseEntity<>(assembler.toResource(page, housingInventoryAssembler),
 				HttpStatus.OK);
 	}
-	@APIMapping(value="CREATE_HOUSING_INVENTORIES")
+	@APIMapping(value="GET_HOUSING_INVENTORIES")
 	@RequestMapping(value="/eligibilityrequirements",method=RequestMethod.GET,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Resources<Resource>> getAllEligibilities(HttpServletRequest request,Pageable pageable) throws Exception {
 		Session session = sessionHelper.getSession(request);
