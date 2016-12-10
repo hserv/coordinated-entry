@@ -130,6 +130,11 @@ public class EligibilityRequirementResource extends BaseResource {
 	@RequestMapping(value="/eligibilityrequirements",method=RequestMethod.GET,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Resources<Resource>> getAllEligibilities(HttpServletRequest request,Pageable pageable) throws Exception {
 		Session session = sessionHelper.getSession(request);
+		//Adding S.o.P for debugging will take it out
+		System.out.println("session.getAccount()"+session.getAccount().toString());
+		System.out.println("session.getAccount().getProjectGroup()"+session.getAccount().getProjectGroup().toString());
+		System.out.println("session.getAccount().getProjectGroup().getProjectGroupCode()"+session.getAccount().getProjectGroup().getProjectGroupCode());
+		
 	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode(), pageable);
 		return new ResponseEntity<>(assembler.toResource(page, housingInventoryAssembler),
 				HttpStatus.OK);
