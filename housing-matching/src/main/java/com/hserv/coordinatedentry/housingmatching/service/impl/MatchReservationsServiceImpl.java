@@ -240,7 +240,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		
 			BaseProject project = projectService.getProjectInfo(housingInventory.getProjectId(), session, trustedAppId);
 
-			logger.log("match.process.project.loaded",new Object[]{housingInventory.getHousingInventoryId(),project.getProjectType()}, project!=null ? true : false,housingInventory.getHousingInventoryId(),null,null);
+			logger.log("match.process.project.loaded",new Object[]{project!=null? "SUCCESS":"FAILED",housingInventory.getHousingInventoryId(),project!=null? project.getProjectType(): "Project not found in HMIS"}, project!=null ? true : false,housingInventory.getHousingInventoryId(),null,null);
 			if(project!=null) {
 					List<EligibleClient> clients= new ArrayList<>();
 						if(housingInventory.getFamilyUnit()){
