@@ -74,7 +74,7 @@ public class ScoreController extends BaseController {
 		Session session = sessionHelper.getSession(request);
 		DeferredResult<String> deferredResult = new DeferredResult<>();
 		//	surveyScoreService.checkAnyProcessRunning(session.getAccount().getProjectGroup().getProjectGroupCode());
-			batchProcessService.startBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), session.getAccount().getEmailAddress());
+			batchProcessService.startScoresBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), session.getAccount().getEmailAddress());
 			surveyScoreService.calculateScore(session);
 			deferredResult.setResult("triggered: 'ok'");
 		return deferredResult;

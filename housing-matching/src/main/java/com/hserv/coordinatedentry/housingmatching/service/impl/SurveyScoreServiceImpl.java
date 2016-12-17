@@ -134,11 +134,12 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			//  Get survey tag value : SINGLE_AUDULT pass individual true
 			//                         FAMILY pass family true
+			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
 			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagValue()));
 			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
-			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
+
 			if(client!=null)
 				eligibleClient.setClientLink(client.getLink());		
 			if(!eligibleClient.getMatched())

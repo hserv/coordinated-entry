@@ -14,6 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.servinglynk.hmis.warehouse.core.model.Error;
+import com.servinglynk.hmis.warehouse.core.model.exception.MissingParameterException;
 
 
 public class ExceptionMapper {
@@ -94,6 +95,12 @@ public class ExceptionMapper {
 			logger.error(e.getMessage(),e);
 			r.setErrorCode("ERR_CODE_INVALID_DATA");
 			r.setErrorMessage("Request contains invalid data");
+			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+		}catch(MissingParameterException e){
+			logger.info(e.getMessage());
+			logger.error(e.getMessage());
+			r.setErrorCode("ERR_CODE_PARAMETER_MISSING");
+			r.setErrorMessage(e.getMessage());
 			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		catch (Throwable t) {

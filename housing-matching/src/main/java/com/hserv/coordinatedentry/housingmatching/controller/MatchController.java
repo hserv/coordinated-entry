@@ -1,6 +1,7 @@
 
 package com.hserv.coordinatedentry.housingmatching.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,12 +23,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.core.JsonParser.NumberType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
+import com.hserv.coordinatedentry.housingmatching.model.BatchProcessModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchStatusModel;
+import com.hserv.coordinatedentry.housingmatching.service.BatchProcessService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
 import com.servinglynk.hmis.warehouse.core.model.Session;
@@ -47,6 +61,9 @@ public class MatchController extends BaseController {
 	
 	@Autowired
 	private PagedResourcesAssembler assembler;
+	
+	@Autowired
+	private BatchProcessService batchProcessService;
 	
 
 	private ResourceAssembler<Match, Resource<MatchReservationModel>> housingInventoryAssembler = new MatchController.HousingInventoryAssembler();
@@ -75,6 +92,20 @@ public class MatchController extends BaseController {
 	 * 
 	 * 
 	 */
+	/*@RequestMapping( method = RequestMethod.POST)
+	@APIMapping(value="trigger-match-process")
+	public ResponseEntity<BatchProcessModel> createMatch(
+			@RequestParam (name="",defaultValue="3",required=false) Integer maxClients,
+			HttpServletRequest request) throws Exception {
+		Session session  = sessionHelper.getSession(request);
+		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
+		UUID processId = batchProcessService.startMatchBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), session.getAccount().getEmailAddress());
+		matchReservationsService.matchingProcess(maxClients,session,trustedAppId,processId);
+		BatchProcessModel model = new BatchProcessModel();
+		model.setProcessId(processId);
+		return new ResponseEntity<BatchProcessModel>(model,HttpStatus.OK);
+	}*/
+	
 	@RequestMapping( method = RequestMethod.POST)
 	@APIMapping(value="trigger-match-process")
 	public ResponseEntity<String> createMatch(
@@ -82,8 +113,8 @@ public class MatchController extends BaseController {
 			HttpServletRequest request) throws Exception {
 		Session session  = sessionHelper.getSession(request);
 		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
-		
-		matchReservationsService.matchingProcess(maxClients,session,trustedAppId);
+		UUID processId = batchProcessService.startMatchBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), session.getAccount().getEmailAddress());
+		matchReservationsService.matchingProcess(maxClients,session,trustedAppId,processId);
 		return ResponseEntity.ok("{\"triggered\": \"success\"}\"");
 	}
 

@@ -2,6 +2,7 @@ package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -36,11 +37,12 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 	BatchProcessTranslator batchProcessTranslator;
 	
 	
-	public void  startBatch(String projectGroup,String user){
+	public void  startScoresBatch(String projectGroup,String user){
 		try{
 			BatchProcessEntity batchProcessEntity = new BatchProcessEntity();
 			batchProcessEntity.setInitiateBy(user);
 			batchProcessEntity.setStatus(Constants.BATCH_STATUS_INPROGRESS);
+			batchProcessEntity.setProcessType(Constants.SCORES_PROCESS_BATCH);
 			batchProcessEntity.setStartedAt(LocalDateTime.now());
 			batchProcessEntity.setIsProcessing(1L);
 			repositoryFactory.getBatchProcessRepository().save(batchProcessEntity);
@@ -49,6 +51,28 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 		}
 		
 			System.out.println("Batch process record created");
+	}
+	
+	public UUID startMatchBatch(String projectGroup,String user){
+		try{
+			BatchProcessEntity batchProcessEntity = new BatchProcessEntity();
+			batchProcessEntity.setInitiateBy(user);
+			batchProcessEntity.setStatus(Constants.BATCH_STATUS_INPROGRESS);
+			batchProcessEntity.setProcessType(Constants.MATCH_PROCESS_BATCH);
+			batchProcessEntity.setStartedAt(LocalDateTime.now());
+			repositoryFactory.getBatchProcessRepository().save(batchProcessEntity);
+			return batchProcessEntity.getId();
+		}catch (Exception e) {
+			throw new ProcessAlreadyRunningException(); 
+		}
+	}
+	
+	public void endBatch(UUID batchId){
+		BatchProcessEntity entity =  repositoryFactory.getBatchProcessRepository().findOne(batchId);
+		entity.setStatus(Constants.BATCH_STATUS_COMPLETED);
+		entity.setCompletedAt(LocalDateTime.now());
+		entity.setIsProcessing(null);
+		repositoryFactory.getBatchProcessRepository().save(entity);
 	}
 	
 	public void endBatch(String projectGroup,Boolean success){
@@ -67,14 +91,16 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 	}
 	
 	
-	public BatchProcessModel getStatus(String projectGroup){
+	public BatchProcessModel getScoreStatus(String projectGroup){
 		Specification<BatchProcessEntity> specification = Specifications.where(new Specification<BatchProcessEntity>() {
 
 			@Override
 			public Predicate toPredicate(Root<BatchProcessEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				
 			return criteriaBuilder.and(
-						criteriaBuilder.equal(root.get("projectGroupCode"),projectGroup));
+						criteriaBuilder.equal(root.get("projectGroupCode"),projectGroup),
+						criteriaBuilder.equal(root.get("processType"),Constants.SCORES_PROCESS_BATCH)
+						);
 			}	
 		});
 		
@@ -87,14 +113,16 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 	}
 
 	
-	public Page<BatchProcessEntity> getStatusHistory(String projectGroup,Pageable pageable){
+	public Page<BatchProcessEntity> getScoreStatusHistory(String projectGroup,Pageable pageable){
 		Specification<BatchProcessEntity> specification = Specifications.where(new Specification<BatchProcessEntity>() {
 
 			@Override
 			public Predicate toPredicate(Root<BatchProcessEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				
 			return criteriaBuilder.and(
-						criteriaBuilder.equal(root.get("projectGroupCode"),projectGroup));
+						criteriaBuilder.equal(root.get("projectGroupCode"),projectGroup),
+						criteriaBuilder.equal(root.get("processType"),Constants.SCORES_PROCESS_BATCH)
+					);
 			}	
 		});
 		

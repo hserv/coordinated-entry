@@ -53,14 +53,14 @@ public class BatchProcessController extends BaseController {
 	public BatchProcessModel getCurrentStatus(HttpServletRequest request) throws Exception{
 		Session session = sessionHelper.getSession(request);
 		
-		return batchProcessService.getStatus(session.getAccount().getProjectGroup().getProjectGroupCode());
+		return batchProcessService.getScoreStatus(session.getAccount().getProjectGroup().getProjectGroupCode());
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/history")
 	@APIMapping(value="GET_BATCH_PROCESS_HISTORY")
 	public ResponseEntity<Resources<Resource>> getBatchProcessHistory(Pageable pageable,HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
-		return new ResponseEntity<>(assembler.toResource(batchProcessService.getStatusHistory(session.getAccount().getProjectGroup().getProjectGroupCode(), pageable),housingInventoryAssembler),HttpStatus.OK);
+		return new ResponseEntity<>(assembler.toResource(batchProcessService.getScoreStatusHistory(session.getAccount().getProjectGroup().getProjectGroupCode(), pageable),housingInventoryAssembler),HttpStatus.OK);
 	}
 	
 }

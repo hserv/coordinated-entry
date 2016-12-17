@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+//		objectMapper.configure(Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 		objectMapper.constructType(DefaultPrettyPrinter.class);
 		objectMapper.writerWithDefaultPrettyPrinter();
 		jsonConverter.setObjectMapper(objectMapper);

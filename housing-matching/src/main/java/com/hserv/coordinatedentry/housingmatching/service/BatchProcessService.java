@@ -1,5 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.service;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,11 +10,14 @@ import com.hserv.coordinatedentry.housingmatching.model.BatchProcessModel;
 
 public interface BatchProcessService {
 
-	BatchProcessModel getStatus(String projectGroup);
+	BatchProcessModel getScoreStatus(String projectGroup);
 	
-	Page<BatchProcessEntity> getStatusHistory(String projectGroup,Pageable pageable);
+	Page<BatchProcessEntity> getScoreStatusHistory(String projectGroup,Pageable pageable);
 	
-	void startBatch(String projectGroup,String user);
+	void startScoresBatch(String projectGroup,String user);
 	
 	void endBatch(String projectGroup,Boolean success);
+	UUID startMatchBatch(String projectGroup,String user);
+	
+	void endBatch(UUID batchId);
 }

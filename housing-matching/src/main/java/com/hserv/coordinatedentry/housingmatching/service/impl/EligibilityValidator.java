@@ -2,9 +2,12 @@ package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.expression.EvaluationContext;
@@ -22,6 +25,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibilityRequirement;
 import com.hserv.coordinatedentry.housingmatching.entity.HouseholdMembership;
 import com.hserv.coordinatedentry.housingmatching.model.ClientDEModel;
 import com.hserv.coordinatedentry.housingmatching.model.Requirement;
+import com.hserv.coordinatedentry.housingmatching.util.MatchProcessLogger;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 
 @Component
@@ -30,12 +34,14 @@ public class EligibilityValidator {
 	@Autowired
 	RepositoryFactory repositoryFactory;
 	
+	@Autowired
+	MatchProcessLogger logger;
 	
+
 	@Value(value = "${apply_project_eligibility}")
 	boolean applyProjectEligibility;
 
-	public boolean validateProjectEligibility(ClientDEModel client,UUID projectId) {
-			boolean result=false;
+	public boolean validateProjectEligibility(ClientDEModel client,UUID projectId, UUID housingUnitId) {
 			
 			if(!applyProjectEligibility)
 				return true;
@@ -45,6 +51,8 @@ public class EligibilityValidator {
 			ExpressionParser parser = new SpelExpressionParser();
 			ObjectMapper mapper = new ObjectMapper();
 			
+			Set<Boolean> result = new HashSet<Boolean>();
+			logger.log("match.process.project.eligibility.validation", new Object[]{eligibilityRequirementModels.size()},eligibilityRequirementModels.size()>0 ? true : false,housingUnitId, projectId, client.getClientId());
 			for(EligibilityRequirement eligibilityRequirement : eligibilityRequirementModels){
 		
 				List<Requirement> requirements= new ArrayList<Requirement>();
@@ -55,43 +63,34 @@ public class EligibilityValidator {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+					int step=1;
 				for( Requirement requirement :  requirements){
 						
 						String req=generateExpression(requirement.getName(), requirement.getValue()+"");
 						try{
 							Expression expression = parser.parseExpression(req);
-							result = (boolean) expression.getValue(context);
-							System.out.println(" attribute "+ requirement.getName() +" with expression "+requirement.getValue()+" evaluation "+result);
+							boolean isValid = (boolean) expression.getValue(context);
+//							match.process.project.eligibility.step={"step":"{}# VALIDATE - Project eligibility criteria","statusMessage":"{} - {} validated with criteria {} ","additionalInfo":{"eligibilityRequirmentId":"{}","dataElement":"{}","criteria":"{}","clientDEValue":"{}"}}
+							logger.log("match.process.project.eligibility.step",new Object[]{ step,isValid? "SUCCESS" : "FAILED",requirement.getName(), requirement.getValue().toString().replaceAll("\"","&quot;"),eligibilityRequirement.getEligibilityId(),requirement.getName(),requirement.getValue().toString().replaceAll("\"","&quot;"),BeanUtils.getProperty(client, requirement.getName())}, isValid,housingUnitId,projectId,client.getClientId());
+							if(!isValid) return false;
 						}catch (Exception e) {
-							System.out.println(" attribute "+ requirement.getName() +" with expression "+requirement.getValue()+" "+e.getMessage());
-							result = true;
+							logger.log("match.process.project.eligibility.step.invalid",new Object[]{ step,"SUCCESS",requirement.getName(), requirement.getValue().toString().replaceAll("\"","&quot;"),eligibilityRequirement.getEligibilityId(),requirement.getName(),requirement.getValue().toString().replaceAll("\"","&quot;"),""}, true,housingUnitId,projectId,client.getClientId());
 						}
+						step++;
  					}
 			}
-			System.out.println("  Project eligibility validation result "+result);
-			return result;
+			return true;
 	}
 	
 	public String generateExpression(String name,String value){
-//		 value = value.replaceAll("eq",name +" eq ");
 		 value = value.replaceAll("==",name +" eq ");
-		 value = value.replaceAll("=",name +" eq ");
-		 //value = value.replaceAll("and", name+ " and ");
-		 //value = value.replaceAll("&&", name+ " and ");
-		 //value = value.replaceAll("&", name+ " and ");
-		// value = value.replaceAll("or", name+ " or ");
-		// value = value.replaceAll("||", name+ " or ");
-
 		 value = value.replaceAll("!=",name +" ne ");
-//		 value = value.replaceAll("lt",name +" lt ");
+		 value = value.replaceAll("=",name +" eq ");
 		 value = value.replaceAll("<=",name +" le ");
 		 value = value.replaceAll(">=",name +" ge ");
 		 value = value.replaceAll(">",name +" gt ");
-		 value = value.replaceAll("<",name +" lt ");
-		 
+		 value = value.replaceAll("<",name +" lt ");		 
 		 value = "( " + value +" ) ? true : false";
-
 		return value;
 	}
 	
@@ -100,14 +99,18 @@ public class EligibilityValidator {
 		return true;
 	}
 	
-	public Integer validateBedsAvailability(UUID clientId,Integer bedsCount){
+	public Integer validateBedsAvailability(UUID clientId,Integer bedsCount, UUID housingUnitId, UUID projectId){
 		Integer bedsRequired = 0;
 		Integer members =0;
 		List<HouseholdMembership> membership =  repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientId(clientId);
+			
 		if(!membership.isEmpty()){
-			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.get(0).getGlobalHousehold());
+			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.get(0).getGlobalHousehold());		
+				logger.log("match.process.household.memberRegistration",new Object[]{"SUCCESS","Client registered in global house hold"},true,housingUnitId,projectId,clientId);
 		}else{
 			bedsRequired = 0;
+			logger.log("match.process.household.memberRegistration",new Object[]{"FAILED","Client not registered in global house hold"},false,housingUnitId,projectId,clientId);	
+			return bedsRequired;
 		}
 		if(members == bedsCount ){
 			bedsRequired = members;
@@ -115,42 +118,7 @@ public class EligibilityValidator {
 		if( (members-1) == bedsCount){
 			bedsRequired = bedsCount;
 		}
-		
-		System.out.println("Requeired beds are "+bedsRequired);
+			logger.log("match.process.household.memberValidationWithBeds",new Object[]{bedsRequired>0 ? "SUCCESS" : "FAILED",members,members,bedsCount},bedsRequired==0 ? false : true ,housingUnitId,projectId,clientId);
 		return bedsRequired;
 	}
-	
-	
-/*	public static void main(String args[]){
-		EligibilityValidator validator = new EligibilityValidator();
-		String name="veteranStatus";
-		String value=" eq \"Client does not know\" || != \"Client refused\"";
-		
-		List<EligibilityRequirementModel> models = new ArrayList<EligibilityRequirementModel>();
-		EligibilityRequirementModel requirement = new EligibilityRequirementModel();
-		requirement.addRequirement(name, value);
-		requirement.addRequirement("gender"," >10 && <25");
-		models.add(requirement);
-		BaseClient client = new BaseClient();
-		client.setVeteranStatus("yes");
-		client.setGender(0);
-
-		validator.validateClientEligibility(client, models);
-		
-	}*/
-	
-/*	
-	public static void main(String ags[]){
-		for(int i=0; i< 10 ; i++){
-			for(int j=0;j<10; j++){
-				System.out.println(" i " +i);
-				if(j%2==0){
-					System.out.println(" breaking inner loop " +j);
-					break;
-
-				}
-				
-			}
-		}
-	}*/
 }

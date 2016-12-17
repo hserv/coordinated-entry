@@ -2,6 +2,7 @@ package com.hserv.coordinatedentry.housingmatching.model;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import org.apache.commons.lang.time.DateUtils;
 
@@ -14,6 +15,7 @@ public class ClientDEModel {
 	private Integer veteranStatus;
 	private Integer gender;
 	private Integer age;
+	private UUID clientId;
 	
 	private boolean servesSingles;
 	
@@ -43,6 +45,12 @@ public class ClientDEModel {
 		this.servesSingles = servesSingles;
 	}
 		
+	public UUID getClientId() {
+		return clientId;
+	}
+	public void setClientId(UUID clientId) {
+		this.clientId = clientId;
+	}
 	public void populateValues(BaseClient client){
 		if(client.getVeteranStatus()!=null)
 			this.setVeteranStatus(Integer.parseInt(client.getVeteranStatus()));
@@ -53,6 +61,7 @@ public class ClientDEModel {
 	}
 	
 	public void populateValues(EligibleClient client){
+		this.setClientId(client.getClientId());
 		if(client.getSpdatLabel()!=null) {
 			if(client.getSpdatLabel().equalsIgnoreCase("TAY") || client.getSpdatLabel().equalsIgnoreCase("SINGLE_AUDLT")){
 				this.setServesSingles(true);

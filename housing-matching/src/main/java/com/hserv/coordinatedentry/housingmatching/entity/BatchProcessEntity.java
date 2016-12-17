@@ -53,6 +53,9 @@ public class BatchProcessEntity extends BaseEntity {
 	@Column(name="IS_PROCESSING")
 	private Long isProcessing;
 	
+	@Column(name="process_type")
+	private String processType;
+	
 	public UUID getId() {
 		return id;
 	}
@@ -95,5 +98,10 @@ public class BatchProcessEntity extends BaseEntity {
 	public void setIsProcessing(Long isProcessing) {
 		this.isProcessing = isProcessing;
 	}
-	
+	public String getProcessType() {
+		return processType;
+	}
+	public void setProcessType(String processType) {
+		this.processType = processType;
+	}
 }

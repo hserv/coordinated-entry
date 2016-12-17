@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -18,6 +19,8 @@ public class BatchProcessModel {
 	private LocalDateTime completedAt;
 	private String initiatedBy;
 	private String status;
+	private UUID processId;
+	
 	public LocalDateTime getStartedAt() {
 		return startedAt;
 	}
@@ -42,4 +45,11 @@ public class BatchProcessModel {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public UUID getProcessId() {
+		return processId;
+	}
+	public void setProcessId(UUID processId) {
+		this.processId = processId;
+	}
+	
 }

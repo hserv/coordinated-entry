@@ -13,6 +13,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
 public interface HousingUnitsRepository extends JpaRepository<HousingInventory, Serializable>,JpaSpecificationExecutor<HousingInventory> {
 
 	List<HousingInventory>	findByProjectGroupCode(String projectGroupCode);
+	List<HousingInventory>	findByProjectGroupCodeAndVacant(String projectGroupCode,boolean isVacent);
 	List<HousingInventory>  findByProjectId(String projectId);
 //	List<HousingInventory>  findByProjectIdAndFamilyUnitAndBedsCapacity(UUID projectId,boolean isFamilyUnit);
 	
