@@ -34,7 +34,7 @@ public class MontereyCommunityStrategy implements MatchStrategy{
 	public String getProgramType(int spdatScore,String spdatLabel){
 		String programType = null;
 		switch (spdatLabel) {
-		case "SINGLE_AUDULT":
+		case "SINGLE_ADULT":
 			if(spdatScore>8){
 				programType = "10";
 			}else if(spdatScore >=4 && spdatScore <=7){
@@ -88,7 +88,7 @@ public class MontereyCommunityStrategy implements MatchStrategy{
 		int additionalScore=0;
 		
 		switch (spdatLabel) {
-		case "SINGLE_AUDULT":
+		case "SINGLE_ADULT":
 			if(age>=18 && age<=24)
 				additionalScore+=2;
 			break;
