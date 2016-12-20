@@ -52,7 +52,7 @@ public class EligibilityValidator {
 			ObjectMapper mapper = new ObjectMapper();
 			
 			Set<Boolean> result = new HashSet<Boolean>();
-			logger.log("match.process.project.eligibility.validation", new Object[]{eligibilityRequirementModels.size()},eligibilityRequirementModels.size()>0 ? true : false,housingUnitId, projectId, client.getClientId());
+			logger.log("match.process.project.eligibility.validation", new Object[]{eligibilityRequirementModels.size()},true,housingUnitId, projectId, client.getClientId());
 			for(EligibilityRequirement eligibilityRequirement : eligibilityRequirementModels){
 		
 				List<Requirement> requirements= new ArrayList<Requirement>();

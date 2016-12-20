@@ -16,6 +16,7 @@ public class ClientDEModel {
 	private Integer gender;
 	private Integer age;
 	private UUID clientId;
+	private Integer race;
 	
 	private boolean servesSingles;
 	
@@ -37,7 +38,12 @@ public class ClientDEModel {
 	public void setAge(Integer age) {
 		this.age = age;
 	}
-	
+	public Integer getRace() {
+		return race;
+	}
+	public void setRace(Integer race) {
+		this.race = race;
+	}
 	public boolean isServesSingles() {
 		return servesSingles;
 	}
@@ -58,6 +64,8 @@ public class ClientDEModel {
 			this.setGender(client.getGender());
 		if(client.getDob()!=null)
 			this.setAge(DateUtil.calculateAge(client.getDob()));
+		if(client.getRace()!=null)
+			this.setRace(client.getRace());
 	}
 	
 	public void populateValues(EligibleClient client){
