@@ -19,11 +19,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.servinglynk.hmis.warehouse.client.search.SearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 import com.servinglynk.hmis.warehouse.rest.SurveysController;
 import com.servinglynk.hmis.warehouse.rest.interceptor.ApiAuthCheckInterceptor;
+import com.servinglynk.hmis.warehouse.service.ClientValidator;
+import com.servinglynk.hmis.warehouse.service.impl.ClientValidatorImpl;
 
 @Configuration
 @Import({com.servinglynk.hmis.warehouse.config.DatabaseConfig.class,
@@ -87,6 +90,12 @@ public class RestConfig extends WebMvcConfigurerAdapter {
 	public TrustedAppHelper trustedAppHelper(){
 		return new TrustedAppHelper();
 	}
+	
+	@Bean
+	public ClientValidatorImpl clientValidator(){
+		return new ClientValidatorImpl();
+	}
+	
 	
 	 @Override
 	    public void addInterceptors(InterceptorRegistry registry) {

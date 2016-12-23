@@ -26,7 +26,7 @@ import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundExc
 public class ResponseServiceImpl extends ServiceBase implements ResponseService  {
 
    @Transactional
-   public Response createResponse(UUID clientId,UUID surveyId,Responses responses,String caller){
+   public Response createResponse(UUID clientId,UUID surveyId,Responses responses,String clientLink,String caller){
 	   Response returnResponse = new Response();
 	   
 	   UUID submissionId = UUID.randomUUID();
@@ -52,6 +52,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
        pResponse.setUser(caller);
        pResponse.setClientId(clientId);
        pResponse.setSubmissionId(submissionId);
+       pResponse.setClientLink(clientLink);
 //       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
        daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
     //   pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, pResponse));

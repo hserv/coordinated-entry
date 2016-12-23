@@ -20,6 +20,7 @@ import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SectionScore;
 import com.servinglynk.hmis.warehouse.core.model.SectionScores;
 import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.TrustedApp;
 
 @RestController
 @RequestMapping("/clients")
@@ -32,7 +33,9 @@ public class ClientsController extends BaseController {
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @Valid  @RequestBody Responses response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request);
-	       return serviceFactory.getResponseService().createResponse(clientid,surveyid,response,session.getAccount().getUsername()); 
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
+	       return serviceFactory.getResponseService().createResponse(clientid,surveyid,response,clientLink,session.getAccount().getUsername()); 
 	       
 	   }
 
@@ -42,9 +45,12 @@ public class ClientsController extends BaseController {
 			   @PathVariable("surveyid")  UUID surveyid,@PathVariable( "responseid" ) UUID responseId,
 			   @Valid  @RequestBody Response response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 	        response.setResponseId(responseId);
 	        response.setSectionId(surveyid);
 	        response.setClientId(clientid);
+	        
 	        serviceFactory.getResponseService().updateResponse(response,session.getAccount().getUsername()); 
 	   }
 	   
@@ -55,6 +61,8 @@ public class ClientsController extends BaseController {
 			   @PathVariable("surveyid")  UUID surveyid,@PathVariable( "submissionid" ) UUID submissionid,
 			   @Valid  @RequestBody Responses response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 	        serviceFactory.getResponseService().updateResponsesBySubmissionId(submissionid, response, session.getAccount().getUsername()); 
 	   }
 
@@ -65,6 +73,8 @@ public class ClientsController extends BaseController {
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @PathVariable( "responseid" ) UUID responseId,HttpServletRequest request,HttpServletResponse response) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 	        serviceFactory.getSurveyService().getSurveyById(surveyid);
 	        serviceFactory.getResponseService().deleteResponse(responseId,session.getAccount().getUsername()); 
 	        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
@@ -77,6 +87,8 @@ public class ClientsController extends BaseController {
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @PathVariable( "submissionid" ) UUID submissionid,HttpServletRequest request,HttpServletResponse response) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 	        serviceFactory.getSurveyService().getSurveyById(surveyid);
 	        serviceFactory.getResponseService().deleteResponsesBySubmissionId(surveyid,submissionid,session.getAccount().getUsername()); 
 	        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
@@ -87,6 +99,9 @@ public class ClientsController extends BaseController {
 	   public Response getResponseById(@PathVariable("clientid") UUID clientid,
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @PathVariable( "responseid" ) UUID responseId,HttpServletRequest request) throws Exception{
+		   Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   serviceFactory.getSurveyService().getSurveyById(surveyid);
 		   return serviceFactory.getResponseService().getResponseById(responseId); 
 	   }
@@ -99,7 +114,9 @@ public class ClientsController extends BaseController {
 			   @RequestParam(value="startIndex", required=false,defaultValue="0") Integer startIndex, 
                @RequestParam(value="maxItems", required=false,defaultValue="30") Integer maxItems,
                HttpServletRequest request) throws Exception {
-
+		   Session session= sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   serviceFactory.getSurveyService().getSurveyById(surveyid);
 		   return serviceFactory.getResponseService().getResponsesBySubmissionId(surveyid,submissionid, startIndex, maxItems); 
 	   }
@@ -115,6 +132,9 @@ public class ClientsController extends BaseController {
 	                       HttpServletRequest request) throws Exception {
 	           if (startIndex == null) startIndex =0;
 	           if (maxItems == null || maxItems > 30) maxItems =30;
+	           Session session = sessionHelper.getSession(request);
+		        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+		        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 	        return serviceFactory.getResponseService().getAllSurveyResponses(surveyid,startIndex,maxItems); 
 	   }
 	   
@@ -125,7 +145,9 @@ public class ClientsController extends BaseController {
 			   				@PathVariable("surveyid")  UUID surveyid,
 			   				@PathVariable("sectionid")  UUID sectionid,
 	                       HttpServletRequest request) throws Exception {
-		   
+		   Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   SectionScores scores= serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, sectionid, 0, 0);
 		   if(!scores.getSectionScores().isEmpty())
 			   return scores.getSectionScores().get(0);
@@ -143,7 +165,10 @@ public class ClientsController extends BaseController {
 	                       HttpServletRequest request) throws Exception {
            if (startIndex == null) startIndex =0;
            if (maxItems == null || maxItems > 30) maxItems =30;
-		   
+		   Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
+           
 		   return serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, sectionid, startIndex, maxItems);
 	   }
 	   
@@ -153,7 +178,9 @@ public class ClientsController extends BaseController {
 			   				@PathVariable("surveyid")  UUID surveyid,
 			   				@PathVariable("sectionid")  UUID sectionid,
 	                       HttpServletRequest request) throws Exception {
-		   
+		   Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, sectionid);
 	   }
 	   
@@ -164,8 +191,9 @@ public class ClientsController extends BaseController {
 			   				@PathVariable("sectionid")  UUID sectionid,
 			   				@RequestBody SectionScore sectionScore,
 	                       HttpServletRequest request) throws Exception {
-		   
-		   
+		   Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   sectionScore.setClientId(clientid);
 		   sectionScore.setSectionId(sectionid);
 		   sectionScore.setSurveyId(surveyid);
@@ -185,8 +213,9 @@ public class ClientsController extends BaseController {
 			   				@PathVariable("scoreid") UUID scoreid  ,
 			   				@RequestBody SectionScore sectionScore,
 	                       HttpServletRequest request) throws Exception {
-		   
-		   
+		   Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   sectionScore.setClientId(clientid);
 		   sectionScore.setSectionId(sectionid);
 		   sectionScore.setSurveyId(surveyid);
@@ -204,7 +233,9 @@ public class ClientsController extends BaseController {
 	                       HttpServletRequest request) throws Exception {
            if (startIndex == null) startIndex =0;
            if (maxItems == null || maxItems > 30) maxItems =30;
-		   
+		   Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   return serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, null, startIndex, maxItems);
 	   }
 	   
@@ -218,6 +249,9 @@ public class ClientsController extends BaseController {
            if (startIndex == null) startIndex =0;
            if (maxItems == null || maxItems > 30) maxItems =30;
 		   
+           Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		    serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, null, startIndex, maxItems);
 	   }
 	   
@@ -231,6 +265,9 @@ public class ClientsController extends BaseController {
            if (startIndex == null) startIndex =0;
            if (maxItems == null || maxItems > 30) maxItems =30;
 		   
+           Session session = sessionHelper.getSession(request);
+	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
+	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, null);
 	   }
 	   

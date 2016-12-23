@@ -10,7 +10,7 @@ public class ResponseConverter {
        entity.setRefused(model.isRefused());
        entity.setResponseText(model.getResponseText());
        entity.setAppId(model.getAppId());
-       entity.setClientId(model.getClientId());
+//       entity.setClientId(model.getClientId());
        return entity;    
    }
 

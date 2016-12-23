@@ -58,6 +58,9 @@ public class ResponseEntity extends BaseEntity {
 	@Column(name="submission_id")
 	private UUID submissionId;
 	
+    
+    @Column(name="CLIENT_LINK")
+    private String clientLink;
 	
 	public UUID getId() {
 		return id;
@@ -129,5 +132,11 @@ public class ResponseEntity extends BaseEntity {
 	}
 	public void setSubmissionId(UUID submissionId) {
 		this.submissionId = submissionId;
+	}
+	public String getClientLink() {
+		return clientLink;
+	}
+	public void setClientLink(String clientLink) {
+		this.clientLink = clientLink;
 	}
 }

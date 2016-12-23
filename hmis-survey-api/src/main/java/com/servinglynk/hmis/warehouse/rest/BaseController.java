@@ -20,7 +20,9 @@ import com.servinglynk.hmis.warehouse.client.baseclients.BaseClientService;
 import com.servinglynk.hmis.warehouse.core.model.Error;
 import com.servinglynk.hmis.warehouse.core.model.Errors;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
+import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 import com.servinglynk.hmis.warehouse.rest.common.ExceptionMapper;
+import com.servinglynk.hmis.warehouse.service.ClientValidator;
 import com.servinglynk.hmis.warehouse.service.core.ParentServiceFactory;
 
 
@@ -36,10 +38,18 @@ public abstract class BaseController {
 	SessionHelper sessionHelper;
 	
 	@Autowired
+	TrustedAppHelper trustedAppHelper;
+	
+	@Autowired
 	ParentServiceFactory serviceFactory;
 	
 	@Autowired
 	BaseClientService baseClientService;
+	
+	@Autowired
+	ClientValidator clientValidator;
+	
+	
 	
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
