@@ -92,7 +92,7 @@ public class MatchController extends BaseController {
 	 * 
 	 * 
 	 */
-	/*@RequestMapping( method = RequestMethod.POST)
+	@RequestMapping( method = RequestMethod.POST)
 	@APIMapping(value="trigger-match-process")
 	public ResponseEntity<BatchProcessModel> createMatch(
 			@RequestParam (name="",defaultValue="3",required=false) Integer maxClients,
@@ -104,20 +104,8 @@ public class MatchController extends BaseController {
 		BatchProcessModel model = new BatchProcessModel();
 		model.setProcessId(processId);
 		return new ResponseEntity<BatchProcessModel>(model,HttpStatus.OK);
-	}*/
-	
-	@RequestMapping( method = RequestMethod.POST)
-	@APIMapping(value="trigger-match-process")
-	public ResponseEntity<String> createMatch(
-			@RequestParam (name="maxclients",defaultValue="3",required=false) Integer maxClients,
-			HttpServletRequest request) throws Exception {
-		Session session  = sessionHelper.getSession(request);
-		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
-		UUID processId = batchProcessService.startMatchBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), session.getAccount().getEmailAddress());
-		matchReservationsService.matchingProcess(maxClients,session,trustedAppId,processId);
-		return ResponseEntity.ok("{\"triggered\": \"success\"}\"");
 	}
-
+	
 	/**
 	 * Get the list of the proposed matches.
 	 * 
