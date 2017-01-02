@@ -120,13 +120,9 @@ public class HousingInventoryResource extends BaseResource{
 		Session session = sessionHelper.getSession(request);
 		HousingInventory housingInventory=new HousingInventory();
 		housingInventory.setProjectId(projectId);
-		housingInventory.setInactive(inactive);
 		housingInventory.setVacant(vacant);
 		housingInventory.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
-//		housingInventory.setInactive(false);
-		
-//		List<HousingInventory> housingInventories = housingInventoryService.getAllHousingInventory(housingInventory);
-		
+				
 		return new ResponseEntity<>(assembler.toResource(housingInventoryService.getAllHousingInventory(housingInventory, pageable), housingInventoryAssembler),
 				HttpStatus.OK);
 	}

@@ -58,21 +58,21 @@ public class HousingUnitAssignmentService  {
 	
 	public Page<HousingUnitAssignment> getAllHousingUnitAssignments(UUID housingUnitId,Pageable pageable){
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		HousingInventory housingInventory= HousingInventoryRepository.findByHousingInventoryIdAndProjectGroupCode(housingUnitId, projectGroup);
+		HousingInventory housingInventory= HousingInventoryRepository.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(housingUnitId, projectGroup,false);
 		if(housingInventory==null) throw new ResourceNotFoundException("Housing unit not found "+housingUnitId);
-		return housingUnitAssignmentRepository.findByHousingInventory(housingInventory, pageable);
+		return housingUnitAssignmentRepository.findByHousingInventoryAndDeleted(housingInventory, false,pageable);
 	}
 
 	public HousingUnitAssignment getHousingUnitAssignmentById(UUID id) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		HousingUnitAssignment assignment = housingUnitAssignmentRepository.findByAssignmentIdAndProjectGroupCode(id,projectGroup);
+		HousingUnitAssignment assignment = housingUnitAssignmentRepository.findByAssignmentIdAndProjectGroupCodeAndDeleted(id,projectGroup,false);
 		if(assignment==null) throw new ResourceNotFoundException("Housing assignment not found "+id);
 		return assignment; 
 	}
 	
 	public void delete(UUID id) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		HousingUnitAssignment assignment = housingUnitAssignmentRepository.findByAssignmentIdAndProjectGroupCode(id,projectGroup);
+		HousingUnitAssignment assignment = housingUnitAssignmentRepository.findByAssignmentIdAndProjectGroupCodeAndDeleted(id,projectGroup,false);
 		if(assignment==null) throw new ResourceNotFoundException("Housing assignment not found "+id);
         housingUnitAssignmentRepository.delete(assignment);
     }

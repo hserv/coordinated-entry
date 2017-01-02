@@ -12,7 +12,7 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 public interface HousingInventoryRepository extends JpaRepository<HousingInventory,
 Serializable> , JpaSpecificationExecutor<HousingInventory>{
 
-	HousingInventory findByHousingInventoryIdAndProjectGroupCode(UUID inventoryId, String projectgroup);
+	HousingInventory findByHousingInventoryIdAndProjectGroupCodeAndDeleted(UUID inventoryId, String projectgroup,boolean deleted);
 	
 	
 	@Query(value="select 1",nativeQuery=true)

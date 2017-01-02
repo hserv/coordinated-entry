@@ -12,15 +12,15 @@ import com.hserv.coordinatedentry.housinginventory.domain.EligibilityRequirement
 
 public interface EligibilityRequirementRepository extends JpaRepository<EligibilityRequirement, Serializable>{
 
-	Page<EligibilityRequirement> findByProjectId(UUID projectId,Pageable pageable);
+	Page<EligibilityRequirement> findByProjectIdAndDeleted(UUID projectId,boolean deleted,Pageable pageable);
 
-	Page<EligibilityRequirement> findByProjectIdIn(List projectIds, Pageable pageable);
+	Page<EligibilityRequirement> findByProjectIdInAndDeleted(List projectIds,boolean deleted, Pageable pageable);
 	
-	Page<EligibilityRequirement> findByProjectGroupCode(String projectGroupCode,Pageable pageable);
+	Page<EligibilityRequirement> findByProjectGroupCodeAndDeleted(String projectGroupCode,boolean deleted,Pageable pageable);
 
-	EligibilityRequirement findByEligibilityIdAndProjectGroupCode(UUID eligibilityId, String projectGroupCode);
+	EligibilityRequirement findByEligibilityIdAndProjectGroupCodeAndDeleted(UUID eligibilityId, String projectGroupCode,boolean deleted);
 
-	Page<EligibilityRequirement> findByProjectIdAndProjectGroupCode(UUID projectId, String projectGroupCode,
+	Page<EligibilityRequirement> findByProjectIdAndProjectGroupCodeAndDeleted(UUID projectId, String projectGroupCode,boolean deleted,
 			Pageable pageable);
 	
 }

@@ -12,7 +12,7 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAssignment;
 
 public interface HousingUnitAssignmentRepository extends JpaRepository<HousingUnitAssignment, Serializable>{
 
-	Page<HousingUnitAssignment> findByHousingInventory(HousingInventory housingInventory,Pageable pageable);
+	Page<HousingUnitAssignment> findByHousingInventoryAndDeleted(HousingInventory housingInventory,boolean deleted,Pageable pageable);
 	
-	HousingUnitAssignment findByAssignmentIdAndProjectGroupCode(UUID assignmentId,String projectGroupCode);
+	HousingUnitAssignment findByAssignmentIdAndProjectGroupCodeAndDeleted(UUID assignmentId,String projectGroupCode,boolean deleted);
 }

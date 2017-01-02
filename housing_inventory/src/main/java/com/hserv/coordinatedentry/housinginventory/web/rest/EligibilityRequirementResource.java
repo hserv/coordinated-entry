@@ -114,7 +114,7 @@ public class EligibilityRequirementResource extends BaseResource {
 	public EligibilityRequirementModel getEligibilityById(@PathVariable UUID projectId,
 			@PathVariable UUID eligibilityId, HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
-		EligibilityRequirement eligibility = housingUnitEligibilityRepository.findByEligibilityIdAndProjectGroupCode(eligibilityId,session.getAccount().getProjectGroup().getProjectGroupCode());		
+		EligibilityRequirement eligibility = housingUnitEligibilityRepository.findByEligibilityIdAndProjectGroupCodeAndDeleted(eligibilityId,session.getAccount().getProjectGroup().getProjectGroupCode(),false);		
 		return JsonUtil.fromJSON(eligibility.getEligibility(), EligibilityRequirementModel.class);
 	}
 	
@@ -122,7 +122,7 @@ public class EligibilityRequirementResource extends BaseResource {
 	@RequestMapping(value="/{projectId}/eligibilityrequirements",method=RequestMethod.GET,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Resources<Resource>> getEligibilities(@PathVariable UUID projectId, HttpServletRequest request,Pageable pageable) throws Exception {
 		Session session = sessionHelper.getSession(request);
-	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectIdAndProjectGroupCode(projectId,session.getAccount().getProjectGroup().getProjectGroupCode(), pageable);
+	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectIdAndProjectGroupCodeAndDeleted(projectId,session.getAccount().getProjectGroup().getProjectGroupCode(),false ,pageable);
 		return new ResponseEntity<>(assembler.toResource(page, housingInventoryAssembler),
 				HttpStatus.OK);
 	}
@@ -135,7 +135,7 @@ public class EligibilityRequirementResource extends BaseResource {
 		System.out.println("session.getAccount().getProjectGroup()"+session.getAccount().getProjectGroup().toString());
 		System.out.println("session.getAccount().getProjectGroup().getProjectGroupCode()"+session.getAccount().getProjectGroup().getProjectGroupCode());
 		
-	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode(), pageable);
+	  Page<EligibilityRequirement> page	= housingUnitEligibilityRepository.findByProjectGroupCodeAndDeleted(session.getAccount().getProjectGroup().getProjectGroupCode(), false,pageable);
 		return new ResponseEntity<>(assembler.toResource(page, housingInventoryAssembler),
 				HttpStatus.OK);
 	}

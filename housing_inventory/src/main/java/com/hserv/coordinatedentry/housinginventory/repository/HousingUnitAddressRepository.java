@@ -13,8 +13,8 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 
 public interface HousingUnitAddressRepository extends JpaRepository<HousingUnitAddress, Serializable>{
 
-	Page<HousingUnitAddress> findByHousingInventory(HousingInventory housingInventory,Pageable pageable);
-	List<HousingUnitAddress> findByHousingInventory(HousingInventory housingInventory);
-	HousingUnitAddress findByAddressIdAndProjectGroupCode(UUID id,
-			String projectGroup);
+	Page<HousingUnitAddress> findByHousingInventoryAndDeleted(HousingInventory housingInventory,boolean deleted,Pageable pageable);
+	List<HousingUnitAddress> findByHousingInventoryAndDeleted(HousingInventory housingInventory,boolean deleted);
+	HousingUnitAddress findByAddressIdAndProjectGroupCodeAndDeleted(UUID id,
+			String projectGroup,boolean deleted);
 }

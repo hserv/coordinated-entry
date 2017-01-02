@@ -44,10 +44,10 @@ public class HousingInventoryBaseEntity implements Serializable {
 	@Column(name="user_id")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID userId;
-	
-	@Column(name="inactive")
-	private boolean inactive;
 
+	@Column(name="deleted")
+	private boolean deleted;
+	
 
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
@@ -104,12 +104,11 @@ public class HousingInventoryBaseEntity implements Serializable {
 	}	
 	
 
-	public boolean isInactive() {
-		return inactive;
+	public boolean isDeleted() {
+		return deleted;
 	}
 
-	public void setInactive(boolean inactive) {
-		this.inactive = inactive;
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
-
 }

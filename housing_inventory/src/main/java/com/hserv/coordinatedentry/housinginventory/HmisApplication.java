@@ -17,12 +17,13 @@ import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.hserv.coordinatedentry.housinginventory.repository.BaseRepositoryFactoryBean;
 import com.servinglynk.hmis.warehouse.client.config.SpringConfig;
 
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableJpaRepositories
+@EnableJpaRepositories(repositoryFactoryBeanClass=BaseRepositoryFactoryBean.class)
 @EnableEntityLinks
 @EnableTransactionManagement
 @EnableSpringDataWebSupport

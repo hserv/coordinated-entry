@@ -44,11 +44,9 @@ public class HousingInventoryService  {
 	 
 	 @Transactional
 	 public HousingInventory saveHousingInventory(HousingInventory housingInventory) {
-			housingInventory.setInactive(false);
 		    HousingUnitAddress address=housingInventory.getHousingUnitAddress();
 			housingInventory=housingInventoryRepository.save(housingInventory);
 			if(address!=null){
-				address.setInactive(false);
 				address.setHousingInventory(housingInventory);
 				HousingUnitAddressRepository.save(address);
 			}
@@ -59,12 +57,10 @@ public class HousingInventoryService  {
 	 @Transactional
 	 public List<HousingInventory> saveHousingInventories(List<HousingInventory> housingInventories) {
           for(HousingInventory housingInventory: housingInventories){ 
-		    housingInventory.setInactive(false);
 		    HousingUnitAddress address= housingInventory.getHousingUnitAddress();
 		    housingInventory= housingInventoryRepository.save(housingInventory);
 			if(address!=null){
 			address.setAddressId(UUID.randomUUID());
-			address.setInactive(false);
 			address.setDateCreated((new Date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 			address.setDateUpdated((new Date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             address.setHousingInventory(housingInventory);
@@ -142,14 +138,14 @@ public class HousingInventoryService  {
 
 	public HousingInventory getHousingInventoryById(UUID housingInventoryId) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		HousingInventory inventory =housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCode(housingInventoryId,projectGroup);
+		HousingInventory inventory =housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(housingInventoryId,projectGroup,false);
 		if(inventory==null) throw new ResourceNotFoundException("Housing unit not found "+housingInventoryId);
 		return inventory;
 	}
 	
 	public void delete(UUID id) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		HousingInventory inventory =housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCode(id,projectGroup);
+		HousingInventory inventory =housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(id,projectGroup,false);
 		if(inventory==null) throw new ResourceNotFoundException("Housing unit not found "+id);
         housingInventoryRepository.delete(inventory);
     }
