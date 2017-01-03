@@ -25,7 +25,11 @@ public class SurveySectionEntityDaoImpl extends QueryExecutorImpl implements Sur
        delete(SurveySectionEntity);
    }
    public SurveySectionEntity getSurveySectionEntityById(UUID SurveySectionEntityId){ 
-       return (SurveySectionEntity) get(SurveySectionEntity.class, SurveySectionEntityId);
+	   DetachedCriteria criteria = DetachedCriteria.forClass(SurveySectionEntity.class);
+	   criteria.add(Restrictions.eq("id", SurveySectionEntityId));
+	   List<SurveySectionEntity> entities = (List<SurveySectionEntity>) findByCriteria(criteria);
+	   if(entities.isEmpty()) return null;
+	   return entities.get(0);
    }
    @SuppressWarnings("unchecked")
    public List<SurveySectionEntity> getAllSurveySurveySectionEntities(UUID surveyId,Integer startIndex, Integer maxItems){

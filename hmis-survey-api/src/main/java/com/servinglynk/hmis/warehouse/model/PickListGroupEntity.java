@@ -19,8 +19,6 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name="PICKLIST_GROUP",schema="survey")
-@SQLDelete(sql="UPDATE survey.PICKLIST_GROUP SET IS_ACTIVE = 'FALSE' WHERE ID =?")
-@Where(clause=" IS_ACTIVE = 'TRUE' ")
 public class PickListGroupEntity extends BaseEntity {
 
 	@Id

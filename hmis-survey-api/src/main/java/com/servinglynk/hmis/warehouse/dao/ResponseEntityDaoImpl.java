@@ -26,7 +26,11 @@ public class ResponseEntityDaoImpl extends QueryExecutorImpl implements Response
        delete(ResponseEntity);
    }
    public ResponseEntity getResponseEntityById(UUID ResponseEntityId){ 
-       return (ResponseEntity) get(ResponseEntity.class, ResponseEntityId);
+	   DetachedCriteria criteria = DetachedCriteria.forClass(ResponseEntity.class);
+	   criteria.add(Restrictions.eq("id", ResponseEntityId));
+	   List<ResponseEntity> entities = (List<ResponseEntity>) findByCriteria(criteria);
+	   if(entities.isEmpty()) return null;
+	   return entities.get(0);
    }
    
    @SuppressWarnings("unchecked")

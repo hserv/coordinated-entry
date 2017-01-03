@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
@@ -24,7 +25,11 @@ public class SurveyDaoImpl extends QueryExecutorImpl implements SurveyDao {
        delete(survey);
    }
    public SurveyEntity getSurveyById(UUID surveyId){ 
-       return (SurveyEntity) get(SurveyEntity.class, surveyId);
+	   DetachedCriteria criteria = DetachedCriteria.forClass(SurveyEntity.class);
+	   criteria.add(Restrictions.eq("id", surveyId));
+	   List<SurveyEntity> entities = (List<SurveyEntity>) findByCriteria(criteria);
+	   if(entities.isEmpty()) return null;
+	   return entities.get(0);
    }
    @SuppressWarnings("unchecked")
    public List<SurveyEntity> getAllSurveys(Integer startIndex, Integer maxItems){

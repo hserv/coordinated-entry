@@ -26,7 +26,11 @@ public class SectionQuestionMappingEntityDaoImpl extends QueryExecutorImpl imple
        delete(SectionQuestionMappingEntity);
    }
    public SectionQuestionMappingEntity getSectionQuestionMappingEntityById(UUID SectionQuestionMappingEntityId){ 
-       return (SectionQuestionMappingEntity) get(SectionQuestionMappingEntity.class, SectionQuestionMappingEntityId);
+	   DetachedCriteria criteria = DetachedCriteria.forClass(SectionQuestionMappingEntity.class);
+	   criteria.add(Restrictions.eq("id", SectionQuestionMappingEntityId));
+	   List<SectionQuestionMappingEntity> entities = (List<SectionQuestionMappingEntity>) findByCriteria(criteria);
+	   if(entities.isEmpty()) return null;
+	   return entities.get(0);
    }
    
    @SuppressWarnings("unchecked")

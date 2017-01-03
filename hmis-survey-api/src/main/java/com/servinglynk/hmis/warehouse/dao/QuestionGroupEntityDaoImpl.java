@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import com.servinglynk.hmis.warehouse.model.QuestionGroupEntity;
@@ -25,7 +26,11 @@ public class QuestionGroupEntityDaoImpl extends QueryExecutorImpl implements Que
        delete(QuestionGroupEntity);
    }
    public QuestionGroupEntity getQuestionGroupEntityById(UUID QuestionGroupEntityId){ 
-       return (QuestionGroupEntity) get(QuestionGroupEntity.class, QuestionGroupEntityId);
+	   DetachedCriteria criteria = DetachedCriteria.forClass(QuestionGroupEntity.class);
+	   criteria.add(Restrictions.eq("id", QuestionGroupEntityId));
+	   List<QuestionGroupEntity> entities = (List<QuestionGroupEntity>) findByCriteria(criteria);
+	   if(entities.isEmpty()) return null;
+	   return entities.get(0);
    }
    @SuppressWarnings("unchecked")
    public List<QuestionGroupEntity> getAllQuestionGroupEntitys(Integer startIndex, Integer maxItems){

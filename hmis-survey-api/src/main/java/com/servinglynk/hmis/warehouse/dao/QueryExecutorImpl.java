@@ -1,9 +1,12 @@
 package com.servinglynk.hmis.warehouse.dao;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -12,10 +15,18 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.ejb.criteria.expression.function.LocateFunction;
+import org.hibernate.internal.CriteriaImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.servinglynk.hmis.warehouse.util.SecurityContextUtil;
 
 
 @Component
@@ -38,7 +49,7 @@ public class QueryExecutorImpl  implements QueryExecutor{
 	}
 	
 	public Object get(Class<?> entity,Serializable id){
-		return getCurrentSession().get(entity, id);
+			return getCurrentSession().get(entity, id);
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Object insert(Object entity) {
@@ -61,8 +72,15 @@ public class QueryExecutorImpl  implements QueryExecutor{
 		return null;
 	}
 
-	public void delete(Object entity) {
-        getCurrentSession().delete(entity);
+	public void delete(Object entity) {		
+			try {
+				BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
+				BeanUtils.copyProperty(entity, "updatedAt", LocalDateTime.now());
+				BeanUtils.copyProperty(entity, "deleted",true);
+				getCurrentSession().update(entity);
+			} catch (Exception e) {
+				getCurrentSession().delete(entity);
+			}
 	}
 
 	public Object insertOrUpdate(Object entity) {
@@ -166,6 +184,7 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 	
 
 	public List<?> findByCriteria(DetachedCriteria detachedCriteria){
+				detachedCriteria.add(Restrictions.eq("deleted", false));
 				return detachedCriteria.getExecutableCriteria(getCurrentSession()).list();
 	}
 	
@@ -176,13 +195,14 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 	
 
 	public List<?> findByCriteria(DetachedCriteria detachedCriteria,Integer firstResult,Integer maxResults){
+		detachedCriteria.add(Restrictions.eq("deleted", false));
 		Criteria criteria = detachedCriteria.getExecutableCriteria(getCurrentSession());
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResults);		
 		return criteria.list();
 		
 	}
-		
+			
 	public long countRows(DetachedCriteria dCriteria, ProjectionList projectionList){
 		 return (long)0;
 		 //TBD

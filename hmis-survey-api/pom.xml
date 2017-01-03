@@ -21,10 +21,15 @@
 
 	<dependencies>
 		<!-- spring dependencies -->
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
+		</dependency> -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>4.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -77,8 +82,8 @@
 			<artifactId>spring-oxm</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
-				<dependency>
+
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
@@ -140,11 +145,11 @@
 			<version>2.5.3</version>
 		</dependency>
 		<dependency>
-    <groupId>com.fasterxml.jackson.datatype</groupId>
-    <artifactId>jackson-datatype-jsr310</artifactId>
-    <version>2.5.4</version>
-</dependency>
-		
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.5.4</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.servinglynk.hmis.warehouse</groupId>
 			<artifactId>hmis-core-common</artifactId>
@@ -193,9 +198,9 @@
 			<version>1.2.14</version>
 		</dependency>
 		<dependency>
-     		<groupId>org.jadira.usertype</groupId>
-     		<artifactId>usertype.extended</artifactId>
-     		<version>3.1.0.GA</version>
+			<groupId>org.jadira.usertype</groupId>
+			<artifactId>usertype.extended</artifactId>
+			<version>3.1.0.GA</version>
 		</dependency>
 		<dependency>
 			<groupId>com.servinglynk.hmis.warehouse</groupId>
@@ -208,7 +213,7 @@
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -245,7 +250,7 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
+	<!-- 		<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
@@ -253,16 +258,16 @@
 					<server>TomcatServer</server>
 					<path>/hhmis-authorization-service</path>
 				</configuration>
-			</plugin>
+			</plugin> -->
 
 
 		</plugins>
 	</build>
-	<repositories>
+<!-- 	<repositories>
 		<repository>
-	      <id>deployment</id>
-	      <url>http://52.37.76.153:8080/nexus/content/repositories/snapshots</url>
-	    </repository>
+			<id>deployment</id>
+			<url>http://52.37.76.153:8080/nexus/content/repositories/snapshots</url>
+		</repository>
 		<repository>
 			<id>central</id>
 			<name>Maven Repository Switchboard</name>
@@ -272,7 +277,7 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-	</repositories>
+	</repositories> -->
 
 	<pluginRepositories>
 		<pluginRepository>

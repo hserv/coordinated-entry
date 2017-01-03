@@ -21,6 +21,8 @@ public abstract class BaseEntity {
 	@Column(name="USER_ID")	
 	protected String user;
 	
+	@Column(name="deleted")
+	protected boolean deleted;
 	
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
@@ -46,4 +48,11 @@ public abstract class BaseEntity {
 	public void setUser(String user) {
 		this.user = user;
 	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	
 }

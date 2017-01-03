@@ -7,6 +7,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
+import com.servinglynk.hmis.warehouse.model.PickListGroupEntity;
 import com.servinglynk.hmis.warehouse.model.PickListValueEntity;
 
 @Component
@@ -25,7 +26,11 @@ public class PickListValueEntityDaoImpl extends QueryExecutorImpl implements Pic
        delete(PickListValueEntity);
    }
    public PickListValueEntity getPickListValueEntityById(UUID PickListValueEntityId){ 
-       return (PickListValueEntity) get(PickListValueEntity.class, PickListValueEntityId);
+	   DetachedCriteria criteria = DetachedCriteria.forClass(PickListValueEntity.class);
+	   criteria.add(Restrictions.eq("id", PickListValueEntityId));
+	   List<PickListValueEntity> entities = (List<PickListValueEntity>) findByCriteria(criteria);
+	   if(entities.isEmpty()) return null;
+	   return entities.get(0);
    }
    @SuppressWarnings("unchecked")
    public List<PickListValueEntity> getAllPickListGroupPickListValueEntities(UUID pickListGroupId,Integer startIndex, Integer maxItems){

@@ -26,7 +26,11 @@ public class SurveyEntityDaoImpl extends QueryExecutorImpl implements SurveyEnti
        delete(surveyEntity);
    }
    public SurveyEntity getSurveyEntityById(UUID surveyEntityId){ 
-       return (SurveyEntity) get(SurveyEntity.class, surveyEntityId);
+	   DetachedCriteria criteria = DetachedCriteria.forClass(SurveyEntity.class);
+	   criteria.add(Restrictions.eq("id", surveyEntityId));
+	   List<SurveyEntity> entities = (List<SurveyEntity>) findByCriteria(criteria);
+	   if(entities.isEmpty()) return null;
+	   return entities.get(0);
    }
    @SuppressWarnings("unchecked")
    public List<SurveyEntity> getAllSurveyEntitys(Integer startIndex, Integer maxItems,String projectGroupCode){

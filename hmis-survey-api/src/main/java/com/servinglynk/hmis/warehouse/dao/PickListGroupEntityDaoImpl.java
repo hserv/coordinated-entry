@@ -3,7 +3,9 @@ package com.servinglynk.hmis.warehouse.dao;
 import java.util.UUID;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import com.servinglynk.hmis.warehouse.model.PickListGroupEntity;
@@ -24,7 +26,11 @@ public class PickListGroupEntityDaoImpl extends QueryExecutorImpl implements Pic
        delete(PickListGroupEntity);
    }
    public PickListGroupEntity getPickListGroupEntityById(UUID PickListGroupEntityId){ 
-       return (PickListGroupEntity) get(PickListGroupEntity.class, PickListGroupEntityId);
+	   DetachedCriteria criteria = DetachedCriteria.forClass(PickListGroupEntity.class);
+	   criteria.add(Restrictions.eq("id", PickListGroupEntityId));
+	   List<PickListGroupEntity> entities = (List<PickListGroupEntity>) findByCriteria(criteria);
+	   if(entities.isEmpty()) return null;
+	   return entities.get(0);
    }
    @SuppressWarnings("unchecked")
    public List<PickListGroupEntity> getAllPickListGroupEntitys(Integer startIndex, Integer maxItems){

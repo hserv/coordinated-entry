@@ -20,8 +20,6 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "SURVEY",schema="survey")
-@SQLDelete(sql="UPDATE survey.SURVEY SET IS_ACTIVE = 'FALSE' WHERE ID =?")
-@Where(clause=" IS_ACTIVE = 'TRUE' ")
 public class SurveyEntity extends BaseEntity {
 
 	@Id
