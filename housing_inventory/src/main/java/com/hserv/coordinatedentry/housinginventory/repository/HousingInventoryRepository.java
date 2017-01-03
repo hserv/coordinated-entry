@@ -17,4 +17,7 @@ Serializable> , JpaSpecificationExecutor<HousingInventory>{
 	
 	@Query(value="select 1",nativeQuery=true)
 	Integer validateConnection();
+
+
+	HousingInventory findByHousingInventoryIdAndDeleted(UUID housingUnitId, boolean deleted);
 }

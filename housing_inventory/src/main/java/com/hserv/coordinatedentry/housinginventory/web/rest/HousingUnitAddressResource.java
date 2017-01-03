@@ -79,9 +79,6 @@ public class HousingUnitAddressResource extends BaseResource{
 			HousingInventory inventory = new HousingInventory();
 			inventory.setHousingInventoryId(housingUnitId);
 			housingUnitAddress.setHousingInventory(inventory);
-	        if (housingUnitAddress.getAddressId() == null) {
-	            return createHousingUnitAddressByHousingUnitId(housingUnitAddress, housingUnitId);
-	        }
 	        HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress);
 	        result.setHousingInventory(null);
 	        return ResponseEntity.ok()

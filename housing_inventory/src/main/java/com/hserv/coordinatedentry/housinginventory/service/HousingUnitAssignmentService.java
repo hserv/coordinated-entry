@@ -29,8 +29,8 @@ public class HousingUnitAssignmentService  {
 	 @Transactional
 	 public List<HousingUnitAssignment> saveHousingUnitAssignments(List<HousingUnitAssignment> housingUnitAssignments, UUID housingUnitId) {
 		 
-		 HousingInventory housingInventory = HousingInventoryRepository.findOne(housingUnitId);
-		 
+		 HousingInventory housingInventory = HousingInventoryRepository.findByHousingInventoryIdAndDeleted(housingUnitId, false) ;
+		 if(housingInventory==null) throw new ResourceNotFoundException("Housing unit not found "+housingUnitId);
 		 for(HousingUnitAssignment housingUnitAssignment: housingUnitAssignments ){
 			 housingUnitAssignment.setHousingInventory(housingInventory);
 			housingUnitAssignment=housingUnitAssignmentRepository.save(housingUnitAssignment);
