@@ -98,6 +98,7 @@ public class SurveyMSServiceImpl implements SurveyMSService {
 		projectionList.add(Projections.groupProperty("surveyEntity.tagValue"),"surveyTagValue");
 		criteria.setProjection(projectionList);
 		criteria.add(Restrictions.eq("surveyEntity.projectGroupCode",projectGroup));
+		criteria.add(Restrictions.eq("deleted", false));
 		criteria.setResultTransformer(Transformers.aliasToBean(ClientSurveyScore.class));
 		
 		Criteria eCriteria = criteria.getExecutableCriteria(session);

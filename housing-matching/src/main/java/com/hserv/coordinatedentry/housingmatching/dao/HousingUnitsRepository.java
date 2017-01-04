@@ -12,9 +12,9 @@ import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
 @Repository
 public interface HousingUnitsRepository extends JpaRepository<HousingInventory, Serializable>,JpaSpecificationExecutor<HousingInventory> {
 
-	List<HousingInventory>	findByProjectGroupCode(String projectGroupCode);
-	List<HousingInventory>	findByProjectGroupCodeAndVacant(String projectGroupCode,boolean isVacent);
-	List<HousingInventory>  findByProjectId(String projectId);
+	List<HousingInventory>	findByProjectGroupCodeAndDeleted(String projectGroupCode,boolean deleted);
+	List<HousingInventory>	findByProjectGroupCodeAndVacantAndDeleted(String projectGroupCode,boolean isVacent,boolean deleted);
+	List<HousingInventory>  findByProjectIdAndDeleted(String projectId,boolean deleted);
 //	List<HousingInventory>  findByProjectIdAndFamilyUnitAndBedsCapacity(UUID projectId,boolean isFamilyUnit);
 	
 	

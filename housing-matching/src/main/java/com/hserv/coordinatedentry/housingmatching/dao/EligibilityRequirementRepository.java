@@ -12,8 +12,8 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibilityRequirement;
 @Repository
 public interface EligibilityRequirementRepository extends JpaRepository<EligibilityRequirement, Serializable> {
 
-	List<EligibilityRequirement> findByProjectGroupCode(String projectGroupCode);
+	List<EligibilityRequirement> findByProjectGroupCodeAndDeleted(String projectGroupCode,boolean deleted);
 	
-	List<EligibilityRequirement> findByProjectId(UUID projectId);
+	List<EligibilityRequirement> findByProjectIdAndDeleted(UUID projectId,boolean deleted);
 	
 }

@@ -16,10 +16,10 @@ import com.hserv.coordinatedentry.housingmatching.entity.HouseholdMembership;
  */
 public interface HouseholdMembershipRepository extends JpaRepository<HouseholdMembership,Serializable> {
 	
-   Page<HouseholdMembership> findByGlobalHousehold(GlobalHousehold globalHousehold,Pageable pageable);
+   Page<HouseholdMembership> findByGlobalHouseholdAndDeleted(GlobalHousehold globalHousehold,boolean deleted,Pageable pageable);
 
-   List<HouseholdMembership> findByGlobalClientId(UUID clientId);
+   List<HouseholdMembership> findByGlobalClientIdAndDeleted(UUID clientId,boolean deleted);
 
-   Integer countByGlobalHousehold(GlobalHousehold globalHousehold);
+   Integer countByGlobalHouseholdAndDeleted(GlobalHousehold globalHousehold,boolean deleted);
 
 }

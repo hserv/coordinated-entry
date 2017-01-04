@@ -40,7 +40,7 @@ public class BaseEntity implements Serializable {
 	@Column(name="user_id")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID userId;
-
+	
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
@@ -90,7 +90,7 @@ public class BaseEntity implements Serializable {
 
 	public void setProjectGroupCode(String projectGroupCode) {
 		this.projectGroupCode = projectGroupCode;
-	}	
-	
-	
+	}
+
+
 }

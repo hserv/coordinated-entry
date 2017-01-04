@@ -65,6 +65,18 @@ public class Match extends BaseEntity {
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID statusId;
 
+	@Column(name="deleted")
+	private boolean deleted;
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}	
+
+	
 	public UUID getReservationId() {
 		return this.reservationId;
 	}

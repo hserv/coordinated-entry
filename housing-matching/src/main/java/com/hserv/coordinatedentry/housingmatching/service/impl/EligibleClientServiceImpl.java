@@ -49,7 +49,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	RepositoryFactory repositoryFactory;
 
 	
-	public List<EligibleClientModel> getEligibleClientsBack(int num , String programType) {
+/*	public List<EligibleClientModel> getEligibleClientsBack(int num , String programType) {
 		List<EligibleClientModel> eligibleClientModels = new ArrayList<>();
 		List<EligibleClient> eligibleClients = eligibleClientsRepository
 				.findTopEligibleClients(programType ,new PageRequest(0, num, eligibleClientSortClause()));
@@ -66,12 +66,12 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 				.findTopEligibleClients(programType ,new PageRequest(0, num, eligibleClientSortClause()));
 
 		return eligibleClients;
-	}
+	}*/
 	
 	@Override
 	public EligibleClientModel getEligibleClientDetail(UUID clientID) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		EligibleClient eligibleClient = eligibleClientsRepository.findByClientIdAndProjectGroupCode(clientID,projectGroup);
+		EligibleClient eligibleClient = eligibleClientsRepository.findByClientIdAndProjectGroupCodeAndDeleted(clientID,projectGroup,false);
 		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible not found "+clientID);
 		EligibleClientModel eligibleClientModel=  eligibleClientsTranslator.translate(eligibleClient);
 		return eligibleClientModel;
@@ -79,7 +79,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	
 	@Override
 	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable) {
-		Page<EligibleClient> clients = eligibleClientsRepository.findByProjectGroupCode(projectGroupCode , pageable);
+		Page<EligibleClient> clients = eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroupCode,false , pageable);
 		return clients;
 	}
 
@@ -96,8 +96,9 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Override
 	public boolean deleteEligibleClientById(UUID clientID) {
 		boolean status = false;
-		if(!StringUtils.isEmpty(clientID)&& eligibleClientsRepository.exists(clientID)){
-			eligibleClientsRepository.deleteByClientId(clientID);
+		EligibleClient client =	repositoryFactory.getEligibleClientsRepository().findOne(clientID);
+		if(client!=null && !client.isDeleted()){
+				eligibleClientsRepository.delete(client);
 			status = true;
 		}
 		return status;
@@ -145,11 +146,12 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Override
 	public boolean updateEligibleClientScore(UUID clientID, int scoreTotal) {
 		boolean status = false;
-		if(!StringUtils.isEmpty(clientID)&&
-				eligibleClientsRepository.exists(clientID)){
-			eligibleClientsRepository.updateScoreByClientId(scoreTotal, clientID);
-			status = true;
+		EligibleClient client = eligibleClientsRepository.findByClientIdAndDeleted(clientID,false);
+		if(client!=null){
+			client.setSurveyScore(scoreTotal);
+			eligibleClientsRepository.save(client);
 		}
+			
 		return status;	
 	}
 	
@@ -177,6 +179,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 							criteriaBuilder.equal(root.get("programType"),programType+""),
 							criteriaBuilder.equal(root.get("projectGroupCode"),projectGroup),
 						criteriaBuilder.equal(root.get("spdatLabel"),spdatLabel),
+						criteriaBuilder.equal(root.get("deleted"), false),
 						criteriaBuilder.equal(root.get("matched"),false));
 			}	
 		});

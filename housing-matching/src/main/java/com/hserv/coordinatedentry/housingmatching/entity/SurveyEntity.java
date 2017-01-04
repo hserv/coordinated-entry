@@ -22,8 +22,6 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "SURVEY",schema="survey")
-@SQLDelete(sql="UPDATE survey.SURVEY SET IS_ACTIVE = 'FALSE' WHERE ID =?")
-@Where(clause=" IS_ACTIVE = 'TRUE' ")
 public class SurveyEntity {
 
 	@Id
@@ -46,9 +44,19 @@ public class SurveyEntity {
 	private boolean copySurveyId;
 	
 	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
-	@Where(clause=" IS_ACTIVE = 'TRUE' ")
 	List<SurveySectionEntity> surveySectionEntities = new ArrayList<SurveySectionEntity>();
 	
+	@Column(name="deleted")
+	private boolean deleted;
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}	
+
 	public UUID getId() {
 		return id;
 	}

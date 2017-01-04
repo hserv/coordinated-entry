@@ -65,7 +65,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Override
 	public Page<EligibleClient> getScores(Pageable pageable) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		return eligibleClientsRepository.findByProjectGroupCode(projectGroup,pageable);
+		return eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroup,false,pageable);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Override
 	public int getScoreByClientId(UUID clientId) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-			EligibleClient eligibleClients = eligibleClientsRepository.findByClientIdAndProjectGroupCode(clientId,projectGroup);
+			EligibleClient eligibleClients = eligibleClientsRepository.findByClientIdAndProjectGroupCodeAndDeleted(clientId,projectGroup,false);
 			if(eligibleClients!=null)
 				return eligibleClients.getSurveyScore();
 		     return 0;
@@ -145,7 +145,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			if(!eligibleClient.getMatched())
 				eligibleClientsRepository.save(eligibleClient);
 			
-		    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClient(eligibleClient);
+		    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(eligibleClient,false);
 			if(matches.isEmpty()){
 				Match  match = new Match();
 				match.setEligibleClient(eligibleClient);

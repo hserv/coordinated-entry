@@ -32,6 +32,18 @@ public class EligibilityRequirement extends BaseEntity {
 	@Column(name="inactive")
 	private Boolean inactive;	
 	
+
+	
+	@Column(name="deleted")
+	private boolean deleted;
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}	
 	
 	public UUID getEligibilityId() {
 		return eligibilityId;

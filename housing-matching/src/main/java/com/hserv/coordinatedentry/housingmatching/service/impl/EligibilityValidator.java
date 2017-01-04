@@ -46,7 +46,7 @@ public class EligibilityValidator {
 			if(!applyProjectEligibility)
 				return true;
 			
-			List<EligibilityRequirement> eligibilityRequirementModels = repositoryFactory.getEligibilityRequirementRepository().findByProjectId(projectId);
+			List<EligibilityRequirement> eligibilityRequirementModels = repositoryFactory.getEligibilityRequirementRepository().findByProjectIdAndDeleted(projectId,false);
 			EvaluationContext context = new StandardEvaluationContext(client);
 			ExpressionParser parser = new SpelExpressionParser();
 			ObjectMapper mapper = new ObjectMapper();
@@ -102,10 +102,10 @@ public class EligibilityValidator {
 	public Integer validateBedsAvailability(UUID clientId,Integer bedsCount, UUID housingUnitId, UUID projectId){
 		Integer bedsRequired = 0;
 		Integer members =0;
-		List<HouseholdMembership> membership =  repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientId(clientId);
+		List<HouseholdMembership> membership =  repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientIdAndDeleted(clientId,false);
 			
 		if(!membership.isEmpty()){
-			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHousehold(membership.get(0).getGlobalHousehold());		
+			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHouseholdAndDeleted(membership.get(0).getGlobalHousehold(),false);		
 				logger.log("match.process.household.memberRegistration",new Object[]{"SUCCESS","Client registered in global house hold"},true,housingUnitId,projectId,clientId);
 		}else{
 			bedsRequired = 0;

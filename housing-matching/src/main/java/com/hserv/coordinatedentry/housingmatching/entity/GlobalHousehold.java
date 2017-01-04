@@ -32,6 +32,17 @@ public class GlobalHousehold extends BaseEntity {
     @JsonIgnore
     private Set<HouseholdMembership> members = new HashSet<>();
 
+    @Column(name="deleted")
+	private boolean deleted;
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}	
+
 
     public UUID getGlobalHouseholdId() {
 		return globalHouseholdId;

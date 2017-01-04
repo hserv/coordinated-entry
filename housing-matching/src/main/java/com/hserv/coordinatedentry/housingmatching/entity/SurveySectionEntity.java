@@ -18,8 +18,6 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name="SURVEY_SECTION",schema="survey")
-@SQLDelete(sql="UPDATE survey.SURVEY_SECTION SET IS_ACTIVE = FALSE WHERE ID =?")
-@Where(clause=" IS_ACTIVE = 'TRUE' ")
 public class SurveySectionEntity {
 	
 	@Id
@@ -44,6 +42,18 @@ public class SurveySectionEntity {
 	
 	@Column(name="SECTION_ORDER")
 	private int order;
+	
+	@Column(name="deleted")
+	private boolean deleted;
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}	
+
 	
 	public UUID getId() {
 		return id;

@@ -33,6 +33,17 @@ public class HouseholdMembership extends BaseEntity {
     private GlobalHousehold globalHousehold;
 
 
+    @Column(name="deleted")
+	private boolean deleted;
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}	
+
     public UUID getHouseholdMembershipId() {
 		return householdMembershipId;
 	}

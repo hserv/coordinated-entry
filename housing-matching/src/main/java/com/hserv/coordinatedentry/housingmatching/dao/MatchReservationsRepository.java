@@ -16,17 +16,9 @@ import com.hserv.coordinatedentry.housingmatching.entity.Match;
 @Repository
 public interface MatchReservationsRepository extends JpaRepository<Match, Serializable>{
 
-/*	@Modifying(clearAutomatically=true)
-	@Query("update Match ms set ms.matchStatus = ?1 where ms.reservationId = ?2")
-	int updateMatchStatus(String matchStatus, UUID reservationId);*/
+//	void deleteByEligibleClientClientId(UUID clientId);
 	
-/*	@Modifying(clearAutomatically=true)
-	@Query("update Match ms set ms.matchStatus = ?1, ms.manualMatch = ?2 where ms.reservationId = ?3")
-	int updateMatchStatusAndManualMatch(String matchStatus, boolean manualMatch, UUID reservationId);*/
-	
-	void deleteByEligibleClientClientId(UUID clientId);
-	
-	List<Match> findByEligibleClient(EligibleClient clientId);
+	List<Match> findByEligibleClientAndDeleted(EligibleClient clientId,boolean deleted);
 	
 	
 
@@ -34,9 +26,9 @@ public interface MatchReservationsRepository extends JpaRepository<Match, Serial
 	Integer validateConnection();
 	
 	
-	Page<Match> findByProgramType(String projectGroupCode,Pageable pageable);
+	Page<Match> findByProgramTypeAndDeleted(String projectGroupCode,boolean deleted,Pageable pageable);
 
-	Page<Match> findByProgramTypeAndMatchStatusIn(String projectGroupCode, String[] status, Pageable pageable);
+	Page<Match> findByProgramTypeAndMatchStatusInAndDeleted(String projectGroupCode, String[] status,boolean deleted ,Pageable pageable);
 	
 	
 }

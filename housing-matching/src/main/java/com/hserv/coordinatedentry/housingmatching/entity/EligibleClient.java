@@ -52,9 +52,21 @@ public class EligibleClient extends BaseEntity {
 	
 	@Column(name="client_link")
 	private String clientLink;
-
+	
 	@OneToMany(mappedBy="eligibleClient",cascade= CascadeType.REMOVE)
 	private List<Match> matchs = new ArrayList<>(); 
+	
+	@Column(name="deleted")
+	private boolean deleted;
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}	
+
 	
 	public EligibleClient() {
 	}

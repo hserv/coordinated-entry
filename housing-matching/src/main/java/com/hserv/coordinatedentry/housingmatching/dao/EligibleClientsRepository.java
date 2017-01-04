@@ -1,7 +1,6 @@
 package com.hserv.coordinatedentry.housingmatching.dao;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -18,39 +17,22 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 @Repository
 public interface EligibleClientsRepository extends JpaRepository<EligibleClient, Serializable>,JpaSpecificationExecutor<EligibleClient> {
 	
-	public EligibleClient findByClientIdAndProjectGroupCode(UUID clientID,String projectGroup);
-
-	@Query("select ec from EligibleClient as ec where ec.matched=false and ec.programType<>?1")
-	List<EligibleClient> findTopEligibleClients(String programType, Pageable pageable);
-	
-	List<EligibleClient> findByProgramTypeAndMatched(String programType,Boolean mathed);
-	
-	public List<EligibleClient> findAll();
-	
-	Page<EligibleClient> findByProjectGroupCode(String projectGroupCode,Pageable pageable);
+	public EligibleClient findByClientIdAndProjectGroupCodeAndDeleted(UUID clientID,String projectGroup,boolean deleted);
+	Page<EligibleClient> findByProjectGroupCodeAndDeleted(String projectGroupCode,boolean deleted,Pageable pageable);
 	
 	@Transactional(readOnly = false)
 	Long deleteByClientId(UUID clientId);
 	
+	EligibleClient findByClientIdAndDeleted(UUID clientID, boolean deleted);
+	
 	@Transactional(readOnly = false)
 	@Modifying(clearAutomatically=true)
-	@Query("update EligibleClient as ec set ec.surveyScore = 0")
+	@Query("update EligibleClient as ec set ec.surveyScore = 0 where deleted = false")
 	void deleteScores();
 	
 	@Transactional
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClient as ec set ec.surveyScore = 0 where ec.clientId = ?1")
 	void deleteScoreByClientId(UUID clientId);
-	
-	@Transactional(readOnly = false)
-	@Modifying(clearAutomatically=true)
-	@Query("update EligibleClient as ec set ec.surveyScore = ?1 where ec.clientId = ?2")
-	void updateScoreByClientId(int score, UUID clientId);
-
-	List<EligibleClient> findByProgramTypeAndMatched(String string, boolean b);
-	
-	
-	
-//	List<EligibleClient> findByProgramTypeAndMatchedObderBySurveyScoreAscSurveyDate(String projectGroup,boolean match);
 	
 }

@@ -10,11 +10,12 @@ import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.hserv.coordinatedentry.housingmatching.dao.BaseRepositoryFactoryBean;
 import com.servinglynk.hmis.warehouse.client.config.SpringConfig;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableJpaRepositories
+@EnableJpaRepositories(repositoryFactoryBeanClass=BaseRepositoryFactoryBean.class)
 @EnableEntityLinks
 @EnableTransactionManagement
 @EnableSpringDataWebSupport

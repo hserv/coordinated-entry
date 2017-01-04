@@ -117,16 +117,19 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			status=	q.split(",");
 		
 		if(status.length>0){
-			return repositoryFactory.getMatchReservationsRepository().findByProgramTypeAndMatchStatusIn(projectGroupCode,status,pageable);
+			return repositoryFactory.getMatchReservationsRepository().findByProgramTypeAndMatchStatusInAndDeleted(projectGroupCode,status,false,pageable);
 		}else{
-		return repositoryFactory.getMatchReservationsRepository().findByProgramType(projectGroupCode,pageable);
+		return repositoryFactory.getMatchReservationsRepository().findByProgramTypeAndDeleted(projectGroupCode,false,pageable);
 		}
 	}
 
 	@Override
 	public boolean deleteByClientId(UUID clientId) {
-		if (repositoryFactory.getMatchReservationsRepository().exists(clientId)) {
-			repositoryFactory.getMatchReservationsRepository().deleteByEligibleClientClientId(clientId);
+		EligibleClient client = repositoryFactory.getEligibleClientsRepository().findByClientIdAndDeleted(clientId, false);
+		if(client!=null)
+		{
+				List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client, false);
+				repositoryFactory.getMatchReservationsRepository().delete(matches);
 			return true;
 		}
 		return false;
@@ -135,12 +138,12 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	@Override
 	public MatchReservationModel findByClientId(UUID clientId) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		EligibleClient eligibleClient = repositoryFactory.getEligibleClientsRepository().findByClientIdAndProjectGroupCode(clientId, projectGroup);
-		if (eligibleClient!=null) 
-			return matchReservationTranslator
-					.translate(repositoryFactory.getMatchReservationsRepository().findByEligibleClient(eligibleClient).get(0));
-		
-		return null;
+		EligibleClient eligibleClient = repositoryFactory.getEligibleClientsRepository().findByClientIdAndProjectGroupCodeAndDeleted(clientId, projectGroup,false);	
+		if (eligibleClient==null) throw new ResourceNotFoundException("Client not found "+clientId);
+		List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(eligibleClient,false);
+		if(matchs.isEmpty()) throw new ResourceNotFoundException("macth reservation not found for the client "+clientId);
+		return matchReservationTranslator.translate(matchs.get(0));
+	
 	}
 
 	@Override
@@ -160,7 +163,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	public void updateMatchStatus(UUID clientId, MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception {
 		EligibleClient client = new EligibleClient();
 		client.setClientId(clientId);
-		List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClient(client);
+		List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client,false);
 		if(matches.isEmpty()) throw new ResourceNotFoundException("No match reservation found for this client");
 		Match match = matches.get(0);
 		List<MatchStatusLevels> nextLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(match.getProgramType(), match.getMatchStatus()+"");
@@ -229,7 +232,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		logger.setProcessId(processId);
 		
 		String projectGroup = session.getAccount().getProjectGroup().getProjectGroupCode();
-		List<HousingInventory> housingInventories = repositoryFactory.getHousingUnitsRepository().findByProjectGroupCodeAndVacant(projectGroup,true);
+		List<HousingInventory> housingInventories = repositoryFactory.getHousingUnitsRepository().findByProjectGroupCodeAndVacantAndDeleted(projectGroup,true,false);
 //		match.process.housingInventories= {"step":"FETCH vacant housing units.","statusMessage":"SUCCESS - {} housing unit(s) loaded"}
 		logger.log("match.process.housingInventories",new Object[]{housingInventories.size()},housingInventories.size()>0 ? true :false,null,null,null);
 		
@@ -279,7 +282,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 	
 	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode){
-		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClient(client);
+		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client,false);
 		Match match =null;
 		if(matches.isEmpty()) {
 			 match = new Match();

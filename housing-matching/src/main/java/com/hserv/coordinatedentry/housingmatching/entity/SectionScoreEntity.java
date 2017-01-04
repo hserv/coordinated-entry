@@ -40,6 +40,8 @@ public class SectionScoreEntity {
 	@Column(name="CLIENT_ID")
 	private UUID clientId;
 	
+	@Column(name="deleted")
+	private boolean deleted;
 	
 	public UUID getId() {
 		return id;
@@ -108,5 +110,11 @@ public class SectionScoreEntity {
 	}
 	public void setUser(String user) {
 		this.user = user;
+	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 }
