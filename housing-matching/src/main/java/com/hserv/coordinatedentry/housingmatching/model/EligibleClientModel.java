@@ -40,6 +40,7 @@ public class EligibleClientModel {
 	
 	@JsonProperty("status")
 	private BatchProcessModel batchProcessModel;
+	private boolean ignoreMatchProcess;
 	
 	
 	@JsonProperty(access=Access.WRITE_ONLY)
@@ -84,6 +85,12 @@ public class EligibleClientModel {
 	public SpdatLabelEnum getSpdatLabel() {
 		return spdatLabel;
 	}
+	public boolean isIgnoreMatchProcess() {
+		return ignoreMatchProcess;
+	}
+	public void setIgnoreMatchProcess(boolean ignoreMatchProcess) {
+		this.ignoreMatchProcess = ignoreMatchProcess;
+	}
 	public void setSpdatLabel(SpdatLabelEnum spdatLabel) {
 		this.spdatLabel = spdatLabel;
 	}
@@ -117,4 +124,5 @@ public class EligibleClientModel {
 	public void setBatchProcessModel(BatchProcessModel batchProcessModel) {
 		this.batchProcessModel = batchProcessModel;
 	}
+	
 }

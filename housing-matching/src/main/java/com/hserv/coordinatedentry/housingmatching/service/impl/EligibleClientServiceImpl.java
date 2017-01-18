@@ -180,6 +180,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 							criteriaBuilder.equal(root.get("projectGroupCode"),projectGroup),
 						criteriaBuilder.equal(root.get("spdatLabel"),spdatLabel),
 						criteriaBuilder.equal(root.get("deleted"), false),
+						criteriaBuilder.equal(root.get("ignoreMatchProcess"),false),
 						criteriaBuilder.equal(root.get("matched"),false));
 			}	
 		});

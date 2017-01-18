@@ -262,6 +262,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 										ClientDEModel model = new ClientDEModel();
 										model.populateValues(baseClient);
 										model.populateValues(client);
+										model.populateValues(repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientIdAndDeleted(baseClient.getClientId(), false));
 										logger.log("match.process.clientInfo.loaded",new Object[]{client.getClientId(),baseClient.getFirstName(),baseClient.getLastName(),model.getAge(),client.getCocScore(),client.getSurveyScore()},true,housingInventory.getHousingInventoryId(),project.getProjectId(),baseClient.getClientId());
 										Integer bedsRequired = eligibilityValidator.validateBedsAvailability(baseClient.getClientId(), housingInventory.getBedsCurrent(),housingInventory.getHousingInventoryId(),project.getProjectId());
 										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(model, project.getProjectId(),housingInventory.getHousingInventoryId());						
