@@ -1,14 +1,11 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.lang.time.DateUtils;
-
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.entity.HouseholdMembership;
+import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.util.DateUtil;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 
@@ -23,6 +20,7 @@ public class ClientDEModel {
 	private Integer targetPopulation;
 	private boolean servesHouseholdWithChildren;
 	
+	private EligibleClientService eligibleClientService;
 	
 	public Integer getVeteranStatus() {
 		return veteranStatus;
@@ -69,6 +67,12 @@ public class ClientDEModel {
 	}
 	
 	
+	public EligibleClientService getEligibleClientService() {
+		return eligibleClientService;
+	}
+	public void setEligibleClientService(EligibleClientService eligibleClientService) {
+		this.eligibleClientService = eligibleClientService;
+	}
 	public boolean isServesHouseholdWithChildren() {
 		return servesHouseholdWithChildren;
 	}
@@ -102,10 +106,14 @@ public class ClientDEModel {
 		}
 	}
 	
-	public void populateValues(List<HouseholdMembership> members){
+	public void populateValues(List<HouseholdMembership> members,String trustedAppId,String sessionToken){
 		for(HouseholdMembership membership : members){
-			if(membership.getRelationshipToHeadOfHousehold() !=null && membership.getRelationshipToHeadOfHousehold().toLowerCase().contains("child"))
-					this.setServesHouseholdWithChildren(true);
+			BaseClient client =	eligibleClientService.getClientInfo(membership.getGlobalClientId(), trustedAppId, sessionToken);
+				if(client!=null && client.getDob()!=null) 
+					 if(DateUtil.calculateAge(client.getDob())  < 18){
+						 	this.setServesHouseholdWithChildren(true);
+						 	break;
+					 }
 		}
 	}
 }
