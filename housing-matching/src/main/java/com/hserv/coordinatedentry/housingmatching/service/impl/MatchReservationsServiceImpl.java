@@ -269,6 +269,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 										model.populateValues(repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientIdAndDeleted(baseClient.getClientId(), false),trustedAppId,session.getToken(),clientDEs);
 										logger.log("match.process.clientInfo.loaded",new Object[]{client.getClientId(),baseClient.getFirstName(),baseClient.getLastName(),model.getAge(),client.getCocScore(),client.getSurveyScore()},true,housingInventory.getHousingInventoryId(),project.getProjectId(),baseClient.getClientId());
 										Integer bedsRequired = eligibilityValidator.validateBedsAvailability(baseClient.getClientId(), housingInventory.getBedsCurrent(),housingInventory.getHousingInventoryId(),project.getProjectId());
+										Map<String, Object> clientDataElements = map(clientDEs.getParameters());
+										if(clientDataElements.get("disabilityRequired".toLowerCase())==null) clientDataElements.put("disabilityRequired".toLowerCase(), false);
+										if(clientDataElements.get("mentalHealthProblem".toLowerCase())==null) clientDataElements.put("mentalHealthProblem".toLowerCase(), false);
 										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(map(clientDEs.getParameters()),baseClient.getClientId() ,project.getProjectId(),housingInventory.getHousingInventoryId());						
 										if(validClient){
 											this.matchClient(client, housingInventory,projectGroup);
