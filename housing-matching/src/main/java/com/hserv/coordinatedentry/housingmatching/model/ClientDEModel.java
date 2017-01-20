@@ -8,6 +8,8 @@ import com.hserv.coordinatedentry.housingmatching.entity.HouseholdMembership;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.util.DateUtil;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
+import com.servinglynk.hmis.warehouse.core.model.Parameter;
+import com.servinglynk.hmis.warehouse.core.model.Parameters;
 
 public class ClientDEModel {
 	
@@ -79,39 +81,46 @@ public class ClientDEModel {
 	public void setServesHouseholdWithChildren(boolean servesHouseholdWithChildren) {
 		this.servesHouseholdWithChildren = servesHouseholdWithChildren;
 	}
-	public void populateValues(BaseClient client){
+	public void populateValues(BaseClient client,Parameters parameters){
 		if(client.getVeteranStatus()!=null)
-			this.setVeteranStatus(Integer.parseInt(client.getVeteranStatus()));
+			parameters.addParameter(new Parameter("veteranStatus", Integer.parseInt(client.getVeteranStatus())));
+	//		this.setVeteranStatus(Integer.parseInt(client.getVeteranStatus()));
 		if(client.getGender()!=null)
-			this.setGender(client.getGender());
+			parameters.addParameter(new Parameter("gender",client.getGender()));
+	//		this.setGender(client.getGender());
 		if(client.getDob()!=null)
-			this.setAge(DateUtil.calculateAge(client.getDob()));
+			parameters.addParameter(new Parameter("age", DateUtil.calculateAge(client.getDob())));
+	//		this.setAge(DateUtil.calculateAge(client.getDob()));
 		if(client.getRace()!=null)
-			this.setRace(client.getRace());
+			parameters.addParameter(new Parameter("race", client.getRace()));
+	//		this.setRace(client.getRace());
 	}
 	
-	public void populateValues(Project project){
+	public void populateValues(Project project,Parameters parameters){
 		if(project.getTargetPopulation()!=null)
 			this.setTargetPopulation(project.getTargetPopulation()); 
 	}
 	
-	public void populateValues(EligibleClient client){
+	public void populateValues(EligibleClient client,Parameters parameters){
 		this.setClientId(client.getClientId());
 		if(client.getSpdatLabel()!=null) {
 			if(client.getSpdatLabel().equalsIgnoreCase("TAY") || client.getSpdatLabel().equalsIgnoreCase("SINGLE_AUDLT")){
-				this.setServesSingles(true);
+				parameters.addParameter(new Parameter("servesSingles", true));
+	//			this.setServesSingles(true);
 			}else{
-				this.setServesSingles(false);
+				parameters.addParameter(new Parameter("servesSingles", false));
+//				this.setServesSingles(false);
 			}
 		}
 	}
 	
-	public void populateValues(List<HouseholdMembership> members,String trustedAppId,String sessionToken){
+	public void populateValues(List<HouseholdMembership> members,String trustedAppId,String sessionToken,Parameters parameters){
 		for(HouseholdMembership membership : members){
 			BaseClient client =	eligibleClientService.getClientInfo(membership.getGlobalClientId(), trustedAppId, sessionToken);
 				if(client!=null && client.getDob()!=null) 
 					 if(DateUtil.calculateAge(client.getDob())  < 18){
-						 	this.setServesHouseholdWithChildren(true);
+							parameters.addParameter(new Parameter("servesHouseholdWithChildren", true));
+//						 	this.setServesHouseholdWithChildren(true);
 						 	break;
 					 }
 		}

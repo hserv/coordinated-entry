@@ -18,9 +18,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
@@ -31,6 +37,8 @@ import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
+import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
+import com.servinglynk.hmis.warehouse.core.model.Parameters;
 
 @Service
 public class EligibleClientServiceImpl implements EligibleClientService {
@@ -205,4 +213,37 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		if(!clients.isEmpty()) return clients.get(0);
 		return null;
 	}	
+	
+	public Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken) {
+		HttpHeaders headers = getHttpHeaders();
+		headers.add("X-HMIS-TrustedApp-Id", trustedAppId);
+		headers.add("Authorization", "HMISUserAuth session_token=" + sessionToken);
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		HttpEntity entity = new HttpEntity(headers);
+
+		StringBuffer URI = new StringBuffer(
+				"http://52.38.189.237:8080/hmis-globalapi/rest/clients/" + clientId+"/dataelements");
+	
+		ResponseEntity<String> response = restTemplate.exchange(URI.toString(), HttpMethod.GET, entity, String.class);
+		JSONObjectMapper mapper = new JSONObjectMapper();
+		Parameters parameters = null;
+		try{
+		 parameters = mapper.readValue(response.getBody(), Parameters.class);
+		}catch (Exception e) {
+			e.printStackTrace();
+			parameters = new Parameters();
+		}
+		return parameters;
+	}
+	
+	protected HttpHeaders getHttpHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Accept", "application/json");
+		// Surya 04/17/2015 - You can add any headers here like user session, Authorization token etc
+		headers.add("Content-Type", "application/json; charset=UTF-8");
+		
+		return headers;
+	}
 }

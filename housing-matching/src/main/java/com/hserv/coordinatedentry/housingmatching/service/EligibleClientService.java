@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
+import com.servinglynk.hmis.warehouse.core.model.Parameters;
 
 public interface EligibleClientService {
 
@@ -35,4 +36,6 @@ public interface EligibleClientService {
 	List<EligibleClient> getEligibleClients(Integer programType ,String projectGroup,String spdatLabel);
 	
 	BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken);
+	
+	Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken);
 }

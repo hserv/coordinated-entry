@@ -46,6 +46,8 @@ import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseProject;
+import com.servinglynk.hmis.warehouse.core.model.Parameter;
+import com.servinglynk.hmis.warehouse.core.model.Parameters;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Service
@@ -259,14 +261,15 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 							boolean validClient= false;
 							BaseClient baseClient = eligibleClientService.getClientInfo(client.getClientId(), trustedAppId, session.getToken());							
 							if(baseClient!=null){
-										ClientDEModel model = new ClientDEModel();
+									Parameters clientDEs = eligibleClientService.getClientDataElements(baseClient.getClientId(), trustedAppId, session.getToken());
+									ClientDEModel model = new ClientDEModel();
 										model.setEligibleClientService(eligibleClientService);
-										model.populateValues(baseClient);
-										model.populateValues(client);
-										model.populateValues(repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientIdAndDeleted(baseClient.getClientId(), false),trustedAppId,session.getToken());
+										model.populateValues(baseClient,clientDEs);
+										model.populateValues(client,clientDEs);
+										model.populateValues(repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientIdAndDeleted(baseClient.getClientId(), false),trustedAppId,session.getToken(),clientDEs);
 										logger.log("match.process.clientInfo.loaded",new Object[]{client.getClientId(),baseClient.getFirstName(),baseClient.getLastName(),model.getAge(),client.getCocScore(),client.getSurveyScore()},true,housingInventory.getHousingInventoryId(),project.getProjectId(),baseClient.getClientId());
 										Integer bedsRequired = eligibilityValidator.validateBedsAvailability(baseClient.getClientId(), housingInventory.getBedsCurrent(),housingInventory.getHousingInventoryId(),project.getProjectId());
-										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(model, project.getProjectId(),housingInventory.getHousingInventoryId());						
+										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(map(clientDEs.getParameters()),baseClient.getClientId() ,project.getProjectId(),housingInventory.getHousingInventoryId());						
 										if(validClient){
 											this.matchClient(client, housingInventory,projectGroup);
 											logger.log("match.process.matchsuccess", new Object[]{housingInventory.getHousingInventoryId(),client.getClientId()}, true, housingInventory.getHousingInventoryId(),project.getProjectId(),model.getClientId());
@@ -282,6 +285,21 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		}
 		batchProcessService.endBatch(processId);
 	}
+	
+	public Map<String, Object> map(List<Parameter> parameters) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		for (Parameter parameter : parameters) {
+			Object value = parameter.getValue();		
+/*			if(value){
+				map.put(parameter.getKey(), (Boolean)value);		
+			}else{
+*/				map.put(parameter.getKey().toLowerCase(), value);
+//			}
+		
+		}
+		return map;
+	}
+
 	
 	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode){
 		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client,false);
