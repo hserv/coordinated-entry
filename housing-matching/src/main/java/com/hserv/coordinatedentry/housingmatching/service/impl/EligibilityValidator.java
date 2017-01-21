@@ -174,7 +174,7 @@ public class EligibilityValidator {
 		return bedsRequired;
 	}
 	
-		public static void main(String[] args) throws Exception {
+/*		public static void main(String[] args) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("test", true);
 		System.out.println(map.get("test1"));
@@ -189,5 +189,5 @@ public class EligibilityValidator {
 		
 		System.out.println(isValid); 
 
-	} 
+	}  */
 }
