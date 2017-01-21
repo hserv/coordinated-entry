@@ -272,7 +272,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 										Map<String, Object> clientDataElements = map(clientDEs.getParameters());
 										if(clientDataElements.get("disabilityRequired".toLowerCase())==null) clientDataElements.put("disabilityRequired".toLowerCase(), false);
 										if(clientDataElements.get("mentalHealthProblem".toLowerCase())==null) clientDataElements.put("mentalHealthProblem".toLowerCase(), false);
-										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(map(clientDEs.getParameters()),baseClient.getClientId() ,project.getProjectId(),housingInventory.getHousingInventoryId());						
+										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(clientDataElements,baseClient.getClientId() ,project.getProjectId(),housingInventory.getHousingInventoryId());						
 										if(validClient){
 											this.matchClient(client, housingInventory,projectGroup);
 											logger.log("match.process.matchsuccess", new Object[]{housingInventory.getHousingInventoryId(),client.getClientId()}, true, housingInventory.getHousingInventoryId(),project.getProjectId(),model.getClientId());
