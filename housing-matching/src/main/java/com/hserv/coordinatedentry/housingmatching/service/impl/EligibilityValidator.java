@@ -160,9 +160,9 @@ public class EligibilityValidator {
 			 members = repositoryFactory.getHouseholdMembershipRepository().countByGlobalHouseholdAndDeleted(membership.get(0).getGlobalHousehold(),false);		
 				logger.log("match.process.household.memberRegistration",new Object[]{"SUCCESS","Client registered in global house hold"},true,housingUnitId,projectId,clientId);
 		}else{
-			bedsRequired = 0;
-			logger.log("match.process.household.memberRegistration",new Object[]{"FAILED","Client not registered in global house hold"},false,housingUnitId,projectId,clientId);	
-			return bedsRequired;
+			members = 1;
+			logger.log("match.process.household.memberRegistration",new Object[]{"SUCCESS","Client registered in global house hold"},true,housingUnitId,projectId,clientId);
+//			return bedsRequired;
 		}
 		if(members == bedsCount ){
 			bedsRequired = members;
