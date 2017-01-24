@@ -18,6 +18,7 @@ public class MatchReservationModel {
 	private Boolean inactive;
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateUpdated;
+	private UUID processId;
 
 	public UUID getReservationId() {
 		return reservationId;
@@ -96,5 +97,11 @@ public class MatchReservationModel {
 	}
 	public void setHousingUnitId(UUID housingUnitId) {
 		this.housingUnitId = housingUnitId;
+	}
+	public UUID getProcessId() {
+		return processId;
+	}
+	public void setProcessId(UUID processId) {
+		this.processId = processId;
 	}
 }

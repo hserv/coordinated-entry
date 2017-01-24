@@ -274,7 +274,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 										if(clientDataElements.get("mentalHealthProblem".toLowerCase())==null) clientDataElements.put("mentalHealthProblem".toLowerCase(), false);
 										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(clientDataElements,baseClient.getClientId() ,project.getProjectId(),housingInventory.getHousingInventoryId());						
 										if(validClient){
-											this.matchClient(client, housingInventory,projectGroup);
+											this.matchClient(client, housingInventory,projectGroup,processId);
 											logger.log("match.process.matchsuccess", new Object[]{housingInventory.getHousingInventoryId(),client.getClientId()}, true, housingInventory.getHousingInventoryId(),project.getProjectId(),model.getClientId());
 											matchCount++;
 												break;
@@ -304,7 +304,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 
 	
-	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode){
+	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode, UUID processId){
 		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client,false);
 		Match match =null;
 		if(matches.isEmpty()) {
@@ -318,6 +318,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		match.setManualMatch(false);
 		match.setMatchDate(new Date());
 		match.setMatchStatus(0);
+		match.setProcessId(processId);
 		match.setProgramType(projectGroupCode);
 		repositoryFactory.getMatchReservationsRepository().save(match);
 		client.setMatched(true);

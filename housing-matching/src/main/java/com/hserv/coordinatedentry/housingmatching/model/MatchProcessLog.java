@@ -1,13 +1,18 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.servinglynk.hmis.warehouse.core.model.JsonDateSerializer;
 
 public class MatchProcessLog {
 
@@ -20,6 +25,10 @@ public class MatchProcessLog {
 	private UUID clientId;
 	private UUID projectId;
 	private UUID processId;
+	
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
+	private LocalDateTime processDate;
 	public UUID getId() {
 		return id;
 	}
@@ -87,4 +96,11 @@ public class MatchProcessLog {
 	public void setStep(String step) {
 		this.step = step;
 	}
+	public LocalDateTime getProcessDate() {
+		return processDate;
+	}
+	public void setProcessDate(LocalDateTime processDate) {
+		this.processDate = processDate;
+	}
+	
 }

@@ -59,6 +59,7 @@ public class MatchReservationTranslator {
 		matchReservationModel.setInactive(matchReserve.getInactive());
 		matchReservationModel.setHousingUnitId(matchReserve.getHousingUnitId());
 		matchReservationModel.setEligibleClients(eligibleClientsTranslator.translate(matchReserve.getEligibleClient()));
+		matchReservationModel.setProcessId(matchReserve.getProcessId());
 		return matchReservationModel;
 	}
 

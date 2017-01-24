@@ -58,6 +58,10 @@ public class Match extends BaseEntity {
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID housingUnitId;
 
+	@Column(name = "process_id")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID processId;
+
 	@Column(name = "program_type")
 	private String programType;
 
@@ -171,5 +175,13 @@ public class Match extends BaseEntity {
 
 	public void setStatusId(UUID statusId) {
 		this.statusId = statusId;
+	}
+
+	public UUID getProcessId() {
+		return processId;
+	}
+
+	public void setProcessId(UUID processId) {
+		this.processId = processId;
 	}
 }

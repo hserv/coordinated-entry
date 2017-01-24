@@ -43,6 +43,7 @@ public class MatchProcessLogController extends BaseController {
 		public Resource<MatchProcessLog> toResource(MatchProcessLogEntity arg0) {
 			MatchProcessLog log = new MatchProcessLog();
 			BeanUtils.copyProperties(arg0, log);
+			log.setProcessDate(arg0.getDateCreated());
 			log.setStatusMessage(arg0.getStatusMessage());
 			Resource<MatchProcessLog> resource = new Resource<MatchProcessLog>(log);
 			return resource;
@@ -56,13 +57,14 @@ public class MatchProcessLogController extends BaseController {
 			@RequestParam(name="processid",required=false) UUID processId,
 			@RequestParam(name="clientid",required=false) UUID clientId, 
 			@RequestParam(name="projectid",required=false) UUID projectId,
-			@RequestParam(name="housingunitid",required=false) UUID housingUnitId
+			@RequestParam(name="housingunitid",required=false) UUID housingUnitId,
+			@RequestParam(name="matchid",required= false) UUID matchId
 			) throws Exception {
 		
-		if(clientId==null && projectId==null && housingUnitId==null && processId==null)
-			 throw new MissingParameterException(" ProcessId or HousingUnitId or ProjectId or ClientId required.");
+		if(clientId==null && projectId==null && housingUnitId==null && processId==null && matchId ==null)
+			 throw new MissingParameterException(" ProcessId or HousingUnitId or ProjectId or ClientId or MatchId required.");
 		
-		Page<MatchProcessLogEntity> entities = matchProcessLogService.getMatchProcessLog(processId,housingUnitId,projectId,clientId, pageable);
+		Page<MatchProcessLogEntity> entities = matchProcessLogService.getMatchProcessLog(processId,housingUnitId,projectId,clientId,matchId, pageable);
 		return new ResponseEntity<>(assembler.toResource(entities,matchProcessLogAssembler),
 				HttpStatus.OK);
 	}

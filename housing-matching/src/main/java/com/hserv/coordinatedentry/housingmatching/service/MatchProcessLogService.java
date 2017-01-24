@@ -12,6 +12,6 @@ public interface MatchProcessLogService {
 	void log(String messageId, Object[] args, boolean status, UUID housingUnitId, UUID projectId,
 			UUID clientId);
 	
-	Page<MatchProcessLogEntity> getMatchProcessLog(UUID processId,UUID housingUnitId,UUID projectId,UUID clientId,Pageable pageable);
+	Page<MatchProcessLogEntity> getMatchProcessLog(UUID processId,UUID housingUnitId,UUID projectId,UUID clientId,UUID matchId, Pageable pageable);
 	
 }
