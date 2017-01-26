@@ -3,7 +3,10 @@ package com.hserv.coordinatedentry.housingmatching.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -41,6 +44,8 @@ public class EligibleClientModel {
 	@JsonProperty("status")
 	private BatchProcessModel batchProcessModel;
 	private boolean ignoreMatchProcess;
+//	@NotBlank(message="Remarks Required")
+	private String remarks;
 	
 	
 	@JsonProperty(access=Access.WRITE_ONLY)
@@ -124,5 +129,10 @@ public class EligibleClientModel {
 	public void setBatchProcessModel(BatchProcessModel batchProcessModel) {
 		this.batchProcessModel = batchProcessModel;
 	}
-	
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 }

@@ -31,6 +31,8 @@ public class NotificationServiceImpl implements NotificationService {
 	
 	@Async
 	public void notifyStatusUpdate(Match match,Recipients recipients,Session session,String trustedApp){
+		
+		
 		HousingInventory unit = repositoryFactory.getHousingUnitsRepository().findOne(match.getHousingUnitId());
 		
 		BaseProject project = projectService.getProjectInfo(unit.getProjectId(), session, trustedApp);

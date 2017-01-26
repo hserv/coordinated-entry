@@ -1,5 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -8,11 +10,17 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -95,93 +103,45 @@ public class MatchProcessLogServiceImpl implements MatchProcessLogService {
 	public Page<MatchProcessLogEntity> getMatchProcessLog(UUID processId, UUID housingUnitId, UUID projectId,
 			UUID clientId, UUID matchId, Pageable pageable) {
 
-		Specification<MatchProcessLogEntity> specification = null;
+		List<MatchProcessLogEntity> logData = new ArrayList<MatchProcessLogEntity>();
 		
-		Match match = matchReservationsRepository.findOne(matchId);
+		Session session = entityManager.unwrap(Session.class);
 		
-		if(match!=null) {
-			Specification<MatchProcessLogEntity> processIdSpec = Specifications
-					.where(new Specification<MatchProcessLogEntity>() {
-						@Override
-						public Predicate toPredicate(Root<MatchProcessLogEntity> root, CriteriaQuery<?> query,
-								CriteriaBuilder cb) {
-							return cb.and(cb.equal(root.get("processId"), match.getProcessId()));
-						}
-					});
-			
-			Specification<MatchProcessLogEntity> housingUnitIdSpec = Specifications
-					.where(new Specification<MatchProcessLogEntity>() {
-						@Override
-						public Predicate toPredicate(Root<MatchProcessLogEntity> root, CriteriaQuery<?> query,
-								CriteriaBuilder cb) {
-							return cb.and(cb.equal(root.get("housingUnitId"), match.getHousingUnitId()));
-						}
-					});
+		Match match =null; 
+		if(matchId!=null) match = matchReservationsRepository.findOne(matchId);
+		
+		DetachedCriteria criteria = DetachedCriteria.forClass(MatchProcessLogEntity.class);
+		if(match!=null && match.getProcessId()!=null)
+			criteria.add(Restrictions.eq("processId", match.getProcessId()));
+		if(match!=null && match.getHousingUnitId()!=null)
+			criteria.add(Restrictions.eq("housingUnitId", match.getHousingUnitId()));
+		if(match!=null && match.getEligibleClient()!=null)
+			criteria.add(Restrictions.eq("clientId", match.getEligibleClient().getClientId()));
 
-			Specification<MatchProcessLogEntity> clientIdSpec = Specifications
-					.where(new Specification<MatchProcessLogEntity>() {
-						@Override
-						public Predicate toPredicate(Root<MatchProcessLogEntity> root, CriteriaQuery<?> query,
-								CriteriaBuilder cb) {
-							return cb.and(cb.equal(root.get("clientId"), match.getEligibleClient().getClientId()));
-						}
-					});
-
-			if (match.getProcessId() != null)
-				specification = Specifications.where(specification).and(processIdSpec);
-			if (match.getEligibleClient().getClientId() != null)
-				specification = Specifications.where(specification).and(clientIdSpec);
-			if (match.getHousingUnitId() != null)
-				specification = Specifications.where(specification).and(housingUnitIdSpec);
+		if(housingUnitId!=null)
+			criteria.add(Restrictions.eq("housingUnitId", housingUnitId));
+		if(clientId!=null)
+			criteria.add(Restrictions.eq("clientId", clientId));
+		if(processId!=null)
+			criteria.add(Restrictions.eq("processId", processId));
+		if(projectId!=null)
+			criteria.add(Restrictions.eq("projectId", projectId));
+		
+		criteria.addOrder(Order.asc("dateCreated"));
+		
+		Criteria eCriteria = criteria.getExecutableCriteria(session);
+		Long total = 	(long) eCriteria.list().size();
+		if(total!=0){
+			eCriteria.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+			eCriteria.setMaxResults(pageable.getPageSize());		
+			logData = eCriteria.list();
 		}
-
-
-		Specification<MatchProcessLogEntity> processIdSpec = Specifications
-				.where(new Specification<MatchProcessLogEntity>() {
-					@Override
-					public Predicate toPredicate(Root<MatchProcessLogEntity> root, CriteriaQuery<?> query,
-							CriteriaBuilder cb) {
-						return cb.and(cb.equal(root.get("processId"), processId));
-					}
-				});
-
-		Specification<MatchProcessLogEntity> projectIdSpec = Specifications
-				.where(new Specification<MatchProcessLogEntity>() {
-					@Override
-					public Predicate toPredicate(Root<MatchProcessLogEntity> root, CriteriaQuery<?> query,
-							CriteriaBuilder cb) {
-						return cb.and(cb.equal(root.get("projectId"), projectId));
-					}
-				});
-
-		Specification<MatchProcessLogEntity> housingUnitIdSpec = Specifications
-				.where(new Specification<MatchProcessLogEntity>() {
-					@Override
-					public Predicate toPredicate(Root<MatchProcessLogEntity> root, CriteriaQuery<?> query,
-							CriteriaBuilder cb) {
-						return cb.and(cb.equal(root.get("housingUnitId"), housingUnitId));
-					}
-				});
-
-		Specification<MatchProcessLogEntity> clientIdSpec = Specifications
-				.where(new Specification<MatchProcessLogEntity>() {
-					@Override
-					public Predicate toPredicate(Root<MatchProcessLogEntity> root, CriteriaQuery<?> query,
-							CriteriaBuilder cb) {
-						return cb.and(cb.equal(root.get("clientId"), clientId));
-					}
-				});
-
-		if (processId != null)
-			specification = Specifications.where(specification).and(processIdSpec);
-		if (projectId != null)
-			specification = Specifications.where(specification).and(projectIdSpec);
-		if (clientId != null)
-			specification = Specifications.where(specification).and(clientIdSpec);
-		if (housingUnitId != null)
-			specification = Specifications.where(specification).and(housingUnitIdSpec);
-		Sort sort = new Sort(Direction.ASC, "dateCreated");
+			
+		
+		return new PageImpl<MatchProcessLogEntity>(logData, pageable,total);
+		
+	/*	Sort sort = new Sort(Direction.ASC, "dateCreated");
 		PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
-		return logRepository.findAll(specification, pageRequest);
+		return logRepository.findAll(specification, pageRequest);*/
 	}
 }

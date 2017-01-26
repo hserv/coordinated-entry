@@ -12,11 +12,14 @@ import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -44,10 +47,12 @@ import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTra
 import com.hserv.coordinatedentry.housingmatching.util.MatchProcessLogger;
 import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
+import com.servinglynk.hmis.warehouse.core.model.Account;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseProject;
 import com.servinglynk.hmis.warehouse.core.model.Parameter;
 import com.servinglynk.hmis.warehouse.core.model.Parameters;
+import com.servinglynk.hmis.warehouse.core.model.Recipients;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Service
@@ -88,6 +93,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	@Autowired
 	MatchProcessLogger logger;
 		
+	@Autowired
+	Environment env;
+	
 	Map<Integer, Integer[]> statusMap =new HashMap<Integer,Integer[]>();
 			
 	@Override
@@ -188,7 +196,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		repositoryFactory.getMatchStatusRepository().save(matchStatus);
 		match.setMatchStatus(statusModel.getStatus());
 		repositoryFactory.getMatchReservationsRepository().save(match);
-		if(!statusModel.getRecipients().getToRecipients().isEmpty())
+		Account loggedinUser = SecurityContextUtil.getUserAccount();
+		statusModel.getRecipients().getCcRecipients().add(loggedinUser.getEmailAddress());
+//		if(!statusModel.getRecipients().getToRecipients().isEmpty())
 			notificationService.notifyStatusUpdate(match, statusModel.getRecipients(),session,trustedApp);
 	}
 	
@@ -274,7 +284,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 										if(clientDataElements.get("mentalHealthProblem".toLowerCase())==null) clientDataElements.put("mentalHealthProblem".toLowerCase(), false);
 										if(bedsRequired!=0) validClient = eligibilityValidator.validateProjectEligibility(clientDataElements,baseClient.getClientId() ,project.getProjectId(),housingInventory.getHousingInventoryId());						
 										if(validClient){
-											this.matchClient(client, housingInventory,projectGroup,processId);
+											this.matchClient(client, housingInventory,projectGroup,processId,trustedAppId);
 											logger.log("match.process.matchsuccess", new Object[]{housingInventory.getHousingInventoryId(),client.getClientId()}, true, housingInventory.getHousingInventoryId(),project.getProjectId(),model.getClientId());
 											matchCount++;
 												break;
@@ -304,7 +314,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 
 	
-	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode, UUID processId){
+	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode, UUID processId,String trustedAppId){
 		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client,false);
 		Match match =null;
 		if(matches.isEmpty()) {
@@ -326,5 +336,10 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		housingInventory.setVacant(false);
 //		housingInventory.setBedsCurrent(housingInventory.getBedsCurrent()-1);							
 		repositoryFactory.getHousingUnitsRepository().save(housingInventory);
+		Recipients recipients = new Recipients();
+		recipients.getCcRecipients().add(env.getProperty("defaultMatchEmail-"+projectGroupCode));
+		SecurityContext context =  SecurityContextHolder.getContext();
+		Authentication authentication =  context.getAuthentication();
+		notificationService.notifyStatusUpdate(match, recipients,(Session) authentication.getPrincipal(),trustedAppId);
 	}
 }

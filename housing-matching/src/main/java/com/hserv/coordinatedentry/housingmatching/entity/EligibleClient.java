@@ -56,6 +56,9 @@ public class EligibleClient extends BaseEntity {
 	@Column(name="ignore_match_process")
 	private boolean ignoreMatchProcess;
 	
+	@Column(name="remarks")
+	private String remarks;
+	
 	@OneToMany(mappedBy="eligibleClient",cascade= CascadeType.REMOVE)
 	private List<Match> matchs = new ArrayList<>(); 
 	
@@ -195,5 +198,13 @@ public class EligibleClient extends BaseEntity {
 
 	public void setIgnoreMatchProcess(boolean ignoreMatchProcess) {
 		this.ignoreMatchProcess = ignoreMatchProcess;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 }

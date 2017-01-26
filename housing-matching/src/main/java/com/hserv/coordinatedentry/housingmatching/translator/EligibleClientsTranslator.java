@@ -34,6 +34,7 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setDateCreated(eligibleClient.getDateCreated());
 			eligibleClientModel.setDateUpdated(eligibleClient.getDateUpdated());
 			eligibleClientModel.setIgnoreMatchProcess(eligibleClient.isIgnoreMatchProcess());
+			eligibleClientModel.setRemarks(eligibleClient.getRemarks());
 		}
 		return eligibleClientModel;
 	}
@@ -45,7 +46,7 @@ public class EligibleClientsTranslator {
 			 eligibleClient.setClientId(eligibleClientModel.getClientId());
 		}
 
-		
+		eligibleClient.setRemarks(eligibleClientModel.getRemarks());
 		eligibleClient.setProgramType(eligibleClientModel.getProgramType());
 		eligibleClient.setMatched(eligibleClientModel.getMatched());
 		eligibleClient.setSpdatLabel(eligibleClientModel.getSpdatLabel().getValue());

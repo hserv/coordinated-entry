@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -60,6 +61,9 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	
 	@Autowired
 	BatchProcessService batchProcessService;
+	
+	@Autowired
+	Environment env;
 	
 	
 	@Override
@@ -139,7 +143,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
-
+			eligibleClient.setRemarks(env.getProperty("eligibleClientRemarks"));
 			if(client!=null)
 				eligibleClient.setClientLink(client.getLink());		
 			if(!eligibleClient.getMatched())
