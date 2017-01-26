@@ -337,9 +337,10 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 //		housingInventory.setBedsCurrent(housingInventory.getBedsCurrent()-1);							
 		repositoryFactory.getHousingUnitsRepository().save(housingInventory);
 		Recipients recipients = new Recipients();
-		recipients.getCcRecipients().add(env.getProperty("defaultMatchEmail-"+projectGroupCode));
+		String defaultEmails = env.getProperty("defaultMatchEmail-"+projectGroupCode);
+		recipients.getCcRecipients().addAll(Arrays.asList(defaultEmails.split(";")));
 		SecurityContext context =  SecurityContextHolder.getContext();
 		Authentication authentication =  context.getAuthentication();
-		notificationService.notifyStatusUpdate(match, recipients,(Session) authentication.getPrincipal(),trustedAppId);
+	//	notificationService.notifyStatusUpdate(match, recipients,(Session) authentication.getPrincipal(),trustedAppId);
 	}
 }

@@ -143,7 +143,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
-			eligibleClient.setRemarks(env.getProperty("eligibleClientRemarks"));
+			eligibleClient.setRemarks("Ignore match flag auto set by system to false");
 			if(client!=null)
 				eligibleClient.setClientLink(client.getLink());		
 			if(!eligibleClient.getMatched())
