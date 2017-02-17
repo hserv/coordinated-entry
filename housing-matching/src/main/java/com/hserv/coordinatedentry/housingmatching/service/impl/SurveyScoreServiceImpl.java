@@ -1,5 +1,6 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -115,6 +116,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Transactional
 	@Async
 	public void calculateScore(Session session) throws Exception {
+		try{
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
 		
 		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponses(session.getAccount().getProjectGroup().getProjectGroupCode());
@@ -127,6 +129,9 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 				eligibleClient = new EligibleClient();
 				eligibleClient.setMatched(false);
 			}
+			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
+			LocalDateTime surveyDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
+			if(surveyDate!=null)eligibleClient.setSurveyDate(surveyDate);
 			eligibleClient.setClientId(clientSurveyScore.getClientId());
 			BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
 			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
@@ -140,13 +145,12 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			//                         FAMILY pass family true
 			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
 			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagValue()));
-			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
 			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
 			eligibleClient.setRemarks("Ignore match flag auto set by system to false");
 			if(client!=null)
 				eligibleClient.setClientLink(client.getLink());		
-			if(!eligibleClient.getMatched())
+			if(eligibleClient.getMatched() == false)
 				eligibleClientsRepository.save(eligibleClient);
 			
 		    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(eligibleClient,false);
@@ -161,6 +165,12 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			}
 			//eligibleClients.add(eligibleClient);
 		}
-		batchProcessService.endBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), true);
+		}catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+		}finally {
+			batchProcessService.endBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), true);			
+		}
+
 	}
 }
