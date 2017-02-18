@@ -35,7 +35,7 @@ public class EligibleClient extends BaseEntity {
 	private String programType;
 	
 	@Column(name = "matched")
-	private Boolean matched;
+	private boolean matched;
 	
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
 	@Column(name = "survey_date")
@@ -82,7 +82,7 @@ public class EligibleClient extends BaseEntity {
 	}
 
 	public EligibleClient(UUID clientId, String surveyType, Integer surveyScore, String programType,
-			Boolean matched, LocalDateTime surveyDate, String spdatLabel, Set<Match> matchReservations
+			boolean matched, LocalDateTime surveyDate, String spdatLabel, Set<Match> matchReservations
 			,String zipCode) {
 		this.clientId = clientId;
 		this.surveyType = surveyType;
@@ -130,11 +130,11 @@ public class EligibleClient extends BaseEntity {
 	}
 
 
-	public Boolean getMatched() {
+	public boolean getMatched() {
 		return this.matched;
 	}
 
-	public void setMatched(Boolean matched) {
+	public void setMatched(boolean matched) {
 		this.matched = matched;
 	}
 

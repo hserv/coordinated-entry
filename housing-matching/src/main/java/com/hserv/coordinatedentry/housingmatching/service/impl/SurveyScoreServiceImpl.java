@@ -125,43 +125,46 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		MatchStrategy strategy;
 		for(ClientSurveyScore clientSurveyScore : surveyResponseModel.getClientsSurveyScores()){
 			EligibleClient eligibleClient = eligibleClientsRepository.findOne(clientSurveyScore.getClientId());
-			if(eligibleClient==null){
-				eligibleClient = new EligibleClient();
-				eligibleClient.setMatched(false);
-			}
-			eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
-			LocalDateTime surveyDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
-			if(surveyDate!=null)eligibleClient.setSurveyDate(surveyDate);
-			eligibleClient.setClientId(clientSurveyScore.getClientId());
-			BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
-			strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
-			int additionalScore =0;
-			if(client!=null && client.getDob()!=null){
-					additionalScore = strategy.getAdditionalScore(DateUtil.calculateAge(client.getDob()),clientSurveyScore.getSurveyTagValue());
-			}
-		 
-			eligibleClient.setClientId(clientSurveyScore.getClientId());
-			//  Get survey tag value : SINGLE_AUDULT pass individual true
-			//                         FAMILY pass family true
-			eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
-			eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagValue()));
-			eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
-			eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
-			eligibleClient.setRemarks("Ignore match flag auto set by system to false");
-			if(client!=null)
-				eligibleClient.setClientLink(client.getLink());		
-			if(eligibleClient.getMatched() == false)
-				eligibleClientsRepository.save(eligibleClient);
+			if(eligibleClient==null || ( eligibleClient!=null &&  eligibleClient.getMatched() == false )){
+				System.out.println("Inside false block" + eligibleClient.getClientId() + " " +eligibleClient.getMatched());
+							eligibleClient = new EligibleClient();
+							eligibleClient.setMatched(false);
+							eligibleClient.setProjectGroupCode(clientSurveyScore.getProjectGroupCode());
+						eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
+						LocalDateTime surveyDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
+						if(surveyDate!=null)eligibleClient.setSurveyDate(surveyDate);
+						eligibleClient.setClientId(clientSurveyScore.getClientId());
+						BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
+						strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
+						int additionalScore =0;
+						if(client!=null && client.getDob()!=null){
+								additionalScore = strategy.getAdditionalScore(DateUtil.calculateAge(client.getDob()),clientSurveyScore.getSurveyTagValue());
+						}
+					 
+						eligibleClient.setClientId(clientSurveyScore.getClientId());
+						//  Get survey tag value : SINGLE_AUDULT pass individual true
+						//                         FAMILY pass family true
+						eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
+						eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagValue()));
+						eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
+						eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
+						eligibleClient.setRemarks("Ignore match flag auto set by system to false");
+						if(client!=null)
+							eligibleClient.setClientLink(client.getLink());		
 			
-		    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(eligibleClient,false);
-			if(matches.isEmpty()){
-				Match  match = new Match();
-				match.setEligibleClient(eligibleClient);
-				match.setManualMatch(false);
-		//		match.setMatchDate(new Date());
-				match.setMatchStatus(0);
-				match.setProgramType(session.getAccount().getProjectGroup().getProjectGroupCode());
-	//			repositoryFactory.getMatchReservationsRepository().save(match);
+						eligibleClientsRepository.save(eligibleClient);	
+						
+					    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(eligibleClient,false);
+						if(matches.isEmpty()){
+							Match  match = new Match();
+							match.setEligibleClient(eligibleClient);
+							match.setManualMatch(false);
+					//		match.setMatchDate(new Date());
+							match.setMatchStatus(0);
+							match.setProgramType(session.getAccount().getProjectGroup().getProjectGroupCode());
+				//			repositoryFactory.getMatchReservationsRepository().save(match);
+
+			}
 			}
 			//eligibleClients.add(eligibleClient);
 		}
