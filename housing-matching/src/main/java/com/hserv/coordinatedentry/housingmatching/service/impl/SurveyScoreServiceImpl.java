@@ -154,7 +154,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			
 						eligibleClientsRepository.save(eligibleClient);	
 						
-					    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(eligibleClient,false);
+					    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient,false);
 						if(matches.isEmpty()){
 							Match  match = new Match();
 							match.setEligibleClient(eligibleClient);

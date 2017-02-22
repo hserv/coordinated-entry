@@ -65,6 +65,9 @@ public class EligibleClient extends BaseEntity {
 	@Column(name="deleted")
 	private boolean deleted;
 	
+	@Column(name="status")
+	private Integer status;
+	
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -206,5 +209,13 @@ public class EligibleClient extends BaseEntity {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

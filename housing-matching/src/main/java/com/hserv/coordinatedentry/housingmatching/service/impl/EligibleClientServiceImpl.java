@@ -1,5 +1,6 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +31,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
+import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
@@ -92,12 +95,30 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 
 	@Override
-	public boolean updateEligibleClient(UUID clientID, EligibleClientModel eligibleClientModel) {
+	public boolean updateEligibleClient(UUID clientID, EligibleClientModel eligibleClientModel) throws Exception  {
 		boolean status = false;
 		EligibleClient eligibleClient = eligibleClientsRepository.findOne(eligibleClientModel.getClientId());
-	
-			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel,eligibleClient));
-			status = true;
+		if(eligibleClient.getMatched() == false) {			
+				eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel,eligibleClient));
+				status = true;
+		}else{
+			 if( eligibleClient.getStatus()!=null && eligibleClient.getStatus() == 10 &&  eligibleClientModel.isIgnoreMatchProcess()==false){				 
+				 	eligibleClient.setMatched(false); 
+				 	eligibleClient.setStatus(null);
+				 	eligibleClient.setRemarks(eligibleClientModel.getRemarks());
+				 	eligibleClientsRepository.saveAndFlush(eligibleClient);
+					List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient, false);
+					if(matchs.isEmpty()) return false;
+						HousingInventory housingUnit = repositoryFactory.getHousingUnitsRepository().findOne(matchs.get(0).getHousingUnitId());
+						housingUnit.setVacant(true);
+						repositoryFactory.getHousingUnitsRepository().save(housingUnit);
+				 	status = true;
+			 } else{
+				 throw new AccessDeniedException(" Matched client connot be updated");
+			 }
+
+		}
+
 		return status;
 	}
 
@@ -130,7 +151,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 
 	@Override
-	public boolean updateEligibleClients(List<EligibleClientModel> eligibleClientModels) {
+	public boolean updateEligibleClients(List<EligibleClientModel> eligibleClientModels) throws Exception {
 		if (eligibleClientModels != null && !eligibleClientModels.isEmpty()) {
 			for (EligibleClientModel clientModel : eligibleClientModels) {
 				updateEligibleClient(clientModel.getClientId(), clientModel);

@@ -98,14 +98,10 @@ public class EligibleClientsController extends BaseController {
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	@APIMapping(value="update-eligible-clients")
 	public ResponseEntity<String> updateEligibleClients(
-			@Valid @RequestBody EligibleClientsModel eligibleClientModels) {
+			@Valid @RequestBody EligibleClientsModel eligibleClientModels) throws Exception  {
 		ResponseEntity<String> responseEntity = null;
-		try {
 			boolean status = eligibleClientService.updateEligibleClients(eligibleClientModels.getEligibleClients());
 			responseEntity = ResponseEntity.ok("{\"updated\": \""+ status +"\"}\"");
-		} catch (Exception ex) {
-			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
-		}
 		return responseEntity;
 	}
 

@@ -1,5 +1,6 @@
 package com.hserv.coordinatedentry.housingmatching.service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public interface EligibleClientService {
 
 	Page<EligibleClient> getEligibleClients(String projectGroupCode ,Pageable pageable);
 
-	boolean updateEligibleClient(UUID clientID , EligibleClientModel eligibleClientModel);
+	boolean updateEligibleClient(UUID clientID , EligibleClientModel eligibleClientModel) throws Exception ;
 
 	boolean deleteEligibleClientById(UUID clientID);
 	
@@ -27,7 +28,7 @@ public interface EligibleClientService {
 	
 	boolean deleteAll();
 	
-	boolean updateEligibleClients(List<EligibleClientModel> eligibleClientModels);
+	boolean updateEligibleClients(List<EligibleClientModel> eligibleClientModels) throws Exception;
 	
 	boolean createEligibleClients(List<EligibleClientModel> eligibleClientModels);
 

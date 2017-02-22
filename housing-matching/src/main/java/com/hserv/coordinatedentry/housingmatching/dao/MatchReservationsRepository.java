@@ -2,7 +2,6 @@ package com.hserv.coordinatedentry.housingmatching.dao;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,7 @@ public interface MatchReservationsRepository extends JpaRepository<Match, Serial
 
 //	void deleteByEligibleClientClientId(UUID clientId);
 	
-	List<Match> findByEligibleClientAndDeleted(EligibleClient clientId,boolean deleted);
+	List<Match> findByEligibleClientAndDeletedOrderByDateCreatedDesc(EligibleClient clientId,boolean deleted);
 	
 	
 

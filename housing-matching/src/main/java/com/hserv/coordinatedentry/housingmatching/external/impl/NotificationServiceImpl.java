@@ -32,18 +32,27 @@ public class NotificationServiceImpl implements NotificationService {
 	@Async
 	public void notifyStatusUpdate(Match match,Recipients recipients,Session session,String trustedApp){
 		
+		Notification notification = new Notification();
 		
-		HousingInventory unit = repositoryFactory.getHousingUnitsRepository().findOne(match.getHousingUnitId());
+		if(match.getHousingUnitId()!=null) {
+			HousingInventory unit = repositoryFactory.getHousingUnitsRepository().findOne(match.getHousingUnitId());
 		
 		BaseProject project = projectService.getProjectInfo(unit.getProjectId(), session, trustedApp);
+		
+		notification.getParameters().addParameter(new Parameter("aliasName",unit.getAliasName()!=null ? unit.getAliasName() : "housing unit" ));
+		notification.getParameters().addParameter(new Parameter("projectId",project.getProjectName()));
 
-		Notification notification = new Notification();
+		}else{
+			notification.getParameters().addParameter(new Parameter("aliasName"," " ));
+			notification.getParameters().addParameter(new Parameter("projectId"," "));
+
+		}
+
+
 		notification.setType("HOUSING_MATCHING_STATUS_UPDATE");
 		notification.setMethod("EMAIL");
 		notification.setRecipients(recipients);
 		notification.getParameters().addParameter(new Parameter("status",match.getMatchStatus()));
-		notification.getParameters().addParameter(new Parameter("aliasName",unit.getAliasName()!=null ? unit.getAliasName() : "housing unit" ));
-		notification.getParameters().addParameter(new Parameter("projectId",project.getProjectName()));
 		notification.getParameters().addParameter(new Parameter("clientId",match.getEligibleClient().getClientId()));
 		notificationServiceClient.createNotification(notification);
 		

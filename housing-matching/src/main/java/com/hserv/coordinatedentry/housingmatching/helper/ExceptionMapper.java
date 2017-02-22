@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.helper;
 
 
+import java.nio.file.AccessDeniedException;
 import java.security.InvalidParameterException;
 import java.util.Map;
 
@@ -102,6 +103,12 @@ public class ExceptionMapper {
 			r.setErrorCode("ERR_CODE_PARAMETER_MISSING");
 			r.setErrorMessage(e.getMessage());
 			r.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+		}catch (AccessDeniedException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage());
+			r.setErrorCode("ERR_CODE_ACCESS_DENIED");
+			r.setErrorMessage(ex.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
 		}
 		catch (Throwable t) {
         	t.printStackTrace();

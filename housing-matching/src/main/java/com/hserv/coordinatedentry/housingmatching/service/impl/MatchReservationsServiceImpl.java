@@ -138,7 +138,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		EligibleClient client = repositoryFactory.getEligibleClientsRepository().findByClientIdAndDeleted(clientId, false);
 		if(client!=null)
 		{
-				List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client, false);
+				List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client, false);
 				repositoryFactory.getMatchReservationsRepository().delete(matches);
 			return true;
 		}
@@ -150,7 +150,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
 		EligibleClient eligibleClient = repositoryFactory.getEligibleClientsRepository().findByClientIdAndProjectGroupCodeAndDeleted(clientId, projectGroup,false);	
 		if (eligibleClient==null) throw new ResourceNotFoundException("Client not found "+clientId);
-		List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(eligibleClient,false);
+		List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient,false);
 		if(matchs.isEmpty()) throw new ResourceNotFoundException("macth reservation not found for the client "+clientId);
 		return matchReservationTranslator.translate(matchs.get(0));
 	
@@ -171,9 +171,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	
 	@Override
 	public void updateMatchStatus(UUID clientId, MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception {
-		EligibleClient client = new EligibleClient();
-		client.setClientId(clientId);
-		List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client,false);
+		EligibleClient client =	repositoryFactory.getEligibleClientsRepository().findOne(clientId);
+		List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client,false);
 		if(matches.isEmpty()) throw new ResourceNotFoundException("No match reservation found for this client");
 		Match match = matches.get(0);
 		List<MatchStatusLevels> nextLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(match.getProgramType(), match.getMatchStatus()+"");
@@ -194,8 +193,19 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			matchStatus.setRecipients(statusModel.getRecipients().toJSONString());
 		matchStatus.setClientId(clientId);
 		repositoryFactory.getMatchStatusRepository().save(matchStatus);
+
+		if(statusModel.getStatus() == 10) {
+			HousingInventory housingUnit = repositoryFactory.getHousingUnitsRepository().findOne(match.getHousingUnitId());
+			if(housingUnit!=null) housingUnit.setVacant(true);
+			repositoryFactory.getHousingUnitsRepository().save(housingUnit);
+			match.setHousingUnitId(null);
+		}
+		
 		match.setMatchStatus(statusModel.getStatus());
 		repositoryFactory.getMatchReservationsRepository().save(match);
+		client.setStatus(match.getMatchStatus());
+		client.setIgnoreMatchProcess(true);
+		repositoryFactory.getEligibleClientsRepository().save(client);
 		Account loggedinUser = SecurityContextUtil.getUserAccount();
 		statusModel.getRecipients().getCcRecipients().add(loggedinUser.getEmailAddress());
 //		if(!statusModel.getRecipients().getToRecipients().isEmpty())
@@ -315,7 +325,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 	
 	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode, UUID processId,String trustedAppId){
-		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeleted(client,false);
+		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client,false);
 		Match match =null;
 		if(matches.isEmpty()) {
 			 match = new Match();
