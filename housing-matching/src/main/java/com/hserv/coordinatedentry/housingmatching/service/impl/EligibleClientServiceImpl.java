@@ -107,11 +107,11 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 				 	eligibleClient.setStatus(null);
 				 	eligibleClient.setRemarks(eligibleClientModel.getRemarks());
 				 	eligibleClientsRepository.saveAndFlush(eligibleClient);
-					List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient, false);
+/*					List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient, false);
 					if(matchs.isEmpty()) return false;
 						HousingInventory housingUnit = repositoryFactory.getHousingUnitsRepository().findOne(matchs.get(0).getHousingUnitId());
 						housingUnit.setVacant(true);
-						repositoryFactory.getHousingUnitsRepository().save(housingUnit);
+						repositoryFactory.getHousingUnitsRepository().save(housingUnit);*/
 				 	status = true;
 			 } else{
 				 throw new AccessDeniedException(" Matched client connot be updated");
