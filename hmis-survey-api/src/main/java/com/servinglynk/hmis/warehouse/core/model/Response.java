@@ -1,8 +1,11 @@
 package com.servinglynk.hmis.warehouse.core.model;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonRootName("response")
 public class Response extends ClientModel {
@@ -28,6 +31,10 @@ public class Response extends ClientModel {
 	private boolean refused;
 
 	private UUID submissionId;
+	
+	@JsonDeserialize(using=JsonTimestampDeserializer.class)
+	@JsonSerialize(using=JsonTimestampSerializer.class)
+	private LocalDateTime effectiveDate;
 
 	public Response() {
 		super();
@@ -124,5 +131,13 @@ public class Response extends ClientModel {
 
 	public void setClientLink(String clientLink) {
 		this.clientLink = clientLink;
+	}
+
+	public LocalDateTime getEffectiveDate() {
+		return effectiveDate;
+	}
+
+	public void setEffectiveDate(LocalDateTime effectiveDate) {
+		this.effectiveDate = effectiveDate;
 	}
 }

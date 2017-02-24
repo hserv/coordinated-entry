@@ -21,5 +21,7 @@ public interface HouseholdMembershipRepository extends JpaRepository<HouseholdMe
    List<HouseholdMembership> findByGlobalClientIdAndDeleted(UUID clientId,boolean deleted);
 
    Integer countByGlobalHouseholdAndDeleted(GlobalHousehold globalHousehold,boolean deleted);
+   
+   List<HouseholdMembership> findByGlobalHouseholdAndDeleted(GlobalHousehold globalHousehold,boolean deleted);
 
 }

@@ -120,10 +120,16 @@ public class EligibilityValidator {
 							if(!isValid) return false;
 						}
 						else{
-							logger.log("match.process.project.eligibility.step.invalid",new Object[]{ step,"SUCCESS",requirement.getName(), requirement.getValue().toString().replaceAll("\"","&quot;"),eligibilityRequirement.getEligibilityId(),requirement.getName(),requirement.getValue().toString().replaceAll("\"","&quot;"),""}, true,housingUnitId,projectId,clientId);
+							if(requirement.getName().equalsIgnoreCase("momAndNumberOfKids")){
+								logger.log("match.process.project.eligibility.step",new Object[]{ step,false? "SUCCESS" : "FAILED",requirement.getName(), requirement.getValue().toString().replaceAll("\"","&quot;"),eligibilityRequirement.getEligibilityId(),requirement.getName(),requirement.getValue().toString().replaceAll("\"","&quot;"),client.get(requirement.getName().toLowerCase())}, false,housingUnitId,projectId,clientId);
+								return false;
+							}else{
+								logger.log("match.process.project.eligibility.step.invalid",new Object[]{ step,"SUCCESS",requirement.getName(), requirement.getValue().toString().replaceAll("\"","&quot;"),eligibilityRequirement.getEligibilityId(),requirement.getName(),requirement.getValue().toString().replaceAll("\"","&quot;"),""}, true,housingUnitId,projectId,clientId);
+							}
 						}
 					}catch (Exception e) {
 						System.out.println(" exception in SPEL"+e.getMessage());
+
 						logger.log("match.process.project.eligibility.step.invalid",new Object[]{ step,"SUCCESS",requirement.getName(), requirement.getValue().toString().replaceAll("\"","&quot;"),eligibilityRequirement.getEligibilityId(),requirement.getName(),requirement.getValue().toString().replaceAll("\"","&quot;"),""}, true,housingUnitId,projectId,clientId);
 					}
 					step++;

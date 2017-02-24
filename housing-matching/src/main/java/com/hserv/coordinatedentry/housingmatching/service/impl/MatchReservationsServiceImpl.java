@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.entity.GlobalHousehold;
 import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.entity.MatchStatus;
@@ -197,15 +198,17 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		if(statusModel.getStatus() == 10) {
 			HousingInventory housingUnit = repositoryFactory.getHousingUnitsRepository().findOne(match.getHousingUnitId());
 			if(housingUnit!=null) housingUnit.setVacant(true);
+			client.setIgnoreMatchProcess(true);
 			repositoryFactory.getHousingUnitsRepository().save(housingUnit);
 			match.setHousingUnitId(null);
 		}
 		
 		match.setMatchStatus(statusModel.getStatus());
 		repositoryFactory.getMatchReservationsRepository().save(match);
+		
 		client.setStatus(match.getMatchStatus());
-		client.setIgnoreMatchProcess(true);
 		repositoryFactory.getEligibleClientsRepository().save(client);
+		
 		Account loggedinUser = SecurityContextUtil.getUserAccount();
 		statusModel.getRecipients().getCcRecipients().add(loggedinUser.getEmailAddress());
 //		if(!statusModel.getRecipients().getToRecipients().isEmpty())
@@ -286,7 +289,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 										model.setEligibleClientService(eligibleClientService);
 										model.populateValues(baseClient,clientDEs);
 										model.populateValues(client,clientDEs);
-										model.populateValues(repositoryFactory.getHouseholdMembershipRepository().findByGlobalClientIdAndDeleted(baseClient.getClientId(), false),trustedAppId,session.getToken(),clientDEs);
+										GlobalHousehold globalHousehold = repositoryFactory.getGlobalHouseholdRepository().findByHeadOfHouseholdIdAndDeleted(baseClient.getClientId(), false);
+										model.populateValues(repositoryFactory.getHouseholdMembershipRepository().findByGlobalHouseholdAndDeleted(globalHousehold, false),trustedAppId,session.getToken(),clientDEs,baseClient);
 										logger.log("match.process.clientInfo.loaded",new Object[]{client.getClientId(),baseClient.getFirstName(),baseClient.getLastName(),model.getAge(),client.getCocScore(),client.getSurveyScore()},true,housingInventory.getHousingInventoryId(),project.getProjectId(),baseClient.getClientId());
 										Integer bedsRequired = eligibilityValidator.validateBedsAvailability(baseClient.getClientId(), housingInventory.getBedsCurrent(),housingInventory.getHousingInventoryId(),project.getProjectId());
 										Map<String, Object> clientDataElements = map(clientDEs.getParameters());
@@ -325,16 +329,10 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 
 	
 	public void matchClient(EligibleClient client,HousingInventory housingInventory,String projectGroupCode, UUID processId,String trustedAppId){
-		List<Match> matches =	repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client,false);
-		Match match =null;
-		if(matches.isEmpty()) {
-			 match = new Match();
+		Match match = new Match();
 			 match.setEligibleClient(client);
-		}else{
-			match = matches.get(0);
-		}
-	
-		match.setHousingUnitId(housingInventory.getHousingInventoryId());
+
+			 match.setHousingUnitId(housingInventory.getHousingInventoryId());
 		match.setManualMatch(false);
 		match.setMatchDate(new Date());
 		match.setMatchStatus(0);

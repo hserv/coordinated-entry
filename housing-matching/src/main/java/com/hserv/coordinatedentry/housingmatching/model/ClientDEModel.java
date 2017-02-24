@@ -3,6 +3,12 @@ package com.hserv.coordinatedentry.housingmatching.model;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.entity.HouseholdMembership;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
@@ -12,6 +18,8 @@ import com.servinglynk.hmis.warehouse.core.model.Parameter;
 import com.servinglynk.hmis.warehouse.core.model.Parameters;
 
 public class ClientDEModel {
+	
+	String momAndNumberOfKids ="( ?[ relationshipToHeadOfHousehold!=null && relationshipToHeadOfHousehold.toLowerCase().contains('child')]).size() ";
 	
 	private Integer veteranStatus;
 	private Integer gender;
@@ -114,7 +122,7 @@ public class ClientDEModel {
 		}
 	}
 	
-	public void populateValues(List<HouseholdMembership> members,String trustedAppId,String sessionToken,Parameters parameters){
+	public void populateValues(List<HouseholdMembership> members,String trustedAppId,String sessionToken,Parameters parameters,BaseClient baseClient){
 		for(HouseholdMembership membership : members){
 			BaseClient client =	eligibleClientService.getClientInfo(membership.getGlobalClientId(), trustedAppId, sessionToken);
 				if(client!=null && client.getDob()!=null) 
@@ -124,5 +132,33 @@ public class ClientDEModel {
 						 	break;
 					 }
 		}
+			
+		if(baseClient.getGender()==0){
+			Object kidscount = this.evaluvateExpression(members, momAndNumberOfKids);
+			if(kidscount!=null && ((members.size()-1) == Integer.parseInt(kidscount+"") )){
+				parameters.addParameter(new Parameter("momAndNumberOfKids", Integer.parseInt(kidscount+"")));
+			}else{
+				parameters.addParameter(new Parameter("momAndNumberOfKids", null));
+			}
+
+		}else{
+			parameters.addParameter(new Parameter("momAndNumberOfKids", null));
+		}				
+		
 	}
+	
+	
+	public Object evaluvateExpression( Object dataObject, String expr){
+		try{
+			EvaluationContext context = new StandardEvaluationContext(dataObject);
+			ExpressionParser parser = new SpelExpressionParser();
+	
+			Expression expression = parser.parseExpression(expr);
+			return expression.getValue(context);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 }

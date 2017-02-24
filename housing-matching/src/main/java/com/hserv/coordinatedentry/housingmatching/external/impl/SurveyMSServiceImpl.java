@@ -117,10 +117,10 @@ public class SurveyMSServiceImpl implements SurveyMSService {
 		criteria.createAlias("surveyEntity", "surveyEntity");
 		criteria.add(Restrictions.eq("clientId", clientId));
 		criteria.add(Restrictions.eq("surveyEntity.id", surveyId));
-		criteria.addOrder(Order.asc("createdAt"));
+		criteria.addOrder(Order.asc("effectiveDate"));
 		Criteria eCriteria = criteria.getExecutableCriteria(session);
 		List<ResponseEntity> entities = eCriteria.list();
-		if(!entities.isEmpty()) return entities.get(0).getCreatedAt();
+		if(!entities.isEmpty()) return entities.get(0).getEffectiveDate();
 		return null;
 	}
 

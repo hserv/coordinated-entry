@@ -10,6 +10,7 @@ public class ResponseConverter {
        entity.setRefused(model.isRefused());
        entity.setResponseText(model.getResponseText());
        entity.setAppId(model.getAppId());
+       entity.setEffectiveDate(model.getEffectiveDate());
 //       entity.setClientId(model.getClientId());
        return entity;    
    }
@@ -27,6 +28,7 @@ public class ResponseConverter {
        model.setClientId(entity.getClientId());
        model.setSurveyId(entity.getSurveyEntity().getId());
        model.setSubmissionId(entity.getSubmissionId());
+       model.setEffectiveDate(entity.getEffectiveDate());
        return model;
    }
 

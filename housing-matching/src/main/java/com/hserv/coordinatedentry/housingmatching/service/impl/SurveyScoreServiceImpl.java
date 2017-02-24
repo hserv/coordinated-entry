@@ -115,7 +115,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Override
 	@Transactional
 	@Async
-	public void calculateScore(Session session) throws Exception {
+	public void calculateScore(Session session) {
 		try{
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
 		
@@ -126,10 +126,11 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		for(ClientSurveyScore clientSurveyScore : surveyResponseModel.getClientsSurveyScores()){
 			EligibleClient eligibleClient = eligibleClientsRepository.findOne(clientSurveyScore.getClientId());
 			if(eligibleClient==null || ( eligibleClient!=null &&  eligibleClient.getMatched() == false )){
-				System.out.println("Inside false block" + eligibleClient.getClientId() + " " +eligibleClient.getMatched());
+					if(eligibleClient==null){
 							eligibleClient = new EligibleClient();
 							eligibleClient.setMatched(false);
 							eligibleClient.setProjectGroupCode(clientSurveyScore.getProjectGroupCode());
+					}
 						eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 						LocalDateTime surveyDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
 						if(surveyDate!=null)eligibleClient.setSurveyDate(surveyDate);
@@ -167,12 +168,12 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			}
 			}
 			//eligibleClients.add(eligibleClient);
+		
 		}
+		batchProcessService.endBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), true);	
 		}catch (Exception e) {
 				e.printStackTrace();
-				throw e;
-		}finally {
-			batchProcessService.endBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), true);			
+				batchProcessService.endBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), false);			
 		}
 
 	}
