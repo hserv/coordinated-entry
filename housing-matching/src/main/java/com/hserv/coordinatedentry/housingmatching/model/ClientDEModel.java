@@ -19,7 +19,7 @@ import com.servinglynk.hmis.warehouse.core.model.Parameters;
 
 public class ClientDEModel {
 	
-	String momAndNumberOfKids ="( ?[ relationshipToHeadOfHousehold!=null && relationshipToHeadOfHousehold.toLowerCase().contains('child')]).size() ";
+	String momAndNumberOfKids ="( ?[ relationshipToHeadOfHousehold!=null && relationshipToHeadOfHousehold.equals('2')]).size() ";
 	
 	private Integer veteranStatus;
 	private Integer gender;
