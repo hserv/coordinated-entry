@@ -123,20 +123,22 @@ public class ClientDEModel {
 	}
 	
 	public void populateValues(List<HouseholdMembership> members,String trustedAppId,String sessionToken,Parameters parameters,BaseClient baseClient){
+	
+		Integer childCount =0 ;
 		for(HouseholdMembership membership : members){
 			BaseClient client =	eligibleClientService.getClientInfo(membership.getGlobalClientId(), trustedAppId, sessionToken);
 				if(client!=null && client.getDob()!=null) 
 					 if(DateUtil.calculateAge(client.getDob())  < 18){
-							parameters.addParameter(new Parameter("servesHouseholdWithChildren", true));
-//						 	this.setServesHouseholdWithChildren(true);
-						 	break;
+						 	childCount++;
 					 }
+		}
+		if(childCount>0){
+			parameters.addParameter(new Parameter("servesHouseholdWithChildren", true));
 		}
 			
 		if(baseClient.getGender()==0){
-			Object kidscount = this.evaluvateExpression(members, momAndNumberOfKids);
-			if(kidscount!=null && ((members.size()-1) == Integer.parseInt(kidscount+"") )){
-				parameters.addParameter(new Parameter("momAndNumberOfKids", Integer.parseInt(kidscount+"")));
+			if(childCount!=0 && ((members.size()-1) == childCount)){
+				parameters.addParameter(new Parameter("momAndNumberOfKids",childCount));
 			}else{
 				parameters.addParameter(new Parameter("momAndNumberOfKids", null));
 			}
