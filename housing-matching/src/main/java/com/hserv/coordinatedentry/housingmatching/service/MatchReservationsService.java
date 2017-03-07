@@ -7,8 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
+import com.hserv.coordinatedentry.housingmatching.entity.StatusNotesEntity;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchStatusModel;
+import com.hserv.coordinatedentry.housingmatching.model.NoteModel;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 public interface MatchReservationsService {
@@ -32,10 +34,14 @@ public interface MatchReservationsService {
 	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel);
 	
 	
-	public void updateMatchStatus(UUID clientId,MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception;
+	public void updateMatchStatus(UUID reservationID,UUID clientId,MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception;
 	
-	List<MatchStatusModel> getMatchStatusHistory(UUID clientId,String projectGroupCode) throws Exception;
+	List<MatchStatusModel> getMatchStatusHistory(UUID reservationId,String projectGroupCode) throws Exception;
 	
 	
 	void matchingProcess(Integer maxClients, Session session , String trustedAppId, UUID processId);
+	void addStatusNote(UUID reservationId,Integer statusCode,NoteModel noteModel) throws Exception;
+	void deleteNote(UUID nodeId) throws Exception;
+
+	public Page<StatusNotesEntity> getStatusNote(UUID resevationId, Integer statuscode,Pageable pageable);
  }

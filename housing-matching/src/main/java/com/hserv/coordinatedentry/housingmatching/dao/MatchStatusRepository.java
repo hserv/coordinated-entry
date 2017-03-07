@@ -15,5 +15,9 @@ public interface MatchStatusRepository extends JpaRepository<MatchStatus, Serial
   List<MatchStatus> findByClientId(UUID clientId);
   
   List<MatchStatus> findByClientIdOrderByDateCreatedDesc(UUID clientId);
-	
+
+  List<MatchStatus> findByReservationIdAndStatus(UUID reservationId, Integer statusCode);
+
+List<MatchStatus> findByReservationId(UUID reservationId);
+ 	
 }

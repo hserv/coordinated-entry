@@ -37,6 +37,10 @@ public class MatchStatus extends BaseEntity {
 	
 	@Column(name="active")
 	private boolean active;
+	
+	@Column(name="reservation_id")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID reservationId;
 
 	public UUID getId() {
 		return id;
@@ -73,5 +77,11 @@ public class MatchStatus extends BaseEntity {
 	}
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	public UUID getReservationId() {
+		return reservationId;
+	}
+	public void setReservationId(UUID reservationId) {
+		this.reservationId = reservationId;
 	}
 }

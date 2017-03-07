@@ -1,8 +1,11 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.servinglynk.hmis.warehouse.core.model.Recipients;
@@ -26,6 +29,12 @@ public class MatchStatusModel {
 	private LocalDateTime dateUpdated;
 	private String userId;
 	private String statusCode;
+	
+	@JsonProperty("note")
+	private NoteModel noteModel;
+	
+	@JsonProperty("notes")
+	private List<NoteModel> noteModels = new ArrayList<NoteModel>();
 
 	public UUID getId() {
 		return id;
@@ -92,5 +101,17 @@ public class MatchStatusModel {
 	}
 	public void setStatusDescription(String statusDescription) {
 		this.statusDescription = statusDescription;
+	}
+	public NoteModel getNoteModel() {
+		return noteModel;
+	}
+	public void setNoteModel(NoteModel noteModel) {
+		this.noteModel = noteModel;
+	}
+	public List<NoteModel> getNoteModels() {
+		return noteModels;
+	}
+	public void setNoteModels(List<NoteModel> noteModels) {
+		this.noteModels = noteModels;
 	}
 }

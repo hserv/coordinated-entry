@@ -1,5 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
+import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,6 +35,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.entity.MatchStatus;
 import com.hserv.coordinatedentry.housingmatching.entity.MatchStatusLevels;
+import com.hserv.coordinatedentry.housingmatching.entity.StatusNotesEntity;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.external.NotificationService;
 import com.hserv.coordinatedentry.housingmatching.external.ProjectService;
@@ -40,6 +43,7 @@ import com.hserv.coordinatedentry.housingmatching.helper.InvalidMatchStatus;
 import com.hserv.coordinatedentry.housingmatching.model.ClientDEModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchStatusModel;
+import com.hserv.coordinatedentry.housingmatching.model.NoteModel;
 import com.hserv.coordinatedentry.housingmatching.service.BatchProcessService;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
@@ -171,11 +175,20 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 	
 	@Override
-	public void updateMatchStatus(UUID clientId, MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception {
-		EligibleClient client =	repositoryFactory.getEligibleClientsRepository().findOne(clientId);
-		List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client,false);
-		if(matches.isEmpty()) throw new ResourceNotFoundException("No match reservation found for this client");
-		Match match = matches.get(0);
+	public void updateMatchStatus(UUID reservationID,UUID clientId, MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception {
+		Match match = null;
+		EligibleClient client=null;
+		if(clientId!=null) {
+			 client =	repositoryFactory.getEligibleClientsRepository().findOne(clientId);
+			List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client,false);
+			if(matches.isEmpty()) throw new ResourceNotFoundException("No match reservation found for this client");
+			match = matches.get(0);
+		}
+		if(reservationID!=null){
+				match = repositoryFactory.getMatchReservationsRepository().findOne(reservationID);
+				if(match==null)  throw new ResourceNotFoundException("No match reservation found");
+				client = match.getEligibleClient();
+		}
 		List<MatchStatusLevels> nextLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(match.getProgramType(), match.getMatchStatus()+"");
 		
 		
@@ -193,6 +206,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		if(!statusModel.getRecipients().getToRecipients().isEmpty())
 			matchStatus.setRecipients(statusModel.getRecipients().toJSONString());
 		matchStatus.setClientId(clientId);
+		matchStatus.setReservationId(match.getReservationId());
 		repositoryFactory.getMatchStatusRepository().save(matchStatus);
 
 		if(statusModel.getStatus() == 10) {
@@ -205,7 +219,13 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		
 		match.setMatchStatus(statusModel.getStatus());
 		repositoryFactory.getMatchReservationsRepository().save(match);
-		
+		if(statusModel.getNoteModel()!=null && ( statusModel.getNoteModel().getNote()!=null && !statusModel.getNoteModel().getNote().isEmpty()) ){
+			StatusNotesEntity statusNote = new StatusNotesEntity();
+			statusNote.setNotes(statusModel.getNoteModel().getNote());
+			statusNote.setStatusId(matchStatus.getId());
+			repositoryFactory.getStatusNotesRepository().save(statusNote);
+		}
+				
 		client.setStatus(match.getMatchStatus());
 		repositoryFactory.getEligibleClientsRepository().save(client);
 		
@@ -215,9 +235,9 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			notificationService.notifyStatusUpdate(match, statusModel.getRecipients(),session,trustedApp);
 	}
 	
-	public List<MatchStatusModel> getMatchStatusHistory(UUID clientId,String projectGroupCode) throws Exception {
+	public List<MatchStatusModel> getMatchStatusHistory(UUID reservationId,String projectGroupCode) throws Exception {
 		List<MatchStatusModel> history = new ArrayList<MatchStatusModel>();
-		List<MatchStatus> statusHistory = repositoryFactory.getMatchStatusRepository().findByClientIdOrderByDateCreatedDesc(clientId);
+		List<MatchStatus> statusHistory = repositoryFactory.getMatchStatusRepository().findByReservationId(reservationId);
 		for(MatchStatus matchStatus : statusHistory){
 			MatchStatusModel matchStatusModel = new MatchStatusModel();
 			BeanUtils.copyProperties(matchStatus, matchStatusModel,"recipients");
@@ -227,10 +247,49 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			//matchStatusModel.setStatusCode(MatchStatusUpdateEnum.lookupEnum(matchStatus.getStatus()+"").getValue());
 		//	if(matchStatus.getRecipients()!=null)
 		//			matchStatusModel.setRecipients(objectMapper.readValue(matchStatus.getRecipients(), Recipients.class));
+			
+		/*	List<StatusNotesEntity> notes = repositoryFactory.getStatusNotesRepository().findByStatusIdAndDeletedOrderByDateCreatedDesc(matchStatusModel.getId(),false);
+			for(StatusNotesEntity entity : notes ){
+				NoteModel model = new NoteModel();
+				model.setNote(entity.getNotes());
+				model.setNoteDate(entity.getDateCreated());
+				model.setNoteId(entity.getId());
+				model.setUserId(entity.getUserId());
+				matchStatusModel.getNoteModels().add(model);
+			}*/
 			history.add(matchStatusModel);
 			
 		}
 		return history;
+	}
+	
+	public void addStatusNote(UUID reservationId,Integer statusCode,NoteModel noteModel) throws Exception{
+		String projectGroupCode = SecurityContextUtil.getUserProjectGroup(); 
+		
+		List<MatchStatus> statusHistory = repositoryFactory.getMatchStatusRepository().findByReservationIdAndStatus(reservationId,statusCode);
+		
+		if(statusHistory.isEmpty()) throw new AccessDeniedException("Access denide");
+		
+		StatusNotesEntity note = new StatusNotesEntity();
+		note.setNotes(noteModel.getNote());
+		note.setStatusId(statusHistory.get(0).getId());
+		note.setDateCreated(LocalDateTime.now());
+		note.setDateUpdated(LocalDateTime.now());
+		note.setProjectGroupCode(projectGroupCode);
+		note.setUserId(SecurityContextUtil.getUserAccount().getAccountId());
+		repositoryFactory.getStatusNotesRepository().save(note);
+	}
+	
+	public void deleteNote(UUID nodeId) throws Exception {		
+	    StatusNotesEntity entity = repositoryFactory.getStatusNotesRepository().findOne(nodeId);
+	    repositoryFactory.getStatusNotesRepository().delete(entity);
+	}
+	
+	public Page<StatusNotesEntity> getStatusNote(UUID reservationId, Integer statuscode,Pageable pageable){
+		List<MatchStatus> statusHistory = repositoryFactory.getMatchStatusRepository().findByReservationIdAndStatus(reservationId,statuscode);
+		if(statusHistory.isEmpty()) throw new ResourceNotFoundException("Status not found");
+		Page<StatusNotesEntity> entities = repositoryFactory.getStatusNotesRepository().findByStatusIdAndDeletedOrderByDateCreatedDesc(statusHistory.get(0).getId(), false,pageable);
+		return entities;
 	}
 	
 	public MatchStatusModel getMatchStatusById(UUID id) throws Exception {
@@ -339,6 +398,12 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		match.setProcessId(processId);
 		match.setProgramType(projectGroupCode);
 		repositoryFactory.getMatchReservationsRepository().save(match);
+		MatchStatus status = new MatchStatus();
+		status.setComments("Housing unit assigned through match process");
+		status.setStatus(0);
+		status.setReservationId(match.getReservationId());
+		status.setClientId(client.getClientId());
+		repositoryFactory.getMatchStatusRepository().save(status);
 		client.setMatched(true);
 		repositoryFactory.getEligibleClientsRepository().save(client);
 		housingInventory.setVacant(false);

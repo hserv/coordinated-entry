@@ -17,6 +17,7 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 	@Autowired private MatchStatuLevelsRepository matchStatuLevelsRepository;
 	@Autowired private BatchProcessRepository batchProcessRepository;
 	@Autowired private MatchStatusRemarksRepository matchStatusRemarksRepository;
+	@Autowired private StatusNotesRepository statusNotesRepository;
 	
 	
 	public EligibilityRequirementRepository getEligibilityRequirementRepository() {
@@ -78,5 +79,11 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 	}
 	public void setMatchStatusRemarksRepository(MatchStatusRemarksRepository matchStatusRemarksRepository) {
 		this.matchStatusRemarksRepository = matchStatusRemarksRepository;
-	}	
+	}
+	public StatusNotesRepository getStatusNotesRepository() {
+		return statusNotesRepository;
+	}
+	public void setStatusNotesRepository(StatusNotesRepository statusNotesRepository) {
+		this.statusNotesRepository = statusNotesRepository;
+	}
 }

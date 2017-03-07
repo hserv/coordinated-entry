@@ -44,7 +44,7 @@ public class MatchStatusRemarksController extends BaseController {
 		}
 	}	
 	
-	@RequestMapping(method=RequestMethod.GET,value="/{statusCode}/remarks")
+	@RequestMapping(method=RequestMethod.GET,value="/{statusCode}/reasons")
 	@APIMapping(value="UPDATE_MATCH_STATUS")
 	public ResponseEntity<Resources<Resource>> getStatusRemarks(
 			@PathVariable("statusCode") Long statusCode,

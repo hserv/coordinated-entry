@@ -12,4 +12,5 @@ public interface RepositoryFactory {
 	MatchStatuLevelsRepository getMatchStatuLevelsRepository();
 	BatchProcessRepository getBatchProcessRepository();
 	MatchStatusRemarksRepository getMatchStatusRemarksRepository();
+	StatusNotesRepository getStatusNotesRepository();
 }

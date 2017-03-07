@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
@@ -36,11 +37,13 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
+import com.hserv.coordinatedentry.housingmatching.entity.StatusNotesEntity;
 import com.hserv.coordinatedentry.housingmatching.external.HousingUnitService;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.BatchProcessModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchReservationModel;
 import com.hserv.coordinatedentry.housingmatching.model.MatchStatusModel;
+import com.hserv.coordinatedentry.housingmatching.model.NoteModel;
 import com.hserv.coordinatedentry.housingmatching.service.BatchProcessService;
 import com.hserv.coordinatedentry.housingmatching.service.MatchReservationsService;
 import com.hserv.coordinatedentry.housingmatching.translator.MatchReservationTranslator;
@@ -80,6 +83,25 @@ public class MatchController extends BaseController {
 			if(model.getEligibleClients().getLink()!=null)
 				links.add(new Link(model.getEligibleClients().getLink()).withRel("client"));
 			resource.add(links);
+			return resource;
+		}
+	}	
+	
+	
+	private ResourceAssembler<StatusNotesEntity, Resource<NoteModel>> statuNoteAssembler = new MatchController.StatusNotesAssembler();
+	
+	private class StatusNotesAssembler implements ResourceAssembler<StatusNotesEntity, Resource<NoteModel>> {
+
+		@Override
+		public Resource<NoteModel> toResource(StatusNotesEntity entity) {
+				NoteModel model = new NoteModel();
+				model.setNote(entity.getNotes());
+				model.setNoteDate(entity.getDateCreated());
+				model.setNoteId(entity.getId());
+				model.setUserId(entity.getUserId());
+				
+				Resource<NoteModel> resource = new Resource<NoteModel>(model);
+				
 			return resource;
 		}
 	}	
@@ -204,13 +226,41 @@ public class MatchController extends BaseController {
 	public void updateMatchStatus(@PathVariable("id") UUID clientId,@RequestBody MatchStatusModel matchStatusModel,HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
 		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
-		matchReservationsService.updateMatchStatus(clientId, matchStatusModel,session.getAccount().getUsername(),session,trustedAppId);
+		matchReservationsService.updateMatchStatus(null,clientId,matchStatusModel,session.getAccount().getUsername(),session,trustedAppId);
 	}
 	
-	@RequestMapping(value="/client/{id}/status",method=RequestMethod.GET)
-	@APIMapping(value="GET_MATCH_STATUS_UPDATES")
-	public List<MatchStatusModel> getMatchStatusDtls(@PathVariable("id") UUID clientId,HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/{reservationId}/statuses",method=RequestMethod.PUT)
+	@APIMapping(value="UPDATE_MATCH_STATUS")
+	public void updateMatchStatusByReservationId(@PathVariable("reservationId") UUID reservationId,@RequestBody MatchStatusModel matchStatusModel,HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
-		return	matchReservationsService.getMatchStatusHistory(clientId,session.getAccount().getProjectGroup().getProjectGroupCode());
+		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
+		matchReservationsService.updateMatchStatus(reservationId,null, matchStatusModel,session.getAccount().getUsername(),session,trustedAppId);
+	}
+	
+	@RequestMapping(value="/{reservationId}/statuses",method=RequestMethod.GET)
+	@APIMapping(value="GET_MATCH_STATUS_UPDATES")
+	public List<MatchStatusModel> getMatchStatusDtls(@PathVariable("reservationId") UUID reservationId,HttpServletRequest request) throws Exception {
+		Session session = sessionHelper.getSession(request);
+		return	matchReservationsService.getMatchStatusHistory(reservationId,session.getAccount().getProjectGroup().getProjectGroupCode());
+	}
+	
+	@RequestMapping(value="/{reservationId}/statuses/{statuscode}/notes",method=RequestMethod.POST)
+	@APIMapping(value="GET_MATCH_STATUS_UPDATES")
+	public void addNotes(@PathVariable("reservationId") UUID reservationId,@PathVariable("statuscode") Integer statuscode,@RequestBody NoteModel noteModel) throws Exception {
+		matchReservationsService.addStatusNote(reservationId,statuscode,noteModel);
+	}
+	
+	@RequestMapping(value="/{resevationId}/statuses/{statuscode}/notes",method=RequestMethod.GET)
+	@APIMapping(value="GET_MATCH_STATUS_UPDATES")
+	public ResponseEntity<Resources<Resource>> getNotes(@PathVariable("resevationId") UUID resevationId,@PathVariable("statuscode")  Integer statuscode,
+			@PageableDefault(size=50) Pageable pageable) throws Exception {
+		 return new ResponseEntity<>(assembler.toResource(matchReservationsService.getStatusNote(resevationId,statuscode,pageable), statuNoteAssembler),
+					HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/{resevationId}/statuses/{statuscode}/notes/{noteid}",method=RequestMethod.DELETE)
+	@APIMapping(value="GET_MATCH_STATUS_UPDATES")
+	public void deleteNote(@PathVariable("resevationId") UUID resevationId,@PathVariable("statuscode")  Integer statuscode, @PathVariable("noteid") UUID noteid) throws Exception {
+		matchReservationsService.deleteNote(noteid);
 	}
 }
