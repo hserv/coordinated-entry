@@ -229,6 +229,14 @@ public class MatchController extends BaseController {
 		matchReservationsService.updateMatchStatus(null,clientId,matchStatusModel,session.getAccount().getUsername(),session,trustedAppId);
 	}
 	
+	@RequestMapping(value="/client/{id}/status",method=RequestMethod.GET)
+	@APIMapping(value="UPDATE_MATCH_STATUS")
+	public void getMatchStatus(@PathVariable("id") UUID clientId,HttpServletRequest request) throws Exception {
+		Session session = sessionHelper.getSession(request);
+		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
+		matchReservationsService.getMatchStatusHistory(null,clientId,session.getAccount().getProjectGroup().getProjectGroupCode());
+	}
+	
 	@RequestMapping(value="/{reservationId}/statuses",method=RequestMethod.PUT)
 	@APIMapping(value="UPDATE_MATCH_STATUS")
 	public void updateMatchStatusByReservationId(@PathVariable("reservationId") UUID reservationId,@RequestBody MatchStatusModel matchStatusModel,HttpServletRequest request) throws Exception {
@@ -241,7 +249,7 @@ public class MatchController extends BaseController {
 	@APIMapping(value="GET_MATCH_STATUS_UPDATES")
 	public List<MatchStatusModel> getMatchStatusDtls(@PathVariable("reservationId") UUID reservationId,HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
-		return	matchReservationsService.getMatchStatusHistory(reservationId,session.getAccount().getProjectGroup().getProjectGroupCode());
+		return	matchReservationsService.getMatchStatusHistory(reservationId,null,session.getAccount().getProjectGroup().getProjectGroupCode());
 	}
 	
 	@RequestMapping(value="/{reservationId}/statuses/{statuscode}/notes",method=RequestMethod.POST)

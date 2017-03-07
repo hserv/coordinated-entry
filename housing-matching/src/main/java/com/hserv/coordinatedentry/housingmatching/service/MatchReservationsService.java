@@ -36,7 +36,7 @@ public interface MatchReservationsService {
 	
 	public void updateMatchStatus(UUID reservationID,UUID clientId,MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception;
 	
-	List<MatchStatusModel> getMatchStatusHistory(UUID reservationId,String projectGroupCode) throws Exception;
+	List<MatchStatusModel> getMatchStatusHistory(UUID reservationId,UUID clientId,String projectGroupCode) throws Exception;
 	
 	
 	void matchingProcess(Integer maxClients, Session session , String trustedAppId, UUID processId);

@@ -235,10 +235,18 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			notificationService.notifyStatusUpdate(match, statusModel.getRecipients(),session,trustedApp);
 	}
 	
-	public List<MatchStatusModel> getMatchStatusHistory(UUID reservationId,String projectGroupCode) throws Exception {
+	public List<MatchStatusModel> getMatchStatusHistory(UUID reservationId,UUID clientId,String projectGroupCode) throws Exception {
 		List<MatchStatusModel> history = new ArrayList<MatchStatusModel>();
-		List<MatchStatus> statusHistory = repositoryFactory.getMatchStatusRepository().findByReservationId(reservationId);
-		for(MatchStatus matchStatus : statusHistory){
+		List<MatchStatus> statusHistory = null; 
+		if(reservationId!=null)
+			statusHistory =	repositoryFactory.getMatchStatusRepository().findByReservationId(reservationId);
+		if(clientId!=null){
+			EligibleClient client =	repositoryFactory.getEligibleClientsRepository().findOne(clientId);
+			List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client, false);
+			if(!matchs.isEmpty()) { statusHistory =	repositoryFactory.getMatchStatusRepository().findByReservationId(matchs.get(0).getReservationId()); }
+			else { statusHistory = new ArrayList<MatchStatus>(); }
+		}
+		for(MatchStatus matchStatus : statusHistory){			
 			MatchStatusModel matchStatusModel = new MatchStatusModel();
 			BeanUtils.copyProperties(matchStatus, matchStatusModel,"recipients");
 			List<MatchStatusLevels> matchStatusLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(projectGroupCode,(matchStatus.getStatus()+""));
