@@ -241,10 +241,15 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		if(reservationId!=null)
 			statusHistory =	repositoryFactory.getMatchStatusRepository().findByReservationId(reservationId);
 		if(clientId!=null){
+			
 			EligibleClient client =	repositoryFactory.getEligibleClientsRepository().findOne(clientId);
 			List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client, false);
-			if(!matchs.isEmpty()) { statusHistory =	repositoryFactory.getMatchStatusRepository().findByReservationId(matchs.get(0).getReservationId()); }
-			else { statusHistory = new ArrayList<MatchStatus>(); }
+			if(!matchs.isEmpty()) { 
+				statusHistory =	repositoryFactory.getMatchStatusRepository().findByReservationId(matchs.get(0).getReservationId());
+			}
+			else { 
+				statusHistory = new ArrayList<MatchStatus>(); 
+			}
 		}
 		for(MatchStatus matchStatus : statusHistory){			
 			MatchStatusModel matchStatusModel = new MatchStatusModel();
@@ -266,7 +271,6 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 				matchStatusModel.getNoteModels().add(model);
 			}*/
 			history.add(matchStatusModel);
-			
 		}
 		return history;
 	}

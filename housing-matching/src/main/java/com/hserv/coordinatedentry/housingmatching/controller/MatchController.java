@@ -231,10 +231,10 @@ public class MatchController extends BaseController {
 	
 	@RequestMapping(value="/client/{id}/status",method=RequestMethod.GET)
 	@APIMapping(value="UPDATE_MATCH_STATUS")
-	public void getMatchStatus(@PathVariable("id") UUID clientId,HttpServletRequest request) throws Exception {
+	public List<MatchStatusModel> getMatchStatus(@PathVariable("id") UUID clientId,HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
 		String trustedAppId = trustedAppHelper.retrieveTrustedAppId(request);
-		matchReservationsService.getMatchStatusHistory(null,clientId,session.getAccount().getProjectGroup().getProjectGroupCode());
+		return matchReservationsService.getMatchStatusHistory(null,clientId,session.getAccount().getProjectGroup().getProjectGroupCode());
 	}
 	
 	@RequestMapping(value="/{reservationId}/statuses",method=RequestMethod.PUT)
