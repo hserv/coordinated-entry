@@ -37,7 +37,7 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 	BatchProcessTranslator batchProcessTranslator;
 	
 	
-	public void  startScoresBatch(String projectGroup,String user){
+	public UUID  startScoresBatch(String projectGroup,String user){
 		try{
 			BatchProcessEntity batchProcessEntity = new BatchProcessEntity();
 			batchProcessEntity.setInitiateBy(user);
@@ -46,11 +46,11 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 			batchProcessEntity.setStartedAt(LocalDateTime.now());
 			batchProcessEntity.setIsProcessing(1L);
 			repositoryFactory.getBatchProcessRepository().save(batchProcessEntity);
+			System.out.println("Batch process record created   "+batchProcessEntity.getId());
+			return batchProcessEntity.getId();
 		}catch (Exception e) {
 			throw new ProcessAlreadyRunningException(); 
 		}
-		
-			System.out.println("Batch process record created");
 	}
 	
 	public UUID startMatchBatch(String projectGroup,String user){
@@ -75,10 +75,8 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 		repositoryFactory.getBatchProcessRepository().save(entity);
 	}
 	
-	public void endBatch(String projectGroup,Boolean success){
-		List<BatchProcessEntity> entities = repositoryFactory.getBatchProcessRepository().findByProjectGroupCodeAndStatus(projectGroup, Constants.BATCH_STATUS_INPROGRESS);
-		if(!entities.isEmpty()){
-			BatchProcessEntity batchProcessEntity = entities.get(0);
+	public void endBatch(UUID processId,Boolean success){
+		BatchProcessEntity batchProcessEntity = repositoryFactory.getBatchProcessRepository().findOne(processId);
 			if(success)
 				batchProcessEntity.setStatus(Constants.BATCH_STATUS_COMPLETED);
 			else
@@ -87,7 +85,6 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 			batchProcessEntity.setIsProcessing(null);
 			repositoryFactory.getBatchProcessRepository().save(batchProcessEntity);
 			System.out.println("Batch process record updated");
-		}
 	}
 	
 	

@@ -115,7 +115,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Override
 	@Transactional
 	@Async
-	public void calculateScore(Session session) {
+	public void calculateScore(Session session,UUID processId) {
 		try{
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
 		
@@ -170,10 +170,10 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 			//eligibleClients.add(eligibleClient);
 		
 		}
-		batchProcessService.endBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), true);	
+		batchProcessService.endBatch(processId, true);	
 		}catch (Exception e) {
 				e.printStackTrace();
-				batchProcessService.endBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), false);			
+				batchProcessService.endBatch(processId, false);			
 		}
 
 	}

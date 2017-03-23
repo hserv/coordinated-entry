@@ -14,9 +14,9 @@ public interface BatchProcessService {
 	
 	Page<BatchProcessEntity> getScoreStatusHistory(String projectGroup,Pageable pageable);
 	
-	void startScoresBatch(String projectGroup,String user);
+	UUID startScoresBatch(String projectGroup,String user);
 	
-	void endBatch(String projectGroup,Boolean success);
+	void endBatch(UUID processId,Boolean success);
 	UUID startMatchBatch(String projectGroup,String user);
 	
 	void endBatch(UUID batchId);
