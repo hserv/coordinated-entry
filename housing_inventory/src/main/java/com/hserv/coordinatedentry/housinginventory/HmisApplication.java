@@ -50,7 +50,7 @@ public class HmisApplication extends SpringBootServletInitializer {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		
 		dataSource.setDriverClassName("org.postgresql.Driver");
-		dataSource.setUrl("jdbc:postgresql://hmis-multischema-db.ct16elltavnx.us-west-2.rds.amazonaws.com:5432/hmis");
+		dataSource.setUrl("jdbc:postgresql://hmis-v2-db.ct16elltavnx.us-west-2.rds.amazonaws.com:5432/hmis");
 		dataSource.setUsername("hmisdb1");
 		dataSource.setPassword("hmisdb1234");
 		
