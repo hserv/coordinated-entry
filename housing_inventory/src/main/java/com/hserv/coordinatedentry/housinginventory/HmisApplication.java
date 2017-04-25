@@ -43,18 +43,4 @@ public class HmisApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(HmisApplication.class, args);
 	}
-	
-/*	@Bean
-	public DataSource dataSource() {
-
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		
-		dataSource.setDriverClassName("org.postgresql.Driver");
-		dataSource.setUrl("jdbc:postgresql://hmis-v2-db.ct16elltavnx.us-west-2.rds.amazonaws.com:5432/hmis");
-		dataSource.setUsername("hmisdb1");
-		dataSource.setPassword("#SERVINGLYNK#2016%s3cur3");
-		
-		return dataSource;
-	}
-*/
 }
