@@ -245,7 +245,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		HttpEntity entity = new HttpEntity(headers);
 
 		StringBuffer URI = new StringBuffer(
-				"http://52.38.189.237:8080/hmis-globalapi/rest/clients/" + clientId+"/dataelements");
+				"http://hmiselb.aws.hmislynk.com/hmis-globalapi/rest/clients/" + clientId+"/dataelements");
 	
 		ResponseEntity<String> response = restTemplate.exchange(URI.toString(), HttpMethod.GET, entity, String.class);
 		JSONObjectMapper mapper = new JSONObjectMapper();
