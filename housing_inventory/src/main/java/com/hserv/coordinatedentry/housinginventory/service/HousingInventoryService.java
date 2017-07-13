@@ -1,4 +1,5 @@
 package com.hserv.coordinatedentry.housinginventory.service;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Component
 public class HousingInventoryService  {
@@ -43,10 +45,16 @@ public class HousingInventoryService  {
 	
 	 
 	 @Transactional
-	 public HousingInventory saveHousingInventory(HousingInventory housingInventory) {
+	 public HousingInventory saveHousingInventory(HousingInventory housingInventory,Session  session) {
 		    HousingUnitAddress address=housingInventory.getHousingUnitAddress();
+		    housingInventory.setDateCreated(LocalDateTime.now());
+		    housingInventory.setDateUpdated(LocalDateTime.now());
+		    housingInventory.setUserId(session.getAccount().getAccountId());
 			housingInventory=housingInventoryRepository.save(housingInventory);
 			if(address!=null){
+				address.setDateCreated(LocalDateTime.now());
+			    address.setDateUpdated(LocalDateTime.now());
+			    address.setUserId(session.getAccount().getAccountId());
 				address.setHousingInventory(housingInventory);
 				HousingUnitAddressRepository.save(address);
 			}
@@ -55,7 +63,7 @@ public class HousingInventoryService  {
 	
 	 
 	 @Transactional
-	 public List<HousingInventory> saveHousingInventories(List<HousingInventory> housingInventories) {
+	 public List<HousingInventory> saveHousingInventories(List<HousingInventory> housingInventories,Session session) {
           for(HousingInventory housingInventory: housingInventories){ 
 		    HousingUnitAddress address= housingInventory.getHousingUnitAddress();
 		    housingInventory= housingInventoryRepository.save(housingInventory);
@@ -63,6 +71,7 @@ public class HousingInventoryService  {
 			address.setAddressId(UUID.randomUUID());
 			address.setDateCreated((new Date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 			address.setDateUpdated((new Date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+			address.setUserId(session.getAccount().getAccountId());
             address.setHousingInventory(housingInventory);
             HousingUnitAddressRepository.save(address);
           }
@@ -72,10 +81,12 @@ public class HousingInventoryService  {
 
 	
 	@Transactional
-	public List<HousingInventory> updateHousingInentories(List<HousingInventory> housingInventories) {
+	public List<HousingInventory> updateHousingInentories(List<HousingInventory> housingInventories,Session session) {
 			for(HousingInventory housingInventory : housingInventories){
 				HousingInventory unit = housingInventoryRepository.findOne(housingInventory.getHousingInventoryId());
 				BeanUtils.copyProperties(housingInventory, unit, "dateCreated");
+				unit.setDateUpdated((new Date()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+				unit.setUserId(session.getAccount().getAccountId());
 				housingInventoryRepository.save(unit);				
 			}
 		return housingInventories;

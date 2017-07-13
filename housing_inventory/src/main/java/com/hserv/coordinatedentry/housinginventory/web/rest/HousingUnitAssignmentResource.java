@@ -3,6 +3,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAssignment;
 import com.hserv.coordinatedentry.housinginventory.service.HousingUnitAssignmentService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @RestController
 @RequestMapping("/housing-units")
@@ -52,11 +55,13 @@ public class HousingUnitAssignmentResource extends BaseResource{
 	
 	@APIMapping(value="CREATE_ASSIGNMENT_BY_HOUSINGUNIT_ID")
 	@RequestMapping(value = "/{housingUnitId}/assignments",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE/*, produces = MediaType.APPLICATION_JSON_VALUE*/)
-	public ResponseEntity<List<HousingUnitAssignment>> createHousingUnitAssignment(@RequestBody List<HousingUnitAssignment> housingUnitAssignments, @PathVariable UUID housingUnitId )
+	public ResponseEntity<List<HousingUnitAssignment>> createHousingUnitAssignment(@RequestBody List<HousingUnitAssignment> housingUnitAssignments,
+			@PathVariable UUID housingUnitId,HttpServletRequest request )
 			throws URISyntaxException {
 		log.debug("REST request to save HousingUnitAssignment : {}");
+		Session session = sessionHelper.getSession(request);
 	
-		List<HousingUnitAssignment> result = housingUnitAssignmentService.saveHousingUnitAssignments(housingUnitAssignments,housingUnitId);
+		List<HousingUnitAssignment> result = housingUnitAssignmentService.saveHousingUnitAssignments(housingUnitAssignments,housingUnitId,session);
 		//HousingUnitAssignment result1 = housingUnitAssignmentService.saveHousingUnitAssignment(housingUnitAssignmentsList.get(0));
 		//result.add(result1);
 		return new ResponseEntity<List<HousingUnitAssignment>>(result,HttpStatus.OK); 
@@ -67,9 +72,11 @@ public class HousingUnitAssignmentResource extends BaseResource{
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE,
 	        consumes= MediaType.APPLICATION_JSON_VALUE)
-	    public ResponseEntity<List<HousingUnitAssignment>> updateHousingInventory(@RequestBody List<HousingUnitAssignment> housingUnitAssignments, @PathVariable UUID housingUnitId) throws URISyntaxException {
+	    public ResponseEntity<List<HousingUnitAssignment>> updateHousingInventory(@RequestBody List<HousingUnitAssignment> housingUnitAssignments,
+	    		@PathVariable UUID housingUnitId,HttpServletRequest request) throws URISyntaxException {
 	        log.debug("REST request to update HousingUnitAssignment : {}", housingUnitAssignments);
-	        List<HousingUnitAssignment> result = housingUnitAssignmentService.saveHousingUnitAssignments(housingUnitAssignments,housingUnitId);
+	        Session session = sessionHelper.getSession(request);
+	        List<HousingUnitAssignment> result = housingUnitAssignmentService.saveHousingUnitAssignments(housingUnitAssignments,housingUnitId,session);
 	        return new ResponseEntity<List<HousingUnitAssignment>>(result,HttpStatus.OK);
 	    }
 	

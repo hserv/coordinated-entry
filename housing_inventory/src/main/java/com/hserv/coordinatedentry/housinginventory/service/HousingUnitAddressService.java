@@ -1,5 +1,6 @@
 package com.hserv.coordinatedentry.housinginventory.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Component
 public class HousingUnitAddressService  {
@@ -26,13 +28,15 @@ public class HousingUnitAddressService  {
 	private HousingInventoryRepository housingInventoryRepository;
 	
 
-	 public HousingUnitAddress saveHousingUnitAddress(HousingUnitAddress housingUnitAddress) {
+	 public HousingUnitAddress saveHousingUnitAddress(HousingUnitAddress housingUnitAddress, Session session) {
 		 
 			String projectGroup = SecurityContextUtil.getUserProjectGroup();
 		 HousingInventory housingInventory = housingInventoryRepository.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(housingUnitAddress.getHousingInventory().getHousingInventoryId(),projectGroup,false);
 		 
 		 if(housingInventory==null) throw new ResourceNotFoundException("Housing unit not found "+housingUnitAddress.getHousingInventory().getHousingInventoryId());
-		 
+		 housingUnitAddress.setDateCreated(LocalDateTime.now());
+		 housingUnitAddress.setDateUpdated(LocalDateTime.now());
+		 housingUnitAddress.setUserId(session.getAccount().getAccountId());
 		 housingUnitAddress.setHousingInventory(housingInventory);
 		 housingUnitAddressRepository.save(housingUnitAddress);
 		

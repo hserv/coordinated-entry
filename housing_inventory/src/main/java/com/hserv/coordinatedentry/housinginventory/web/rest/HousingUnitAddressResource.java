@@ -3,6 +3,9 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -23,6 +26,7 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
 import com.hserv.coordinatedentry.housinginventory.service.HousingUnitAddressService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -52,9 +56,11 @@ public class HousingUnitAddressResource extends BaseResource{
 	
 	@APIMapping(value="CREATE_ADDRESSES")
 	@RequestMapping(value = "/{housingUnitId}/addresses",  method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE/*, produces = MediaType.APPLICATION_JSON_VALUE*/)
-	public ResponseEntity<HousingUnitAddress> createHousingUnitAddressByHousingUnitId(@RequestBody HousingUnitAddress housingUnitAddress, @PathVariable UUID housingUnitId)
+	public ResponseEntity<HousingUnitAddress> createHousingUnitAddressByHousingUnitId(@RequestBody HousingUnitAddress housingUnitAddress, 
+			@PathVariable UUID housingUnitId,HttpServletRequest request)
 			throws URISyntaxException {
 		// log.debug("REST request to save HousingUnitAddress : {}",
+		Session session = sessionHelper.getSession(request);
 		if (housingUnitAddress.getAddressId() != null) {
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("housingUnitAddress", "idexists",
 					"A new housingUnitAddress cannot already have an ID")).body(null);
@@ -62,7 +68,7 @@ public class HousingUnitAddressResource extends BaseResource{
 		HousingInventory housingInventory=new HousingInventory();
 		housingInventory.setHousingInventoryId(housingUnitId);
 		housingUnitAddress.setHousingInventory(housingInventory);
-		HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress);
+		HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress,session);
 		result.setHousingInventory(null);
 		return ResponseEntity
 				.created(new URI("/"+housingUnitId+"/addresses" + result.getAddressId())).headers(HeaderUtil
@@ -74,12 +80,14 @@ public class HousingUnitAddressResource extends BaseResource{
 	@RequestMapping(value = "/{housingUnitId}/addresses",
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
-	    public ResponseEntity<HousingUnitAddress> updateHousingAddress(@RequestBody HousingUnitAddress housingUnitAddress, @PathVariable UUID housingUnitId ) throws URISyntaxException {
+	    public ResponseEntity<HousingUnitAddress> updateHousingAddress(@RequestBody HousingUnitAddress housingUnitAddress,
+	    		@PathVariable UUID housingUnitId,HttpServletRequest request ) throws URISyntaxException {
 	        //log.debug("REST request to update HousingUnitAddress : {}", housingUnitAddress);
 			HousingInventory inventory = new HousingInventory();
 			inventory.setHousingInventoryId(housingUnitId);
 			housingUnitAddress.setHousingInventory(inventory);
-	        HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress);
+			Session session = sessionHelper.getSession(request);
+	        HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress,session);
 	        result.setHousingInventory(null);
 	        return ResponseEntity.ok()
 	            .headers(HeaderUtil.createEntityUpdateAlert("housingUnitAddress", housingUnitAddress.getAddressId().toString()))
@@ -104,8 +112,10 @@ public class HousingUnitAddressResource extends BaseResource{
 	@RequestMapping(value = "{housingUnitId}/addresses/{id}",
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
-	    public ResponseEntity<HousingUnitAddress> updateHousingUnitAddressById(@RequestBody HousingUnitAddress housingUnitAddress, @PathVariable UUID housingUnitId) throws URISyntaxException {
-	        HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress);
+	    public ResponseEntity<HousingUnitAddress> updateHousingUnitAddressById(@RequestBody HousingUnitAddress housingUnitAddress, 
+	    		@PathVariable UUID housingUnitId,HttpServletRequest request) throws URISyntaxException {
+		Session session = sessionHelper.getSession(request);   
+		HousingUnitAddress result = housingUnitAddressService.saveHousingUnitAddress(housingUnitAddress,session);
 	        return ResponseEntity.ok()
 	            .headers(HeaderUtil.createEntityUpdateAlert("housingUnitAddress", housingUnitAddress.getAddressId().toString()))
 	            .body(result);

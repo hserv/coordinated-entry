@@ -16,6 +16,7 @@ import com.servinglynk.hmis.warehouse.core.model.ClientSurveyScore;
 import com.servinglynk.hmis.warehouse.core.model.ClientsSurveyScores;
 import com.servinglynk.hmis.warehouse.core.model.SectionScore;
 import com.servinglynk.hmis.warehouse.core.model.SectionScores;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
@@ -60,14 +61,14 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 	}
 	
 	@Transactional
-	public void updateSectionScores(UUID clientId,UUID surveyId,UUID sectionId){
+	public void updateSectionScores(UUID clientId,UUID surveyId,UUID sectionId,String caller){
 		deleteSectionScores(clientId, surveyId, sectionId);
-		this.calculateSectionScore(surveyId, clientId);
+		this.calculateSectionScore(surveyId, clientId,caller);
 		
 	}
 	
 	@Transactional
-	public void calculateSectionScore(UUID surveyId,UUID clientid){
+	public void calculateSectionScore(UUID surveyId,UUID clientid,String  caller){
 			SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(surveyId);
 			if(surveyEntity ==null) throw new SurveyNotFoundException();
 			for(SurveySectionEntity sectionEntity :   surveyEntity.getSurveySectionEntities()){
@@ -82,6 +83,9 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 				scoreEntity.setSectionScore(score);
 				scoreEntity.setSurveyEntity(surveyEntity);
 				scoreEntity.setClientId(clientid);
+				scoreEntity.setCreatedAt(LocalDateTime.now());
+				scoreEntity.setUpdatedAt(LocalDateTime.now());
+				scoreEntity.setUser(caller);
 				daoFactory.getSectionScoreDao().createSectionScore(scoreEntity);
 			}
 			
@@ -118,7 +122,7 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 	}
 
 	@Transactional
-	public SectionScore createSectionScores(SectionScore sectionScore) {
+	public SectionScore createSectionScores(SectionScore sectionScore,Session session) {
 		SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(sectionScore.getSurveyId());
 		if(surveyEntity==null) throw new SurveyNotFoundException();
 		SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao().getSurveySectionEntityById(sectionScore.getSectionId());
@@ -134,6 +138,9 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 			sectionScoreEntity.setClientId(sectionScore.getClientId());
 			sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
 			sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
+			sectionScoreEntity.setCreatedAt(LocalDateTime.now());
+			sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
+			sectionScoreEntity.setUser(session.getAccount().getUsername());
 			daoFactory.getSectionScoreDao().updateSectionScore(sectionScoreEntity);
 		}else{
 			sectionScoreEntity = new SectionScoreEntity();
@@ -143,6 +150,8 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 			sectionScoreEntity.setClientId(sectionScore.getClientId());
 			sectionScoreEntity.setCreatedAt(LocalDateTime.now());
 			sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
+			sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
+			sectionScoreEntity.setUser(session.getAccount().getUsername());
 			daoFactory.getSectionScoreDao().createSectionScore(sectionScoreEntity);
 		}
 		
@@ -151,10 +160,12 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 	}
 
 	@Transactional
-	public void updateSectionScores(SectionScore sectionScore) {
+	public void updateSectionScores(SectionScore sectionScore,Session session) {
 		SectionScoreEntity sectionScoreEntity = daoFactory.getSectionScoreDao().getSectionScoreById(sectionScore.getSectionScoreId());
 		if(sectionScoreEntity==null) throw new SectionScoreNotFoundException();
 		sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
+		sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
+		sectionScoreEntity.setUser(session.getAccount().getUsername());
 		daoFactory.getSectionScoreDao().updateSectionScore(sectionScoreEntity);
 	}
 	

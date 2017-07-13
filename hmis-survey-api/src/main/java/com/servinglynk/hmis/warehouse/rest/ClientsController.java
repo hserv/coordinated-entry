@@ -181,7 +181,7 @@ public class ClientsController extends BaseController {
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
-		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, sectionid);
+		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, sectionid,session.getAccount().getUsername());
 	   }
 	   
 	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.POST)
@@ -197,7 +197,7 @@ public class ClientsController extends BaseController {
 		   sectionScore.setClientId(clientid);
 		   sectionScore.setSectionId(sectionid);
 		   sectionScore.setSurveyId(surveyid);
-		    serviceFactory.getSectionScoreService().createSectionScores(sectionScore);
+		    serviceFactory.getSectionScoreService().createSectionScores(sectionScore,session);
 		    SectionScore score = new SectionScore();
 		    score.setSectionScoreId(sectionScore.getSectionScoreId());
 		    score.setSectionScore(sectionScore.getSectionScore());
@@ -220,7 +220,7 @@ public class ClientsController extends BaseController {
 		   sectionScore.setSectionId(sectionid);
 		   sectionScore.setSurveyId(surveyid);
 		   sectionScore.setSectionScoreId(scoreid);
-		    serviceFactory.getSectionScoreService().updateSectionScores(sectionScore);
+		    serviceFactory.getSectionScoreService().updateSectionScores(sectionScore,session);
 	   }
 	   
 	   
@@ -268,7 +268,7 @@ public class ClientsController extends BaseController {
            Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
-		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, null);
+		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, null,session.getAccount().getUsername());
 	   }
 	   
 	   @RequestMapping(method=RequestMethod.GET)

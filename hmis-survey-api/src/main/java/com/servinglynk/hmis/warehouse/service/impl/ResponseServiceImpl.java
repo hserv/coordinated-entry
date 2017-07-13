@@ -75,7 +75,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
    //    pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(pResponse.getQuestionEntity(), pResponse));
        daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
        response.setResponseId(pResponse.getId());
-	   serviceFactory.getSectionScoreService().updateSectionScores(pResponse.getClientId(), pResponse.getSurveyEntity().getId(), null);
+	   serviceFactory.getSectionScoreService().updateSectionScores(pResponse.getClientId(), pResponse.getSurveyEntity().getId(), null,caller);
        return response;
    }
    

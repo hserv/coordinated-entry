@@ -16,6 +16,7 @@ import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAssignment;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAssignmentRepository;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Component
 public class HousingUnitAssignmentService  {
@@ -27,7 +28,7 @@ public class HousingUnitAssignmentService  {
 	HousingInventoryRepository HousingInventoryRepository;
 	
 	 @Transactional
-	 public List<HousingUnitAssignment> saveHousingUnitAssignments(List<HousingUnitAssignment> housingUnitAssignments, UUID housingUnitId) {
+	 public List<HousingUnitAssignment> saveHousingUnitAssignments(List<HousingUnitAssignment> housingUnitAssignments, UUID housingUnitId, Session session) {
 		 
 		 HousingInventory housingInventory = HousingInventoryRepository.findByHousingInventoryIdAndDeleted(housingUnitId, false) ;
 		 if(housingInventory==null) throw new ResourceNotFoundException("Housing unit not found "+housingUnitId);

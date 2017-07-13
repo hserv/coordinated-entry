@@ -94,7 +94,7 @@ public class HousingInventoryResource extends BaseResource{
 		 for(HousingInventory inventory : housingInventories){
 			 inventory.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
 			 populateProjectSchemaYear(inventory,session,trustedAppId);
-			 HousingInventory result=housingInventoryService.saveHousingInventory(inventory);
+			 HousingInventory result=housingInventoryService.saveHousingInventory(inventory,session);
 			 lHousingInventory.add(result);
 		 }
 		 return new ResponseEntity<List<HousingInventory>>(lHousingInventory, HttpStatus.OK);
@@ -105,7 +105,8 @@ public class HousingInventoryResource extends BaseResource{
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
 	    public ResponseEntity<List<HousingInventory>> updateHousingInventory(@RequestBody List<HousingInventory> housingInventories,HttpServletRequest request) throws URISyntaxException {
-	        List<HousingInventory> lresult = housingInventoryService.updateHousingInentories(housingInventories);
+	       Session session = sessionHelper.getSession(request);
+			List<HousingInventory> lresult = housingInventoryService.updateHousingInentories(housingInventories,session);
 	        return new  ResponseEntity<List<HousingInventory>>(lresult, HttpStatus.OK);
 	    }
 	
@@ -144,8 +145,9 @@ public class HousingInventoryResource extends BaseResource{
 	@RequestMapping(value = "/{id}",
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
-	    public ResponseEntity<HousingInventory> updateHousingInventoryById(@RequestBody HousingInventory housingInventory) throws URISyntaxException {
-	        HousingInventory result = housingInventoryService.saveHousingInventory(housingInventory);
+	    public ResponseEntity<HousingInventory> updateHousingInventoryById(@RequestBody HousingInventory housingInventory,HttpServletRequest request) throws URISyntaxException {
+		Session session = sessionHelper.getSession(request);
+		HousingInventory result = housingInventoryService.saveHousingInventory(housingInventory,session);
 	        return ResponseEntity.ok()
 	            .headers(HeaderUtil.createEntityUpdateAlert("housingInventory", housingInventory.getHousingInventoryId().toString()))
 	            .body(result);
