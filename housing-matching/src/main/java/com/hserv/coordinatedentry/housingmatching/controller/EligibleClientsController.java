@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
@@ -76,14 +78,17 @@ public class EligibleClientsController extends BaseController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@APIMapping(value="get-eligible-clients")
-	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable,HttpServletRequest request) throws Exception {
+	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable,HttpServletRequest request,@RequestParam(defaultValue = "active",required=false) String filter) throws Exception {
 		Session session = sessionHelper.getSession(request);
 		String projectGroupCode = session.getAccount().getProjectGroup().getProjectGroupCode();
 		Link statusLink = linkTo(methodOn(BatchProcessController.class).getCurrentStatus(request)).withRel("scoreprocessingstatus");
 		PageRequest page= new PageRequest(0,20);
 		Link historyLink = linkTo(methodOn(BatchProcessController.class).getBatchProcessHistory(page, request)).withRel("scoreprocessinghistory");
-		
-		PagedResources resources = assembler.toResource(eligibleClientService.getEligibleClients(projectGroupCode,pageable), housingInventoryAssembler);
+		boolean ignoreMatchProcess =false;
+		if(StringUtils.isNotBlank(filter) && StringUtils.equals("inactive", filter)) {
+			ignoreMatchProcess = true;
+		}
+		PagedResources resources = assembler.toResource(eligibleClientService.getEligibleClients(projectGroupCode,pageable,ignoreMatchProcess), housingInventoryAssembler);
 		resources.getLinks().add(statusLink);
 		resources.getLinks().add(historyLink);
 		return new ResponseEntity<>(resources,

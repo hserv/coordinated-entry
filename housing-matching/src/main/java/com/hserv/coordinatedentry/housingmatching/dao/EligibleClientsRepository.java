@@ -18,7 +18,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 public interface EligibleClientsRepository extends JpaRepository<EligibleClient, Serializable>,JpaSpecificationExecutor<EligibleClient> {
 	
 	public EligibleClient findByClientIdAndProjectGroupCodeAndDeleted(UUID clientID,String projectGroup,boolean deleted);
-	Page<EligibleClient> findByProjectGroupCodeAndDeleted(String projectGroupCode,boolean deleted,Pageable pageable);
+	Page<EligibleClient> findByProjectGroupCodeAndDeleted(String projectGroupCode,boolean deleted,Pageable pageableignore,boolean ignoreMatchProcess);
 	
 	@Transactional(readOnly = false)
 	Long deleteByClientId(UUID clientId);

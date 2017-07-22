@@ -89,8 +89,8 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 	
 	@Override
-	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable) {
-		Page<EligibleClient> clients = eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroupCode,false , pageable);
+	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable, boolean ignoreMatchProcess) {
+		Page<EligibleClient> clients = eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroupCode,false , pageable,ignoreMatchProcess);
 		return clients;
 	}
 

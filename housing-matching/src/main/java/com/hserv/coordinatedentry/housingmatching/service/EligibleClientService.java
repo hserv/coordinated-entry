@@ -18,7 +18,7 @@ public interface EligibleClientService {
 
 	EligibleClientModel getEligibleClientDetail(UUID clientID);
 
-	Page<EligibleClient> getEligibleClients(String projectGroupCode ,Pageable pageable);
+	Page<EligibleClient> getEligibleClients(String projectGroupCode ,Pageable pageable, boolean ignoreMatchProcess);
 
 	boolean updateEligibleClient(UUID clientID , EligibleClientModel eligibleClientModel) throws Exception ;
 
