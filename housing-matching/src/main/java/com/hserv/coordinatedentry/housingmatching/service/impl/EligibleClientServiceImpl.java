@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -89,8 +90,17 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 	
 	@Override
-	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable, boolean ignoreMatchProcess) {
-		Page<EligibleClient> clients = eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroupCode,false , pageable,ignoreMatchProcess);
+	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable, String filter) {
+		Page<EligibleClient> clients  = new PageImpl<EligibleClient>(new ArrayList<EligibleClient>());
+		if(filter.equalsIgnoreCase("inactive")) {
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcess(projectGroupCode,false,true, pageable);
+		}else if(filter.equalsIgnoreCase("active")) {
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcess(projectGroupCode,false, false, pageable);
+		}else {
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroupCode,false , pageable);			
+		}
+
+
 		return clients;
 	}
 

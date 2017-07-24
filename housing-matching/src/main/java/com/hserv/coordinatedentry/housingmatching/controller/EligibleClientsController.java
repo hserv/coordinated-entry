@@ -78,17 +78,15 @@ public class EligibleClientsController extends BaseController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@APIMapping(value="get-eligible-clients")
-	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable,HttpServletRequest request,@RequestParam(defaultValue = "active",required=false) String filter) throws Exception {
+	public ResponseEntity<Resources<Resource>> getEligibleClients(Pageable pageable,HttpServletRequest request,
+			@RequestParam(defaultValue = "active",required=false) String filter) throws Exception {
 		Session session = sessionHelper.getSession(request);
 		String projectGroupCode = session.getAccount().getProjectGroup().getProjectGroupCode();
 		Link statusLink = linkTo(methodOn(BatchProcessController.class).getCurrentStatus(request)).withRel("scoreprocessingstatus");
 		PageRequest page= new PageRequest(0,20);
 		Link historyLink = linkTo(methodOn(BatchProcessController.class).getBatchProcessHistory(page, request)).withRel("scoreprocessinghistory");
-		boolean ignoreMatchProcess =false;
-		if(StringUtils.isNotBlank(filter) && StringUtils.equals("inactive", filter)) {
-			ignoreMatchProcess = true;
-		}
-		PagedResources resources = assembler.toResource(eligibleClientService.getEligibleClients(projectGroupCode,pageable,ignoreMatchProcess), housingInventoryAssembler);
+
+		PagedResources resources = assembler.toResource(eligibleClientService.getEligibleClients(projectGroupCode,pageable,filter), housingInventoryAssembler);
 		resources.getLinks().add(statusLink);
 		resources.getLinks().add(historyLink);
 		return new ResponseEntity<>(resources,
