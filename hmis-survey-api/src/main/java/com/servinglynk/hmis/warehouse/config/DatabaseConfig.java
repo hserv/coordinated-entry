@@ -2,56 +2,40 @@ package com.servinglynk.hmis.warehouse.config;
 
 import java.util.Properties;
 
-import javax.annotation.Resource;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource("classpath:database.properties")
 public class DatabaseConfig {
-
-    private static final String PROPERTY_NAME_DATABASE_DRIVER   = "db.driver";
-    private static final String PROPERTY_NAME_DATABASE_PASSWORD = "db.password";
-    private static final String PROPERTY_NAME_DATABASE_URL      = "db.url";
-    private static final String PROPERTY_NAME_DATABASE_USERNAME = "db.username";
-	
-    private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
-    private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
-    @SuppressWarnings("unused")
-	private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
-    private static final String PROPERTY_NAME_HIBERNATE_DEFAULT_SCHEMA = "hibernate.default.schema";
-    
-	@Resource
-	private Environment env;
 	
 	@Bean
 	public DataSource dataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		
-		dataSource.setDriverClassName(env.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
-		dataSource.setUrl(env.getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
-		dataSource.setUsername(env.getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME));
-		dataSource.setPassword(env.getRequiredProperty(PROPERTY_NAME_DATABASE_PASSWORD));
-		
-		return dataSource;
+		JndiObjectFactoryBean jndi=new JndiObjectFactoryBean();
+		jndi.setResourceRef(true);
+		jndi.setJndiName("jdbc/hmisdb");
+		jndi.setProxyInterface(DataSource.class);
+		jndi.setLookupOnStartup(true);
+		try {
+			jndi.afterPropertiesSet();
+		}catch (NamingException e) {
+			throw new RuntimeException(e);
+		}
+		return (DataSource)jndi.getObject();
 	}
 	
 	private Properties hibProperties() {
 		Properties properties = new Properties();
-		properties.put(PROPERTY_NAME_HIBERNATE_DIALECT, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
-		properties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
-		properties.put("hibernate.default_catalog.null", "");
+		properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+		properties.put("hibernate.show_sql",true);
 		properties.put("databasePlatform", "PostgreSQLDialectUuid");
-		properties.put("hibernate.default_schema",env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DEFAULT_SCHEMA));
 		properties.setProperty("hibernate.temp.use_jdbc_metadata_defaults","false");
 		return properties;	
 	}
