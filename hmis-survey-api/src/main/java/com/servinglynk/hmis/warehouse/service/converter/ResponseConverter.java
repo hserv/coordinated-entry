@@ -1,5 +1,9 @@
 package com.servinglynk.hmis.warehouse.service.converter; 
 
+import java.time.ZoneId;
+import java.util.Date;
+
+import com.servinglynk.hmis.warehouse.core.model.Client;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 public class ResponseConverter {
@@ -29,6 +33,32 @@ public class ResponseConverter {
        model.setSurveyId(entity.getSurveyEntity().getId());
        model.setSubmissionId(entity.getSubmissionId());
        model.setEffectiveDate(entity.getEffectiveDate());
+       return model;
+   }
+   
+   public static Response entityToModelDetail (ResponseEntity entity) {
+       Response model = new Response();
+       model.setResponseId(entity.getId());
+       model.setRefused(entity.isRefused());
+       model.setResponseText(entity.getResponseText());
+       model.setQuestionScore(entity.getQuestionScore());
+       model.setAppId(entity.getAppId());
+       model.setSectionId(entity.getSurveySectionEntity().getId());
+       model.setQuestionId(entity.getQuestionEntity().getId());
+       model.setClientId(entity.getClientId());
+       model.setSurveyId(entity.getSurveyEntity().getId());
+       model.setSubmissionId(entity.getSubmissionId());
+       model.setEffectiveDate(entity.getEffectiveDate());
+       if(entity.getClient()!=null) {
+    	   Client client = new Client();
+    	   client.setDob(Date.from(entity.getClient().getDob().atZone(ZoneId.systemDefault()).toInstant()));
+    	   client.setEmailAddress(entity.getClient().getEmailAddress());
+    	   client.setFirstName(entity.getClient().getFirstName());
+			client.setLastName(entity.getClient().getLastName());
+			client.setMiddleName(entity.getClient().getMiddleName());
+			client.setPhoneNumber(entity.getClient().getPhoneNumber());
+			model.setClient(client);
+       }
        return model;
    }
 

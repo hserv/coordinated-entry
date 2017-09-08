@@ -46,7 +46,7 @@ public class EligibleClientModel {
 	private boolean ignoreMatchProcess;
 //	@NotBlank(message="Remarks Required")
 	private String remarks;
-	
+	private ClientModel client;
 	
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String link;
@@ -134,5 +134,11 @@ public class EligibleClientModel {
 	}
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	public ClientModel getClient() {
+		return client;
+	}
+	public void setClient(ClientModel client) {
+		this.client = client;
 	}
 }

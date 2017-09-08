@@ -81,10 +81,12 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}*/
 	
 	@Override
-	public EligibleClientModel getEligibleClientDetail(UUID clientID) {
+	public EligibleClientModel getEligibleClientDetail(UUID clientID,String version) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
 		EligibleClient eligibleClient = eligibleClientsRepository.findByClientIdAndProjectGroupCodeAndDeleted(clientID,projectGroup,false);
 		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible not found "+clientID);
+		if(version!=null && version.equalsIgnoreCase("v2"))
+			return eligibleClientsTranslator.translateV2(eligibleClient);
 		EligibleClientModel eligibleClientModel=  eligibleClientsTranslator.translate(eligibleClient);
 		return eligibleClientModel;
 	}

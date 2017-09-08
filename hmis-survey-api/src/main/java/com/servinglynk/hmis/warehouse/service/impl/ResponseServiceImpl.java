@@ -133,20 +133,25 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 
 
    @Transactional
-   public Response getResponseById(UUID ResponseId){
+   public Response getResponseById(UUID ResponseId,String version){
        ResponseEntity pResponse = daoFactory.getResponseEntityDao().getResponseEntityById(ResponseId);
        if(pResponse==null) throw new ResponseNotFoundException();
-
-       return ResponseConverter.entityToModel( pResponse );
+   		if(version!=null && version.equalsIgnoreCase("v2"))
+   			return ResponseConverter.entityToModelDetail(pResponse);
+   		else
+   			return ResponseConverter.entityToModel( pResponse );
    }
 
 
    @Transactional
-   public Responses getAllSurveyResponses(UUID surveyid, Integer startIndex, Integer maxItems){
+   public Responses getAllSurveyResponses(UUID surveyid, Integer startIndex, Integer maxItems, String version){
        Responses Responses = new Responses();
         List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSurveyResponses(surveyid,null,startIndex,maxItems);
         for(ResponseEntity entity : entities){
-           Responses.addResponse(ResponseConverter.entityToModel(entity));
+        	if(version!=null && version.equalsIgnoreCase("v2"))
+        		Responses.addResponse(ResponseConverter.entityToModelDetail(entity));
+        	else
+        		Responses.addResponse(ResponseConverter.entityToModel(entity));
         }
         long count = daoFactory.getResponseEntityDao().getSurveyResponsesCount(surveyid);
         SortedPagination pagination = new SortedPagination();

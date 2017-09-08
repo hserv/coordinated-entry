@@ -9,8 +9,8 @@ public interface ResponseService {
    Response createResponse(UUID clientId,UUID surveyId,Responses response,String clientLink,String caller );
    Response updateResponse(Response Response,String caller);
    Response deleteResponse(UUID ResponseId,String caller);
-   Response getResponseById(UUID ResponseId);
-   Responses getAllSurveyResponses(UUID surveyid, Integer startIndex, Integer maxItems);
+   Response getResponseById(UUID ResponseId, String version);
+   Responses getAllSurveyResponses(UUID surveyid, Integer startIndex, Integer maxItems, String version);
    
    void updateResponsesBySubmissionId(UUID submissionId,Responses responses,String caller);
    void deleteResponsesBySubmissionId(UUID surveyId,UUID submissionId,String caller);

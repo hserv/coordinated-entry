@@ -9,8 +9,11 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -23,6 +26,12 @@ public class EligibleClient extends BaseEntity {
 	@Column(name = "client_id", unique = true, nullable = false)
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
 	private UUID clientId;
+	
+	
+	@JoinColumn(name="client_id",insertable=false,updatable=false)
+	@OneToOne(fetch=FetchType.LAZY)
+	private Client client;
+	
 	@Column(name = "survey_type")	
 	private String surveyType;
 	
@@ -217,5 +226,13 @@ public class EligibleClient extends BaseEntity {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
 	}
 }

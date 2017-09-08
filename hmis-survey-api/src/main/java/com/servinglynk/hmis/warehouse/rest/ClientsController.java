@@ -103,7 +103,7 @@ public class ClientsController extends BaseController {
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   serviceFactory.getSurveyService().getSurveyById(surveyid);
-		   return serviceFactory.getResponseService().getResponseById(responseId); 
+		   return serviceFactory.getResponseService().getResponseById(responseId,null); 
 	   }
 
 	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.GET)
@@ -135,9 +135,8 @@ public class ClientsController extends BaseController {
 	           Session session = sessionHelper.getSession(request);
 		        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 		        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
-	        return serviceFactory.getResponseService().getAllSurveyResponses(surveyid,startIndex,maxItems); 
+	        return serviceFactory.getResponseService().getAllSurveyResponses(surveyid,startIndex,maxItems,null); 
 	   }
-	   
 	   
 	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_ALL_SECTION_SCORES",checkTrustedApp=true,checkSessionToken=true)	   

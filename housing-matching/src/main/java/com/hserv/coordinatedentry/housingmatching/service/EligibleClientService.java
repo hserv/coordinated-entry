@@ -16,7 +16,7 @@ public interface EligibleClientService {
 
 //	List<EligibleClient> getEligibleClients( Pageable pageable);
 
-	EligibleClientModel getEligibleClientDetail(UUID clientID);
+	EligibleClientModel getEligibleClientDetail(UUID clientID, String version);
 
 	Page<EligibleClient> getEligibleClients(String projectGroupCode ,Pageable pageable, String filter);
 

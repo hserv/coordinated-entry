@@ -69,7 +69,9 @@ public class HousingInventoryResource extends BaseResource{
 
 		@Override
 		public Resource<HousingInventory> toResource(HousingInventory arg0) {
+			arg0.setProject(null);
 			Resource<HousingInventory> resource = new Resource<HousingInventory>(arg0);
+			
 			 if(arg0.getSchemaYear()!=null)
 				 resource.add(new Link("/hmis-clientapi/rest/v"+arg0.getSchemaYear()+"/projects/"+arg0.getProjectId()).withRel("project"));
 			return resource;
@@ -132,6 +134,7 @@ public class HousingInventoryResource extends BaseResource{
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<Resource<HousingInventory>> getHousingInverntoryByID(@PathVariable UUID id) {
 		HousingInventory housingInventory = housingInventoryService.getHousingInventoryById(id);
+		housingInventory.setProject(null);
 		Resource resource =null;
 		if(housingInventory.getSchemaYear()!=null)
 			resource = new Resource(housingInventory, (new Link("/hmis-clientapi/rest/v"+housingInventory.getSchemaYear()+"/projects/"+housingInventory.getProjectId()).withRel("project")));

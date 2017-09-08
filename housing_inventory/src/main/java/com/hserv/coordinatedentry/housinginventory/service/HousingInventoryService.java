@@ -22,8 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
+import com.hserv.coordinatedentry.housinginventory.domain.Project;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
+import com.hserv.coordinatedentry.housinginventory.repository.ProjectRepository;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
@@ -35,6 +37,9 @@ public class HousingInventoryService  {
 	
 	@Autowired
 	private HousingUnitAddressRepository HousingUnitAddressRepository;
+	
+	@Autowired
+	private ProjectRepository projectRepository;
 
 	/*@Inject
     private HousingInventoryRepository housingInventoryRepository;*/
@@ -172,6 +177,11 @@ public class HousingInventoryService  {
 		if(inventory==null) throw new ResourceNotFoundException("Housing unit not found "+id);
         housingInventoryRepository.delete(inventory);
     }
+
+
+	public Project getProjectById(UUID projectId) {
+		return	projectRepository.findOne(projectId);
+	}
 	
 	
 	

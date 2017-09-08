@@ -1,6 +1,8 @@
 
 package com.hserv.coordinatedentry.housingmatching.controller;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
+import com.hserv.coordinatedentry.housingmatching.model.ClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientsModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
@@ -67,9 +70,6 @@ public class EligibleClientsController extends BaseController {
 			return resource;
 		}
 	}	
-
-	
-	
 	
 
 	/**
@@ -161,7 +161,7 @@ public class EligibleClientsController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@APIMapping(value="get-eligible-client-by-id")
 	public ResponseEntity<Resource>  getEligibleClientById(@PathVariable UUID id) {
-		EligibleClientModel client =  eligibleClientService.getEligibleClientDetail(id);
+		EligibleClientModel client =  eligibleClientService.getEligibleClientDetail(id,"");
 		Resource<EligibleClientModel> resource =null;
 		if(client.getLink()!=null)
 			resource = new Resource<EligibleClientModel>(client,new Link(client.getLink()).withRel("client")); 

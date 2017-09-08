@@ -5,14 +5,17 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+
 
 @Entity
 @Table(name="RESPONSE",schema="survey")
@@ -41,6 +44,11 @@ public class ResponseEntity extends BaseEntity {
 	@org.hibernate.annotations.Type(type="pg-uuid")
 	@Column(name="CLIENT_ID")
 	private UUID clientId;
+	
+	
+	@JoinColumn(name="CLIENT_ID",insertable=false,updatable=false)
+	@OneToOne(fetch=FetchType.LAZY)
+	private ClientEntity client;
 	
 	@ManyToOne
 	@JoinColumn(name="SECTION_ID")
@@ -138,5 +146,11 @@ public class ResponseEntity extends BaseEntity {
 	}
 	public void setClientLink(String clientLink) {
 		this.clientLink = clientLink;
+	}
+	public ClientEntity getClient() {
+		return client;
+	}
+	public void setClient(ClientEntity client) {
+		this.client = client;
 	}
 }

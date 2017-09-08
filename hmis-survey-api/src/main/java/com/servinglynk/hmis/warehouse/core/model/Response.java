@@ -32,6 +32,8 @@ public class Response extends ClientModel {
 
 	private UUID submissionId;
 	
+	private Client client;
+	
 	@JsonDeserialize(using=JsonTimestampDeserializer.class)
 	@JsonSerialize(using=JsonTimestampSerializer.class)
 	private LocalDateTime effectiveDate;
@@ -139,5 +141,13 @@ public class Response extends ClientModel {
 
 	public void setEffectiveDate(LocalDateTime effectiveDate) {
 		this.effectiveDate = effectiveDate;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
 	}
 }
