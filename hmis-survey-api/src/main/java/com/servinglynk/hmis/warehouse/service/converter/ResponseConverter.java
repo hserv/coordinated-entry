@@ -57,6 +57,7 @@ public class ResponseConverter {
 			client.setLastName(entity.getClient().getLastName());
 			client.setMiddleName(entity.getClient().getMiddleName());
 			client.setPhoneNumber(entity.getClient().getPhoneNumber());
+			client.setId(entity.getClient().getId());
 			model.setClient(client);
        }
        return model;

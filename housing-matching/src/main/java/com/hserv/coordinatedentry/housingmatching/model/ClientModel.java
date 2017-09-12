@@ -1,9 +1,11 @@
 package com.hserv.coordinatedentry.housingmatching.model;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class ClientModel {
 
+	private UUID id;
 	private String firstName;
 	private String middleName;
 	private String lastName;
@@ -46,5 +48,11 @@ public class ClientModel {
 	}
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
 	}
 }

@@ -29,7 +29,7 @@ public class ClientsControllerV2  extends BaseController {
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
 		   serviceFactory.getSurveyService().getSurveyById(surveyid);
-		   return serviceFactory.getResponseService().getResponseById(responseId,""); 
+		   return serviceFactory.getResponseService().getResponseById(responseId,"v2"); 
 	   }
 	   
 	   

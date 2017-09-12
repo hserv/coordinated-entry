@@ -67,6 +67,7 @@ public class EligibleClientsControllerV2 extends BaseController {
 				clientModel.setLastName(arg0.getClient().getLastName());
 				clientModel.setMiddleName(arg0.getClient().getMiddleName());
 				clientModel.setPhoneNumber(arg0.getClient().getPhoneNumber());
+				clientModel.setId(arg0.getClient().getId());
 				model.setClient(clientModel);
 			}
 			Resource<EligibleClientModel> resource = new Resource<EligibleClientModel>(model);

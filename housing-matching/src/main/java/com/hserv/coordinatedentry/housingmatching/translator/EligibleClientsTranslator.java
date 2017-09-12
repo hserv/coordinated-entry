@@ -61,6 +61,7 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setRemarks(eligibleClient.getRemarks());
 			if(eligibleClient.getClient()!=null) {
 				ClientModel clientModel = new ClientModel();
+				clientModel.setId(eligibleClient.getClient().getId());
 				clientModel.setDob(Date.from( eligibleClient.getClient().getDob().atZone(ZoneId.systemDefault()).toInstant()));
 				clientModel.setEmailAddress(eligibleClient.getClient().getEmailAddress());
 				clientModel.setFirstName(eligibleClient.getClient().getFirstName());
