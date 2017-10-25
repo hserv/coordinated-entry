@@ -36,8 +36,7 @@ public class SurveyEntity {
 	private String surveyOwner;
 	@Column(name="TAG_VALUE")	
 	private String tagValue;
-	@Column(name="PROJECT_GROUP_CODE")	
-	private String projectGroupCode;
+
 	@Column(name="LOCKED")	
 	private boolean locked;
 	@Column(name="IS_COPY_SURVEY_ID")	
@@ -80,12 +79,6 @@ public class SurveyEntity {
 	}
 	public void setTagValue(String tagValue) {
 		this.tagValue = tagValue;
-	}
-	public String getProjectGroupCode() {
-		return projectGroupCode;
-	}
-	public void setProjectGroupCode(String projectGroupCode) {
-		this.projectGroupCode = projectGroupCode;
 	}
 	public boolean isLocked() {
 		return locked;

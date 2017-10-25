@@ -14,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 
@@ -34,13 +33,12 @@ public class SurveyEntity extends BaseEntity {
 	private String surveyOwner;
 	@Column(name="TAG_VALUE")	
 	private String tagValue;
-	@Column(name="PROJECT_GROUP_CODE")	
-	private String projectGroupCode;
 	@Column(name="LOCKED")	
 	private boolean locked;
 	@Column(name="IS_COPY_SURVEY_ID")	
 	private boolean copySurveyId;
-	
+	@Column(name="SURVEY_DEFINITION")
+	private String surveyDefinition;
 	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
 	@Where(clause=" IS_ACTIVE = 'TRUE' ")
 	List<SurveySectionEntity> surveySectionEntities = new ArrayList<SurveySectionEntity>();
@@ -92,5 +90,11 @@ public class SurveyEntity extends BaseEntity {
 	}
 	public void setSurveySectionEntities(List<SurveySectionEntity> surveySectionEntities) {
 		this.surveySectionEntities = surveySectionEntities;
+	}
+	public String getSurveyDefinition() {
+		return surveyDefinition;
+	}
+	public void setSurveyDefinition(String surveyDefinition) {
+		this.surveyDefinition = surveyDefinition;
 	}
 }

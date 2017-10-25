@@ -66,6 +66,7 @@ public class ExceptionMapper {
 			r.setErrorMessage("REQUEST_AUTHENTICATION_FAILED");
 			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
 		}catch (org.springframework.http.converter.HttpMessageNotReadableException ex) {
+			ex.printStackTrace();
 			logger.info(ex.getMessage());
 			r.setErrorCode("INVALID_REQUEST_BODY");
 			r.setErrorMessage("INVALID_REQUEST_BODY");

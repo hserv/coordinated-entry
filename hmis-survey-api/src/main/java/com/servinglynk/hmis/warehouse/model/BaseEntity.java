@@ -21,6 +21,10 @@ public abstract class BaseEntity {
 	@Column(name="USER_ID")	
 	protected String user;
 	
+	@Column(name="PROJECT_GROUP_CODE")
+	protected String projectGroupCode;
+	
+	
 	@Column(name="deleted")
 	protected boolean deleted;
 	
@@ -54,5 +58,10 @@ public abstract class BaseEntity {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
+	}
 }
