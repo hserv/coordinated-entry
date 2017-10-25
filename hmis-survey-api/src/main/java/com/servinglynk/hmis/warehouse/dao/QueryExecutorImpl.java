@@ -196,7 +196,7 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 
 	public List<?> findByCriteria(DetachedCriteria detachedCriteria){
 				detachedCriteria.add(Restrictions.eq("deleted", false));
-				detachedCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
+			//	detachedCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
 				return detachedCriteria.getExecutableCriteria(getCurrentSession()).list();
 	}
 	
@@ -208,7 +208,7 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 
 	public List<?> findByCriteria(DetachedCriteria detachedCriteria,Integer firstResult,Integer maxResults){
 		detachedCriteria.add(Restrictions.eq("deleted", false));
-		detachedCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
+	//	detachedCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
 		Criteria criteria = detachedCriteria.getExecutableCriteria(getCurrentSession());
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResults);		
@@ -224,7 +224,7 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 
 	public long countRows(DetachedCriteria dCriteria){
 		dCriteria.add(Restrictions.eq("deleted", false));
-		dCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
+	//	dCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
 		return dCriteria.getExecutableCriteria(getCurrentSession()).list().size();
 		 //TBD
 	}
