@@ -10,6 +10,7 @@ import com.servinglynk.hmis.warehouse.service.SectionQuestionMappingService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreService;
 import com.servinglynk.hmis.warehouse.service.SurveySectionService;
 import com.servinglynk.hmis.warehouse.service.SurveyService;
+import com.servinglynk.hmis.warehouse.service.SurveyServicev2;
 
 public interface ParentServiceFactory  {
 	
@@ -32,5 +33,7 @@ public interface ParentServiceFactory  {
 	SectionScoreService getSectionScoreService();
 
 	HealthService getHealthService();
+	
+	SurveyServicev2 getSurveyServicev2();
 }
 

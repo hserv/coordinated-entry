@@ -13,12 +13,14 @@ import com.servinglynk.hmis.warehouse.service.SectionQuestionMappingService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreService;
 import com.servinglynk.hmis.warehouse.service.SurveySectionService;
 import com.servinglynk.hmis.warehouse.service.SurveyService;
+import com.servinglynk.hmis.warehouse.service.SurveyServicev2;
 
 @Component
 public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 
 
 	@Autowired SurveyService surveyService;
+	@Autowired SurveyServicev2 surveyServicev2;
 
 	public SurveyService getSurveyService() {
 		return surveyService;
@@ -120,5 +122,13 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 
 	public void setHealthService(HealthService healthService) {
 		this.healthService = healthService;
+	}
+
+	public SurveyServicev2 getSurveyServicev2() {
+		return surveyServicev2;
+	}
+
+	public void setSurveyServicev2(SurveyServicev2 surveyServicev2) {
+		this.surveyServicev2 = surveyServicev2;
 	}
 }

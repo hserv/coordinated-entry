@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.servinglynk.hmis.warehouse.core.annotations.AllowedValues;
 
 @JsonRootName("survey")
-public class Survey extends ClientModel {
+public class Surveyv2 extends ClientModel {
 
 	private UUID surveyId;
 
@@ -31,6 +31,7 @@ public class Survey extends ClientModel {
 
 	private boolean copySurveyId;
 
+	private String surveyDefinition;
 
 	public UUID getSurveyId() {
 		return surveyId;
@@ -86,5 +87,13 @@ public class Survey extends ClientModel {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
+	}
+
+	public String getSurveyDefinition() {
+		return surveyDefinition;
+	}
+
+	public void setSurveyDefinition(String surveyDefinition) {
+		this.surveyDefinition = surveyDefinition;
 	}
 }
