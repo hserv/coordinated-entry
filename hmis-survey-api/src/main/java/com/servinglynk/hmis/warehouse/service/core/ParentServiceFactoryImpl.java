@@ -8,6 +8,7 @@ import com.servinglynk.hmis.warehouse.service.PickListGroupService;
 import com.servinglynk.hmis.warehouse.service.PickListValueService;
 import com.servinglynk.hmis.warehouse.service.QuestionGroupService;
 import com.servinglynk.hmis.warehouse.service.QuestionService;
+import com.servinglynk.hmis.warehouse.service.QuestionServicev2;
 import com.servinglynk.hmis.warehouse.service.ResponseService;
 import com.servinglynk.hmis.warehouse.service.SectionQuestionMappingService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreService;
@@ -21,6 +22,8 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 
 	@Autowired SurveyService surveyService;
 	@Autowired SurveyServicev2 surveyServicev2;
+	@Autowired QuestionServicev2 questionServicev2;
+	
 
 	public SurveyService getSurveyService() {
 		return surveyService;
@@ -130,5 +133,13 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 
 	public void setSurveyServicev2(SurveyServicev2 surveyServicev2) {
 		this.surveyServicev2 = surveyServicev2;
+	}
+
+	public QuestionServicev2 getQuestionServicev2() {
+		return questionServicev2;
+	}
+
+	public void setQuestionServicev2(QuestionServicev2 questionServicev2) {
+		this.questionServicev2 = questionServicev2;
 	}
 }

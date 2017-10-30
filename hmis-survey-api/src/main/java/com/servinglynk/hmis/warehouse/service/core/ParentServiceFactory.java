@@ -5,6 +5,7 @@ import com.servinglynk.hmis.warehouse.service.PickListGroupService;
 import com.servinglynk.hmis.warehouse.service.PickListValueService;
 import com.servinglynk.hmis.warehouse.service.QuestionGroupService;
 import com.servinglynk.hmis.warehouse.service.QuestionService;
+import com.servinglynk.hmis.warehouse.service.QuestionServicev2;
 import com.servinglynk.hmis.warehouse.service.ResponseService;
 import com.servinglynk.hmis.warehouse.service.SectionQuestionMappingService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreService;
@@ -35,5 +36,7 @@ public interface ParentServiceFactory  {
 	HealthService getHealthService();
 	
 	SurveyServicev2 getSurveyServicev2();
+	
+	QuestionServicev2 getQuestionServicev2();
 }
 

@@ -61,6 +61,11 @@ public class QuestionEntity extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name="PICKLIST_GROUP_ID")
 	private PickListGroupEntity pickListGroupEntity;
+	
+	@Column(name="PICKLIST_VALUES")
+	private String picklistValues;
+	
+	
 	public UUID getId() {
 		return id;
 	}
@@ -138,5 +143,11 @@ public class QuestionEntity extends BaseEntity {
 	}
 	public void setPickListGroupEntity(PickListGroupEntity pickListGroupEntity) {
 		this.pickListGroupEntity = pickListGroupEntity;
+	}
+	public String getPicklistValues() {
+		return picklistValues;
+	}
+	public void setPicklistValues(String picklistValues) {
+		this.picklistValues = picklistValues;
 	}
 }
