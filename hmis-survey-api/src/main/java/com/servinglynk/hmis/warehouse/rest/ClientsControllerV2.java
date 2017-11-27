@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
+import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.Session;
@@ -27,7 +28,7 @@ public class ClientsControllerV2  extends BaseController {
 			   @PathVariable( "responseid" ) UUID responseId,HttpServletRequest request) throws Exception{
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
+	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
 		   serviceFactory.getSurveyService().getSurveyById(surveyid);
 		   return serviceFactory.getResponseService().getResponseById(responseId,"v2"); 
 	   }
@@ -45,7 +46,7 @@ public class ClientsControllerV2  extends BaseController {
 	           if (maxItems == null || maxItems > 30) maxItems =30;
 	           Session session = sessionHelper.getSession(request);
 		        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-		        String clientLink =clientValidator.validateClient(clientid, trustedApp, session);
+		        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
 	        return serviceFactory.getResponseService().getAllSurveyResponses(surveyid,startIndex,maxItems,"v2"); 
 	   }
 

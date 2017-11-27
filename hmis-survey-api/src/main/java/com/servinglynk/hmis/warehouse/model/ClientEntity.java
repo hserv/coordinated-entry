@@ -35,8 +35,9 @@ public class ClientEntity {
 	private String schemaYear;
 	private String phoneNumber;
 	private String emailAddress;
-
-
+	private boolean deleted;
+	private String projectGroupCode;
+	
 
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
 	@Basic( optional = true )
@@ -174,4 +175,24 @@ public class ClientEntity {
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
+
+	@Column(name="deleted")
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	@Column(name="PROJECT_GROUP_CODE")
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
+	}
+	
+	
 }

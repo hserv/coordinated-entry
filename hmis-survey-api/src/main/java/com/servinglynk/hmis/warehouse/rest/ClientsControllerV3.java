@@ -24,91 +24,91 @@ import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.TrustedApp;
 
 @RestController
-@RequestMapping("/clients")
-public class ClientsController extends BaseController {
+@RequestMapping("/v3/clients")
+public class ClientsControllerV3 extends BaseController {
 
 	
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses",method=RequestMethod.POST)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/responses",method=RequestMethod.POST)
 	   @APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	   public Response createResponse(@PathVariable("clientid") UUID clientid,
+	   public Response createResponse(@PathVariable("clientDedupId") UUID clientDedupId,
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @Valid  @RequestBody Responses response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-	       return serviceFactory.getResponseService().createResponse(clientid,surveyid,response,client,session.getAccount().getUsername()); 
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+	       return serviceFactory.getResponseServiceV3().createResponse(surveyid,response,client,session.getAccount().getUsername()); 
 	       
 	   }
 
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses/{responseid}",method=RequestMethod.PUT)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/responses/{responseid}",method=RequestMethod.PUT)
 	   @APIMapping(value="SURVEY_API_UPDATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	   public void updateResponse(@PathVariable("clientid") UUID clientid,
+	   public void updateResponse(@PathVariable("clientDedupId") UUID clientDedupId,
 			   @PathVariable("surveyid")  UUID surveyid,@PathVariable( "responseid" ) UUID responseId,
 			   @Valid  @RequestBody Response response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
 	        response.setResponseId(responseId);
 	        response.setSectionId(surveyid);
-	        response.setClientId(clientid);
+	        response.setClientId(clientDedupId);
 	        response.setDedupClientId(client.getDedupClientId());
 	        
-	        serviceFactory.getResponseService().updateResponse(response,session.getAccount().getUsername()); 
+	        serviceFactory.getResponseServiceV3().updateResponse(response,session.getAccount().getUsername()); 
 	   }
 	   
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.PUT)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.PUT)
 	   @APIMapping(value="SURVEY_API_UPDATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	   public void updateResponsesBySubmission(@PathVariable("clientid") UUID clientid,
+	   public void updateResponsesBySubmission(@PathVariable("clientDedupId") UUID clientDedupId,
 			   @PathVariable("surveyid")  UUID surveyid,@PathVariable( "submissionid" ) UUID submissionid,
 			   @Valid  @RequestBody Responses response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-	        serviceFactory.getResponseService().updateResponsesBySubmissionId(submissionid, response, session.getAccount().getUsername()); 
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+	        serviceFactory.getResponseServiceV3().updateResponsesBySubmissionId(submissionid, response, session.getAccount().getUsername()); 
 	   }
 
 
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses/{responseid}",method=RequestMethod.DELETE)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/responses/{responseid}",method=RequestMethod.DELETE)
 	   @APIMapping(value="SURVEY_API_DELETE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	   public void deleteResponse(@PathVariable("clientid") UUID clientid,
+	   public void deleteResponse(@PathVariable("clientDedupId") UUID clientDedupId,
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @PathVariable( "responseid" ) UUID responseId,HttpServletRequest request,HttpServletResponse response) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
 	        serviceFactory.getSurveyService().getSurveyById(surveyid);
-	        serviceFactory.getResponseService().deleteResponse(responseId,session.getAccount().getUsername()); 
+	        serviceFactory.getResponseServiceV3().deleteResponse(responseId,session.getAccount().getUsername()); 
 	        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
 	   }
 
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.DELETE)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.DELETE)
 	   @APIMapping(value="SURVEY_API_DELETE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	   public void deleteResponsesBySubmission(@PathVariable("clientid") UUID clientid,
+	   public void deleteResponsesBySubmission(@PathVariable("clientDedupId") UUID clientDedupId,
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @PathVariable( "submissionid" ) UUID submissionid,HttpServletRequest request,HttpServletResponse response) throws Exception{
 	        Session session = sessionHelper.getSession(request); 
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        serviceFactory.getSurveyService().getSurveyById(surveyid);
-	        serviceFactory.getResponseService().deleteResponsesBySubmissionId(surveyid,submissionid,session.getAccount().getUsername()); 
+	        serviceFactory.getResponseServiceV3().deleteResponsesBySubmissionId(surveyid,submissionid,session.getAccount().getUsername()); 
 	        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
 	   }
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses/{responseid}",method=RequestMethod.GET)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/responses/{responseid}",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_RESPONSE_BY_ID",checkTrustedApp=true,checkSessionToken=true)
-	   public Response getResponseById(@PathVariable("clientid") UUID clientid,
+	   public Response getResponseById(@PathVariable("clientDedupId") UUID clientDedupId,
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @PathVariable( "responseid" ) UUID responseId,HttpServletRequest request) throws Exception{
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 		   serviceFactory.getSurveyService().getSurveyById(surveyid);
-		   return serviceFactory.getResponseService().getResponseById(responseId,null); 
+		   return serviceFactory.getResponseServiceV3().getResponseById(responseId,null); 
 	   }
 
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.GET)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/submissions/{submissionid}",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_RESPONSE_BY_ID",checkTrustedApp=true,checkSessionToken=true)
-	   public Responses getResponseBySubmissionId(@PathVariable("clientid") UUID clientid,
+	   public Responses getResponseBySubmissionId(@PathVariable("clientDedupId") UUID clientDedupId,
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @PathVariable( "submissionid" ) UUID submissionid,	               
 			   @RequestParam(value="startIndex", required=false,defaultValue="0") Integer startIndex, 
@@ -116,16 +116,16 @@ public class ClientsController extends BaseController {
                HttpServletRequest request) throws Exception {
 		   Session session= sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
 		   serviceFactory.getSurveyService().getSurveyById(surveyid);
-		   return serviceFactory.getResponseService().getResponsesBySubmissionId(surveyid,submissionid, startIndex, maxItems); 
+		   return serviceFactory.getResponseServiceV3().getResponsesBySubmissionId(surveyid,submissionid, startIndex, maxItems); 
 	   }
 
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/responses",method=RequestMethod.GET)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/responses",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_ALL_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
 	   public Responses getAllSurveyResponses(
-			   				@PathVariable("clientid") UUID clientid,
+			   				@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 	                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
 	                       @RequestParam(value="maxItems", required=false) Integer maxItems,
@@ -134,29 +134,29 @@ public class ClientsController extends BaseController {
 	           if (maxItems == null || maxItems > 30) maxItems =30;
 	           Session session = sessionHelper.getSession(request);
 		        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-		        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-	        return serviceFactory.getResponseService().getAllSurveyResponses(surveyid,startIndex,maxItems,null); 
+		        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+	        return serviceFactory.getResponseServiceV3().getAllSurveyResponses(surveyid,startIndex,maxItems,null); 
 	   }
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.GET)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_ALL_SECTION_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public SectionScore getAllSectionScores(@PathVariable("clientid") UUID clientid,
+	   public SectionScore getAllSectionScores(@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 			   				@PathVariable("sectionid")  UUID sectionid,
 	                       HttpServletRequest request) throws Exception {
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-		   SectionScores scores= serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, sectionid, 0, 0);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+		   SectionScores scores= serviceFactory.getSectionScoreServiceV3().getAllSectionScores(clientDedupId, surveyid, sectionid, 0, 0);
 		   if(!scores.getSectionScores().isEmpty())
 			   return scores.getSectionScores().get(0);
 		   return new SectionScore();
 	   }
 	   
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.DELETE)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.DELETE)
 	   @APIMapping(value="SURVEY_API_DELETE_SECTION_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public SectionScores getDeleteSectionScores(@PathVariable("clientid") UUID clientid,
+	   public SectionScores getDeleteSectionScores(@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 			   				@PathVariable("sectionid")  UUID sectionid,
 	                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
@@ -166,38 +166,38 @@ public class ClientsController extends BaseController {
            if (maxItems == null || maxItems > 30) maxItems =30;
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
            
-		   return serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, sectionid, startIndex, maxItems);
+		   return serviceFactory.getSectionScoreServiceV3().getAllSectionScores(clientDedupId, surveyid, sectionid, startIndex, maxItems);
 	   }
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.PUT)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.PUT)
 	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public void getUpdateSectionScores(@PathVariable("clientid") UUID clientid,
+	   public void getUpdateSectionScores(@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 			   				@PathVariable("sectionid")  UUID sectionid,
 	                       HttpServletRequest request) throws Exception {
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, sectionid,session.getAccount().getUsername());
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+		   serviceFactory.getSectionScoreServiceV3().updateSectionScores(clientDedupId, surveyid, sectionid,session.getAccount().getUsername());
 	   }
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.POST)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.POST)
 	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public SectionScore createSectionScores(@PathVariable("clientid") UUID clientid,
+	   public SectionScore createSectionScores(@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 			   				@PathVariable("sectionid")  UUID sectionid,
 			   				@RequestBody SectionScore sectionScore,
 	                       HttpServletRequest request) throws Exception {
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-		   sectionScore.setClientId(clientid);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+		   sectionScore.setClientDedupId(clientDedupId);
 		   sectionScore.setSectionId(sectionid);
 		   sectionScore.setSurveyId(surveyid);
-		   sectionScore.setClientDedupId(client.getDedupClientId());
-		    serviceFactory.getSectionScoreService().createSectionScores(sectionScore,session);
+		   sectionScore.setClientId(client.getClientId());
+		    serviceFactory.getSectionScoreServiceV3().createSectionScores(sectionScore,session);
 		    SectionScore score = new SectionScore();
 		    score.setSectionScoreId(sectionScore.getSectionScoreId());
 		    score.setSectionScore(sectionScore.getSectionScore());
@@ -205,9 +205,9 @@ public class ClientsController extends BaseController {
 	   }
 	   
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/sections/{sectionid}/scores/{scoreid}",method=RequestMethod.PUT)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/sections/{sectionid}/scores/{scoreid}",method=RequestMethod.PUT)
 	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public void updateSectionScores(@PathVariable("clientid") UUID clientid,
+	   public void updateSectionScores(@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 			   				@PathVariable("sectionid")  UUID sectionid,
 			   				@PathVariable("scoreid") UUID scoreid  ,
@@ -215,18 +215,19 @@ public class ClientsController extends BaseController {
 	                       HttpServletRequest request) throws Exception {
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-		   sectionScore.setClientId(clientid);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+		   sectionScore.setClientId(client.getClientId());
+		   sectionScore.setClientDedupId(client.getDedupClientId());
 		   sectionScore.setSectionId(sectionid);
 		   sectionScore.setSurveyId(surveyid);
 		   sectionScore.setSectionScoreId(scoreid);
-		    serviceFactory.getSectionScoreService().updateSectionScores(sectionScore,session);
+		    serviceFactory.getSectionScoreServiceV3().updateSectionScores(sectionScore,session);
 	   }
 	   
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.GET)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/scores",method=RequestMethod.GET)
 	   @APIMapping(value="SURVEY_API_GET_ALL_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public SectionScores getAllSurveyScores(@PathVariable("clientid") UUID clientid,
+	   public SectionScores getAllSurveyScores(@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 	                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
 	                       @RequestParam(value="maxItems", required=false) Integer maxItems,
@@ -235,13 +236,13 @@ public class ClientsController extends BaseController {
            if (maxItems == null || maxItems > 30) maxItems =30;
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-		   return serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, null, startIndex, maxItems);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+		   return serviceFactory.getSectionScoreServiceV3().getAllSectionScores(clientDedupId, surveyid, null, startIndex, maxItems);
 	   }
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.DELETE)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/scores",method=RequestMethod.DELETE)
 	   @APIMapping(value="SURVEY_API_DELETE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public void getDeleteSurveyScores(@PathVariable("clientid") UUID clientid,
+	   public void getDeleteSurveyScores(@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 	                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
 	                       @RequestParam(value="maxItems", required=false) Integer maxItems,
@@ -251,13 +252,13 @@ public class ClientsController extends BaseController {
 		   
            Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-		    serviceFactory.getSectionScoreService().getAllSectionScores(clientid, surveyid, null, startIndex, maxItems);
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+		    serviceFactory.getSectionScoreServiceV3().getAllSectionScores(clientDedupId, surveyid, null, startIndex, maxItems);
 	   }
 	   
-	   @RequestMapping(value="/{clientid}/surveys/{surveyid}/scores",method=RequestMethod.PUT)
+	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/scores",method=RequestMethod.PUT)
 	   @APIMapping(value="SURVEY_API_UPDATE_SURVEY_SCORES",checkTrustedApp=true,checkSessionToken=true)	   
-	   public void getUpdateSurveyScores(@PathVariable("clientid") UUID clientid,
+	   public void getUpdateSurveyScores(@PathVariable("clientDedupId") UUID clientDedupId,
 			   				@PathVariable("surveyid")  UUID surveyid,
 	                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
 	                       @RequestParam(value="maxItems", required=false) Integer maxItems,
@@ -267,8 +268,8 @@ public class ClientsController extends BaseController {
 		   
            Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
-	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-		   serviceFactory.getSectionScoreService().updateSectionScores(clientid, surveyid, null,session.getAccount().getUsername());
+	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
+		   serviceFactory.getSectionScoreServiceV3().updateSectionScores(clientDedupId, surveyid, null,session.getAccount().getUsername());
 	   }
 	   
 	   @RequestMapping(method=RequestMethod.GET)
@@ -278,6 +279,6 @@ public class ClientsController extends BaseController {
                							HttpServletRequest request) throws Exception {
 		   				Session session = sessionHelper.getSession(request);
 		   				if(maxItems>50) maxItems=50;
-		 return serviceFactory.getSectionScoreService().calculateClientSurveyScore(startIndex,maxItems,session.getAccount().getProjectGroup().getProjectGroupCode());
+		 return serviceFactory.getSectionScoreServiceV3().calculateClientSurveyScore(startIndex,maxItems,session.getAccount().getProjectGroup().getProjectGroupCode());
 	   }
 }

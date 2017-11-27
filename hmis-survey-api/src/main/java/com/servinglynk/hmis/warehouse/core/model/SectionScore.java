@@ -15,10 +15,10 @@ public class SectionScore extends ClientModel{
       private UUID surveyId;
 
       private UUID clientId;
+      
+      private UUID clientDedupId;
 
       private int sectionScore;
-
-
 
       public UUID getSectionScoreId(){
           return sectionScoreId;
@@ -50,5 +50,10 @@ public class SectionScore extends ClientModel{
       public void setSectionScore(int sectionScore){
           this.sectionScore = sectionScore;
       }
-
- }
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
+	}
+}
