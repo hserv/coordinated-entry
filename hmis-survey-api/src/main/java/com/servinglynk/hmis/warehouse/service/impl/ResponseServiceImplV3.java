@@ -11,12 +11,13 @@ import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.ClientEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
 import com.servinglynk.hmis.warehouse.model.SurveySectionEntity;
-import com.servinglynk.hmis.warehouse.service.ResponseService;
-import com.servinglynk.hmis.warehouse.service.converter.ResponseConverter;
+import com.servinglynk.hmis.warehouse.service.ResponseServiceV3;
+import com.servinglynk.hmis.warehouse.service.converter.ResponseConverterV3;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
@@ -24,10 +25,10 @@ import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundExc
 
 
 @Component
-public class ResponseServiceImpl extends ServiceBase implements ResponseService  {
+public class ResponseServiceImplV3 extends ServiceBase implements ResponseServiceV3  {
 
    @Transactional
-   public Response createResponse(UUID clientId,UUID surveyId,Responses responses,BaseClient client,String caller){
+   public Response createResponse(UUID surveyId,Responses responses,BaseClient client,String caller){
 	   Response returnResponse = new Response();
 	   
 	   UUID submissionId = UUID.randomUUID();
@@ -45,13 +46,13 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 	   SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao().getSurveySectionEntityById(response.getSectionId());
 	   if(sectionEntity==null) throw new SurveySectionNotFoundException();
 	   
-       ResponseEntity pResponse = ResponseConverter.modelToEntity(response, null);
+       ResponseEntity pResponse = ResponseConverterV3.modelToEntity(response, null);
        pResponse.setSurveyEntity(surveyEntity);
        pResponse.setSurveySectionEntity(sectionEntity);
        pResponse.setQuestionEntity(questionEntity);
        pResponse.setCreatedAt(LocalDateTime.now());
        pResponse.setUser(caller);
-       pResponse.setClientId(clientId);
+       pResponse.setClientId(client.getClientId());
        pResponse.setSubmissionId(submissionId);
        pResponse.setClientLink(client.getLink());
        pResponse.setDedupClientId(client.getDedupClientId());
@@ -71,13 +72,13 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
        ResponseEntity pResponse = daoFactory.getResponseEntityDao().getResponseEntityById(response.getResponseId());
        if(pResponse==null) throw new ResponseNotFoundException();
 
-       ResponseConverter.modelToEntity(response, pResponse);
+       ResponseConverterV3.modelToEntity(response, pResponse);
        pResponse.setUpdatedAt(LocalDateTime.now());
        pResponse.setUser(caller);
    //    pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(pResponse.getQuestionEntity(), pResponse));
        daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
        response.setResponseId(pResponse.getId());
-	   serviceFactory.getSectionScoreService().updateSectionScores(pResponse.getClientId(), pResponse.getSurveyEntity().getId(), null,caller);
+//	   serviceFactory.getSectionScoreService().updateSectionScores(pResponse.getClientId(), pResponse.getSurveyEntity().getId(), null,caller);
        return response;
    }
    
@@ -109,7 +110,8 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 	   List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSubmissionResponses(surveyId, submissionId, startIndex, maxItems);
    
 	   for(ResponseEntity entity:entities){
-		   responses.addResponse(ResponseConverter.entityToModel(entity));
+		   ClientEntity clientEntity = daoFactory.getClientDao().getClient(entity.getDedupClientId());
+		   responses.addResponse(ResponseConverterV3.entityToModel(entity,clientEntity));
 	   }
 	   
        long count = daoFactory.getResponseEntityDao().getSubmissionResponsesCount(surveyId,submissionId);
@@ -137,11 +139,8 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
    @Transactional
    public Response getResponseById(UUID ResponseId,String version){
        ResponseEntity pResponse = daoFactory.getResponseEntityDao().getResponseEntityById(ResponseId);
-       if(pResponse==null) throw new ResponseNotFoundException();
-   		if(version!=null && version.equalsIgnoreCase("v2"))
-   			return ResponseConverter.entityToModelDetail(pResponse);
-   		else
-   			return ResponseConverter.entityToModel( pResponse );
+       			ClientEntity clientEntity = daoFactory.getClientDao().getClient(pResponse.getDedupClientId());
+   			return ResponseConverterV3.entityToModelDetail(pResponse,clientEntity);
    }
 
 
@@ -150,10 +149,8 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
        Responses Responses = new Responses();
         List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSurveyResponses(surveyid,null,startIndex,maxItems);
         for(ResponseEntity entity : entities){
-        	if(version!=null && version.equalsIgnoreCase("v2"))
-        		Responses.addResponse(ResponseConverter.entityToModelDetail(entity));
-        	else
-        		Responses.addResponse(ResponseConverter.entityToModel(entity));
+        		ClientEntity clientEntity = daoFactory.getClientDao().getClient(entity.getDedupClientId());
+        		Responses.addResponse(ResponseConverterV3.entityToModelDetail(entity,clientEntity));
         }
         long count = daoFactory.getResponseEntityDao().getSurveyResponsesCount(surveyid);
         SortedPagination pagination = new SortedPagination();

@@ -5,9 +5,9 @@ import java.util.UUID;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
-public interface ResponseService {
+public interface ResponseServiceV3 {
 
-   Response createResponse(UUID clientId,UUID surveyId,Responses response,BaseClient client,String caller );
+   Response createResponse(UUID surveyId,Responses response,BaseClient client,String caller );
    Response updateResponse(Response Response,String caller);
    Response deleteResponse(UUID ResponseId,String caller);
    Response getResponseById(UUID ResponseId, String version);

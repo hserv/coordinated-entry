@@ -24,6 +24,7 @@ public interface ParentDaoFactory  {
 	 SectionScoreDao getSectionScoreDao();
 	 
 	 HealthDao getHealthDao();
+	 
+	 ClientDao getClientDao();
 
 }
-

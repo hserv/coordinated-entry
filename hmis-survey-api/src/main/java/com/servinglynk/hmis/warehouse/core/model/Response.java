@@ -23,7 +23,9 @@ public class Response extends ClientModel {
 	private UUID questionId;
 
 	private UUID clientId;
-
+	
+	private UUID dedupClientId;
+	
 	private String clientLink;
 
 	private UUID surveyId;
@@ -149,5 +151,13 @@ public class Response extends ClientModel {
 
 	public void setClient(Client client) {
 		this.client = client;
+	}
+
+	public UUID getDedupClientId() {
+		return dedupClientId;
+	}
+
+	public void setDedupClientId(UUID dedupClientId) {
+		this.dedupClientId = dedupClientId;
 	}
 }

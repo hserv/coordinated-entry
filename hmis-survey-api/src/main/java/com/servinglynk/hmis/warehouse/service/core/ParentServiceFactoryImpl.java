@@ -3,6 +3,7 @@ package com.servinglynk.hmis.warehouse.service.core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.servinglynk.hmis.warehouse.service.ClientService;
 import com.servinglynk.hmis.warehouse.service.HealthService;
 import com.servinglynk.hmis.warehouse.service.PickListGroupService;
 import com.servinglynk.hmis.warehouse.service.PickListValueService;
@@ -10,8 +11,10 @@ import com.servinglynk.hmis.warehouse.service.QuestionGroupService;
 import com.servinglynk.hmis.warehouse.service.QuestionService;
 import com.servinglynk.hmis.warehouse.service.QuestionServicev2;
 import com.servinglynk.hmis.warehouse.service.ResponseService;
+import com.servinglynk.hmis.warehouse.service.ResponseServiceV3;
 import com.servinglynk.hmis.warehouse.service.SectionQuestionMappingService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreService;
+import com.servinglynk.hmis.warehouse.service.SectionScoreServiceV3;
 import com.servinglynk.hmis.warehouse.service.SurveySectionService;
 import com.servinglynk.hmis.warehouse.service.SurveyService;
 import com.servinglynk.hmis.warehouse.service.SurveyServicev2;
@@ -23,7 +26,9 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 	@Autowired SurveyService surveyService;
 	@Autowired SurveyServicev2 surveyServicev2;
 	@Autowired QuestionServicev2 questionServicev2;
-	
+	@Autowired ResponseServiceV3 responseServiceV3;
+	@Autowired SectionScoreServiceV3 sectionScoreServiceV3;
+	@Autowired ClientService clientService;
 
 	public SurveyService getSurveyService() {
 		return surveyService;
@@ -141,5 +146,29 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 
 	public void setQuestionServicev2(QuestionServicev2 questionServicev2) {
 		this.questionServicev2 = questionServicev2;
+	}
+
+	public ResponseServiceV3 getResponseServiceV3() {
+		return responseServiceV3;
+	}
+
+	public void setResponseServiceV3(ResponseServiceV3 responseServiceV3) {
+		this.responseServiceV3 = responseServiceV3;
+	}
+
+	public SectionScoreServiceV3 getSectionScoreServiceV3() {
+		return sectionScoreServiceV3;
+	}
+
+	public void setSectionScoreServiceV3(SectionScoreServiceV3 sectionScoreServiceV3) {
+		this.sectionScoreServiceV3 = sectionScoreServiceV3;
+	}
+
+	public ClientService getClientService() {
+		return clientService;
+	}
+
+	public void setClientService(ClientService clientService) {
+		this.clientService = clientService;
 	}
 }

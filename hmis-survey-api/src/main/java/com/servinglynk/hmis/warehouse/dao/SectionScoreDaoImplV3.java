@@ -15,7 +15,7 @@ import com.servinglynk.hmis.warehouse.core.model.ClientSurveyScore;
 import com.servinglynk.hmis.warehouse.model.SectionScoreEntity;
 
 @Component
-public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionScoreDao {
+public class SectionScoreDaoImplV3 extends QueryExecutorImpl implements SectionScoreDaoV3 {
 
 	public SectionScoreEntity createSectionScore(SectionScoreEntity sectionScoreEntity) {
 		sectionScoreEntity.setId(UUID.randomUUID());
@@ -42,11 +42,11 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		return (List<SectionScoreEntity>) findByCriteria(criteria, startIndex, maxItems);
 	}
 	
-	public List<SectionScoreEntity> getClientScores(UUID clientId,UUID surveyId, UUID sectionId,Integer startIndex,Integer maxItems){
+	public List<SectionScoreEntity> getClientScores(UUID dedupClientId,UUID surveyId, UUID sectionId,Integer startIndex,Integer maxItems){
 		DetachedCriteria criteria = DetachedCriteria.forClass(SectionScoreEntity.class);
 		criteria.createAlias("sectionEntity", "sectionEntity");
 		criteria.createAlias("surveyEntity", "surveyEntity");
-		criteria.add(Restrictions.eq("clientId", clientId));
+		criteria.add(Restrictions.eq("clientDedupId", dedupClientId));
 		if (surveyId != null)
 			criteria.add(Restrictions.eq("surveyEntity.id", surveyId));
 		if (sectionId != null)
@@ -55,11 +55,11 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		return (List<SectionScoreEntity>) findByCriteria(criteria, startIndex, maxItems);
 	}
 	
-	public long getClientScoresCount(UUID clientId,UUID surveyId, UUID sectionId) {
+	public long getClientScoresCount(UUID clientDedupId,UUID surveyId, UUID sectionId) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(SectionScoreEntity.class);
 		criteria.createAlias("sectionEntity", "sectionEntity");
 		criteria.createAlias("surveyEntity", "surveyEntity");
-		criteria.add(Restrictions.eq("clientId", clientId));
+		criteria.add(Restrictions.eq("clientDedupId", clientDedupId));
 		if (surveyId != null)
 			criteria.add(Restrictions.eq("surveyEntity.id", surveyId));
 		if (sectionId != null)
@@ -105,10 +105,10 @@ public class SectionScoreDaoImpl extends QueryExecutorImpl implements SectionSco
 		ProjectionList projectionList = Projections.projectionList();
 		projectionList.add(Projections.sum("sectionScore"),"surveyScore");
 		projectionList.add(Projections.property("surveyEntity.id"),"surveyId");
-		projectionList.add(Projections.property("clientId"),"clientId");
+		projectionList.add(Projections.property("clientDedupId"),"clientDedupId");
 
 		projectionList.add(Projections.groupProperty("surveyEntity.id"));
-		projectionList.add(Projections.groupProperty("clientId"));
+		projectionList.add(Projections.groupProperty("clientDedupId"));
 		criteria.setProjection(projectionList);
 		criteria.add(Restrictions.eq("surveyEntity.projectGroupCode",projectGroupCode));
 		return countRows(criteria);
