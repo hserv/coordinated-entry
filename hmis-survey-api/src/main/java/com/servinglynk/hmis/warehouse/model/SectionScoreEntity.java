@@ -38,7 +38,10 @@ public class SectionScoreEntity extends BaseEntity {
 	@Column(name="CLIENT_ID")
 	private UUID clientId;
 	
-	
+	@org.hibernate.annotations.Type(type="pg-uuid")	
+	@Column(name="CLIENT_DEDUP_ID")
+	private UUID clientDedupId;
+		
 	public UUID getId() {
 		return id;
 	}
@@ -68,5 +71,11 @@ public class SectionScoreEntity extends BaseEntity {
 	}
 	public void setClientId(UUID clientId) {
 		this.clientId = clientId;
+	}
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
 	}
 }

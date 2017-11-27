@@ -5,8 +5,9 @@ import java.util.Date;
 
 import com.servinglynk.hmis.warehouse.core.model.Client;
 import com.servinglynk.hmis.warehouse.core.model.Response;
+import com.servinglynk.hmis.warehouse.model.ClientEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
-public class ResponseConverter {
+public class ResponseConverterV3 {
 
    public static ResponseEntity modelToEntity (Response model ,ResponseEntity entity) {
        if(entity==null) entity = new ResponseEntity();
@@ -21,7 +22,7 @@ public class ResponseConverter {
    }
 
 
-   public static Response entityToModel (ResponseEntity entity) {
+   public static Response entityToModel (ResponseEntity entity, ClientEntity clientEntity) {
        Response model = new Response();
        model.setResponseId(entity.getId());
        model.setRefused(entity.isRefused());
@@ -30,7 +31,7 @@ public class ResponseConverter {
        model.setAppId(entity.getAppId());
        model.setSectionId(entity.getSurveySectionEntity().getId());
        model.setQuestionId(entity.getQuestionEntity().getId());
-       model.setClientId(entity.getClientId());
+       model.setClientId(clientEntity.getId());
        model.setSurveyId(entity.getSurveyEntity().getId());
        model.setSubmissionId(entity.getSubmissionId());
        model.setEffectiveDate(entity.getEffectiveDate());
@@ -38,7 +39,7 @@ public class ResponseConverter {
        return model;
    }
    
-   public static Response entityToModelDetail (ResponseEntity entity) {
+   public static Response entityToModelDetail (ResponseEntity entity, ClientEntity clientEntity) {
        Response model = new Response();
        model.setResponseId(entity.getId());
        model.setRefused(entity.isRefused());
@@ -47,21 +48,20 @@ public class ResponseConverter {
        model.setAppId(entity.getAppId());
        model.setSectionId(entity.getSurveySectionEntity().getId());
        model.setQuestionId(entity.getQuestionEntity().getId());
-       model.setClientId(entity.getClientId());
+       model.setClientId(clientEntity.getId());
        model.setSurveyId(entity.getSurveyEntity().getId());
        model.setSubmissionId(entity.getSubmissionId());
        model.setEffectiveDate(entity.getEffectiveDate());
-       model.setDedupClientId(entity.getDedupClientId());
+       model.setDedupClientId(clientEntity.getDedupClientId());
        if(entity.getClient()!=null) {
     	   Client client = new Client();
-    	   client.setDob(Date.from(entity.getClient().getDob().atZone(ZoneId.systemDefault()).toInstant()));
-    	   client.setEmailAddress(entity.getClient().getEmailAddress());
-    	   client.setFirstName(entity.getClient().getFirstName());
-			client.setLastName(entity.getClient().getLastName());
-			client.setMiddleName(entity.getClient().getMiddleName());
-			client.setPhoneNumber(entity.getClient().getPhoneNumber());
-			client.setId(entity.getClient().getId());
-			client.setDedupClientId(entity.getDedupClientId());
+    	   client.setDob(Date.from(clientEntity.getDob().atZone(ZoneId.systemDefault()).toInstant()));
+    	   client.setEmailAddress(clientEntity.getEmailAddress());
+    	   client.setFirstName(clientEntity.getFirstName());
+			client.setLastName(clientEntity.getLastName());
+			client.setMiddleName(clientEntity.getMiddleName());
+			client.setPhoneNumber(clientEntity.getPhoneNumber());
+			client.setId(clientEntity.getId());
 			model.setClient(client);
        }
        return model;

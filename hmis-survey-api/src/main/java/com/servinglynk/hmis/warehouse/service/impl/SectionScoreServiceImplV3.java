@@ -18,31 +18,33 @@ import com.servinglynk.hmis.warehouse.core.model.SectionScore;
 import com.servinglynk.hmis.warehouse.core.model.SectionScores;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.ClientEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.model.SectionScoreEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
 import com.servinglynk.hmis.warehouse.model.SurveySectionEntity;
-import com.servinglynk.hmis.warehouse.service.SectionScoreService;
-import com.servinglynk.hmis.warehouse.service.converter.SectionScoreConverter;
+import com.servinglynk.hmis.warehouse.service.SectionScoreServiceV3;
+import com.servinglynk.hmis.warehouse.service.converter.SectionScoreConverterV3;
 import com.servinglynk.hmis.warehouse.service.exception.SectionScoreNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundException;
 
 @Component
-public class SectionScoreServiceImpl extends ServiceBase implements SectionScoreService {
+public class SectionScoreServiceImplV3 extends ServiceBase implements SectionScoreServiceV3 {
 
 	@Transactional
-	public SectionScores getAllSectionScores(UUID clientId,UUID surveyId,UUID sectionId,Integer startIndex,Integer maxItems){
+	public SectionScores getAllSectionScores(UUID dedupClientId,UUID surveyId,UUID sectionId,Integer startIndex,Integer maxItems){
 		SectionScores scores = new SectionScores();
 		
-		List<SectionScoreEntity> entities = daoFactory.getSectionScoreDao().getClientScores(clientId,surveyId, sectionId, startIndex, maxItems);
+		List<SectionScoreEntity> entities = daoFactory.getSectionScoreDaoV3().getClientScoresByDedupClientId(dedupClientId,surveyId, sectionId, startIndex, maxItems);
 		for(SectionScoreEntity entity : entities){
-			scores.addSectionScore(SectionScoreConverter.entityToModel(entity));
+			ClientEntity clientEntity = daoFactory.getClientDao().getClient(entity.getClientDedupId());
+			scores.addSectionScore(SectionScoreConverterV3.entityToModel(entity,clientEntity));
 		}
 		
         SortedPagination pagination = new SortedPagination();
-        long count = daoFactory.getSectionScoreDao().getClientScoresCount(clientId,surveyId, sectionId);
+        long count = daoFactory.getSectionScoreDaoV3().getClientScoresCountByDedupClientId(dedupClientId,surveyId, sectionId);
         pagination.setFrom(startIndex);
         pagination.setReturned(scores.getSectionScores().size());
         pagination.setTotal((int)count);
@@ -53,7 +55,7 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 	@Transactional
 	public void deleteSectionScores(UUID clientId,UUID surveyId,UUID sectionId){
 		
-		List<SectionScoreEntity> entities = daoFactory.getSectionScoreDao().getAllSectionScores(surveyId, sectionId, 0, 0);
+		List<SectionScoreEntity> entities = daoFactory.getSectionScoreDaoV3().getAllSectionScores(surveyId, sectionId, 0, 0);
 		
 		for(SectionScoreEntity entity : entities ){
 			daoFactory.getSectionScoreDao().deleteSectionScore(entity);
@@ -114,7 +116,7 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 	@Transactional
 	public ClientsSurveyScores calculateClientSurveyScore(Integer startIndex,Integer maxItems,String projectGroupCode) {
 		ClientsSurveyScores clientsSurveyScores = new ClientsSurveyScores();
-		List<ClientSurveyScore> clientSurveyScores = daoFactory.getSectionScoreDao().calculateClientSurveyScore(startIndex,maxItems,projectGroupCode);
+		List<ClientSurveyScore> clientSurveyScores = daoFactory.getSectionScoreDaoV3().calculateClientSurveyScore(startIndex,maxItems,projectGroupCode);
 		for(ClientSurveyScore clientSurveyScore : clientSurveyScores){
 			clientsSurveyScores.add(clientSurveyScore);
 		}
@@ -128,7 +130,7 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 		SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao().getSurveySectionEntityById(sectionScore.getSectionId());
 		if(sectionEntity==null) throw new SurveySectionNotFoundException();
 		
-		List<SectionScoreEntity> scoreEntities = daoFactory.getSectionScoreDao().getClientScores(sectionScore.getClientId(), sectionScore.getSurveyId(), sectionScore.getSectionId(), 0, 0);
+		List<SectionScoreEntity> scoreEntities = daoFactory.getSectionScoreDaoV3().getClientScores(sectionScore.getClientDedupId(), sectionScore.getSurveyId(), sectionScore.getSectionId(), 0, 0);
 		SectionScoreEntity sectionScoreEntity =null;
 		if(!scoreEntities.isEmpty()){
 			sectionScoreEntity = scoreEntities.get(0);
@@ -163,7 +165,7 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 
 	@Transactional
 	public void updateSectionScores(SectionScore sectionScore,Session session) {
-		SectionScoreEntity sectionScoreEntity = daoFactory.getSectionScoreDao().getSectionScoreById(sectionScore.getSectionScoreId());
+		SectionScoreEntity sectionScoreEntity = daoFactory.getSectionScoreDaoV3().getSectionScoreById(sectionScore.getSectionScoreId());
 		if(sectionScoreEntity==null) throw new SectionScoreNotFoundException();
 		sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
 		sectionScoreEntity.setUpdatedAt(LocalDateTime.now());

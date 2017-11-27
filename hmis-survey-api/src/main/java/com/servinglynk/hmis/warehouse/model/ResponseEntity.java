@@ -45,6 +45,10 @@ public class ResponseEntity extends BaseEntity {
 	@Column(name="CLIENT_ID")
 	private UUID clientId;
 	
+	@org.hibernate.annotations.Type(type="pg-uuid")
+	@Column(name="client_dedup_id")
+	private UUID dedupClientId;
+	
 	
 	@JoinColumn(name="CLIENT_ID",insertable=false,updatable=false)
 	@OneToOne(fetch=FetchType.LAZY)
@@ -152,5 +156,11 @@ public class ResponseEntity extends BaseEntity {
 	}
 	public void setClient(ClientEntity client) {
 		this.client = client;
+	}
+	public UUID getDedupClientId() {
+		return dedupClientId;
+	}
+	public void setDedupClientId(UUID dedupClientId) {
+		this.dedupClientId = dedupClientId;
 	}
 }

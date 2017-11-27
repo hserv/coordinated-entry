@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 public class ParentDaoFactoryImpl  implements ParentDaoFactory {
 
 	@Autowired SurveyDao surveyDao;
+	
+	@Autowired ClientDao clientDao;
+	
+	@Autowired SectionScoreDaoV3 sectionScoreDaoV3;
 
 	public SurveyDao getSurveyDao() {
 		return surveyDao;
@@ -116,5 +120,21 @@ public class ParentDaoFactoryImpl  implements ParentDaoFactory {
 
 	public void setHealthDao(HealthDao healthDao) {
 		this.healthDao = healthDao;
+	}
+
+	public ClientDao getClientDao() {
+		return clientDao;
+	}
+
+	public void setClientDao(ClientDao clientDao) {
+		this.clientDao = clientDao;
+	}
+
+	public SectionScoreDaoV3 getSectionScoreDaoV3() {
+		return sectionScoreDaoV3;
+	}
+
+	public void setSectionScoreDaoV3(SectionScoreDaoV3 sectionScoreDaoV3) {
+		this.sectionScoreDaoV3 = sectionScoreDaoV3;
 	}
 }
