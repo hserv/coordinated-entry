@@ -72,6 +72,10 @@ public class Match extends BaseEntity {
 	@Column(name="deleted")
 	private boolean deleted;
 	
+	@org.hibernate.annotations.Type(type="pg-uuid")	
+	@Column(name="CLIENT_DEDUP_ID")
+	private UUID clientDedupId;
+	
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -183,5 +187,13 @@ public class Match extends BaseEntity {
 
 	public void setProcessId(UUID processId) {
 		this.processId = processId;
+	}
+
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
 	}
 }

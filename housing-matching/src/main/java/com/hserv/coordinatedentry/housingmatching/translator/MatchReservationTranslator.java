@@ -60,6 +60,7 @@ public class MatchReservationTranslator {
 		matchReservationModel.setHousingUnitId(matchReserve.getHousingUnitId());
 		matchReservationModel.setEligibleClients(eligibleClientsTranslator.translate(matchReserve.getEligibleClient()));
 		matchReservationModel.setProcessId(matchReserve.getProcessId());
+		matchReservationModel.setClientDedupId(matchReserve.getClientDedupId());
 		return matchReservationModel;
 	}
 

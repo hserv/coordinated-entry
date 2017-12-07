@@ -12,6 +12,7 @@ public class ClientModel {
 	private Date dob;
 	private String phoneNumber;
 	private String emailAddress;
+	private UUID clientDedupId;
 	
 	public String getFirstName() {
 		return firstName;
@@ -54,5 +55,11 @@ public class ClientModel {
 	}
 	public void setId(UUID id) {
 		this.id = id;
+	}
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
 	}
 }

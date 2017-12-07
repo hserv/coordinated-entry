@@ -40,6 +40,14 @@ public class SectionScoreEntity {
 	@Column(name="CLIENT_ID")
 	private UUID clientId;
 	
+	@org.hibernate.annotations.Type(type="pg-uuid")	
+	@Column(name="CLIENT_DEDUP_ID")
+	private UUID clientDedupId;
+	
+	@Column(name="PROJECT_GROUP_CODE")
+	protected String projectGroupCode;
+	
+	
 	@Column(name="deleted")
 	private boolean deleted;
 	
@@ -117,4 +125,18 @@ public class SectionScoreEntity {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
+	}
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
+	}
+	
+	
 }

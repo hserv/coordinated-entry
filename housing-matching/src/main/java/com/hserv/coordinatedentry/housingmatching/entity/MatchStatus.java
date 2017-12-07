@@ -41,6 +41,10 @@ public class MatchStatus extends BaseEntity {
 	@Column(name="reservation_id")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID reservationId;
+	
+	@org.hibernate.annotations.Type(type="pg-uuid")	
+	@Column(name="CLIENT_DEDUP_ID")
+	private UUID clientDedupId;
 
 	public UUID getId() {
 		return id;
@@ -83,5 +87,11 @@ public class MatchStatus extends BaseEntity {
 	}
 	public void setReservationId(UUID reservationId) {
 		this.reservationId = reservationId;
+	}
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
 	}
 }

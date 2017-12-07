@@ -43,6 +43,7 @@ import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
 import com.servinglynk.hmis.warehouse.core.model.Parameters;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @Service
 public class EligibleClientServiceImpl implements EligibleClientService {
@@ -246,6 +247,22 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		if(!clients.isEmpty()) return clients.get(0);
 		return null;
 	}	
+	
+	public BaseClient getClientInfoByDedupId(UUID clientDedupId,String trustedAppId,String sessionToken)  {
+		SearchRequest request = new SearchRequest();
+		request.setTrustedAppId(trustedAppId);
+		request.setSearchEntity("clients");
+		request.setSessionToken(sessionToken);
+		request.addSearchParam("q", clientDedupId);
+		List<BaseClient> clients=new ArrayList<BaseClient>();
+		try {
+			clients = (List<BaseClient>) searchServiceClient.search(request);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(!clients.isEmpty()) return clients.get(0);
+		return null;
+	}
 	
 	public Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken) {
 		HttpHeaders headers = getHttpHeaders();

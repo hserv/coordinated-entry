@@ -33,12 +33,14 @@ public class ClientValidator implements ConstraintValidator<ValidateClient,Objec
 	 private HttpServletRequest request;
 	 
 	 String clientField;
+	 String clientDedupIdField;
 	 String link;
 	 
 	 
 	@Override
 	public void initialize(ValidateClient arg0) {
 		clientField = arg0.clientIdField();	
+		clientDedupIdField = arg0.clientDedupIdField();
 		link = arg0.linkField();
 	}
 
@@ -68,6 +70,7 @@ public class ClientValidator implements ConstraintValidator<ValidateClient,Objec
 			return false;
 		}else{
 			BaseClient client = clients.get(0);
+			BeanUtils.setProperty(arg0,clientDedupIdField, client.getDedupClientId());
 			BeanUtils.setProperty(arg0, link, client.getLink());
 			return true;
 		}

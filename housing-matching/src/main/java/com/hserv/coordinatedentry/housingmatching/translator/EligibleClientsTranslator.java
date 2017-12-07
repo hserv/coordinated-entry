@@ -39,6 +39,7 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setDateUpdated(eligibleClient.getDateUpdated());
 			eligibleClientModel.setIgnoreMatchProcess(eligibleClient.isIgnoreMatchProcess());
 			eligibleClientModel.setRemarks(eligibleClient.getRemarks());
+			eligibleClientModel.setClientDedupId(eligibleClient.getClientDedupId());
 		}
 		return eligibleClientModel;
 	}
@@ -59,6 +60,7 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setDateUpdated(eligibleClient.getDateUpdated());
 			eligibleClientModel.setIgnoreMatchProcess(eligibleClient.isIgnoreMatchProcess());
 			eligibleClientModel.setRemarks(eligibleClient.getRemarks());
+			eligibleClientModel.setClientDedupId(eligibleClient.getClientDedupId());
 			if(eligibleClient.getClient()!=null) {
 				ClientModel clientModel = new ClientModel();
 				clientModel.setId(eligibleClient.getClient().getId());
@@ -68,6 +70,7 @@ public class EligibleClientsTranslator {
 				clientModel.setLastName(eligibleClient.getClient().getLastName());
 				clientModel.setMiddleName(eligibleClient.getClient().getMiddleName());
 				clientModel.setPhoneNumber(eligibleClient.getClient().getPhoneNumber());
+				clientModel.setClientDedupId(eligibleClient.getClient().getDedupClientId());
 				eligibleClientModel.setClient(clientModel);
 			}
 		}
@@ -91,6 +94,7 @@ public class EligibleClientsTranslator {
 		eligibleClient.setSurveyType(eligibleClientModel.getSurveyType());
 		eligibleClient.setClientLink(eligibleClientModel.getLink());
 		eligibleClient.setIgnoreMatchProcess(eligibleClientModel.isIgnoreMatchProcess());
+		eligibleClient.setClientDedupId(eligibleClientModel.getClientDedupId());
 		MatchStrategy strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 		int additionalScore = strategy.getAdditionalScore(19,eligibleClientModel.getSpdatLabel().getValue());
 		eligibleClient.setCocScore(eligibleClientModel.getSurveyScore().intValue()+additionalScore);

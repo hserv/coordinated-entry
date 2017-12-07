@@ -3,10 +3,7 @@ package com.hserv.coordinatedentry.housingmatching.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -19,7 +16,7 @@ import com.servinglynk.hmis.warehouse.core.model.JsonDateTimeSerializer;
 import com.servinglynk.hmis.warehouse.core.model.JsonTimestampDeserializer;
 import com.servinglynk.hmis.warehouse.core.model.JsonTimestampSerializer;
 
-@ValidateClient(clientIdField="clientId",linkField="link")
+@ValidateClient(clientIdField="clientId",linkField="link",clientDedupIdField="clientDedupId")
 public class EligibleClientModel {
 
 	private UUID clientId;
@@ -47,6 +44,7 @@ public class EligibleClientModel {
 //	@NotBlank(message="Remarks Required")
 	private String remarks;
 	private ClientModel client;
+	private UUID clientDedupId;
 	
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String link;
@@ -140,5 +138,11 @@ public class EligibleClientModel {
 	}
 	public void setClient(ClientModel client) {
 		this.client = client;
+	}
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
 	}
 }

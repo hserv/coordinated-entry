@@ -130,6 +130,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 							eligibleClient = new EligibleClient();
 							eligibleClient.setMatched(false);
 							eligibleClient.setProjectGroupCode(clientSurveyScore.getProjectGroupCode());
+							
 					}
 						eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 						LocalDateTime surveyDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
@@ -140,8 +141,9 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 						int additionalScore =0;
 						if(client!=null && client.getDob()!=null){
 								additionalScore = strategy.getAdditionalScore(DateUtil.calculateAge(client.getDob()),clientSurveyScore.getSurveyTagValue());
+								eligibleClient.setClientDedupId(client.getDedupClientId());
 						}
-					 
+							
 						eligibleClient.setClientId(clientSurveyScore.getClientId());
 						//  Get survey tag value : SINGLE_AUDULT pass individual true
 						//                         FAMILY pass family true

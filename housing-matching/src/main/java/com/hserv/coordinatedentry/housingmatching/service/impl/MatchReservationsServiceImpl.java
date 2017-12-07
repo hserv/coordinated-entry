@@ -207,6 +207,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			matchStatus.setRecipients(statusModel.getRecipients().toJSONString());
 		matchStatus.setClientId(clientId);
 		matchStatus.setReservationId(match.getReservationId());
+		if(client.getClient()!=null)
+		matchStatus.setClientDedupId(client.getClient().getDedupClientId());
 		repositoryFactory.getMatchStatusRepository().save(matchStatus);
 
 		if(statusModel.getStatus() == 10) {
@@ -218,6 +220,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		}
 		
 		match.setMatchStatus(statusModel.getStatus());
+		if(client.getClient()!=null)
+		match.setClientDedupId(client.getClient().getDedupClientId());
 		repositoryFactory.getMatchReservationsRepository().save(match);
 		if(statusModel.getNoteModel()!=null && ( statusModel.getNoteModel().getNote()!=null && !statusModel.getNoteModel().getNote().isEmpty()) ){
 			StatusNotesEntity statusNote = new StatusNotesEntity();
@@ -227,6 +231,8 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		}
 				
 		client.setStatus(match.getMatchStatus());
+		if(client.getClient()!=null)
+		client.setClientDedupId(client.getClient().getDedupClientId());
 		repositoryFactory.getEligibleClientsRepository().save(client);
 		
 		Account loggedinUser = SecurityContextUtil.getUserAccount();
@@ -409,12 +415,14 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		match.setMatchStatus(0);
 		match.setProcessId(processId);
 		match.setProgramType(projectGroupCode);
+		match.setClientDedupId(client.getClientDedupId());
 		repositoryFactory.getMatchReservationsRepository().save(match);
 		MatchStatus status = new MatchStatus();
 		status.setComments("Housing unit assigned through match process");
 		status.setStatus(0);
 		status.setReservationId(match.getReservationId());
 		status.setClientId(client.getClientId());
+		status.setClientDedupId(client.getClientDedupId());
 		repositoryFactory.getMatchStatusRepository().save(status);
 		client.setMatched(true);
 		repositoryFactory.getEligibleClientsRepository().save(client);
