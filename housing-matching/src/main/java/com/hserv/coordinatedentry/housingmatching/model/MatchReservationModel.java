@@ -19,6 +19,7 @@ public class MatchReservationModel {
 	private LocalDateTime dateCreated;
 	private LocalDateTime dateUpdated;
 	private UUID processId;
+	private UUID clientDedupId;
 
 	public UUID getReservationId() {
 		return reservationId;
@@ -103,5 +104,11 @@ public class MatchReservationModel {
 	}
 	public void setProcessId(UUID processId) {
 		this.processId = processId;
+	}
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
 	}
 }

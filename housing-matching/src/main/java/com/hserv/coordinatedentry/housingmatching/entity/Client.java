@@ -35,7 +35,7 @@ public class Client {
 	private String schemaYear;
 	private String phoneNumber;
 	private String emailAddress;
-
+	private String projectGroupCode;
 
 
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
@@ -174,4 +174,13 @@ public class Client {
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
+
+	@Column(name="project_group_code")
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
+	}	
 }

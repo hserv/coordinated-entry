@@ -20,6 +20,7 @@ public class ClientSurveyScore {
 	private LocalDateTime surveyDate;
 	private String surveyTagValue;
 	private String projectGroupCode;
+	private UUID clientDedupId;
 	
 	public UUID getSurveyId() {
 		return surveyId;
@@ -62,5 +63,11 @@ public class ClientSurveyScore {
 	}
 	public void setProjectGroupCode(String projectGroupCode) {
 		this.projectGroupCode = projectGroupCode;
+	}
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
 	}
 }

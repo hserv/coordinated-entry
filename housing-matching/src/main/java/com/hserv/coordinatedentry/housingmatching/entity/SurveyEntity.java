@@ -42,6 +42,10 @@ public class SurveyEntity {
 	@Column(name="IS_COPY_SURVEY_ID")	
 	private boolean copySurveyId;
 	
+	@Column(name="PROJECT_GROUP_CODE")
+	protected String projectGroupCode;
+	
+	
 	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
 	List<SurveySectionEntity> surveySectionEntities = new ArrayList<SurveySectionEntity>();
 	
@@ -136,4 +140,13 @@ public class SurveyEntity {
 	public void setUser(String user) {
 		this.user = user;
 	}
+
+	public String getProjectGroupCode() {
+		return projectGroupCode;
+	}
+
+	public void setProjectGroupCode(String projectGroupCode) {
+		this.projectGroupCode = projectGroupCode;
+	}
+	
 }

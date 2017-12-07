@@ -98,7 +98,7 @@ public class EligibleClientsController extends BaseController {
 	 * more clients.
 	 * 
 	 */
-	@RequestMapping(value = "", method = RequestMethod.PUT)
+/*	@RequestMapping(value = "", method = RequestMethod.PUT)
 	@APIMapping(value="update-eligible-clients")
 	public ResponseEntity<String> updateEligibleClients(
 			@Valid @RequestBody EligibleClientsModel eligibleClientModels) throws Exception  {
@@ -106,7 +106,7 @@ public class EligibleClientsController extends BaseController {
 			boolean status = eligibleClientService.updateEligibleClients(eligibleClientModels.getEligibleClients());
 			responseEntity = ResponseEntity.ok("{\"updated\": \""+ status +"\"}\"");
 		return responseEntity;
-	}
+	}*/
 
 	/**
 	 * Deletes the entire eligible-clients list.

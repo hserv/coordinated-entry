@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.dao;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -35,5 +36,7 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	@Modifying(clearAutomatically=true)
 	@Query("update EligibleClient as ec set ec.surveyScore = 0 where ec.clientId = ?1")
 	void deleteScoreByClientId(UUID clientId);
-	
+
+	public List<EligibleClient> findByClientDedupIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(UUID clientID,String projectGroup,boolean deleted);
+
 }
