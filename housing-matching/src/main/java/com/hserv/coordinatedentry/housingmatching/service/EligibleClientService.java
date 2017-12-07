@@ -39,4 +39,6 @@ public interface EligibleClientService {
 	BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken);
 	
 	Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken);
+	
+	BaseClient getClientInfoByDedupId(UUID clientDedupId,String trustedAppId,String sessionToken);
 }

@@ -77,6 +77,10 @@ public class EligibleClient extends BaseEntity {
 	@Column(name="status")
 	private Integer status;
 	
+	@org.hibernate.annotations.Type(type="pg-uuid")	
+	@Column(name="CLIENT_DEDUP_ID")
+	private UUID clientDedupId;
+	
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -234,5 +238,13 @@ public class EligibleClient extends BaseEntity {
 
 	public void setClient(Client client) {
 		this.client = client;
+	}
+
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
 	}
 }
