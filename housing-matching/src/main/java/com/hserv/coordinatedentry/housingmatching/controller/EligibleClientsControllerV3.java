@@ -96,7 +96,7 @@ public class EligibleClientsControllerV3 extends BaseController {
 				List<Client> clients = clientRepository.findByDedupClientIdAndProjectGroupCodeOrderBySchemaYearDesc(arg0.getClientDedupId(), projectGroup);
 				Client client = arg0.getClient();
 				if(!clients.isEmpty()) client = clients.get(0);
-				clientModel.setDob(Date.from( client.getDob().atZone(ZoneId.systemDefault()).toInstant()));
+				if(client.getDob()!=null) clientModel.setDob(Date.from( client.getDob().atZone(ZoneId.systemDefault()).toInstant()));
 				clientModel.setEmailAddress(client.getEmailAddress());
 				clientModel.setFirstName(client.getFirstName());
 				clientModel.setLastName(client.getLastName());
