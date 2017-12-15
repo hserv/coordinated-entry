@@ -61,13 +61,15 @@ public class EligibleClientsControllerV2 extends BaseController {
 			EligibleClientModel model = eligibleClientsTranslator.translate(arg0);
 			if(arg0.getClient()!=null) {
 				ClientModel clientModel = new ClientModel();
-				clientModel.setDob(Date.from( arg0.getClient().getDob().atZone(ZoneId.systemDefault()).toInstant()));
-				clientModel.setEmailAddress(arg0.getClient().getEmailAddress());
-				clientModel.setFirstName(arg0.getClient().getFirstName());
-				clientModel.setLastName(arg0.getClient().getLastName());
-				clientModel.setMiddleName(arg0.getClient().getMiddleName());
-				clientModel.setPhoneNumber(arg0.getClient().getPhoneNumber());
-				clientModel.setId(arg0.getClient().getId());
+				if(arg0.getClient()!=null) {
+					if(arg0.getClient().getDob()!=null) clientModel.setDob(Date.from( arg0.getClient().getDob().atZone(ZoneId.systemDefault()).toInstant()));
+					clientModel.setEmailAddress(arg0.getClient().getEmailAddress());
+					clientModel.setFirstName(arg0.getClient().getFirstName());
+					clientModel.setLastName(arg0.getClient().getLastName());
+					clientModel.setMiddleName(arg0.getClient().getMiddleName());
+					clientModel.setPhoneNumber(arg0.getClient().getPhoneNumber());
+					clientModel.setId(arg0.getClient().getId());
+				}
 				model.setClient(clientModel);
 			}
 			Resource<EligibleClientModel> resource = new Resource<EligibleClientModel>(model);
