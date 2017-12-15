@@ -54,7 +54,7 @@ public class ResponseConverter {
        model.setDedupClientId(entity.getDedupClientId());
        if(entity.getClient()!=null) {
     	   Client client = new Client();
-    	   client.setDob(Date.from(entity.getClient().getDob().atZone(ZoneId.systemDefault()).toInstant()));
+    	   if(entity.getClient().getDob()!=null) client.setDob(Date.from(entity.getClient().getDob().atZone(ZoneId.systemDefault()).toInstant()));
     	   client.setEmailAddress(entity.getClient().getEmailAddress());
     	   client.setFirstName(entity.getClient().getFirstName());
 			client.setLastName(entity.getClient().getLastName());

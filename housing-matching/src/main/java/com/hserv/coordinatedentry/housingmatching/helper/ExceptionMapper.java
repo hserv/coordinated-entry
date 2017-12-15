@@ -130,10 +130,10 @@ public class ExceptionMapper {
         	}
 		}
 
-		if (returnStatusCode200Only(request)) {
+	/*	if (returnStatusCode200Only(request)) {
 			r.setStatusCode(HttpServletResponse.SC_OK);
 		}
-
+*/
 		return r;
 	}
 
