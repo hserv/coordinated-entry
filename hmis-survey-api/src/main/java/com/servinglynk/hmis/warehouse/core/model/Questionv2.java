@@ -25,9 +25,9 @@ public class Questionv2 extends ClientModel{
       @NotEmpty(message="Question Display Text is required")
       private String displayText;
 
-      private QuestionDataTypeEnum questionDataType;
+      private String questionDataType;
 
-      private QuestionTypeEnum questionType;
+      private String questionType;
 
 //  	  @NotNull(message="Correct Value for Assessment is required.")
 //  	  @NotEmpty(message="Correct Value for Assessment is required.")
@@ -69,16 +69,16 @@ public class Questionv2 extends ClientModel{
       public void setDisplayText(String displayText){
           this.displayText = displayText;
       }
-      public QuestionDataTypeEnum getQuestionDataType(){
+      public String getQuestionDataType(){
           return questionDataType;
       }
-      public void setQuestionDataType(QuestionDataTypeEnum questionDataType){
+      public void setQuestionDataType(String questionDataType){
           this.questionDataType = questionDataType;
       }
-      public QuestionTypeEnum getQuestionType(){
+      public String getQuestionType(){
           return questionType;
       }
-      public void setQuestionType(QuestionTypeEnum questionType){
+      public void setQuestionType(String questionType){
           this.questionType = questionType;
       }
       public String getCorrectValueForAssessment(){
