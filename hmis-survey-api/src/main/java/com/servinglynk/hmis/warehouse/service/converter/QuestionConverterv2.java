@@ -1,12 +1,7 @@
 package com.servinglynk.hmis.warehouse.service.converter; 
 
-import java.security.InvalidParameterException;
-
-import com.servinglynk.hmis.warehouse.core.model.Question;
 import com.servinglynk.hmis.warehouse.core.model.Questionv2;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
-import com.servinglynk.hmis.warehouse.util.QuestionDataTypeEnum;
-import com.servinglynk.hmis.warehouse.util.QuestionTypeEnum;
 public class QuestionConverterv2   {
 
    public static QuestionEntity modelToEntity (Questionv2 model ,QuestionEntity entity) {
@@ -15,8 +10,8 @@ public class QuestionConverterv2   {
        entity.setProjectGroupId(model.getProjectGroupId());
        entity.setQuestionDescription(model.getQuestionDescription());
        entity.setDisplayText(model.getDisplayText());
-       entity.setQuestionDataType(model.getQuestionDataType().name());
-       entity.setQuestionType(model.getQuestionType().name());
+       entity.setQuestionDataType(model.getQuestionDataType());
+       entity.setQuestionType(model.getQuestionType());
        entity.setCorrectValueForAssessment(model.getCorrectValueForAssessment());
        entity.setCopyQuestionId(model.getCopyQuestionId());
        entity.setHudQuestion(model.getHudQuestion());
@@ -34,8 +29,8 @@ public class QuestionConverterv2   {
        model.setProjectGroupId(entity.getProjectGroupId());
        model.setQuestionDescription(entity.getQuestionDescription());
        model.setDisplayText(entity.getDisplayText());
-       model.setQuestionDataType(QuestionDataTypeEnum.valueOf(entity.getQuestionDataType()));
-       model.setQuestionType(QuestionTypeEnum.valueOf(entity.getQuestionType()));
+       model.setQuestionDataType(entity.getQuestionDataType());
+       model.setQuestionType(entity.getQuestionType());
        model.setCorrectValueForAssessment(entity.getCorrectValueForAssessment());
        model.setCopyQuestionId(entity.isCopyQuestionId());
        model.setHudQuestion(entity.isHudQuestion());
