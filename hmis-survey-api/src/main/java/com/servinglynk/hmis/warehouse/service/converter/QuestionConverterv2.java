@@ -18,7 +18,11 @@ public class QuestionConverterv2   {
        entity.setLocked(model.getLocked());
        entity.setQuestionWeight(model.getQuestionWeight());
        entity.setPicklistValues(model.getPickListValues());
-      
+       entity.setDefinition(model.getDefinition());
+       entity.setVisibility(model.isVisibility());
+       entity.setCategory(model.getCategory());
+       entity.setSubcategory(model.getCategory());
+       
        return entity;    
    }
 
@@ -36,7 +40,10 @@ public class QuestionConverterv2   {
        model.setHudQuestion(entity.isHudQuestion());
        model.setLocked(entity.isLocked());
        model.setQuestionWeight(entity.getQuestionWeight());
-       
+       model.setDefinition(entity.getDefinition());
+       model.setVisibility(entity.isVisibility());
+       model.setCategory(entity.getCategory());
+       model.setSubcategory(entity.getSubcategory());
 
        if(entity.getQuestionGroupEntity()!=null)
     	   model.setQuestionGroupId(entity.getQuestionGroupEntity().getId());
