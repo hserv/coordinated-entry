@@ -31,6 +31,14 @@ public class StatusNotesEntity extends BaseEntity {
 	
 	@Column(name="deleted")
 	private boolean deleted;
+	
+	@org.hibernate.annotations.Type(type="pg-uuid")	
+	@Column(name="CLIENT_DEDUP_ID")
+	private UUID clientDedupId;
+	
+	@Column(name = "client_id", unique = true, nullable = false)
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID clientId;
 
 	public UUID getId() {
 		return id;
@@ -62,5 +70,21 @@ public class StatusNotesEntity extends BaseEntity {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public UUID getClientDedupId() {
+		return clientDedupId;
+	}
+
+	public void setClientDedupId(UUID clientDedupId) {
+		this.clientDedupId = clientDedupId;
+	}
+
+	public UUID getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(UUID clientId) {
+		this.clientId = clientId;
 	}
 }
