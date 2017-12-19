@@ -6,22 +6,22 @@ public class QuestionConverterv2   {
 
    public static QuestionEntity modelToEntity (Questionv2 model ,QuestionEntity entity) {
        if(entity==null) entity = new QuestionEntity();
-       entity.setId(model.getQuestionId());
-       entity.setProjectGroupId(model.getProjectGroupId());
-       entity.setQuestionDescription(model.getQuestionDescription());
-       entity.setDisplayText(model.getDisplayText());
-       entity.setQuestionDataType(model.getQuestionDataType());
-       entity.setQuestionType(model.getQuestionType());
-       entity.setCorrectValueForAssessment(model.getCorrectValueForAssessment());
+  //     entity.setId(model.getQuestionId());
+       if(model.getProjectGroupId()!=null)entity.setProjectGroupId(model.getProjectGroupId());
+       if(model.getQuestionDescription()!=null)entity.setQuestionDescription(model.getQuestionDescription());
+       if(model.getDisplayText()!=null)entity.setDisplayText(model.getDisplayText());
+       if(model.getQuestionDataType()!=null)entity.setQuestionDataType(model.getQuestionDataType());
+       if(model.getQuestionType()!=null)entity.setQuestionType(model.getQuestionType());
+       if(model.getCorrectValueForAssessment()!=null)entity.setCorrectValueForAssessment(model.getCorrectValueForAssessment());
        entity.setCopyQuestionId(model.getCopyQuestionId());
        entity.setHudQuestion(model.getHudQuestion());
        entity.setLocked(model.getLocked());
        entity.setQuestionWeight(model.getQuestionWeight());
-       entity.setPicklistValues(model.getPickListValues());
-       entity.setDefinition(model.getDefinition());
+       if(model.getPickListValues()!=null)entity.setPicklistValues(model.getPickListValues());
+       if(model.getDefinition()!=null)entity.setDefinition(model.getDefinition());
        entity.setVisibility(model.isVisibility());
-       entity.setCategory(model.getCategory());
-       entity.setSubcategory(model.getCategory());
+       if(model.getCategory()!=null)entity.setCategory(model.getCategory());
+       if(model.getSubcategory()!=null)entity.setSubcategory(model.getSubcategory());
        
        return entity;    
    }
