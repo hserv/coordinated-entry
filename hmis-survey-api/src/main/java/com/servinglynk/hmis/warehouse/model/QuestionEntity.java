@@ -65,6 +65,18 @@ public class QuestionEntity extends BaseEntity {
 	@Column(name="PICKLIST_VALUES")
 	private String picklistValues;
 	
+	@Column(name="definition")
+	private String definition;
+	
+	@Column(name="visibility")
+	private boolean visibility;
+
+	@Column(name="category")
+	private String category;
+
+	@Column(name="subcategory")
+	private String subcategory;
+	
 	
 	public UUID getId() {
 		return id;
@@ -149,5 +161,29 @@ public class QuestionEntity extends BaseEntity {
 	}
 	public void setPicklistValues(String picklistValues) {
 		this.picklistValues = picklistValues;
+	}
+	public String getDefinition() {
+		return definition;
+	}
+	public void setDefinition(String definition) {
+		this.definition = definition;
+	}
+	public boolean isVisibility() {
+		return visibility;
+	}
+	public void setVisibility(boolean visibility) {
+		this.visibility = visibility;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getSubcategory() {
+		return subcategory;
+	}
+	public void setSubcategory(String subcategory) {
+		this.subcategory = subcategory;
 	}
 }
