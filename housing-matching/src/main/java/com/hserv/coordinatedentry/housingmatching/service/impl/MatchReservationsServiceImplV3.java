@@ -235,6 +235,8 @@ public class MatchReservationsServiceImplV3 implements MatchReservationsServiceV
 			StatusNotesEntity statusNote = new StatusNotesEntity();
 			statusNote.setNotes(statusModel.getNoteModel().getNote());
 			statusNote.setStatusId(matchStatus.getId());
+			statusNote.setClientId(client.getClient().getId());
+			statusNote.setClientDedupId(client.getClient().getDedupClientId());
 			repositoryFactory.getStatusNotesRepository().save(statusNote);
 		}
 				
@@ -305,6 +307,8 @@ public class MatchReservationsServiceImplV3 implements MatchReservationsServiceV
 		note.setDateUpdated(LocalDateTime.now());
 		note.setProjectGroupCode(projectGroupCode);
 		note.setUserId(SecurityContextUtil.getUserAccount().getAccountId());
+		note.setClientId(statusHistory.get(0).getClientId());
+		note.setClientDedupId(statusHistory.get(0).getClientDedupId());
 		repositoryFactory.getStatusNotesRepository().save(note);
 	}
 	

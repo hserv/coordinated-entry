@@ -130,7 +130,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 							eligibleClient = new EligibleClient();
 							eligibleClient.setMatched(false);
 							eligibleClient.setProjectGroupCode(clientSurveyScore.getProjectGroupCode());
-							
+							eligibleClient.setRemarks("Ignore match flag auto set by system to false");
 					}
 						eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
 						LocalDateTime surveyDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
@@ -151,7 +151,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 						eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagValue()));
 						eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
 						eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
-						eligibleClient.setRemarks("Ignore match flag auto set by system to false");
+
 						if(client!=null)
 							eligibleClient.setClientLink(client.getLink());		
 			
