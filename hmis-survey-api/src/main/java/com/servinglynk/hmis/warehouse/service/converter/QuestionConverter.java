@@ -21,7 +21,7 @@ public class QuestionConverter   {
        entity.setHudQuestion(model.getHudQuestion());
        entity.setLocked(model.getLocked());
        entity.setQuestionWeight(model.getQuestionWeight());
-       
+       entity.setVisibility(true);
        if(QuestionTypeEnum.isPickListType(model.getQuestionType().getValue())){
     	  if(model.getPickListGroupId()==null) throw new InvalidParameterException("Picklist Group required");
        }

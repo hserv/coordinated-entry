@@ -69,7 +69,7 @@ public class QuestionEntity extends BaseEntity {
 	private String definition;
 	
 	@Column(name="visibility")
-	private boolean visibility;
+	private Boolean visibility;
 
 	@Column(name="category")
 	private String category;
@@ -168,10 +168,10 @@ public class QuestionEntity extends BaseEntity {
 	public void setDefinition(String definition) {
 		this.definition = definition;
 	}
-	public boolean isVisibility() {
+	public Boolean isVisibility() {
 		return visibility;
 	}
-	public void setVisibility(boolean visibility) {
+	public void setVisibility(Boolean visibility) {
 		this.visibility = visibility;
 	}
 	public String getCategory() {
