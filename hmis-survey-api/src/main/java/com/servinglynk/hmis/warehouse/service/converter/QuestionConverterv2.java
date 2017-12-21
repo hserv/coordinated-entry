@@ -19,7 +19,8 @@ public class QuestionConverterv2   {
        entity.setQuestionWeight(model.getQuestionWeight());
        if(model.getPickListValues()!=null)entity.setPicklistValues(model.getPickListValues());
        if(model.getDefinition()!=null)entity.setDefinition(model.getDefinition());
-       entity.setVisibility(model.isVisibility());
+       if(model.isVisibility()!=null)entity.setVisibility(model.isVisibility());
+       if(model.isVisibility()==null)entity.setVisibility(false);
        if(model.getCategory()!=null)entity.setCategory(model.getCategory());
        if(model.getSubcategory()!=null)entity.setSubcategory(model.getSubcategory());
        
