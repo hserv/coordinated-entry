@@ -46,7 +46,7 @@ public class Questionv2 extends ClientModel {
 
 	private String definition;
 
-	private boolean visibility;
+	private Boolean visibility;
 
 	private String category;
 
@@ -164,11 +164,11 @@ public class Questionv2 extends ClientModel {
 		this.definition = definition;
 	}
 
-	public boolean isVisibility() {
+	public Boolean isVisibility() {
 		return visibility;
 	}
 
-	public void setVisibility(boolean visibility) {
+	public void setVisibility(Boolean visibility) {
 		this.visibility = visibility;
 	}
 
