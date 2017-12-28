@@ -5,12 +5,12 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-@JsonRootName("survies")
+@JsonRootName("surveys")
 public class Surveys extends PaginatedModel{
 
 
-       @JsonProperty("survies") 
-       List<Survey>survies = new ArrayList<Survey>();
+       @JsonProperty("surveys") 
+       List<Survey> survies = new ArrayList<Survey>();
        public List<Survey> getSurvies() {
            return survies;
        }

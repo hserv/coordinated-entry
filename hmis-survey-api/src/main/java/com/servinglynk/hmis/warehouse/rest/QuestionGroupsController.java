@@ -30,7 +30,7 @@ public class QuestionGroupsController extends BaseController {
         Session session = sessionHelper.getSession(request); 
          serviceFactory.getQuestionGroupService().createQuestionGroup(QuestionGroup,session.getAccount().getUsername()); 
          QuestionGroup returnQuestionGroup = new QuestionGroup();
-         returnQuestionGroup.setQuestionIGroupId(QuestionGroup.getQuestionIGroupId());
+         returnQuestionGroup.setQuestionGroupId(QuestionGroup.getQuestionGroupId());
          return returnQuestionGroup;
    }
 

@@ -25,21 +25,21 @@ public class QuestionGroupServiceImpl extends ServiceBase implements QuestionGro
        pQuestionGroup.setCreatedAt(LocalDateTime.now());
        pQuestionGroup.setUser(caller);
        daoFactory.getQuestionGroupEntityDao().createQuestionGroupEntity(pQuestionGroup);
-       QuestionGroup.setQuestionIGroupId(pQuestionGroup.getId());
+       QuestionGroup.setQuestionGroupId(pQuestionGroup.getId());
        return QuestionGroup;
    }
 
 
    @Transactional
    public QuestionGroup updateQuestionGroup(QuestionGroup QuestionGroup,UUID enrollmentId,String caller){
-       QuestionGroupEntity pQuestionGroup = daoFactory.getQuestionGroupEntityDao().getQuestionGroupEntityById(QuestionGroup.getQuestionIGroupId());
+       QuestionGroupEntity pQuestionGroup = daoFactory.getQuestionGroupEntityDao().getQuestionGroupEntityById(QuestionGroup.getQuestionGroupId());
        if(pQuestionGroup==null) throw new QuestionGroupNotFoundException();
 
        QuestionGroupConverter.modelToEntity(QuestionGroup, pQuestionGroup);
        pQuestionGroup.setUpdatedAt(LocalDateTime.now());
        pQuestionGroup.setUser(caller);
        daoFactory.getQuestionGroupEntityDao().updateQuestionGroupEntity(pQuestionGroup);
-       QuestionGroup.setQuestionIGroupId(pQuestionGroup.getId());
+       QuestionGroup.setQuestionGroupId(pQuestionGroup.getId());
        return QuestionGroup;
    }
 
