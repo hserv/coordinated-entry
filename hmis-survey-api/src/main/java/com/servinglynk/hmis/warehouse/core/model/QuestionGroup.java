@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 public class QuestionGroup extends ClientModel{
 
 
-      private UUID questionIGroupId;
+      private UUID questionGroupId;
 
       @NotBlank(message="Question Group Name is required")
       @NotEmpty(message="Question Group Name is required")
@@ -19,11 +19,11 @@ public class QuestionGroup extends ClientModel{
 
 
 
-      public UUID getQuestionIGroupId(){
-          return questionIGroupId;
+      public UUID getQuestionGroupId(){
+          return questionGroupId;
       }
-      public void setQuestionIGroupId(UUID questionIGroupId){
-          this.questionIGroupId = questionIGroupId;
+      public void setQuestionGroupId(UUID questionGroupId){
+          this.questionGroupId = questionGroupId;
       }
       public String getQuestionGroupName(){
           return questionGroupName;
