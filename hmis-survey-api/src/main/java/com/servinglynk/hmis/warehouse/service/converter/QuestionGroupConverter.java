@@ -6,7 +6,7 @@ public class QuestionGroupConverter{
 
    public static QuestionGroupEntity modelToEntity (QuestionGroup model ,QuestionGroupEntity entity) {
        if(entity==null) entity = new QuestionGroupEntity();
-       entity.setId(model.getQuestionIGroupId());
+       entity.setId(model.getQuestionGroupId());
        entity.setQuestionGroupName(model.getQuestionGroupName());
        return entity;    
    }
@@ -14,7 +14,7 @@ public class QuestionGroupConverter{
 
    public static QuestionGroup entityToModel (QuestionGroupEntity entity) {
        QuestionGroup model = new QuestionGroup();
-       model.setQuestionIGroupId(entity.getId());
+       model.setQuestionGroupId(entity.getId());
        model.setQuestionGroupName(entity.getQuestionGroupName());
        return model;
    }
