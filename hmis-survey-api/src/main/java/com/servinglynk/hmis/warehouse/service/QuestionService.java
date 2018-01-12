@@ -10,5 +10,5 @@ public interface QuestionService {
    Question updateQuestion(Question Question,String caller);
    Question deleteQuestion(UUID QuestionId,String caller);
    Question getQuestionById(UUID QuestionId);
-   Questions getAllQuestions(Integer startIndex, Integer maxItems);
+   Questions getAllQuestions(UUID questionGroupId, Integer startIndex, Integer maxItems);
 }

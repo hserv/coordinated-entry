@@ -32,12 +32,16 @@ public class QuestionEntityDaoImpl extends QueryExecutorImpl implements Question
 	   return entities.get(0);
    }
    @SuppressWarnings("unchecked")
-   public List<QuestionEntity> getAllQuestionEntitys(Integer startIndex, Integer maxItems){
+   public List<QuestionEntity> getAllQuestionEntitys(UUID questionGroupId,Integer startIndex, Integer maxItems){
        DetachedCriteria criteria=DetachedCriteria.forClass(QuestionEntity.class);
+       criteria.createAlias("questionGroupEntity", "questionGroupEntity");
+       criteria.add(Restrictions.eq("questionGroupEntity.id",questionGroupId));
        return (List<QuestionEntity>) findByCriteria(criteria,startIndex,maxItems);
    }
-   public long getQuestionEntitysCount(){
+   public long getQuestionEntitysCount(UUID questionGroupId){
        DetachedCriteria criteria=DetachedCriteria.forClass(QuestionEntity.class);
+       criteria.createAlias("questionGroupEntity", "questionGroupEntity");
+       criteria.add(Restrictions.eq("questionGroupEntity.id",questionGroupId));
        return countRows(criteria);
    }
 }
