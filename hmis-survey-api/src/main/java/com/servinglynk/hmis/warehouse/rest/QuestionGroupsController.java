@@ -116,7 +116,7 @@ public class QuestionGroupsController extends BaseController {
            if (startIndex == null) startIndex =0;
            if (maxItems == null || maxItems > 30) maxItems =30;
            serviceFactory.getQuestionGroupService().getQuestionGroupById(questionGroupId);
-        return serviceFactory.getQuestionService().getAllQuestions(startIndex,maxItems); 
+        return serviceFactory.getQuestionService().getAllQuestions(questionGroupId,startIndex,maxItems); 
    }
 
 }

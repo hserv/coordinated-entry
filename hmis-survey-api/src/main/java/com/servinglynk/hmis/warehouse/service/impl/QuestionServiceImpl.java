@@ -86,13 +86,13 @@ public class QuestionServiceImpl extends ServiceBase implements QuestionService 
 
 
    @Transactional
-   public Questions getAllQuestions(Integer startIndex, Integer maxItems){
+   public Questions getAllQuestions(UUID questionGroupId,Integer startIndex, Integer maxItems){
        Questions Questions = new Questions();
-        List<QuestionEntity> entities = daoFactory.getQuestionEntityDao().getAllQuestionEntitys(startIndex,maxItems);
+        List<QuestionEntity> entities = daoFactory.getQuestionEntityDao().getAllQuestionEntitys(questionGroupId,startIndex,maxItems);
         for(QuestionEntity entity : entities){
            Questions.addQuestion(QuestionConverter.entityToModel(entity));
         }
-        long count = daoFactory.getQuestionEntityDao().getQuestionEntitysCount();
+        long count = daoFactory.getQuestionEntityDao().getQuestionEntitysCount(questionGroupId);
         SortedPagination pagination = new SortedPagination();
  
         pagination.setFrom(startIndex);

@@ -74,13 +74,13 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
 
 
    @Transactional
-   public Questionsv2 getAllQuestions(Integer startIndex, Integer maxItems){
+   public Questionsv2 getAllQuestions(UUID questionGroupId,Integer startIndex, Integer maxItems){
 	   Questionsv2 questions = new Questionsv2();
-        List<QuestionEntity> entities = daoFactory.getQuestionEntityDao().getAllQuestionEntitys(startIndex,maxItems);
+        List<QuestionEntity> entities = daoFactory.getQuestionEntityDao().getAllQuestionEntitys(questionGroupId,startIndex,maxItems);
         for(QuestionEntity entity : entities){
         	questions.addQuestion(QuestionConverterv2.entityToModel(entity));
         }
-        long count = daoFactory.getQuestionEntityDao().getQuestionEntitysCount();
+        long count = daoFactory.getQuestionEntityDao().getQuestionEntitysCount(questionGroupId);
         SortedPagination pagination = new SortedPagination();
  
         pagination.setFrom(startIndex);
