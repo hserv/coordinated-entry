@@ -12,6 +12,6 @@ public interface QuestionEntityDao {
    QuestionEntity updateQuestionEntity(QuestionEntity QuestionEntity);
    void deleteQuestionEntity(QuestionEntity QuestionEntity);
    QuestionEntity getQuestionEntityById(UUID QuestionEntityId);
-   List<QuestionEntity> getAllQuestionEntitys(Integer startIndex, Integer maxItems);
-   long getQuestionEntitysCount();
+   List<QuestionEntity> getAllQuestionEntitys(UUID questionGroupId, Integer startIndex, Integer maxItems);
+   long getQuestionEntitysCount(UUID questionGroupId);
 }
