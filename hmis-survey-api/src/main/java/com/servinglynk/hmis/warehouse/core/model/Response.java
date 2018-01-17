@@ -36,6 +36,8 @@ public class Response extends ClientModel {
 	
 	private Client client;
 	
+	private UUID global_enrollment_id;
+	
 	@JsonDeserialize(using=JsonTimestampDeserializer.class)
 	@JsonSerialize(using=JsonTimestampSerializer.class)
 	private LocalDateTime effectiveDate;
@@ -160,4 +162,13 @@ public class Response extends ClientModel {
 	public void setDedupClientId(UUID dedupClientId) {
 		this.dedupClientId = dedupClientId;
 	}
+
+	public UUID getGlobal_enrollment_id() {
+		return global_enrollment_id;
+	}
+
+	public void setGlobal_enrollment_id(UUID global_enrollment_id) {
+		this.global_enrollment_id = global_enrollment_id;
+	}
+	
 }
