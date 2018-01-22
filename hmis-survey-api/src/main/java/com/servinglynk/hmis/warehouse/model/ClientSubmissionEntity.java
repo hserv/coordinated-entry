@@ -18,8 +18,8 @@ import org.hibernate.annotations.Type;
 
 
 @Entity
-@Table(name="CLIENT_SUBMISSION_ENTITY",schema="survey")
-public class ClientSubmissionEntity {
+@Table(name="CLIENT_SUBMISSION",schema="survey")
+public class ClientSubmissionEntity extends BaseEntity {
 
 
 	@Id
@@ -37,11 +37,11 @@ public class ClientSubmissionEntity {
 	@Column(name="SURVEY_ID")
 	private UUID surveyId; 
 	
-    @org.hibernate.annotations.Type(type="pg-uuid")
+	@org.hibernate.annotations.Type(type="pg-uuid")
 	@Column(name="SUBMISSION_ID")
 	private UUID submissionId;
     
-    @org.hibernate.annotations.Type(type="pg-uuid")
+	@org.hibernate.annotations.Type(type="pg-uuid")
    	@Column(name="GLOBAL_ENROLLMENT_ID")
    	private UUID globalEnrollmentId;
 
@@ -84,6 +84,8 @@ public class ClientSubmissionEntity {
 	public void setGlobalEnrollmentId(UUID globalEnrollmentId) {
 		this.globalEnrollmentId = globalEnrollmentId;
 	}
+
+	
 	
     
     

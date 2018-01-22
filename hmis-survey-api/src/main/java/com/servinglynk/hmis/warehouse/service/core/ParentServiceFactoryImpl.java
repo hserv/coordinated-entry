@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.servinglynk.hmis.warehouse.service.ClientService;
+import com.servinglynk.hmis.warehouse.service.ClientSubmissionService;
 import com.servinglynk.hmis.warehouse.service.HealthService;
 import com.servinglynk.hmis.warehouse.service.PickListGroupService;
 import com.servinglynk.hmis.warehouse.service.PickListValueService;
@@ -29,6 +30,7 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 	@Autowired ResponseServiceV3 responseServiceV3;
 	@Autowired SectionScoreServiceV3 sectionScoreServiceV3;
 	@Autowired ClientService clientService;
+	@Autowired ClientSubmissionService clientSubmissionService;
 
 	public SurveyService getSurveyService() {
 		return surveyService;
@@ -171,4 +173,14 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 	public void setClientService(ClientService clientService) {
 		this.clientService = clientService;
 	}
+
+	public ClientSubmissionService getClientSubmissionService() {
+		return clientSubmissionService;
+	}
+
+	public void setClientSubmissionService(ClientSubmissionService clientSubmissionService) {
+		this.clientSubmissionService = clientSubmissionService;
+	}
+	
+	
 }

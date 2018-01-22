@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Response;
@@ -22,11 +24,17 @@ import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundExceptio
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundException;
+import com.servinglynk.hmis.warehouse.util.RestClient;
+
+
 
 
 @Component
 public class ResponseServiceImplV3 extends ServiceBase implements ResponseServiceV3  {
 
+   @Autowired
+   private RestClient restClient;
+	
    @Transactional
    public Response createResponse(UUID surveyId,Responses responses,BaseClient client,String caller){
 	   Response returnResponse = new Response();
@@ -56,7 +64,8 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
        pResponse.setSubmissionId(submissionId);
        pResponse.setClientLink(client.getLink());
        pResponse.setDedupClientId(client.getDedupClientId());
-//       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
+       
+//     pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
        daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
     //   pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, pResponse));
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);

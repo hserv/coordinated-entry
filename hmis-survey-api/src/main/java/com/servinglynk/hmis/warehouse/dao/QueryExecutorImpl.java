@@ -34,7 +34,6 @@ public class QueryExecutorImpl  implements QueryExecutor{
 	@Autowired
 	SessionFactory sessionFactory;
 	
-
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 		
@@ -53,23 +52,29 @@ public class QueryExecutorImpl  implements QueryExecutor{
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Object insert(Object entity) {
+		
 		try{
-			BeanUtils.setProperty(entity,"projectGroupCode",SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode());
+			//BeanUtils.setProperty(entity,"projectGroupCode",SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode());
+			BeanUtils.setProperty(entity,"projectGroupCode","test");
 			BeanUtils.setProperty(entity, "updatedAt", LocalDateTime.now());
 			BeanUtils.setProperty(entity, "createdAt", LocalDateTime.now());
-			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
-		return getCurrentSession().save(entity);
+			//BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
+			BeanUtils.copyProperty(entity, "user","Gerard");
+			return getCurrentSession().save(entity);
+		
 		}catch(Exception e){
 			e.printStackTrace();
 			return null;
 		}
+		
 	}
 
 
 	public Object update(Object entity) {
 		try {
 			BeanUtils.setProperty(entity, "updatedAt", LocalDateTime.now());
-			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
+			//BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
+			BeanUtils.copyProperty(entity, "user","Gerard");
 			getCurrentSession().update(entity);
 		} catch (Exception e) {
 			e.printStackTrace();
