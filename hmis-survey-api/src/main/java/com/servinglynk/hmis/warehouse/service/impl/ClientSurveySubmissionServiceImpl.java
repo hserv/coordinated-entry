@@ -9,30 +9,30 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
-import com.servinglynk.hmis.warehouse.core.model.ClientSubmission;
-import com.servinglynk.hmis.warehouse.model.ClientSubmissionEntity;
-import com.servinglynk.hmis.warehouse.service.ClientSubmissionService;
+import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
+import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
+import com.servinglynk.hmis.warehouse.service.ClientSurveySubmissionService;
 
 
 @Component
-public class ClientSubmissionServiceImpl extends ServiceBase implements ClientSubmissionService {
+public class ClientSurveySubmissionServiceImpl extends ServiceBase implements ClientSurveySubmissionService {
 
 	@Override
 	@Transactional
-	public void createClientSubmissionEntity (ClientSubmissionEntity  clientSubmissionEntity){
+	public ClientSurveySubmissionEntity createClientSurveySubmissionEntity (ClientSurveySubmissionEntity  clientSurveySubmissionEntity){
 		
 		
-		daoFactory.getClientSubmissionEntityDao().createClientSubmissionEntity(clientSubmissionEntity);
-		// return clientSubmissionEntity;
+		daoFactory.getClientSubmissionEntityDao().createClientSubmissionEntity(clientSurveySubmissionEntity);
+		 return clientSurveySubmissionEntity;
 	}
 	@Override
 	@Transactional
-	public void createClientSubmissionEntity (List<ClientSubmissionEntity>  clientSubmissionEntities){
+	public void createClientSurveySubmissionEntity (List<ClientSurveySubmissionEntity>  clientSurveySubmissionEntities){
 		
-		clientSubmissionEntities.stream().forEach((clientSubmissionEntity) ->{
+		clientSurveySubmissionEntities.stream().forEach((clientSurveySubmissionEntity) ->{
 			
-			createClientSubmissionEntity (  clientSubmissionEntity);
-			logger.debug("created {}",clientSubmissionEntity);
+			createClientSurveySubmissionEntity (  clientSurveySubmissionEntity);
+			logger.debug("created {}",clientSurveySubmissionEntity);
 		});
 			
 
@@ -42,12 +42,15 @@ public class ClientSubmissionServiceImpl extends ServiceBase implements ClientSu
 	
 	
 	@Transactional
-	public void updateClientSubmissionEntity  (ClientSubmissionEntity clientSubmissionEntity) {
-		daoFactory.getClientSubmissionEntityDao().updateClientSubmissionEntity(clientSubmissionEntity);
-		
+	public ClientSurveySubmissionEntity updateClientSurveySubmissionEntity  (ClientSurveySubmissionEntity clientSurveySubmissionEntity) {
+		daoFactory.getClientSubmissionEntityDao().updateClientSubmissionEntity(clientSurveySubmissionEntity);
+		return clientSurveySubmissionEntity;
 	}
 	
-	
+	@Transactional
+	public ClientSurveySubmissionEntity getClientSurveySubmissionEntitybyId(UUID id) {
+		return daoFactory.getClientSubmissionEntityDao().getClientSubmissionEntityById(id);
+	}
 	
 }
 ;

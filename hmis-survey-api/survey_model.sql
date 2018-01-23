@@ -204,13 +204,13 @@ WITH (
   OIDS=FALSE
 );
 
-CREATE TABLE survey.client_submission
+CREATE TABLE survey.client_survey_submission
 (
   id uuid NOT NULL,
-  client_id character varying(256),
-  survey_id character varying(256),
-  submission_id character varying(256),
-  global_enrollment_id character varying(256),
+  client_id UUID,
+  survey_id UUID,
+  submission_id UUID,
+  global_enrollment_id UUID,
   project_group_code character varying(256),
   created_at date,
   updated_at date,

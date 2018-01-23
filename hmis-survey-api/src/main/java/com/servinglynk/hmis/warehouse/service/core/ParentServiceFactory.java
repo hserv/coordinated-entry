@@ -1,7 +1,7 @@
 package com.servinglynk.hmis.warehouse.service.core;
 
 import com.servinglynk.hmis.warehouse.service.ClientService;
-import com.servinglynk.hmis.warehouse.service.ClientSubmissionService;
+import com.servinglynk.hmis.warehouse.service.ClientSurveySubmissionService;
 import com.servinglynk.hmis.warehouse.service.HealthService;
 import com.servinglynk.hmis.warehouse.service.PickListGroupService;
 import com.servinglynk.hmis.warehouse.service.PickListValueService;
@@ -49,5 +49,5 @@ public interface ParentServiceFactory  {
 	
 	ClientService getClientService();
 	
-	ClientSubmissionService getClientSubmissionService();
+	ClientSurveySubmissionService getClientSurveySubmissionService();
 }

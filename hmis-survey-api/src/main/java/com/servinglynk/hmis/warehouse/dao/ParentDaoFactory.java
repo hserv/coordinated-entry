@@ -27,6 +27,6 @@ public interface ParentDaoFactory  {
 	 
 	 ClientDao getClientDao();
 	 
-	 ClientSubmissionEntityDao getClientSubmissionEntityDao(); 
+	 ClientSurveySubmissionEntityDao getClientSubmissionEntityDao(); 
 
 }

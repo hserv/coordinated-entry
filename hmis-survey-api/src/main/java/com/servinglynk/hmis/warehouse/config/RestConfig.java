@@ -19,6 +19,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.servinglynk.hmis.warehouse.client.search.SearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
@@ -57,6 +60,16 @@ public class RestConfig extends WebMvcConfigurerAdapter {
 		return xmlConverter;
 	}
 
+	private ObjectMapper rootMapper()
+	{
+	    ObjectMapper mapper = new ObjectMapper();
+	    mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+	    mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
+	    return mapper;
+	}
+
+	
+	
 	@Bean
 	public RestTemplate restTemplate() {
 		RestTemplate restTemplate = new RestTemplate();

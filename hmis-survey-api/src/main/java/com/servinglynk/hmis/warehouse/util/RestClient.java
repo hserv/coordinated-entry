@@ -17,6 +17,12 @@ public class RestClient {
 		return restTemplate.getForObject(url, responseType);
 	}
 	
+	public Object post(String url , Object ob, Class responseType) {
+		//RestTemplate restTemplate = new RestTemplate();
+		return restTemplate.postForObject(url, ob,responseType);
+	}
+	
+	
 /*	public Object get(String url , HttpEntity httpEntity, Class responseType,Object... uriVariables) {
 		//RestTemplate restTemplate = new RestTemplate();
 		return restTemplate.exchange(url, HttpMethod.GET,httpEntity,responseType,uriVariables);

@@ -3,9 +3,13 @@ package com.servinglynk.hmis.warehouse.core.model;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 
-public class ClientSubmission {
+@JsonRootName(value = "ClientSurveySubmission")
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ClientSurveySubmission {
 	
 	
 	private UUID id;
@@ -13,7 +17,8 @@ public class ClientSubmission {
 	private UUID surveyId; 
 	private UUID submissionId;
     private UUID globalEnrollmentId;
-	public UUID getId() {
+	
+    public UUID getId() {
 		return id;
 	}
 	public void setId(UUID id) {

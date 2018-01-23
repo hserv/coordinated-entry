@@ -14,6 +14,7 @@ import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
+import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
@@ -64,6 +65,17 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
        pResponse.setSubmissionId(submissionId);
        pResponse.setClientLink(client.getLink());
        pResponse.setDedupClientId(client.getDedupClientId());
+       
+       // issue 176
+       try {
+    	   ClientSurveySubmissionEntity clientSurveySubmissionEntity = new ClientSurveySubmissionEntity();
+    	   clientSurveySubmissionEntity.setClientId(client.getClientId());
+    	   clientSurveySubmissionEntity.setSurveyId(surveyId);
+    	   clientSurveySubmissionEntity.setSubmissionId(submissionId);
+    	   serviceFactory.getClientSurveySubmissionService().createClientSurveySubmissionEntity(clientSurveySubmissionEntity);
+       } catch (Exception e) {
+    	   logger.warn("Could not create clientSurveySubmission for submission {}",submissionId);
+       }
        
 //     pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
        daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
