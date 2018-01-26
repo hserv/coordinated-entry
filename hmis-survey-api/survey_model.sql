@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS "survey".survey_section;
 DROP TABLE IF EXISTS "survey".section_question_mapping; 
 DROP TABLE IF EXISTS "survey".response; 
 DROP TABLE IF EXISTS "survey".section_score; 
+DROP TABLE IF EXISTS "survey".client_survey_submission
 
 CREATE TABLE survey.picklist_group
 (
@@ -206,7 +207,7 @@ WITH (
 
 CREATE TABLE survey.client_survey_submission
 (
-  id uuid NOT NULL,
+  id uuid default uuid_generate_v4() NOT NULL,
   client_id UUID,
   survey_id UUID,
   submission_id UUID,

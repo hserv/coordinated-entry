@@ -80,7 +80,7 @@ public class ClientSurveySubmissionController extends BaseController{
 	
 	@RequestMapping(value="/new",method=RequestMethod.GET)
 	@APIMapping(value="SURVEY_API_CREATE_SUBMISSION",checkTrustedApp=true,checkSessionToken=true)
-	public ClientSurveySubmission createList(HttpServletRequest request) throws Exception{  
+	public UUID createList(HttpServletRequest request) throws Exception{  
 		logger.debug("entered new method");    
 		List<ClientSurveySubmission> csss = new ArrayList<ClientSurveySubmission>();
 		
@@ -127,10 +127,10 @@ public class ClientSurveySubmissionController extends BaseController{
 			clientSurveySubmissionEntity.setSubmissionId(cs.getSubmissionId());
 			serviceFactory.getClientSurveySubmissionService().createClientSurveySubmissionEntity(clientSurveySubmissionEntity);
 			// need to add error logging and save to file?
-			logger.debug("created {}",cs.toString() );
+			logger.info("created {} ",cs.toString() );
 		});
 		
-		return csss.get(0);
+		return csss.get(0).getId();
 	}
 	
 		

@@ -34,10 +34,10 @@ public class DatabaseConfigTest {
 		ComboPooledDataSource ds = new ComboPooledDataSource();
 		
 		Properties connectionProps = new Properties();
-		connectionProps.put("user", "root");
-		connectionProps.put("password", "hmis");   
+		connectionProps.put("user", "postgres");
+		connectionProps.put("password", "gerard");   
 		ds.setProperties(connectionProps);
-		ds.setJdbcUrl("jdbc:postgresql://debian.jsp-servlet.net:5432/hmis");
+		ds.setJdbcUrl("jdbc:postgresql://localhost:5432/hmis");
 
 		
 		builder.bind( "java:comp/env/jdbc/hmisdb" , ds );
