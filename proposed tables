@@ -1,4 +1,3 @@
-
 CREATE TABLE "human-svcs".document
 (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -7,13 +6,15 @@ CREATE TABLE "human-svcs".document
   ending_date date,
   client_id uuid,
   user_id uuid,
+  enrollment_id uuid,
   url character varying(128),
+  doc_size integer,
   description character varying(256),
   created_at date,
   updated_at date,
   is_active boolean,
   deleted boolean,
-  doc_category_id uuid,
+  doc_category_id uuid, 
   CONSTRAINT document_pk PRIMARY KEY (id)
 )
 WITH (
