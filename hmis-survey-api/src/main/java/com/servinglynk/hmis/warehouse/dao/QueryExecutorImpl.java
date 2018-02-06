@@ -1,7 +1,6 @@
 package com.servinglynk.hmis.warehouse.dao;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -16,12 +15,7 @@ import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.ejb.criteria.expression.function.LocateFunction;
-import org.hibernate.internal.CriteriaImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,12 +48,10 @@ public class QueryExecutorImpl  implements QueryExecutor{
 	public Object insert(Object entity) {
 		
 		try{
-			//BeanUtils.setProperty(entity,"projectGroupCode",SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode());
-			BeanUtils.setProperty(entity,"projectGroupCode","test");
+			BeanUtils.setProperty(entity,"projectGroupCode",SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode());
 			BeanUtils.setProperty(entity, "updatedAt", LocalDateTime.now());
 			BeanUtils.setProperty(entity, "createdAt", LocalDateTime.now());
-			//BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
-			BeanUtils.copyProperty(entity, "user","Gerard");
+			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
 			return getCurrentSession().save(entity);
 		
 		}catch(Exception e){
@@ -73,8 +65,7 @@ public class QueryExecutorImpl  implements QueryExecutor{
 	public Object update(Object entity) {
 		try {
 			BeanUtils.setProperty(entity, "updatedAt", LocalDateTime.now());
-			//BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
-			BeanUtils.copyProperty(entity, "user","Gerard");
+			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
 			getCurrentSession().update(entity);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -187,7 +178,7 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 	
 	public List<?> list(String entityName){
 		Session session = getCurrentSession();
-		return session.createQuery("from "+entityName).list();
+		return session.createQuery("from "+ entityName).list();
 	}
 	
 	
@@ -202,7 +193,7 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 	public List<?> findByCriteria(DetachedCriteria detachedCriteria){
 				detachedCriteria.add(Restrictions.eq("deleted", false));
 				//detachedCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
-				detachedCriteria.add(Restrictions.eq("projectGroupCode","test"));
+				detachedCriteria.add(Restrictions.eq("projectGroupCode","HO0002"));
 				return detachedCriteria.getExecutableCriteria(getCurrentSession()).list();
 	}
 	

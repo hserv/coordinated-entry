@@ -1,6 +1,7 @@
 package com.servinglynk.hmis.warehouse.core.model;
 
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,9 +10,10 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName(value = "ClientSurveySubmission")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClientSurveySubmission {
-	
-	
+public class ClientSurveySubmission implements Serializable {
+
+	private static final long serialVersionUID = 7526472295622776147L; 
+		
 	private UUID id;
 	private UUID clientId;
 	private UUID surveyId; 

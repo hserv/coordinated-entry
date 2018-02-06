@@ -32,12 +32,10 @@ public class ApiAuthCheckInterceptor extends HandlerInterceptorAdapter {
 		
 		String accessToken = this.sessionHelper.retrieveSessionToken(request);
 		String trustedApp = this.trustedAppHelper.retrieveTrustedAppId(request);
-		logger.debug("got here");
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);
 				
 		if(apiMapping!=null) {
 			if(apiMapping.value().equalsIgnoreCase("HEALTH_CHECK")) return true;
-			if (request.getServerName().contains("192.168.1.198") || request.getServerName().contains("localhost")) return true;
 			ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
 			apiMethodAuthorizationCheck.setApiMethodId(apiMapping.value());
 			apiMethodAuthorizationCheck.setAccessToken(accessToken);

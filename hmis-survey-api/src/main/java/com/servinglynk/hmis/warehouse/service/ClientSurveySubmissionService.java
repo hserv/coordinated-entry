@@ -7,9 +7,10 @@ import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 
 public interface ClientSurveySubmissionService {
 	
+	List<ClientSurveySubmissionEntity> getClientSurveySubmissionEntitybyClientId(UUID clientId);
 	ClientSurveySubmissionEntity createClientSurveySubmissionEntity(ClientSurveySubmissionEntity clientSurveySubmissionEntity);
-	void createClientSurveySubmissionEntity(List<ClientSurveySubmissionEntity> clientSurveySubmissionEntities);
 	ClientSurveySubmissionEntity updateClientSurveySubmissionEntity(ClientSurveySubmissionEntity clientSurveySubmissionEntity);
-	ClientSurveySubmissionEntity getClientSurveySubmissionEntitybyId(UUID id);
+	ClientSurveySubmissionEntity getClientSurveySubmissionEntitybyId(UUID Id);
+	ClientSurveySubmissionEntity getClientSurveySubmissionEntitybyClientSurveySubmission(UUID clientId,UUID surveyId,UUID submissionId);
 }
 
