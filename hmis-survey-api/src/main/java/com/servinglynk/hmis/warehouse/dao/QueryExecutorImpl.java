@@ -192,8 +192,7 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 
 	public List<?> findByCriteria(DetachedCriteria detachedCriteria){
 				detachedCriteria.add(Restrictions.eq("deleted", false));
-				//detachedCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
-				detachedCriteria.add(Restrictions.eq("projectGroupCode","HO0002"));
+				detachedCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
 				return detachedCriteria.getExecutableCriteria(getCurrentSession()).list();
 	}
 	
