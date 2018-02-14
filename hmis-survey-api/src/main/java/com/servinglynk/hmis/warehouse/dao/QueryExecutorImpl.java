@@ -1,7 +1,6 @@
 package com.servinglynk.hmis.warehouse.dao;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -16,12 +15,7 @@ import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.ejb.criteria.expression.function.LocateFunction;
-import org.hibernate.internal.CriteriaImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +28,6 @@ public class QueryExecutorImpl  implements QueryExecutor{
 	@Autowired
 	SessionFactory sessionFactory;
 	
-
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 		
@@ -53,16 +46,19 @@ public class QueryExecutorImpl  implements QueryExecutor{
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Object insert(Object entity) {
+		
 		try{
 			BeanUtils.setProperty(entity,"projectGroupCode",SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode());
 			BeanUtils.setProperty(entity, "updatedAt", LocalDateTime.now());
 			BeanUtils.setProperty(entity, "createdAt", LocalDateTime.now());
 			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
-		return getCurrentSession().save(entity);
+			return getCurrentSession().save(entity);
+		
 		}catch(Exception e){
 			e.printStackTrace();
 			return null;
 		}
+		
 	}
 
 
@@ -182,7 +178,7 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 	
 	public List<?> list(String entityName){
 		Session session = getCurrentSession();
-		return session.createQuery("from "+entityName).list();
+		return session.createQuery("from "+ entityName).list();
 	}
 	
 	

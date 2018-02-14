@@ -3,7 +3,6 @@ package com.servinglynk.hmis.warehouse.config;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,13 +18,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.servinglynk.hmis.warehouse.client.search.SearchServiceClient;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 import com.servinglynk.hmis.warehouse.rest.SurveysController;
 import com.servinglynk.hmis.warehouse.rest.interceptor.ApiAuthCheckInterceptor;
-import com.servinglynk.hmis.warehouse.service.ClientValidator;
 import com.servinglynk.hmis.warehouse.service.impl.ClientValidatorImpl;
 
 @Configuration
@@ -56,7 +56,18 @@ public class RestConfig extends WebMvcConfigurerAdapter {
 
 		return xmlConverter;
 	}
+	
+	@Bean
+	public ObjectMapper rootMapper()
+	{
+	    ObjectMapper mapper = new ObjectMapper();
+	    mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+	    mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
+	    return mapper;
+	}
 
+	
+	
 	@Bean
 	public RestTemplate restTemplate() {
 		RestTemplate restTemplate = new RestTemplate();

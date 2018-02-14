@@ -62,9 +62,10 @@ public abstract class BaseController {
         for(FieldError fieldError : fieldErrors){
         	Error error = new Error();
         	error.setMessage(fieldError.getDefaultMessage());
-        	errors.addError(error);
+        	        	errors.addError(error);
         }
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        
         return errors;
     }
 	

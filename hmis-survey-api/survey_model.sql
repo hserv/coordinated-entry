@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS "survey".survey_section;
 DROP TABLE IF EXISTS "survey".section_question_mapping; 
 DROP TABLE IF EXISTS "survey".response; 
 DROP TABLE IF EXISTS "survey".section_score; 
+DROP TABLE IF EXISTS "survey".client_survey_submission
 
 CREATE TABLE survey.picklist_group
 (
@@ -199,6 +200,25 @@ CREATE TABLE survey.section_score
   CONSTRAINT survey_id_fk FOREIGN KEY (survey_id)
       REFERENCES survey.survey (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE survey.client_survey_submission
+(
+  id uuid default uuid_generate_v4() NOT NULL,
+  client_id UUID,
+  survey_id UUID,
+  submission_id UUID,
+  global_enrollment_id UUID,
+  project_group_code character varying(256),
+  created_at date,
+  updated_at date,
+  user_id character varying(256),
+  is_active boolean,
+  deleted boolean,
+  CONSTRAINT client_submission_pk PRIMARY KEY (id)
 )
 WITH (
   OIDS=FALSE

@@ -40,6 +40,16 @@ public class ParentDaoFactoryImpl  implements ParentDaoFactory {
 		this.pickListValueEntityDao = pickListValueEntityDao;
 	}
 	
+	@Autowired ClientSurveySubmissionEntityDao clientSurveySubmissionEntityDao;
+	
+	public ClientSurveySubmissionEntityDao getClientSubmissionEntityDao() {
+		return clientSurveySubmissionEntityDao;
+	}
+	
+	public void setClientSubmissionEntityDao (ClientSurveySubmissionEntityDao clientSurveySubmissionEntityDao) {
+		this.clientSurveySubmissionEntityDao = clientSurveySubmissionEntityDao;
+	}
+	
 	@Autowired QuestionEntityDao questionEntityDao;
 
 	public QuestionEntityDao getQuestionEntityDao() {

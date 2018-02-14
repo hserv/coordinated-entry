@@ -45,7 +45,7 @@ public class ExceptionMapper {
 	
 	
 	// error messages
-	public static final String ERR_MSG_UNKNOWN = "unexpected error occurred";
+	public static final String ERR_MSG_UNKNOWN = "unexpected error occurred!";
 
 	// query parameter names
 	public static final String PARAM_NAME_SC_200_ONLY = "sc200Only";

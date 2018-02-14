@@ -3,6 +3,8 @@ package com.servinglynk.hmis.warehouse.rest.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,15 +25,15 @@ public class ApiAuthCheckInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	private TrustedAppHelper trustedAppHelper;
 	
-	
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		HandlerMethod handlerMethod = null;
 		handlerMethod = (HandlerMethod) handler;
 		
 		String accessToken = this.sessionHelper.retrieveSessionToken(request);
 		String trustedApp = this.trustedAppHelper.retrieveTrustedAppId(request);
-
 		APIMapping apiMapping = handlerMethod.getMethodAnnotation(APIMapping.class);
+				
 		if(apiMapping!=null) {
 			if(apiMapping.value().equalsIgnoreCase("HEALTH_CHECK")) return true;
 			ApiMethodAuthorizationCheck apiMethodAuthorizationCheck = new ApiMethodAuthorizationCheck();
