@@ -71,6 +71,24 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
 
        return QuestionConverterv2.entityToModel( pQuestion );
    }
+   
+   @Transactional
+   public Questionsv2 filterQuestions(String displayText,String description,Integer startIndex, Integer maxItems) {
+	  
+	   Questionsv2 questions = new Questionsv2();
+	   List<QuestionEntity> entities = daoFactory.getQuestionEntityDao().getAllQuestionEntitys(displayText,description,startIndex,maxItems);
+       for(QuestionEntity entity : entities){
+       	questions.addQuestion(QuestionConverterv2.entityToModel(entity));
+       }
+       long count = daoFactory.getQuestionEntityDao().getAllQuestionEntitiesCount(displayText,description);
+       SortedPagination pagination = new SortedPagination();
+
+       pagination.setFrom(startIndex);
+       pagination.setReturned(questions.getQuestions().size());
+       pagination.setTotal((int)count);
+       questions.setPagination(pagination);
+       return questions; 
+   }
 
 
    @Transactional
