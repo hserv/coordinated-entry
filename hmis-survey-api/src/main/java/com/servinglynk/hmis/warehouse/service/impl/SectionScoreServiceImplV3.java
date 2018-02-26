@@ -87,7 +87,7 @@ public class SectionScoreServiceImplV3 extends ServiceBase implements SectionSco
 				scoreEntity.setClientId(clientid);
 				scoreEntity.setCreatedAt(LocalDateTime.now());
 				scoreEntity.setUpdatedAt(LocalDateTime.now());
-				scoreEntity.setUser(caller);
+				scoreEntity.setUser(getUser());
 				daoFactory.getSectionScoreDao().createSectionScore(scoreEntity);
 			}
 			
@@ -142,7 +142,7 @@ public class SectionScoreServiceImplV3 extends ServiceBase implements SectionSco
 			sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
 			sectionScoreEntity.setCreatedAt(LocalDateTime.now());
 			sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
-			sectionScoreEntity.setUser(session.getAccount().getUsername());
+			sectionScoreEntity.setUser(getUser());
 			sectionScoreEntity.setClientDedupId(sectionScore.getClientDedupId());
 			daoFactory.getSectionScoreDao().updateSectionScore(sectionScoreEntity);
 		}else{
@@ -154,7 +154,7 @@ public class SectionScoreServiceImplV3 extends ServiceBase implements SectionSco
 			sectionScoreEntity.setCreatedAt(LocalDateTime.now());
 			sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
 			sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
-			sectionScoreEntity.setUser(session.getAccount().getUsername());
+			sectionScoreEntity.setUser(getUser());
 			sectionScoreEntity.setClientDedupId(sectionScore.getClientDedupId());
 			daoFactory.getSectionScoreDao().createSectionScore(sectionScoreEntity);
 		}
@@ -169,7 +169,7 @@ public class SectionScoreServiceImplV3 extends ServiceBase implements SectionSco
 		if(sectionScoreEntity==null) throw new SectionScoreNotFoundException();
 		sectionScoreEntity.setSectionScore(sectionScore.getSectionScore());
 		sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
-		sectionScoreEntity.setUser(session.getAccount().getUsername());
+		sectionScoreEntity.setUser(getUser());
 		daoFactory.getSectionScoreDao().updateSectionScore(sectionScoreEntity);
 	}
 	

@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.model;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -18,8 +19,11 @@ public abstract class BaseEntity {
 	protected LocalDateTime updatedAt;
 	@Column(name="IS_ACTIVE")	
 	protected boolean isActive=true;
+	
+	
 	@Column(name="USER_ID")	
-	protected String user;
+	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
+	protected UUID user;
 	
 	@Column(name="PROJECT_GROUP_CODE")
 	protected String projectGroupCode;
@@ -46,10 +50,10 @@ public abstract class BaseEntity {
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-	public String getUser() {
+	public UUID getUser() {
 		return user;
 	}
-	public void setUser(String user) {
+	public void setUser(UUID user) {
 		this.user = user;
 	}
 	public boolean isDeleted() {

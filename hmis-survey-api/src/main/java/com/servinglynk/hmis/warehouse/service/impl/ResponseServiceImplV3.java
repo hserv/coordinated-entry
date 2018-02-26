@@ -51,7 +51,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
        pResponse.setSurveySectionEntity(sectionEntity);
        pResponse.setQuestionEntity(questionEntity);
        pResponse.setCreatedAt(LocalDateTime.now());
-       pResponse.setUser(caller);
+       pResponse.setUser(getUser());
        pResponse.setClientId(client.getClientId());
        pResponse.setSubmissionId(submissionId);
        pResponse.setClientLink(client.getLink());
@@ -74,7 +74,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 
        ResponseConverterV3.modelToEntity(response, pResponse);
        pResponse.setUpdatedAt(LocalDateTime.now());
-       pResponse.setUser(caller);
+       pResponse.setUser(getUser());
    //    pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(pResponse.getQuestionEntity(), pResponse));
        daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
        response.setResponseId(pResponse.getId());
@@ -130,7 +130,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
        ResponseEntity pResponse = daoFactory.getResponseEntityDao().getResponseEntityById(ResponseId);
        if(pResponse==null) throw new ResponseNotFoundException();
 
-       pResponse.setUser(caller);
+       pResponse.setUser(getUser());
        daoFactory.getResponseEntityDao().deleteResponseEntity(pResponse);
        return new Response();
    }

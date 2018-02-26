@@ -23,7 +23,7 @@ public class PickListGroupServiceImpl extends ServiceBase implements PickListGro
    public PickListGroup createPickListGroup(PickListGroup PickListGroup,String caller){
        PickListGroupEntity pPickListGroup = PickListGroupConverter.modelToEntity(PickListGroup, null);
        pPickListGroup.setCreatedAt(LocalDateTime.now());
-       pPickListGroup.setUser(caller);
+       pPickListGroup.setUser(getUser());
        daoFactory.getPickListGroupEntityDao().createPickListGroupEntity(pPickListGroup);
        PickListGroup.setPickListGroupId(pPickListGroup.getId());
        return PickListGroup;
@@ -37,7 +37,7 @@ public class PickListGroupServiceImpl extends ServiceBase implements PickListGro
 
        PickListGroupConverter.modelToEntity(PickListGroup, pPickListGroup);
        pPickListGroup.setUpdatedAt(LocalDateTime.now());
-       pPickListGroup.setUser(caller);
+       pPickListGroup.setUser(getUser());
        daoFactory.getPickListGroupEntityDao().updatePickListGroupEntity(pPickListGroup);
        PickListGroup.setPickListGroupId(pPickListGroup.getId());
        return PickListGroup;
@@ -49,7 +49,7 @@ public class PickListGroupServiceImpl extends ServiceBase implements PickListGro
        PickListGroupEntity pPickListGroup = daoFactory.getPickListGroupEntityDao().getPickListGroupEntityById(PickListGroupId);
        if(pPickListGroup==null) throw new PickListGroupNotFoundException();
 
-       pPickListGroup.setUser(caller);
+       pPickListGroup.setUser(getUser());
        daoFactory.getPickListGroupEntityDao().deletePickListGroupEntity(pPickListGroup);
        return new PickListGroup();
    }

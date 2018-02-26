@@ -37,7 +37,12 @@ public class QuestionConverter   {
        model.setProjectGroupId(entity.getProjectGroupId());
        model.setQuestionDescription(entity.getQuestionDescription());
        model.setDisplayText(entity.getDisplayText());
-       model.setQuestionDataType(QuestionDataTypeEnum.valueOf(entity.getQuestionDataType()));
+       try {
+    	   if(entity.getQuestionDataType()!=null) model.setQuestionDataType(QuestionDataTypeEnum.valueOf(entity.getQuestionDataType()));
+       }catch (Exception e) {
+
+       }	
+    
        model.setQuestionType(QuestionTypeEnum.valueOf(entity.getQuestionType()));
        model.setCorrectValueForAssessment(entity.getCorrectValueForAssessment());
        model.setCopyQuestionId(entity.isCopyQuestionId());

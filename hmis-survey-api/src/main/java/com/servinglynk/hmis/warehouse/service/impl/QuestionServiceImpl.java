@@ -37,7 +37,7 @@ public class QuestionServiceImpl extends ServiceBase implements QuestionService 
     	   pQuestion.setPickListGroupEntity(pickListGroupEntity);
        }
        pQuestion.setCreatedAt(LocalDateTime.now());
-       pQuestion.setUser(caller);
+       pQuestion.setUser(getUser());
        daoFactory.getQuestionEntityDao().createQuestionEntity(pQuestion);
        question.setQuestionId(pQuestion.getId());
        return question;
@@ -58,7 +58,7 @@ public class QuestionServiceImpl extends ServiceBase implements QuestionService 
        }
 
        pQuestion.setUpdatedAt(LocalDateTime.now());
-       pQuestion.setUser(caller);
+       pQuestion.setUser(getUser());
        daoFactory.getQuestionEntityDao().updateQuestionEntity(pQuestion);
        question.setQuestionId(pQuestion.getId());
        return question;
@@ -70,7 +70,7 @@ public class QuestionServiceImpl extends ServiceBase implements QuestionService 
        QuestionEntity pQuestion = daoFactory.getQuestionEntityDao().getQuestionEntityById(QuestionId);
        if(pQuestion==null) throw new QuestionNotFoundException();
 
-       pQuestion.setUser(caller);
+       pQuestion.setUser(getUser());
        daoFactory.getQuestionEntityDao().deleteQuestionEntity(pQuestion);
        return new Question();
    }
