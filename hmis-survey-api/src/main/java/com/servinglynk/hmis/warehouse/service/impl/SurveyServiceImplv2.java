@@ -25,7 +25,7 @@ public class SurveyServiceImplv2 extends ServiceBase implements SurveyServicev2 
        SurveyEntity pSurvey = SurveyConverterv2.modelToEntity(survey, null);
        pSurvey.setCreatedAt(LocalDateTime.now());
        pSurvey.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
-       pSurvey.setUser(session.getAccount().getUsername());
+       pSurvey.setUser(getUser());
        daoFactory.getSurveyEntityDao().createSurveyEntity(pSurvey);
        survey.setSurveyId(pSurvey.getId());
        return survey;
@@ -39,7 +39,7 @@ public class SurveyServiceImplv2 extends ServiceBase implements SurveyServicev2 
 
        SurveyConverterv2.modelToEntity(survey, pSurvey);
        pSurvey.setUpdatedAt(LocalDateTime.now());
-       pSurvey.setUser(caller);
+       pSurvey.setUser(getUser());
        daoFactory.getSurveyEntityDao().updateSurveyEntity(pSurvey);
        survey.setSurveyId(pSurvey.getId());
        return survey;
@@ -51,7 +51,7 @@ public class SurveyServiceImplv2 extends ServiceBase implements SurveyServicev2 
        SurveyEntity pSurvey = daoFactory.getSurveyEntityDao().getSurveyEntityById(surveyId);
        if(pSurvey==null) throw new SurveyNotFoundException();
 
-       pSurvey.setUser(caller);
+       pSurvey.setUser(getUser());
        daoFactory.getSurveyEntityDao().deleteSurveyEntity(pSurvey);
        return new Surveyv2();
    }
