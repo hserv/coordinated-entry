@@ -57,7 +57,7 @@ public class QueryExecutorImpl  implements QueryExecutor{
 			BeanUtils.setProperty(entity,"projectGroupCode",SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode());
 			BeanUtils.setProperty(entity, "updatedAt", LocalDateTime.now());
 			BeanUtils.setProperty(entity, "createdAt", LocalDateTime.now());
-			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
+			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getAccountId());
 		return getCurrentSession().save(entity);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -69,7 +69,7 @@ public class QueryExecutorImpl  implements QueryExecutor{
 	public Object update(Object entity) {
 		try {
 			BeanUtils.setProperty(entity, "updatedAt", LocalDateTime.now());
-			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
+			BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getAccountId());
 			getCurrentSession().update(entity);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +85,7 @@ public class QueryExecutorImpl  implements QueryExecutor{
 
 	public void delete(Object entity) {		
 			try {
-				BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getUsername());
+				BeanUtils.copyProperty(entity, "user", SecurityContextUtil.getUserAccount().getAccountId());
 				BeanUtils.copyProperty(entity, "updatedAt", LocalDateTime.now());
 				BeanUtils.copyProperty(entity, "deleted",true);
 				getCurrentSession().update(entity);
