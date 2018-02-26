@@ -33,7 +33,7 @@ public class PickListValueServiceImpl extends ServiceBase implements PickListVal
 		   PickListValueEntity pPickListValue = PickListValueConverter.modelToEntity(pickListValue, null);
 		   pPickListValue.setPickListGroupEntity(groupEntity);
 		   pPickListValue.setCreatedAt(LocalDateTime.now());
-		   pPickListValue.setUser(caller);
+		   pPickListValue.setUser(getUser());
 		   daoFactory.getPickListValueEntityDao().createPickListValueEntity(pPickListValue);
 		   returnPickListValues.addPickListValue(new PickListValue(pPickListValue.getId()));
 	   }
@@ -48,7 +48,7 @@ public class PickListValueServiceImpl extends ServiceBase implements PickListVal
 
        PickListValueConverter.modelToEntity(PickListValue, pPickListValue);
        pPickListValue.setUpdatedAt(LocalDateTime.now());
-       pPickListValue.setUser(caller);
+       pPickListValue.setUser(getUser());
        daoFactory.getPickListValueEntityDao().updatePickListValueEntity(pPickListValue);
        PickListValue.setPickListValueId(pPickListValue.getId());
        return PickListValue;
@@ -60,7 +60,7 @@ public class PickListValueServiceImpl extends ServiceBase implements PickListVal
        PickListValueEntity pPickListValue = daoFactory.getPickListValueEntityDao().getPickListValueEntityById(PickListValueId);
        if(pPickListValue==null) throw new PickListValueNotFoundException();
 
-       pPickListValue.setUser(caller);
+       pPickListValue.setUser(getUser());
        daoFactory.getPickListValueEntityDao().deletePickListValueEntity(pPickListValue);
        return new PickListValue();
    }

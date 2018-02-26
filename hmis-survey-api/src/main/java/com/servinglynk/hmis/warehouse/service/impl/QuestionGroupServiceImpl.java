@@ -23,7 +23,7 @@ public class QuestionGroupServiceImpl extends ServiceBase implements QuestionGro
    public QuestionGroup createQuestionGroup(QuestionGroup QuestionGroup,String caller){
        QuestionGroupEntity pQuestionGroup = QuestionGroupConverter.modelToEntity(QuestionGroup, null);
        pQuestionGroup.setCreatedAt(LocalDateTime.now());
-       pQuestionGroup.setUser(caller);
+       pQuestionGroup.setUser(getUser());
        daoFactory.getQuestionGroupEntityDao().createQuestionGroupEntity(pQuestionGroup);
        QuestionGroup.setQuestionGroupId(pQuestionGroup.getId());
        return QuestionGroup;
@@ -37,7 +37,7 @@ public class QuestionGroupServiceImpl extends ServiceBase implements QuestionGro
 
        QuestionGroupConverter.modelToEntity(QuestionGroup, pQuestionGroup);
        pQuestionGroup.setUpdatedAt(LocalDateTime.now());
-       pQuestionGroup.setUser(caller);
+       pQuestionGroup.setUser(getUser());
        daoFactory.getQuestionGroupEntityDao().updateQuestionGroupEntity(pQuestionGroup);
        QuestionGroup.setQuestionGroupId(pQuestionGroup.getId());
        return QuestionGroup;
@@ -49,7 +49,7 @@ public class QuestionGroupServiceImpl extends ServiceBase implements QuestionGro
        QuestionGroupEntity pQuestionGroup = daoFactory.getQuestionGroupEntityDao().getQuestionGroupEntityById(QuestionGroupId);
        if(pQuestionGroup==null) throw new QuestionGroupNotFoundException();
 
-       pQuestionGroup.setUser(caller);
+       pQuestionGroup.setUser(getUser());
        daoFactory.getQuestionGroupEntityDao().deleteQuestionGroupEntity(pQuestionGroup);
        return new QuestionGroup();
    }

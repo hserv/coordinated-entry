@@ -31,7 +31,7 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
      
       
        pQuestion.setCreatedAt(LocalDateTime.now());
-       pQuestion.setUser(caller);
+       pQuestion.setUser(getUser());
        daoFactory.getQuestionEntityDao().createQuestionEntity(pQuestion);
        question.setQuestionId(pQuestion.getId());
        return question;
@@ -46,7 +46,7 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
        QuestionConverterv2.modelToEntity(question, pQuestion);
 
        pQuestion.setUpdatedAt(LocalDateTime.now());
-       pQuestion.setUser(caller);
+       pQuestion.setUser(getUser());
        daoFactory.getQuestionEntityDao().updateQuestionEntity(pQuestion);
        question.setQuestionId(pQuestion.getId());
        return question;
@@ -58,7 +58,7 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
        QuestionEntity pQuestion = daoFactory.getQuestionEntityDao().getQuestionEntityById(QuestionId);
        if(pQuestion==null) throw new QuestionNotFoundException();
 
-       pQuestion.setUser(caller);
+       pQuestion.setUser(getUser());
        daoFactory.getQuestionEntityDao().deleteQuestionEntity(pQuestion);
        return new Questionv2();
    }

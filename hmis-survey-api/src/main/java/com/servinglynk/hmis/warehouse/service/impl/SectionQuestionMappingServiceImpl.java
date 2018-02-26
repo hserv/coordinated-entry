@@ -40,7 +40,7 @@ public class SectionQuestionMappingServiceImpl extends ServiceBase implements Se
 		   pSectionQuestionMapping.setSurveySectionEntity(sectionEntity);
 		   pSectionQuestionMapping.setRequired(mapping.isRequired());
 		   pSectionQuestionMapping.setCreatedAt(LocalDateTime.now());
-		   pSectionQuestionMapping.setUser(caller);
+		   pSectionQuestionMapping.setUser(getUser());
 		   daoFactory.getSectionQuestionMappingEntityDao().createSectionQuestionMappingEntity(pSectionQuestionMapping);
 	   }
    }
@@ -50,7 +50,7 @@ public class SectionQuestionMappingServiceImpl extends ServiceBase implements Se
        SectionQuestionMappingEntity pSectionQuestionMapping = daoFactory.getSectionQuestionMappingEntityDao().getSectionQuestionMappingEntityByQuestionId(questionid);
        if(pSectionQuestionMapping==null) throw new SectionQuestionMappingNotFoundException();
 
-       pSectionQuestionMapping.setUser(caller);
+       pSectionQuestionMapping.setUser(getUser());
        daoFactory.getSectionQuestionMappingEntityDao().deleteSectionQuestionMappingEntity(pSectionQuestionMapping);
        return new SectionQuestionMapping();
    }

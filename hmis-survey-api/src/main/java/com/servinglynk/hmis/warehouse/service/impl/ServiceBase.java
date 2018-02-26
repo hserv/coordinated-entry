@@ -1,5 +1,7 @@
 package com.servinglynk.hmis.warehouse.service.impl;
 
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,7 @@ import com.servinglynk.hmis.warehouse.dao.ParentDaoFactory;
 import com.servinglynk.hmis.warehouse.dao.ParentDaoFactoryImpl;
 import com.servinglynk.hmis.warehouse.service.Service;
 import com.servinglynk.hmis.warehouse.service.core.ParentServiceFactory;
+import com.servinglynk.hmis.warehouse.util.SecurityContextUtil;
 
 public abstract class ServiceBase implements Service {
 
@@ -41,5 +44,9 @@ public abstract class ServiceBase implements Service {
 
 	public void setParentServiceFactory(ParentServiceFactory serviceFactory) {
 		this.serviceFactory = serviceFactory;
+	}
+	
+	public UUID getUser() {
+		return SecurityContextUtil.getUserAccount().getAccountId();
 	}
 }

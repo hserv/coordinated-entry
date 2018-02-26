@@ -28,7 +28,7 @@ public class SurveySectionServiceImpl extends ServiceBase implements SurveySecti
        SurveySectionEntity pSurveySection = SurveySectionConverter.modelToEntity(surveySection, null);
        pSurveySection.setSurveyEntity(surveyEntity);
        pSurveySection.setCreatedAt(LocalDateTime.now());
-       pSurveySection.setUser(caller);
+       pSurveySection.setUser(getUser());
        daoFactory.getSurveySectionEntityDao().createSurveySectionEntity(pSurveySection);
        surveySection.setSurveySectionId(pSurveySection.getId());
        return surveySection;
@@ -42,7 +42,7 @@ public class SurveySectionServiceImpl extends ServiceBase implements SurveySecti
 
        SurveySectionConverter.modelToEntity(surveySection, pSurveySection);
        pSurveySection.setUpdatedAt(LocalDateTime.now());
-       pSurveySection.setUser(caller);
+       pSurveySection.setUser(getUser());
        daoFactory.getSurveySectionEntityDao().updateSurveySectionEntity(pSurveySection);
        surveySection.setSurveySectionId(pSurveySection.getId());
        return surveySection;
@@ -54,7 +54,7 @@ public class SurveySectionServiceImpl extends ServiceBase implements SurveySecti
        SurveySectionEntity pSurveySection = daoFactory.getSurveySectionEntityDao().getSurveySectionEntityById(SurveySectionId);
        if(pSurveySection==null) throw new SurveySectionNotFoundException();
 
-       pSurveySection.setUser(caller);
+       pSurveySection.setUser(getUser());
        daoFactory.getSurveySectionEntityDao().deleteSurveySectionEntity(pSurveySection);
        return new SurveySection();
    }
