@@ -26,5 +26,6 @@ public interface ParentDaoFactory  {
 	 HealthDao getHealthDao();
 	 
 	 ClientDao getClientDao();
-
+	 
+	 ClientSurveySubmissionDao getClientSurveySubmissionDao();
 }

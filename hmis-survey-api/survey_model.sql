@@ -203,3 +203,21 @@ CREATE TABLE survey.section_score
 WITH (
   OIDS=FALSE
 );
+
+
+CREATE TABLE survey.client_survey_submission
+(
+  id uuid NOT NULL,
+  client_id uuid,
+  survey_id uuid,
+  submission_id uuid,
+  global_enrollment_id uuid,
+  project_group_code character varying(256),
+  created_at date,
+  updated_at date,
+  user_id character varying(256),
+  is_active boolean,
+  deleted boolean,
+  CONSTRAINT client_submission_pk PRIMARY KEY (id),
+  CONSTRAINT unique_set UNIQUE (client_id, submission_id, survey_id)
+);
