@@ -62,6 +62,8 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
 	   }
 	   
+	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId);
+	   
 	   returnResponse.setSubmissionId(submissionId);
        return returnResponse;
    }

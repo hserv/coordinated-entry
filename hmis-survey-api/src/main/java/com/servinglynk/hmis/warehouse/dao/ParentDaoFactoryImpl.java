@@ -11,6 +11,8 @@ public class ParentDaoFactoryImpl  implements ParentDaoFactory {
 	@Autowired ClientDao clientDao;
 	
 	@Autowired SectionScoreDaoV3 sectionScoreDaoV3;
+	
+	@Autowired ClientSurveySubmissionDao clientSurveySubmissionDao;
 
 	public SurveyDao getSurveyDao() {
 		return surveyDao;
@@ -136,5 +138,13 @@ public class ParentDaoFactoryImpl  implements ParentDaoFactory {
 
 	public void setSectionScoreDaoV3(SectionScoreDaoV3 sectionScoreDaoV3) {
 		this.sectionScoreDaoV3 = sectionScoreDaoV3;
+	}
+
+	public ClientSurveySubmissionDao getClientSurveySubmissionDao() {
+		return clientSurveySubmissionDao;
+	}
+
+	public void setClientSurveySubmissionDao(ClientSurveySubmissionDao clientSurveySubmissionDao) {
+		this.clientSurveySubmissionDao = clientSurveySubmissionDao;
 	}
 }

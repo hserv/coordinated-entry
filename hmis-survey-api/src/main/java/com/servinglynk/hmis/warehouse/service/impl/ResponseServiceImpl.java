@@ -61,6 +61,8 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
 	   }
 	   
+	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(clientId, surveyId, submissionId);
+	   
 	   returnResponse.setSubmissionId(submissionId);
        return returnResponse;
    }
