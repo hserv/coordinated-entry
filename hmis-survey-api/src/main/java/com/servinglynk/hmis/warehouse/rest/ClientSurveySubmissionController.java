@@ -16,7 +16,7 @@ import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
 
 @RestController
-@RequestMapping("/clientsurveysubmission")
+@RequestMapping("/clientsurveysubmissions")
 public class ClientSurveySubmissionController extends BaseController{
 
 	
