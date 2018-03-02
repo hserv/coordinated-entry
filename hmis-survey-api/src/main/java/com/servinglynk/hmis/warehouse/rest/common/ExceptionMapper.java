@@ -14,6 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import com.servinglynk.hmis.warehouse.core.model.Error;
+import com.servinglynk.hmis.warehouse.core.model.exception.AccessDeniedException;
 import com.servinglynk.hmis.warehouse.service.exception.PickListGroupNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.PickListValueNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionGroupNotFoundException;
@@ -59,6 +60,12 @@ public class ExceptionMapper {
 		try {
 
 			throw th;
+		}catch (AccessDeniedException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("CLIENT_CONSENT_AUTHENTICATION_FAILED");
+			r.setErrorMessage(ex.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);		
 		}catch (HttpClientErrorException ex) {
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);

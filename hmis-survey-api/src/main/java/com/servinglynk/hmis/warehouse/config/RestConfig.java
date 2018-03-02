@@ -25,6 +25,7 @@ import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 import com.servinglynk.hmis.warehouse.rest.SurveysController;
 import com.servinglynk.hmis.warehouse.rest.interceptor.ApiAuthCheckInterceptor;
+import com.servinglynk.hmis.warehouse.rest.interceptor.ClientConsentInterceptor;
 import com.servinglynk.hmis.warehouse.service.ClientValidator;
 import com.servinglynk.hmis.warehouse.service.impl.ClientValidatorImpl;
 
@@ -96,10 +97,16 @@ public class RestConfig extends WebMvcConfigurerAdapter {
 		return new ClientValidatorImpl();
 	}
 	
+	@Bean
+	public ClientConsentInterceptor clientConsentInterceptor() {
+		return new ClientConsentInterceptor();
+	}
+	
 	
 	 @Override
 	    public void addInterceptors(InterceptorRegistry registry) {
 	        registry.addInterceptor(authCheckInterceptor());
+	        registry.addInterceptor(clientConsentInterceptor()).addPathPatterns("/clients/*/**","/v2/clients/*/**","/v3/clients/*/**");
 	    }
 	
 }
