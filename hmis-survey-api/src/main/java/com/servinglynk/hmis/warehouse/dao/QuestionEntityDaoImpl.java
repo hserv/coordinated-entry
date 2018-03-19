@@ -3,6 +3,7 @@ package com.servinglynk.hmis.warehouse.dao;
 import java.util.UUID;
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
@@ -44,4 +45,33 @@ public class QuestionEntityDaoImpl extends QueryExecutorImpl implements Question
        criteria.add(Restrictions.eq("questionGroupEntity.id",questionGroupId));
        return countRows(criteria);
    }
+		public List<QuestionEntity> getAllQuestionEntitys(String displayText, String description, Integer startIndex,
+				Integer maxItems) {
+		    DetachedCriteria criteria=DetachedCriteria.forClass(QuestionEntity.class);
+		    
+		    Criterion displayTextCri =Restrictions.ilike("displayText", "%"+displayText+"%");
+		    Criterion descriptionCri =Restrictions.ilike("questionDescription", "%"+description+"%") ;
+		    if(displayText!=null && description ==null) {
+		    	criteria.add(Restrictions.or(displayTextCri));
+		    } else if(displayText==null && description !=null) {
+		    	criteria.add(Restrictions.or(descriptionCri));
+		    }else if(displayText!=null && description !=null) {
+		    	criteria.add(Restrictions.or(displayTextCri,descriptionCri));
+		    }
+		    return (List<QuestionEntity>) findByCriteria(criteria,startIndex,maxItems);
+		}
+		
+		public Long getAllQuestionEntitiesCount(String displayText, String description) {
+		    DetachedCriteria criteria=DetachedCriteria.forClass(QuestionEntity.class);
+		    Criterion displayTextCri =Restrictions.ilike("displayText", "%"+displayText+"%");
+		    Criterion descriptionCri =Restrictions.ilike("questionDescription", "%"+description+"%") ;
+		    if(displayText!=null && description ==null) {
+		    	criteria.add(Restrictions.or(displayTextCri));
+		    } else if(displayText==null && description !=null) {
+		    	criteria.add(Restrictions.or(descriptionCri));
+		    }else if(displayText!=null && description !=null) {
+		    	criteria.add(Restrictions.or(displayTextCri,descriptionCri));
+		    }
+		    return countRows(criteria);
+		}
 }
