@@ -17,8 +17,8 @@ public class QuestionsSearchController extends BaseController {
 	@RequestMapping(method=RequestMethod.GET)
 	@APIMapping(value="SURVEY_API_GET_ALL_QUESTION",checkTrustedApp=true,checkSessionToken=true)
 	public Questionsv2 searchQuestions(
-			@RequestParam(value="name",required=false) String displayText,
-			@RequestParam(value="text",required=false) String description,
+			@RequestParam(value="text",required=false) String displayText,
+			@RequestParam(value="name",required=false) String description,
 			@RequestParam(value = "startIndex", required = false) Integer startIndex,
 			@RequestParam(value = "maxItems", required = false) Integer maxItems, HttpServletRequest request)
 			throws Exception {
