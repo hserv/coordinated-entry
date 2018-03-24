@@ -13,4 +13,6 @@ public interface ClientSurveySubmissionService {
 	
 	void updateClientSurveySubmission(UUID clientSurveySubmissionId, UUID globalEnrollmentId);
 
+	ClientSurveySubmissions getSearchClientSurveySubmissions(String queryString, Integer startIndex, Integer maxItems);
+
 }

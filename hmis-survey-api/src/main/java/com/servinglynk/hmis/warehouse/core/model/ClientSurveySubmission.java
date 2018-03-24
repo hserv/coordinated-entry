@@ -14,6 +14,7 @@ public class ClientSurveySubmission extends ClientModel {
 	private UUID surveyId; 
 	private UUID submissionId;
    	private UUID globalEnrollmentId;
+   	private Client client;
    	
 	public UUID getId() {
 		return id;
@@ -44,5 +45,11 @@ public class ClientSurveySubmission extends ClientModel {
 	}
 	public void setGlobalEnrollmentId(UUID globalEnrollmentId) {
 		this.globalEnrollmentId = globalEnrollmentId;
+	}
+	public Client getClient() {
+		return client;
+	}
+	public void setClient(Client client) {
+		this.client = client;
 	}  	
 }
