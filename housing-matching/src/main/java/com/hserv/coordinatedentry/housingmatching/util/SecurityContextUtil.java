@@ -33,4 +33,16 @@ public class SecurityContextUtil {
 		return null;
 	}
 	
+	public static String getUserProjectGroupSender() {
+		Session session = null;
+		SecurityContext context =  SecurityContextHolder.getContext();
+		Authentication authentication =  context.getAuthentication();
+		if(authentication.getPrincipal()!=null){
+			session = (Session) authentication.getPrincipal();
+			if(session.getAccount()!=null && session.getAccount().getProjectGroup()!=null)
+				return session.getAccount().getProjectGroup().getSenderEmail();
+		}
+		return null;
+	}
+	
 }
