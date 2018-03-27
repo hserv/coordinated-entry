@@ -25,8 +25,6 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		ClientEntity clientEntity = daoFactory.getClientDao().getClientById(clientId);
 		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
 		entity.setClientId(clientEntity);
-		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
-
 		entity.setSubmissionId(submissionId);
 		entity.setSurveyId(surveyId);
 		entity.setCreatedAt(LocalDateTime.now());
