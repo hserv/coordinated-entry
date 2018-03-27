@@ -51,4 +51,5 @@ public class ClientSurveySubmissionController extends BaseController{
 
 		return serviceFactory.getClientSurveySubmissionService().getSearchClientSurveySubmissions(queryString, startIndex,maxItems);
 	}
+
 }

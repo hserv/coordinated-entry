@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
+
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 import com.servinglynk.hmis.warehouse.service.ClientSurveySubmissionService;
 import com.servinglynk.hmis.warehouse.service.converter.ClientSurveySubmissionConverter;
@@ -24,6 +25,8 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		ClientEntity clientEntity = daoFactory.getClientDao().getClientById(clientId);
 		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
 		entity.setClientId(clientEntity);
+		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
+
 		entity.setSubmissionId(submissionId);
 		entity.setSurveyId(surveyId);
 		entity.setCreatedAt(LocalDateTime.now());
@@ -43,6 +46,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		entity.setUpdatedAt(LocalDateTime.now());
 		entity.setUser(getUser());
 		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
+
 	}
 	
 	@Transactional
@@ -95,5 +99,5 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		
 		return submissions;
 	}
-	
+
 }
