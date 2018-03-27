@@ -40,4 +40,16 @@ public class ClientSurveySubmissionController extends BaseController{
 	}
 	
 	
+	@RequestMapping(method=RequestMethod.GET)
+	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
+	public ClientSurveySubmissions getSearchClientSurveySubmissions(@RequestParam("q") String queryString,
+            @RequestParam(value="startIndex", required=false) Integer startIndex, 
+            @RequestParam(value="maxItems", required=false) Integer maxItems,
+            HttpServletRequest request) throws Exception {
+		 if (startIndex == null) startIndex =0;
+         if (maxItems == null || maxItems > 30) maxItems =30;
+
+		return serviceFactory.getClientSurveySubmissionService().getSearchClientSurveySubmissions(queryString, startIndex,maxItems);
+	}
+
 }

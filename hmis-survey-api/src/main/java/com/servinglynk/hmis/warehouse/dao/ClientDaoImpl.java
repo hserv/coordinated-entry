@@ -21,4 +21,12 @@ public class ClientDaoImpl extends QueryExecutorImpl implements ClientDao {
 		if(!clientEntities.isEmpty()) return clientEntities.get(0);
 		return null;
 	}
+	
+	public ClientEntity getClientById(UUID clientId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(ClientEntity.class);
+		criteria.add(Restrictions.eq("id", clientId));
+		List<ClientEntity> clientEntities = (List<ClientEntity>) findByCriteria(criteria);
+		if(!clientEntities.isEmpty()) return clientEntities.get(0);
+		return null;
+	}
 }

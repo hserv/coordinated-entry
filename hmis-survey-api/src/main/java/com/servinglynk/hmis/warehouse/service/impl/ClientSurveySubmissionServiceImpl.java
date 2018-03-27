@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.ClientEntity;
+
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 import com.servinglynk.hmis.warehouse.service.ClientSurveySubmissionService;
 import com.servinglynk.hmis.warehouse.service.converter.ClientSurveySubmissionConverter;
@@ -20,8 +22,11 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 
 	@Transactional
 	public void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId) {
+		ClientEntity clientEntity = daoFactory.getClientDao().getClientById(clientId);
 		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
-		entity.setClientId(clientId);
+		entity.setClientId(clientEntity);
+		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
+
 		entity.setSubmissionId(submissionId);
 		entity.setSurveyId(surveyId);
 		entity.setCreatedAt(LocalDateTime.now());
@@ -40,6 +45,8 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		entity.setGlobalEnrollmentId(globalEnrollmentId);
 		entity.setUpdatedAt(LocalDateTime.now());
 		entity.setUser(getUser());
+		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
+
 	}
 	
 	@Transactional
@@ -62,5 +69,35 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		
 		return submissions;
 	}
-	
+
+	@Transactional
+	public ClientSurveySubmissions getSearchClientSurveySubmissions(String queryString, Integer startIndex,
+			Integer maxItems) {
+		ClientSurveySubmissions submissions = new ClientSurveySubmissions();
+		
+		UUID globalClientId =null;
+		String name=null;
+		try {
+			globalClientId =	UUID.fromString(queryString);
+		}catch (Exception e) {
+			name = queryString;
+		}
+		
+		List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getSearchClientSurveySubmissions(name,globalClientId,startIndex,maxItems);
+		
+		for(ClientSurveySubmissionEntity entity : entities ) {
+			submissions.addClientSurveySubmission(ClientSurveySubmissionConverter.entityToModel(entity));
+		}
+		
+		long count = daoFactory.getClientSurveySubmissionDao().clientSurveySubmissionsCount(name,globalClientId);
+		 SortedPagination pagination = new SortedPagination();
+		 
+	        pagination.setFrom(startIndex);
+	        pagination.setReturned(submissions.getClientSurveySubmissions().size());
+	        pagination.setTotal((int)count);
+	        submissions.setPagination(pagination);
+		
+		return submissions;
+	}
+
 }

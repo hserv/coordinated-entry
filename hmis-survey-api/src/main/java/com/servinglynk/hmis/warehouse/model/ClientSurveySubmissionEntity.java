@@ -5,6 +5,11 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -26,9 +31,11 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@Column(name = "id")
 	private UUID id;
 	
-	@Type(type="pg-uuid")
-	@Column(name="CLIENT_ID")
-	private UUID clientId;
+
+	@JoinColumn(name="CLIENT_ID")
+	@OneToOne(fetch=FetchType.LAZY)
+	private ClientEntity clientId;
+
 		
 	@Type(type="pg-uuid")
 	@Column(name="SURVEY_ID")
@@ -50,11 +57,12 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 		this.id = id;
 	}
 
-	public UUID getClientId() {
+	public ClientEntity getClientId() {
 		return clientId;
 	}
 
-	public void setClientId(UUID clientId) {
+	public void setClientId(ClientEntity clientId) {
+
 		this.clientId = clientId;
 	}
 
