@@ -13,4 +13,6 @@ public interface RepositoryFactory {
 	BatchProcessRepository getBatchProcessRepository();
 	MatchStatusRemarksRepository getMatchStatusRemarksRepository();
 	StatusNotesRepository getStatusNotesRepository();
+	GlobalProjectRepository getGlobalProjectRepository();
+	GlobalProjectMapRepository getGlobalProjectMapRepository();
 }

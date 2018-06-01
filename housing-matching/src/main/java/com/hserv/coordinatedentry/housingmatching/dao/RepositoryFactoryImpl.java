@@ -18,6 +18,8 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 	@Autowired private BatchProcessRepository batchProcessRepository;
 	@Autowired private MatchStatusRemarksRepository matchStatusRemarksRepository;
 	@Autowired private StatusNotesRepository statusNotesRepository;
+	@Autowired private GlobalProjectRepository globalProjectRepository;
+	@Autowired private GlobalProjectMapRepository globalProjectMapRepository;
 	
 	
 	public EligibilityRequirementRepository getEligibilityRequirementRepository() {
@@ -85,5 +87,17 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 	}
 	public void setStatusNotesRepository(StatusNotesRepository statusNotesRepository) {
 		this.statusNotesRepository = statusNotesRepository;
+	}
+	public GlobalProjectRepository getGlobalProjectRepository() {
+		return globalProjectRepository;
+	}
+	public void setGlobalProjectRepository(GlobalProjectRepository globalProjectRepository) {
+		this.globalProjectRepository = globalProjectRepository;
+	}
+	public GlobalProjectMapRepository getGlobalProjectMapRepository() {
+		return globalProjectMapRepository;
+	}
+	public void setGlobalProjectMapRepository(GlobalProjectMapRepository globalProjectMapRepository) {
+		this.globalProjectMapRepository = globalProjectMapRepository;
 	}
 }

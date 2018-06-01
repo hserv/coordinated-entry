@@ -20,12 +20,14 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hserv.coordinatedentry.housinginventory.domain.GlobalProjectEntity;
+import com.hserv.coordinatedentry.housinginventory.domain.GlobalProjectMapEntity;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingUnitAddress;
-import com.hserv.coordinatedentry.housinginventory.domain.Project;
+import com.hserv.coordinatedentry.housinginventory.model.Project;
+import com.hserv.coordinatedentry.housinginventory.repository.GlobalProjectMapRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingInventoryRepository;
 import com.hserv.coordinatedentry.housinginventory.repository.HousingUnitAddressRepository;
-import com.hserv.coordinatedentry.housinginventory.repository.ProjectRepository;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
@@ -38,8 +40,9 @@ public class HousingInventoryService  {
 	@Autowired
 	private HousingUnitAddressRepository HousingUnitAddressRepository;
 	
+	
 	@Autowired
-	private ProjectRepository projectRepository;
+	private GlobalProjectMapRepository globalProjectMapRepository;
 
 	/*@Inject
     private HousingInventoryRepository housingInventoryRepository;*/
@@ -180,8 +183,21 @@ public class HousingInventoryService  {
 
 
 	public Project getProjectById(UUID projectId) {
-		return	projectRepository.findOne(projectId);
+		List<GlobalProjectMapEntity> mappings =	globalProjectMapRepository.findByProjectIdAndProjectGroupCode(projectId, SecurityContextUtil.getUserProjectGroup());
+		if(!mappings.isEmpty()) {
+			GlobalProjectEntity entity = mappings.get(0).getGlobalProject();
+			Project project = new Project();
+			project.setDescription(entity.getDescription());
+			project.setId(projectId);
+			project.setProjectCommonName(entity.getProjectCommonName());
+			project.setProjectName(entity.getProjectName());
+			project.setSourceSystemId(entity.getSourceSystemId());
+			project.setSchemaYear(mappings.get(0).getSource());
+			return project;
+		}		
+		return null; 
 	}
+	
 	
 	
 	

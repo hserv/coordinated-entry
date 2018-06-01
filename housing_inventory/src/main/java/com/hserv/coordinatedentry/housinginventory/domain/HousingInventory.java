@@ -21,6 +21,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hserv.coordinatedentry.housinginventory.model.Project;
 
 @SuppressWarnings("serial")
 @Entity
@@ -60,9 +61,8 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	private Integer schemaYear;
 	
 	@Transient
-	private Project project;
-	
-	
+	Project project;
+		
 	@OneToMany(mappedBy = "housingInventory",cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonIgnore
     private Set<HousingUnitAddress> housingUnitAddresss = new HashSet<HousingUnitAddress>();
