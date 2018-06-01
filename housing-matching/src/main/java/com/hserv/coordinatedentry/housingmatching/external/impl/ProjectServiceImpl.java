@@ -39,9 +39,8 @@ public class ProjectServiceImpl implements ProjectService{
 			searchRequest.setSessionToken(session.getToken());
 			searchRequest.setTrustedAppId(trustedAppId);
 			try {
-				List<BaseProject> projects =  (List<BaseProject>) projectSearchClient.search(searchRequest);
-				if(!projects.isEmpty()) return projects.get(0);
-				return null;
+				BaseProject project =   projectSearchClient.search(searchRequest);
+				return project;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
