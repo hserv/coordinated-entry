@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,7 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
 		criteria.createAlias("clientId", "clientId");
 		criteria.add(Restrictions.eq("clientId.id", clientId));
+
 		return (List<ClientSurveySubmissionEntity>) findByCriteria(criteria,startIndex,maxItems);
 	}
 
@@ -76,6 +78,7 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName));
 
 		}
+
 		return countRows(criteria);
 	}
 }

@@ -1,9 +1,11 @@
 package com.servinglynk.hmis.warehouse.service.converter;
 
+
 import java.time.ZoneId;
 import java.util.Date;
 
 import com.servinglynk.hmis.warehouse.core.model.Client;
+
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 
@@ -12,11 +14,14 @@ public class ClientSurveySubmissionConverter {
 	
 	public static ClientSurveySubmission entityToModel(ClientSurveySubmissionEntity entity) {
 		ClientSurveySubmission model = new ClientSurveySubmission();
+
 		model.setClientId(entity.getClientId().getId());
+
 		model.setGlobalEnrollmentId(entity.getGlobalEnrollmentId());
 		model.setId(entity.getId());
 		model.setSubmissionId(entity.getSubmissionId());
 		model.setSurveyId(entity.getSurveyId());
+
 		
 		if (entity.getClientId() != null) {
 			Client client = new Client();

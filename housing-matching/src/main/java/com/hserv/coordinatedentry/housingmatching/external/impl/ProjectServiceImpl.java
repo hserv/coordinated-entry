@@ -8,9 +8,11 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
+import com.hserv.coordinatedentry.housingmatching.entity.GlobalProjectMapEntity;
 import com.hserv.coordinatedentry.housingmatching.external.ProjectService;
 import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
-import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
+import com.servinglynk.hmis.warehouse.client.projects.ProjectSearchClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseProject;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
@@ -18,25 +20,32 @@ import com.servinglynk.hmis.warehouse.core.model.Session;
 public class ProjectServiceImpl implements ProjectService{
 		
 	 @Autowired
-	 ISearchServiceClient searchServiceClient;
+	 ProjectSearchClient projectSearchClient;
+	 
+	 @Autowired RepositoryFactory repositoryFactory;
 
 	
 	public BaseProject getProjectInfo(UUID projectId,Session session, String trustedAppId){
 		
+		List<GlobalProjectMapEntity> entities = repositoryFactory.getGlobalProjectMapRepository().findByProjectIdAndProjectGroupCode(projectId, session.getAccount().getProjectGroup().getProjectGroupCode());
+		
+		if(!entities.isEmpty()) {
+			
 			Map<String,Object> searchParams = new HashMap<>();
-			searchParams.put("q", projectId);
+			searchParams.put("schemayear", entities.get(0).getSource());
+			searchParams.put("projectId", projectId);
 			SearchRequest searchRequest = new SearchRequest();
 			searchRequest.setSearchParams(searchParams);
 			searchRequest.setSessionToken(session.getToken());
 			searchRequest.setTrustedAppId(trustedAppId);
-			searchRequest.setSearchEntity("projects");
 			try {
-				List<BaseProject> projects =  (List<BaseProject>) searchServiceClient.search(searchRequest);
-				if(!projects.isEmpty()) return projects.get(0);
-				return null;
+				BaseProject project =   projectSearchClient.search(searchRequest);
+				return project;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
 			}	
+		}
+		return null;
 	}
 }
