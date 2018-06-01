@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
 import com.hserv.coordinatedentry.housinginventory.domain.HousingInventory;
 import com.hserv.coordinatedentry.housinginventory.service.HousingInventoryService;
+import com.hserv.coordinatedentry.housinginventory.service.ProjectService;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
@@ -58,6 +59,9 @@ public class HousingInventoryResource extends BaseResource{
 	
 	 @Autowired
 	 ISearchServiceClient searchServiceClient;
+	 
+	 @Autowired
+	 ProjectService projectService;
 	
 	@Autowired
 	private PagedResourcesAssembler assembler;
@@ -95,7 +99,7 @@ public class HousingInventoryResource extends BaseResource{
 		 List<HousingInventory> lHousingInventory  = new ArrayList<HousingInventory>();		 
 		 for(HousingInventory inventory : housingInventories){
 			 inventory.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
-			 populateProjectSchemaYear(inventory,session,trustedAppId);
+			 populateProjectSchemaYear(inventory,session);
 			 HousingInventory result=housingInventoryService.saveHousingInventory(inventory,session);
 			 lHousingInventory.add(result);
 		 }
@@ -106,9 +110,14 @@ public class HousingInventoryResource extends BaseResource{
 	@RequestMapping(
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
-	    public ResponseEntity<List<HousingInventory>> updateHousingInventory(@RequestBody List<HousingInventory> housingInventories,HttpServletRequest request) throws URISyntaxException {
+	    public ResponseEntity<List<HousingInventory>> updateHousingInventory(@RequestBody List<HousingInventory> housingInventories,HttpServletRequest request) throws Exception {
 	       Session session = sessionHelper.getSession(request);
-			List<HousingInventory> lresult = housingInventoryService.updateHousingInentories(housingInventories,session);
+	       List<HousingInventory> units = new ArrayList<>();
+	       for(HousingInventory inventory : housingInventories) {
+	    	   populateProjectSchemaYear(inventory, session);
+	    	   units.add(inventory);
+	       }
+			List<HousingInventory> lresult = housingInventoryService.updateHousingInentories(units,session);
 	        return new  ResponseEntity<List<HousingInventory>>(lresult, HttpStatus.OK);
 	    }
 	
@@ -148,8 +157,9 @@ public class HousingInventoryResource extends BaseResource{
 	@RequestMapping(value = "/{id}",
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
-	    public ResponseEntity<HousingInventory> updateHousingInventoryById(@RequestBody HousingInventory housingInventory,HttpServletRequest request) throws URISyntaxException {
+	    public ResponseEntity<HousingInventory> updateHousingInventoryById(@RequestBody HousingInventory housingInventory,HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
+		populateProjectSchemaYear(housingInventory, session);
 		HousingInventory result = housingInventoryService.saveHousingInventory(housingInventory,session);
 	        return ResponseEntity.ok()
 	            .headers(HeaderUtil.createEntityUpdateAlert("housingInventory", housingInventory.getHousingInventoryId().toString()))
@@ -169,21 +179,13 @@ public class HousingInventoryResource extends BaseResource{
 	
 	
 	
-	public void populateProjectSchemaYear(HousingInventory inventory,Session session,String trustedAppId) throws Exception {
-		 
-	 			UUID projectId = inventory.getProjectId();
-	 			Map<String,Object> searchParams = new HashMap<>();
-	 			searchParams.put("q", projectId);
-	 			SearchRequest searchRequest = new SearchRequest();
-	 			searchRequest.setSearchParams(searchParams);
-	 			searchRequest.setSessionToken(session.getToken());
-	 			searchRequest.setTrustedAppId(trustedAppId);
-	 			searchRequest.setSearchEntity("projects");
-	 			List<BaseProject> projects =  (List<BaseProject>) searchServiceClient.search(searchRequest);
-	 			if(!projects.isEmpty())
-	 				inventory.setSchemaYear(projects.get(0).getSchemaYear());
+	public void populateProjectSchemaYear(HousingInventory inventory,Session session) throws Exception {
+		 	
+					String schemaYear = projectService.populateProjectSchemaYear(inventory.getProjectId(), session.getAccount().getProjectGroup().getProjectGroupCode());
+	 			if(schemaYear!=null)
+	 				inventory.setSchemaYear(Integer.parseInt(schemaYear));
 	 			else
-	 				throw new ResourceNotFoundException("Invalid Project Identification "+projectId);
+	 				throw new ResourceNotFoundException("Invalid Project Identification "+inventory.getProjectId());
 	 	
 	}
 }
