@@ -1,6 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,12 @@ public class EligibleClientServiceImplV3 implements EligibleClientServiceV3 {
 	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable, String filter) {
 		
 		Page<EligibleClient> clients  = new PageImpl<EligibleClient>(new ArrayList<EligibleClient>());
+		
+		List<EligibleClient> returnClients = new ArrayList<>();
+		
+		 List<UUID> distinctDedupIds = new ArrayList<UUID>();
+		 int skipCount=0;
+		
 		if(filter.equalsIgnoreCase("inactive")) {
 			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(projectGroupCode,false,true, pageable);
 		}else if(filter.equalsIgnoreCase("active")) {
@@ -41,8 +48,24 @@ public class EligibleClientServiceImplV3 implements EligibleClientServiceV3 {
 		}else {
 			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedOrderBySurveyDateDesc(projectGroupCode,false , pageable);			
 		}
+		
+		
+		 for (EligibleClient pClient : clients) {
+		    	
 
-		return clients;
+		    	if(pClient!=null && pClient.getClientDedupId()!=null && !distinctDedupIds.contains(pClient.getClientDedupId())) {
+		    		returnClients.add(pClient);
+		    	}else {
+		    		skipCount++;
+		    	}
+		    		
+		    	if(pClient.getClientDedupId()!=null) {
+		    		distinctDedupIds.add(pClient.getClientDedupId());
+		    	}
+
+		 }
+
+		return new PageImpl<>(returnClients);
 	}
 	
 	
