@@ -18,9 +18,9 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 @Repository
 public interface EligibleClientsRepository extends JpaRepository<EligibleClient, Serializable>,JpaSpecificationExecutor<EligibleClient> {
 	
-	public EligibleClient findByClientIdAndProjectGroupCodeAndDeleted(UUID clientID,String projectGroup,boolean deleted);
-	Page<EligibleClient> findByProjectGroupCodeAndDeletedAndIgnoreMatchProcess(String projectGroupCode,boolean deleted,boolean ignoreMatchProcess,Pageable pageableignore);
-	Page<EligibleClient> findByProjectGroupCodeAndDeleted(String projectGroupCode,boolean deleted,Pageable pageableignore);
+	public EligibleClient findByClientIdAndProjectGroupCodeAndDeletedOrderBySurveyDateAsc(UUID clientID,String projectGroup,boolean deleted);
+	Page<EligibleClient> findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateAsc(String projectGroupCode,boolean deleted,boolean ignoreMatchProcess,Pageable pageableignore);
+	Page<EligibleClient> findByProjectGroupCodeAndDeletedOrderBySurveyDateAsc(String projectGroupCode,boolean deleted,Pageable pageableignore);
 	
 	@Transactional(readOnly = false)
 	Long deleteByClientId(UUID clientId);
@@ -38,5 +38,7 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	void deleteScoreByClientId(UUID clientId);
 
 	public List<EligibleClient> findByClientDedupIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(UUID clientID,String projectGroup,boolean deleted);
+	
+	public EligibleClient findByClientIdAndProjectGroupCodeAndDeleted(UUID clientID, String projectGroup, boolean b);
 
 }
