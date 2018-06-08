@@ -35,11 +35,11 @@ public class EligibleClientServiceImplV3 implements EligibleClientServiceV3 {
 		
 		Page<EligibleClient> clients  = new PageImpl<EligibleClient>(new ArrayList<EligibleClient>());
 		if(filter.equalsIgnoreCase("inactive")) {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcess(projectGroupCode,false,true, pageable);
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(projectGroupCode,false,true, pageable);
 		}else if(filter.equalsIgnoreCase("active")) {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcess(projectGroupCode,false, false, pageable);
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(projectGroupCode,false, false, pageable);
 		}else {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroupCode,false , pageable);			
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedOrderBySurveyDateDesc(projectGroupCode,false , pageable);			
 		}
 
 		return clients;

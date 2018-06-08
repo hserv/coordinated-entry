@@ -103,11 +103,11 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		 
 		 
 		if(filter.equalsIgnoreCase("inactive")) {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateAsc(projectGroupCode,false,true, pageable);
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(projectGroupCode,false,true, pageable);
 		}else if(filter.equalsIgnoreCase("active")) {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateAsc(projectGroupCode,false, false, pageable);
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(projectGroupCode,false, false, pageable);
 		}else {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedOrderBySurveyDateAsc(projectGroupCode,false , pageable);			
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedOrderBySurveyDateDesc(projectGroupCode,false , pageable);			
 		}
 		 for (EligibleClient pClient : clients) {
 		    	
