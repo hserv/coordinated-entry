@@ -70,7 +70,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Override
 	public Page<EligibleClient> getScores(Pageable pageable) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		return eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroup,false,pageable);
+		return eligibleClientsRepository.findByProjectGroupCodeAndDeletedOrderBySurveyDateDesc(projectGroup,false,pageable);
 	}
 
 	@Override
