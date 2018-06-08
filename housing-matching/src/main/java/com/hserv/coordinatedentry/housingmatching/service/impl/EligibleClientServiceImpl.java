@@ -95,16 +95,36 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Override
 	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable, String filter) {
 		Page<EligibleClient> clients  = new PageImpl<EligibleClient>(new ArrayList<EligibleClient>());
+		
+		List<EligibleClient> returnClients = new ArrayList<>();
+		
+		 List<UUID> distinctDedupIds = new ArrayList<UUID>();
+		 int skipCount=0;
+		 
+		 
 		if(filter.equalsIgnoreCase("inactive")) {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcess(projectGroupCode,false,true, pageable);
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateAsc(projectGroupCode,false,true, pageable);
 		}else if(filter.equalsIgnoreCase("active")) {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcess(projectGroupCode,false, false, pageable);
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateAsc(projectGroupCode,false, false, pageable);
 		}else {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeleted(projectGroupCode,false , pageable);			
+			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedOrderBySurveyDateAsc(projectGroupCode,false , pageable);			
 		}
+		 for (EligibleClient pClient : clients) {
+		    	
 
+				    	if(pClient!=null && pClient.getClientDedupId()!=null && !distinctDedupIds.contains(pClient.getClientDedupId())) {
+				    		returnClients.add(pClient);
+				    	}else {
+				    		skipCount++;
+				    	}
+				    		
+				    	if(pClient.getClientDedupId()!=null) {
+				    		distinctDedupIds.add(pClient.getClientDedupId());
+				    	}
 
-		return clients;
+		    }
+
+		return new PageImpl<>(returnClients);
 	}
 
 	@Override
