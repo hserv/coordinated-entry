@@ -19,8 +19,30 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 public interface EligibleClientsRepository extends JpaRepository<EligibleClient, Serializable>,JpaSpecificationExecutor<EligibleClient> {
 	
 	public EligibleClient findByClientIdAndProjectGroupCodeAndDeletedOrderBySurveyDateDesc(UUID clientID,String projectGroup,boolean deleted);
-	Page<EligibleClient> findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(String projectGroupCode,boolean deleted,boolean ignoreMatchProcess,Pageable pageableignore);
+	//Page<EligibleClient> findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(String projectGroupCode,boolean deleted,boolean ignoreMatchProcess,Pageable pageableignore);
 	Page<EligibleClient> findByProjectGroupCodeAndDeletedOrderBySurveyDateDesc(String projectGroupCode,boolean deleted,Pageable pageableignore);
+	
+	@Query(value="SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC  DESC LIMIT ? OFFSET ? ",nativeQuery=true)
+	List<EligibleClient> getAllEligibleClients(String projectGroupCode, Integer limit,Integer start);
+	
+	@Query(value="select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = true LIMIT  ? OFFSET ?",nativeQuery=true)
+	List<EligibleClient> getInactiveEligibleClients(String projectGroupCode, Integer limit,Integer start);
+	
+	
+	@Query(value="select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = false LIMIT ? OFFSET ?",nativeQuery=true)
+	List<EligibleClient> getActiveEligibleClients(String projectGroupCode, Integer limit,Integer start);
+	
+	
+	@Query(value="select count (*) from ( SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) q",nativeQuery=true)
+	Long getAllEligibleClientsCount(String projectGroupCode);
+	
+	@Query(value="select count (*) from ( select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = true  ) q",nativeQuery=true)
+	Long getInactiveEligibleClientsCount(String projectGroupCode);
+	
+	
+	@Query(value="select count (*) from ( select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code =?  AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = false  ) q",nativeQuery=true)
+	Long getActiveEligibleClientsCount(String projectGroupCode);
+	
 	
 	@Transactional(readOnly = false)
 	Long deleteByClientId(UUID clientId);

@@ -94,37 +94,21 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	
 	@Override
 	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable, String filter) {
-		Page<EligibleClient> clients  = new PageImpl<EligibleClient>(new ArrayList<EligibleClient>());
-		
-		List<EligibleClient> returnClients = new ArrayList<>();
-		
-		 List<UUID> distinctDedupIds = new ArrayList<UUID>();
-		 int skipCount=0;
-		 
-		 
+		List<EligibleClient> clients  =new ArrayList<EligibleClient>(); 
+		 Long count =0L;
 		if(filter.equalsIgnoreCase("inactive")) {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(projectGroupCode,false,true, pageable);
+			clients = eligibleClientsRepository.getInactiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+			count = eligibleClientsRepository.getInactiveEligibleClientsCount(projectGroupCode);
 		}else if(filter.equalsIgnoreCase("active")) {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(projectGroupCode,false, false, pageable);
+			clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+			count = eligibleClientsRepository.getActiveEligibleClientsCount(projectGroupCode);
 		}else {
-			clients =eligibleClientsRepository.findByProjectGroupCodeAndDeletedOrderBySurveyDateDesc(projectGroupCode,false , pageable);			
+			clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+			count = eligibleClientsRepository.getAllEligibleClientsCount(projectGroupCode);
 		}
-		 for (EligibleClient pClient : clients) {
-		    	
+		 
 
-				    	if(pClient!=null && pClient.getClientDedupId()!=null && !distinctDedupIds.contains(pClient.getClientDedupId())) {
-				    		returnClients.add(pClient);
-				    	}else {
-				    		skipCount++;
-				    	}
-				    		
-				    	if(pClient.getClientDedupId()!=null) {
-				    		distinctDedupIds.add(pClient.getClientDedupId());
-				    	}
-
-		    }
-
-		return new PageImpl<>(returnClients);
+		return new PageImpl<>(clients,pageable,count);
 	}
 
 	@Override
