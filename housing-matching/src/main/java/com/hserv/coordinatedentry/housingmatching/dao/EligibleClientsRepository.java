@@ -22,25 +22,25 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	//Page<EligibleClient> findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(String projectGroupCode,boolean deleted,boolean ignoreMatchProcess,Pageable pageableignore);
 	Page<EligibleClient> findByProjectGroupCodeAndDeletedOrderBySurveyDateDesc(String projectGroupCode,boolean deleted,Pageable pageableignore);
 	
-	@Query(value="SELECT DISTINCT on (client_dedup_id) client_dedup_id,* FROM housing_inventory.eligible_clients WHERE project_group_code =? AND  deleted =false  ORDER BY client_dedup_id, survey_date DESC LIMIT ? OFFSET ? ",nativeQuery=true)
+	@Query(value="SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC  DESC LIMIT ? OFFSET ? ",nativeQuery=true)
 	List<EligibleClient> getAllEligibleClients(String projectGroupCode, Integer limit,Integer start);
 	
-	@Query(value="SELECT DISTINCT on (client_dedup_id) client_dedup_id,* FROM housing_inventory.eligible_clients WHERE project_group_code =? AND ignore_match_process =true AND  deleted =false  ORDER BY client_dedup_id, survey_date DESC LIMIT  ? OFFSET ?",nativeQuery=true)
+	@Query(value="select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = true LIMIT  ? OFFSET ?",nativeQuery=true)
 	List<EligibleClient> getInactiveEligibleClients(String projectGroupCode, Integer limit,Integer start);
 	
 	
-	@Query(value="SELECT DISTINCT on (client_dedup_id) client_dedup_id,* FROM housing_inventory.eligible_clients WHERE project_group_code =? AND ignore_match_process =false AND  deleted =false  ORDER BY client_dedup_id, survey_date DESC LIMIT ? OFFSET ?",nativeQuery=true)
+	@Query(value="select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = false LIMIT ? OFFSET ?",nativeQuery=true)
 	List<EligibleClient> getActiveEligibleClients(String projectGroupCode, Integer limit,Integer start);
 	
 	
-	@Query(value="select count (*) from ( SELECT DISTINCT on (client_dedup_id) client_dedup_id FROM housing_inventory.eligible_clients WHERE project_group_code =? AND  deleted =false  ORDER BY client_dedup_id, survey_date DESC ) q",nativeQuery=true)
+	@Query(value="select count (*) from ( SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) q",nativeQuery=true)
 	Long getAllEligibleClientsCount(String projectGroupCode);
 	
-	@Query(value="select count (*) from ( SELECT DISTINCT on (client_dedup_id) client_dedup_id FROM housing_inventory.eligible_clients WHERE project_group_code =? AND ignore_match_process =true AND  deleted =false  ORDER BY client_dedup_id, survey_date DESC  ) q",nativeQuery=true)
+	@Query(value="select count (*) from ( select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = true  ) q",nativeQuery=true)
 	Long getInactiveEligibleClientsCount(String projectGroupCode);
 	
 	
-	@Query(value="select count (*) from ( SELECT DISTINCT on (client_dedup_id) client_dedup_id FROM housing_inventory.eligible_clients WHERE project_group_code =? AND ignore_match_process =false AND  deleted =false  ORDER BY client_dedup_id, survey_date DESC  ) q",nativeQuery=true)
+	@Query(value="select count (*) from ( select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code =?  AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = false  ) q",nativeQuery=true)
 	Long getActiveEligibleClientsCount(String projectGroupCode);
 	
 	
