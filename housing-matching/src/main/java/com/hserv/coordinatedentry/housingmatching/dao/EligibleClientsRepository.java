@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,26 +23,50 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	//Page<EligibleClient> findByProjectGroupCodeAndDeletedAndIgnoreMatchProcessOrderBySurveyDateDesc(String projectGroupCode,boolean deleted,boolean ignoreMatchProcess,Pageable pageableignore);
 	Page<EligibleClient> findByProjectGroupCodeAndDeletedOrderBySurveyDateDesc(String projectGroupCode,boolean deleted,Pageable pageableignore);
 	
-	@Query(value="SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC  DESC LIMIT ? OFFSET ? ",nativeQuery=true)
+	@Query(value="SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE tm.project_group_code = :projectGroupCode " + 
+			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
+			" AND T .project_group_code = :projectGroupCode " + 
+			" ORDER BY T .client_dedup_id, survey_score desc  LIMIT  :limit OFFSET :start ",nativeQuery=true)
 	List<EligibleClient> getAllEligibleClients(String projectGroupCode, Integer limit,Integer start);
 	
-	@Query(value="select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = true LIMIT  ? OFFSET ?",nativeQuery=true)
-	List<EligibleClient> getInactiveEligibleClients(String projectGroupCode, Integer limit,Integer start);
+	@Query(value="SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE tm.project_group_code = :projectGroupCode " + 
+			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
+			" AND T .project_group_code = :projectGroupCode " + 
+			" AND T .ignore_match_process = TRUE ORDER BY T .client_dedup_id, survey_score desc  LIMIT  :limit OFFSET :start ",nativeQuery=true)
+	List<EligibleClient> getInactiveEligibleClients(@Param("projectGroupCode") String projectGroupCode,@Param("limit") Integer limit,@Param("start") Integer start);
 	
 	
-	@Query(value="select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = false LIMIT ? OFFSET ?",nativeQuery=true)
-	List<EligibleClient> getActiveEligibleClients(String projectGroupCode, Integer limit,Integer start);
+	@Query(value="SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE tm.project_group_code = :projectGroupCode " + 
+			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
+			" AND T .project_group_code = :projectGroupCode " + 
+			" AND T .ignore_match_process = FALSE ORDER BY T .client_dedup_id, survey_score desc  LIMIT  :limit OFFSET :start ",nativeQuery=true)
+	List<EligibleClient> getActiveEligibleClients(@Param("projectGroupCode") String projectGroupCode,@Param("limit") Integer limit,@Param("start") Integer start);
 	
 	
-	@Query(value="select count (*) from ( SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) q",nativeQuery=true)
-	Long getAllEligibleClientsCount(String projectGroupCode);
+	@Query(value="SELECT COUNT(*) FROM (SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE tm.project_group_code = :projectGroupCode " + 
+			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
+			" AND T .project_group_code = :projectGroupCode " + 
+			" ORDER BY T .client_dedup_id, survey_score desc ) ABC ",nativeQuery=true)
+	Long getAllEligibleClientsCount(@Param("projectGroupCode") String projectGroupCode);
 	
-	@Query(value="select count (*) from ( select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code = ? AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = true  ) q",nativeQuery=true)
-	Long getInactiveEligibleClientsCount(String projectGroupCode);
+	@Query(value="SELECT COUNT(*) FROM (SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE tm.project_group_code = :projectGroupCode " + 
+			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
+			"  AND T .project_group_code = :projectGroupCode " + 
+			" AND T .ignore_match_process = TRUE ORDER BY T .client_dedup_id, survey_score desc ) ABC ",nativeQuery=true)
+	Long getInactiveEligibleClientsCount(@Param("projectGroupCode") String projectGroupCode);
 	
 	
-	@Query(value="select count (*) from ( select * from (SELECT DISTINCT ON (client_dedup_id) client_dedup_id ,* FROM housing_inventory.eligible_clients WHERE project_group_code =?  AND deleted = FALSE ORDER BY client_dedup_id,	survey_date, survey_score DESC ) a where a.ignore_match_process = false  ) q",nativeQuery=true)
-	Long getActiveEligibleClientsCount(String projectGroupCode);
+	@Query(value="SELECT COUNT(*) FROM (SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE tm.project_group_code = :projectGroupCode " + 
+			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
+			"  AND T .project_group_code = :projectGroupCode " + 
+			" AND T .ignore_match_process = FALSE ORDER BY T .client_dedup_id, survey_score desc ) ABC ",nativeQuery=true)
+	Long getActiveEligibleClientsCount(@Param("projectGroupCode") String projectGroupCode);
 	
 	
 	@Transactional(readOnly = false)
