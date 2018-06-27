@@ -13,7 +13,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.hserv.coordinatedentry.housinginventory.annotation.APIMapping;
-import com.servinglynk.hmis.warehouse.client.authorizationservice.AuthorizationServiceClient;
+import com.servinglynk.hmis.warehouse.client.authorizationservice.IAuthorizationClient;
 import com.servinglynk.hmis.warehouse.core.model.ApiMethodAuthorizationCheck;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
@@ -32,6 +32,10 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	TrustedAppHelper trustedAppHelper;
 	
+	
+	@Autowired
+	private IAuthorizationClient client;
+	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)  throws Exception{
 		
 		
@@ -45,7 +49,6 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 			apiMethodAuthorizationCheck.setApiMethodId(apiMapping.value());
 			apiMethodAuthorizationCheck.setAccessToken(sessionHelper.retrieveSessionToken(request));
 			apiMethodAuthorizationCheck.setTrustedAppId(trustedAppHelper.retrieveTrustedAppId(request));
-			AuthorizationServiceClient client = new AuthorizationServiceClient();
 			ApiMethodAuthorizationCheck clientresponse = client.checkApiAuthorization(apiMethodAuthorizationCheck);
 			Session session = new Session();
 			session.setAccount(clientresponse.getAccount());

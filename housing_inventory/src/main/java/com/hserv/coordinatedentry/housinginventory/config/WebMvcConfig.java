@@ -2,6 +2,8 @@ package com.hserv.coordinatedentry.housinginventory.config;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hserv.coordinatedentry.housinginventory.service.PropertyReaderServiceImpl;
 
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
@@ -45,4 +48,17 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		registry.addInterceptor(webInterceptor);
 
 	}
+	
+	
+	   
+		@Bean
+		public PropertyReaderServiceImpl propertyReaderService(){
+			return new PropertyReaderServiceImpl();
+		}
+		
+		 @PostConstruct
+		 public void initializeDatabasePropertySourceUsage() {
+			 propertyReaderService().loadProperties("HOUSE-INVENTORY-API");
+		 }
+	    
 }

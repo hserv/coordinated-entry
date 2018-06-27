@@ -3,7 +3,8 @@ package com.servinglynk.hmis.warehouse.config;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.PostConstruct;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,13 +20,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.servinglynk.hmis.warehouse.client.search.SearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 import com.servinglynk.hmis.warehouse.rest.SurveysController;
 import com.servinglynk.hmis.warehouse.rest.interceptor.ApiAuthCheckInterceptor;
-import com.servinglynk.hmis.warehouse.service.ClientValidator;
+import com.servinglynk.hmis.warehouse.service.core.PropertyReaderServiceImpl;
 import com.servinglynk.hmis.warehouse.service.impl.ClientValidatorImpl;
 
 @Configuration
@@ -95,6 +95,16 @@ public class RestConfig extends WebMvcConfigurerAdapter {
 	public ClientValidatorImpl clientValidator(){
 		return new ClientValidatorImpl();
 	}
+	
+	@Bean
+	public PropertyReaderServiceImpl propertyReaderService(){
+		return new PropertyReaderServiceImpl();
+	}
+	
+	 @PostConstruct
+	 public void initializeDatabasePropertySourceUsage() {
+		 propertyReaderService().loadProperties("SURVEY_API");
+	 }
 	
 	
 	 @Override

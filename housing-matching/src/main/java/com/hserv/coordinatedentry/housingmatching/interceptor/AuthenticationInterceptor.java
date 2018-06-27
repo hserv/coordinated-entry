@@ -14,6 +14,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.servinglynk.hmis.warehouse.client.authorizationservice.AuthorizationServiceClient;
+import com.servinglynk.hmis.warehouse.client.authorizationservice.IAuthorizationClient;
 import com.servinglynk.hmis.warehouse.core.model.ApiMethodAuthorizationCheck;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
@@ -34,6 +35,10 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	private TrustedAppHelper trustedAppHelper;
 	
+	@Autowired
+	private IAuthorizationClient client;
+	
+	
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -52,7 +57,6 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 			apiMethodAuthorizationCheck.setApiMethodId("USR_CREATE_SESSION");  //TODO - remove this line once our api mappings are added to hmis db
 			apiMethodAuthorizationCheck.setAccessToken(accessToken);
 			apiMethodAuthorizationCheck.setTrustedAppId(trustedAppId);
-			AuthorizationServiceClient client = new AuthorizationServiceClient();
 			ApiMethodAuthorizationCheck clientresponse = client.checkApiAuthorization(apiMethodAuthorizationCheck);
 		
 			Session session = new Session();

@@ -1,5 +1,7 @@
 package com.hserv.coordinatedentry.housingmatching;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
@@ -12,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.hserv.coordinatedentry.housingmatching.dao.BaseRepositoryFactoryBean;
+import com.hserv.coordinatedentry.housingmatching.service.impl.PropertyReaderServiceImpl;
 import com.servinglynk.hmis.warehouse.client.config.SpringConfig;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 
@@ -35,6 +38,17 @@ public class Application extends SpringBootServletInitializer {
     public SessionHelper sessionHelper() {
     	return new SessionHelper();
     }
+    
+    
+	@Bean
+	public PropertyReaderServiceImpl propertyReaderService(){
+		return new PropertyReaderServiceImpl();
+	}
+	
+	 @PostConstruct
+	 public void initializeDatabasePropertySourceUsage() {
+		 propertyReaderService().loadProperties("HOUSE-MATCHING-API");
+	 }
     
     public static void main(String args[]){
     	

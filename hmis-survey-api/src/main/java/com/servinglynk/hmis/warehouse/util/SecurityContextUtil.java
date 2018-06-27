@@ -13,7 +13,7 @@ public class SecurityContextUtil {
 			Session session = null;
 			SecurityContext context =  SecurityContextHolder.getContext();
 			Authentication authentication =  context.getAuthentication();
-			if(authentication.getPrincipal()!=null){
+			if(authentication!=null && authentication.getPrincipal()!=null){
 				session = (Session) authentication.getPrincipal();
 				return session.getAccount();
 			}
@@ -25,7 +25,7 @@ public class SecurityContextUtil {
 		Session session = null;
 		SecurityContext context =  SecurityContextHolder.getContext();
 		Authentication authentication =  context.getAuthentication();
-		if(authentication.getPrincipal()!=null){
+		if(authentication!=null && authentication.getPrincipal()!=null){
 			session = (Session) authentication.getPrincipal();
 			if(session.getAccount()!=null && session.getAccount().getProjectGroup()!=null)
 				return session.getAccount().getProjectGroup().getProjectGroupCode();

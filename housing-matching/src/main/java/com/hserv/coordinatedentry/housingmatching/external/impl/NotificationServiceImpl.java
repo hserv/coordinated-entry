@@ -49,10 +49,15 @@ public class NotificationServiceImpl implements NotificationService {
 
 		}
 
-
+		try {
+			System.out.println(session.toJSONString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		notification.setType("HOUSING_MATCHING_STATUS_UPDATE");
 		notification.setMethod("EMAIL");
-		notification.setSender(SecurityContextUtil.getUserProjectGroupSender());
+		notification.setSender(session.getAccount().getProjectGroup().getSenderEmail());
 		notification.setRecipients(recipients);
 		notification.getParameters().addParameter(new Parameter("status",match.getMatchStatus()));
 		notification.getParameters().addParameter(new Parameter("clientId",match.getEligibleClient().getClientId()));
