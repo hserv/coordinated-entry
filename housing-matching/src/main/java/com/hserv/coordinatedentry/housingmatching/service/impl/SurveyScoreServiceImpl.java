@@ -133,8 +133,11 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 							eligibleClient.setRemarks("Ignore match flag auto set by system to false");
 					}
 						eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
-						LocalDateTime surveyDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
-						if(surveyDate!=null)eligibleClient.setSurveyDate(surveyDate);
+					
+						LocalDateTime responseSubmissionDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
+						if(responseSubmissionDate==null) responseSubmissionDate = surveyMSService.getSurveyScoreDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
+						if(responseSubmissionDate!=null)eligibleClient.setSurveySubmissionDate(responseSubmissionDate);
+						
 						eligibleClient.setClientId(clientSurveyScore.getClientId());
 						BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
 						strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
