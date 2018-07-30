@@ -81,6 +81,10 @@ public class EligibleClient extends BaseEntity {
 	@Column(name="CLIENT_DEDUP_ID")
 	private UUID clientDedupId;
 	
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+	@Column(name = "survey_submission_date")
+	private LocalDateTime surveySubmissionDate;
+	
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -247,4 +251,13 @@ public class EligibleClient extends BaseEntity {
 	public void setClientDedupId(UUID clientDedupId) {
 		this.clientDedupId = clientDedupId;
 	}
+
+	public LocalDateTime getSurveySubmissionDate() {
+		return surveySubmissionDate;
+	}
+
+	public void setSurveySubmissionDate(LocalDateTime surveySubmissionDate) {
+		this.surveySubmissionDate = surveySubmissionDate;
+	}
+
 }

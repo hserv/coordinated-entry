@@ -18,4 +18,7 @@ public interface SurveyMSService {
 	ClientsSurveyScores fetchSurveyResponses(String projectGroup);
 	
 	LocalDateTime getSurveyDate(UUID clientId, UUID surveyId);
+	
+	
+	LocalDateTime getSurveyScoreDate(UUID clientId, UUID surveyId);
 }
