@@ -157,9 +157,13 @@ public class HousingInventoryResource extends BaseResource{
 	@RequestMapping(value = "/{id}",
 	        method = RequestMethod.PUT,
 	        produces = MediaType.APPLICATION_JSON_VALUE)
-	    public ResponseEntity<HousingInventory> updateHousingInventoryById(@RequestBody HousingInventory housingInventory,HttpServletRequest request) throws Exception {
+	    public ResponseEntity<HousingInventory> updateHousingInventoryById(
+	    		@PathVariable("id") UUID id,
+	    		@RequestBody HousingInventory housingInventory,
+	    		HttpServletRequest request) throws Exception {
 		Session session = sessionHelper.getSession(request);
 		populateProjectSchemaYear(housingInventory, session);
+		housingInventory.setHousingInventoryId(id);
 		HousingInventory result = housingInventoryService.saveHousingInventory(housingInventory,session);
 	        return ResponseEntity.ok()
 	            .headers(HeaderUtil.createEntityUpdateAlert("housingInventory", housingInventory.getHousingInventoryId().toString()))
