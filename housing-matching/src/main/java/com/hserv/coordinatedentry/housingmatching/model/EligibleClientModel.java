@@ -46,6 +46,10 @@ public class EligibleClientModel {
 	private ClientModel client;
 	private UUID clientDedupId;
 	
+	@JsonDeserialize(using=JsonTimestampDeserializer.class)
+	@JsonSerialize(using=JsonTimestampSerializer.class)
+	private LocalDateTime surveySubmissionDate;
+	
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String link;
 	
@@ -144,5 +148,11 @@ public class EligibleClientModel {
 	}
 	public void setClientDedupId(UUID clientDedupId) {
 		this.clientDedupId = clientDedupId;
+	}
+	public LocalDateTime getSurveySubmissionDate() {
+		return surveySubmissionDate;
+	}
+	public void setSurveySubmissionDate(LocalDateTime surveySubmissionDate) {
+		this.surveySubmissionDate = surveySubmissionDate;
 	}
 }

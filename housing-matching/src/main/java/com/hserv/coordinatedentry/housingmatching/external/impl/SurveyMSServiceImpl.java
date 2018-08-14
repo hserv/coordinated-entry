@@ -124,5 +124,19 @@ public class SurveyMSServiceImpl implements SurveyMSService {
 		if(!entities.isEmpty()) return entities.get(0).getEffectiveDate();
 		return null;
 	}
+	
+	public LocalDateTime getSurveyScoreDate(UUID clientId, UUID surveyId) {
+		org.hibernate.Session session =  entityManager.unwrap(org.hibernate.Session.class);
+		
+		DetachedCriteria criteria = DetachedCriteria.forClass(SectionScoreEntity.class);
+		criteria.createAlias("surveyEntity", "surveyEntity");
+		criteria.add(Restrictions.eq("clientId", clientId));
+		criteria.add(Restrictions.eq("surveyEntity.id", surveyId));
+		criteria.addOrder(Order.asc("createdAt"));
+		Criteria eCriteria = criteria.getExecutableCriteria(session);
+		List<SectionScoreEntity> entities = eCriteria.list();
+		if(!entities.isEmpty()) return entities.get(0).getCreatedAt();
+		return null;
+	}
 
 }
