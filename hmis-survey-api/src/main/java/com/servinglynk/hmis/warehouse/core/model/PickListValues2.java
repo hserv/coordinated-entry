@@ -6,11 +6,11 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-@JsonRootName("pickListValues")
-public class PickListValues extends PaginatedModel {
+@JsonRootName("pickList")
+public class PickListValues2 {
 
 
-       @JsonProperty("pickListValues") 
+       @JsonProperty("pickList") 
        List<PickListValue> pickListValues = new ArrayList<PickListValue>();
        public List<PickListValue> getPickListValues() {
            return pickListValues;

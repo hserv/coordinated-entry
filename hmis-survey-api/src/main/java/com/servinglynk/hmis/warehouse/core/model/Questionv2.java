@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.servinglynk.hmis.warehouse.util.QuestionDataTypeEnum;
 import com.servinglynk.hmis.warehouse.util.QuestionTypeEnum;
@@ -51,6 +52,8 @@ public class Questionv2 extends ClientModel {
 	private String category;
 
 	private String subcategory;
+	
+	private PickListValues2 pickList;
 
 	public UUID getQuestionId() {
 		return questionId;
@@ -186,5 +189,13 @@ public class Questionv2 extends ClientModel {
 
 	public void setSubcategory(String subcategory) {
 		this.subcategory = subcategory;
+	}
+
+	public PickListValues2 getPickList() {
+		return pickList;
+	}
+
+	public void setPickList(PickListValues2 pickList) {
+		this.pickList = pickList;
 	}
 }

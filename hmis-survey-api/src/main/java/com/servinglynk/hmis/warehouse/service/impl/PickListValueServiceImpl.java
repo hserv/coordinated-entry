@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.servinglynk.hmis.warehouse.core.model.PickListValue;
 import com.servinglynk.hmis.warehouse.core.model.PickListValues;
+import com.servinglynk.hmis.warehouse.core.model.PickListValues2;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.PickListGroupEntity;
 import com.servinglynk.hmis.warehouse.model.PickListValueEntity;
@@ -76,19 +77,19 @@ public class PickListValueServiceImpl extends ServiceBase implements PickListVal
 
 
    @Transactional
-   public PickListValues getAllPickListGroupPickListValues(UUID pickListGroupId,Integer startIndex, Integer maxItems){
-       PickListValues PickListValues = new PickListValues();
+   public PickListValues2 getAllPickListGroupPickListValues(UUID pickListGroupId,Integer startIndex, Integer maxItems){
+       PickListValues2 pickListValues = new PickListValues2();
         List<PickListValueEntity> entities = daoFactory.getPickListValueEntityDao().getAllPickListGroupPickListValueEntities(pickListGroupId,startIndex,maxItems);
         for(PickListValueEntity entity : entities){
-           PickListValues.addPickListValue(PickListValueConverter.entityToModel(entity));
+        	pickListValues.addPickListValue(PickListValueConverter.entityToModel(entity));
         }
-        long count = daoFactory.getPickListValueEntityDao().getPickListGroupPickListValueEntitiesCount(pickListGroupId);
-        SortedPagination pagination = new SortedPagination();
+ //       long count = daoFactory.getPickListValueEntityDao().getPickListGroupPickListValueEntitiesCount(pickListGroupId);
+//        SortedPagination pagination = new SortedPagination();
  
-        pagination.setFrom(startIndex);
-        pagination.setReturned(PickListValues.getPickListValues().size());
-        pagination.setTotal((int)count);
-        PickListValues.setPagination(pagination);
-        return PickListValues; 
+//        pagination.setFrom(startIndex);
+//        pagination.setReturned(PickListValues.getPickListValues().size());
+//        pagination.setTotal((int)count);
+       // PickListValues.setPagination(pagination);
+        return pickListValues; 
    }
 }
