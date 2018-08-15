@@ -19,6 +19,7 @@ import com.servinglynk.hmis.warehouse.core.model.PickListGroup;
 import com.servinglynk.hmis.warehouse.core.model.PickListGroups;
 import com.servinglynk.hmis.warehouse.core.model.PickListValue;
 import com.servinglynk.hmis.warehouse.core.model.PickListValues;
+import com.servinglynk.hmis.warehouse.core.model.PickListValues2;
 
 @RestController
 @RequestMapping("/picklistgroups")
@@ -109,7 +110,7 @@ public class PickListGroupsController extends BaseController {
 
    @RequestMapping(value="/{picklistgroupid}/picklistvalues",method=RequestMethod.GET)
    @APIMapping(value="SURVEY_API_GET_ALL_PICKLISTVALUE",checkTrustedApp=true,checkSessionToken=true)
-   public PickListValues getAllPickListValues(@PathVariable( "picklistgroupid" ) UUID pickListGroupId,
+   public PickListValues2 getAllPickListValues(@PathVariable( "picklistgroupid" ) UUID pickListGroupId,
                        @RequestParam(value="startIndex", required=false) Integer startIndex, 
                        @RequestParam(value="maxItems", required=false) Integer maxItems,
                        HttpServletRequest request) throws Exception {

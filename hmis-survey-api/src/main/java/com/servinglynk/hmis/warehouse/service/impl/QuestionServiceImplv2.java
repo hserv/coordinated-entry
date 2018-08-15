@@ -7,19 +7,27 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
+import com.servinglynk.hmis.warehouse.core.model.PickListValues2;
+import com.servinglynk.hmis.warehouse.core.model.Question;
 import com.servinglynk.hmis.warehouse.core.model.Questionsv2;
 import com.servinglynk.hmis.warehouse.core.model.Questionv2;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.PickListValueEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionGroupEntity;
 import com.servinglynk.hmis.warehouse.service.QuestionServicev2;
+import com.servinglynk.hmis.warehouse.service.converter.PickListValueConverter;
 import com.servinglynk.hmis.warehouse.service.converter.QuestionConverterv2;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionGroupNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundException;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 
 @Component
 public class QuestionServiceImplv2 extends ServiceBase implements QuestionServicev2  {
+	
+	JSONObjectMapper mapper = new JSONObjectMapper();
 
    @Transactional
    public Questionv2 createQuestion(Questionv2 question,String caller){
@@ -66,19 +74,41 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
 
    @Transactional
    public Questionv2 getQuestionById(UUID QuestionId){
-       QuestionEntity pQuestion = daoFactory.getQuestionEntityDao().getQuestionEntityById(QuestionId);
-       if(pQuestion==null) throw new QuestionNotFoundException();
-
-       return QuestionConverterv2.entityToModel( pQuestion );
+       QuestionEntity entity = daoFactory.getQuestionEntityDao().getQuestionEntityById(QuestionId);
+       if(entity==null) throw new QuestionNotFoundException();
+	   Questionv2 questionv2 = QuestionConverterv2.entityToModel(entity);
+	   if(entity.getPickListGroupEntity()!=null) {
+		   PickListValues2 values2 = new PickListValues2();
+		   List<PickListValueEntity> pickListValueEntities =	entity.getPickListGroupEntity().getPickListValueEntities();
+		   for(PickListValueEntity valueEntity : pickListValueEntities) {
+			   
+			   values2.addPickListValue(PickListValueConverter.entityToModel(valueEntity));
+		   }
+		   
+		   if(!values2.getPickListValues().isEmpty()) questionv2.setPickList(values2);
+	   }
+       return questionv2;
    }
    
+   
    @Transactional
-   public Questionsv2 filterQuestions(String displayText,String description,Integer startIndex, Integer maxItems) {
+   public Questionsv2 filterQuestions(String displayText,String description,Integer startIndex, Integer maxItems)  throws Exception {
 	  
 	   Questionsv2 questions = new Questionsv2();
 	   List<QuestionEntity> entities = daoFactory.getQuestionEntityDao().getAllQuestionEntitys(displayText,description,startIndex,maxItems);
        for(QuestionEntity entity : entities){
-       	questions.addQuestion(QuestionConverterv2.entityToModel(entity));
+    	   Questionv2 questionv2 = QuestionConverterv2.entityToModel(entity);
+    	   if(entity.getPickListGroupEntity()!=null) {
+    		   PickListValues2 values2 = new PickListValues2();
+    		   List<PickListValueEntity> pickListValueEntities =	entity.getPickListGroupEntity().getPickListValueEntities();
+    		   for(PickListValueEntity valueEntity : pickListValueEntities) {
+    			   
+    			   values2.addPickListValue(PickListValueConverter.entityToModel(valueEntity));
+    		   }
+    		   
+    		   if(!values2.getPickListValues().isEmpty()) questionv2.setPickList(values2);
+    	   }
+       	questions.addQuestion(questionv2);
        }
        long count = daoFactory.getQuestionEntityDao().getAllQuestionEntitiesCount(displayText,description);
        SortedPagination pagination = new SortedPagination();
@@ -92,11 +122,22 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
 
 
    @Transactional
-   public Questionsv2 getAllQuestions(UUID questionGroupId,Integer startIndex, Integer maxItems){
+   public Questionsv2 getAllQuestions(UUID questionGroupId,Integer startIndex, Integer maxItems) throws Exception{
 	   Questionsv2 questions = new Questionsv2();
         List<QuestionEntity> entities = daoFactory.getQuestionEntityDao().getAllQuestionEntitys(questionGroupId,startIndex,maxItems);
         for(QuestionEntity entity : entities){
-        	questions.addQuestion(QuestionConverterv2.entityToModel(entity));
+        	  Questionv2 questionv2 = QuestionConverterv2.entityToModel(entity);
+     	   if(entity.getPickListGroupEntity()!=null) {
+    		   PickListValues2 values2 = new PickListValues2();
+    		   List<PickListValueEntity> pickListValueEntities =	entity.getPickListGroupEntity().getPickListValueEntities();
+    		   for(PickListValueEntity valueEntity : pickListValueEntities) {
+    			   
+    			   values2.addPickListValue(PickListValueConverter.entityToModel(valueEntity));
+    		   }
+    		   
+    		  if(!values2.getPickListValues().isEmpty()) questionv2.setPickList(values2);
+    	   }
+       	questions.addQuestion(questionv2);
         }
         long count = daoFactory.getQuestionEntityDao().getQuestionEntitysCount(questionGroupId);
         SortedPagination pagination = new SortedPagination();
