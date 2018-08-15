@@ -74,10 +74,20 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
 
    @Transactional
    public Questionv2 getQuestionById(UUID QuestionId){
-       QuestionEntity pQuestion = daoFactory.getQuestionEntityDao().getQuestionEntityById(QuestionId);
-       if(pQuestion==null) throw new QuestionNotFoundException();
-
-       return QuestionConverterv2.entityToModel( pQuestion );
+       QuestionEntity entity = daoFactory.getQuestionEntityDao().getQuestionEntityById(QuestionId);
+       if(entity==null) throw new QuestionNotFoundException();
+	   Questionv2 questionv2 = QuestionConverterv2.entityToModel(entity);
+	   if(entity.getPickListGroupEntity()!=null) {
+		   PickListValues2 values2 = new PickListValues2();
+		   List<PickListValueEntity> pickListValueEntities =	entity.getPickListGroupEntity().getPickListValueEntities();
+		   for(PickListValueEntity valueEntity : pickListValueEntities) {
+			   
+			   values2.addPickListValue(PickListValueConverter.entityToModel(valueEntity));
+		   }
+		   
+		   if(!values2.getPickListValues().isEmpty()) questionv2.setPickList(values2);
+	   }
+       return questionv2;
    }
    
    
