@@ -17,6 +17,7 @@ import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
 import com.servinglynk.hmis.warehouse.model.SurveySectionEntity;
 import com.servinglynk.hmis.warehouse.service.ResponseServiceV3;
+import com.servinglynk.hmis.warehouse.service.converter.ResponseConverter;
 import com.servinglynk.hmis.warehouse.service.converter.ResponseConverterV3;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
@@ -38,29 +39,36 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 	   if(surveyEntity==null) throw new SurveyNotFoundException();
 	   
 	   
-	   for(Response response : responses.getResponses()){
-	   
-	   QuestionEntity questionEntity = daoFactory.getQuestionEntityDao().getQuestionEntityById(response.getQuestionId());
-	   if(questionEntity==null) throw new QuestionNotFoundException();
-	   
-	   SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao().getSurveySectionEntityById(response.getSectionId());
-	   if(sectionEntity==null) throw new SurveySectionNotFoundException();
-	   
-       ResponseEntity pResponse = ResponseConverterV3.modelToEntity(response, null);
-       pResponse.setSurveyEntity(surveyEntity);
-       pResponse.setSurveySectionEntity(sectionEntity);
-       pResponse.setQuestionEntity(questionEntity);
-       pResponse.setCreatedAt(LocalDateTime.now());
-       pResponse.setUser(getUser());
-       pResponse.setClientId(client.getClientId());
-       pResponse.setSubmissionId(submissionId);
-       pResponse.setClientLink(client.getLink());
-       pResponse.setDedupClientId(client.getDedupClientId());
+		for (Response response : responses.getResponses()) {
+
+			ResponseEntity pResponse = ResponseConverter.modelToEntity(response, null);
+			if (response.getQuestionId() != null) {
+				QuestionEntity questionEntity = daoFactory.getQuestionEntityDao()
+						.getQuestionEntityById(response.getQuestionId());
+				if (questionEntity == null)
+					pResponse.setQuestionEntity(questionEntity);
+			}
+
+			if (response.getSectionId() != null) {
+				SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao()
+						.getSurveySectionEntityById(response.getSectionId());
+				if (sectionEntity == null)
+					pResponse.setSurveySectionEntity(sectionEntity);
+			}
+			pResponse.setSurveyEntity(surveyEntity);
+
+			pResponse.setCreatedAt(LocalDateTime.now());
+			pResponse.setUser(getUser());
+			pResponse.setClientId(client.getClientId());
+			pResponse.setSubmissionId(submissionId);
+			pResponse.setClientLink(client.getLink());
+			pResponse.setDedupClientId(client.getDedupClientId());
 //       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
-       daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
-    //   pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, pResponse));
+			daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
+			// pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity,
+			// pResponse));
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
-	   }
+		}
 	   
 	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId);
 	   
