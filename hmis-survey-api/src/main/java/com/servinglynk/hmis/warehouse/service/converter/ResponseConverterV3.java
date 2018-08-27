@@ -29,8 +29,8 @@ public class ResponseConverterV3 {
        model.setResponseText(entity.getResponseText());
        model.setQuestionScore(entity.getQuestionScore());
        model.setAppId(entity.getAppId());
-       model.setSectionId(entity.getSurveySectionEntity().getId());
-       model.setQuestionId(entity.getQuestionEntity().getId());
+       if(entity.getSurveySectionEntity()!=null) model.setSectionId(entity.getSurveySectionEntity().getId());
+       if(entity.getQuestionEntity()!=null) model.setQuestionId(entity.getQuestionEntity().getId());
        model.setClientId(clientEntity.getId());
        model.setSurveyId(entity.getSurveyEntity().getId());
        model.setSubmissionId(entity.getSubmissionId());
@@ -46,8 +46,8 @@ public class ResponseConverterV3 {
        model.setResponseText(entity.getResponseText());
        model.setQuestionScore(entity.getQuestionScore());
        model.setAppId(entity.getAppId());
-       model.setSectionId(entity.getSurveySectionEntity().getId());
-       model.setQuestionId(entity.getQuestionEntity().getId());
+       if(entity.getSurveySectionEntity()!=null) model.setSectionId(entity.getSurveySectionEntity().getId());
+       if(entity.getQuestionEntity()!=null) model.setQuestionId(entity.getQuestionEntity().getId());
        model.setClientId(clientEntity.getId());
        model.setSurveyId(entity.getSurveyEntity().getId());
        model.setSubmissionId(entity.getSubmissionId());
