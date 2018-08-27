@@ -37,29 +37,35 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 	   if(surveyEntity==null) throw new SurveyNotFoundException();
 	   
 	   
-	   for(Response response : responses.getResponses()){
-	   
-	   QuestionEntity questionEntity = daoFactory.getQuestionEntityDao().getQuestionEntityById(response.getQuestionId());
-	   if(questionEntity==null) throw new QuestionNotFoundException();
-	   
-	   SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao().getSurveySectionEntityById(response.getSectionId());
-	   if(sectionEntity==null) throw new SurveySectionNotFoundException();
-	   
-       ResponseEntity pResponse = ResponseConverter.modelToEntity(response, null);
-       pResponse.setSurveyEntity(surveyEntity);
-       pResponse.setSurveySectionEntity(sectionEntity);
-       pResponse.setQuestionEntity(questionEntity);
-       pResponse.setCreatedAt(LocalDateTime.now());
-       pResponse.setUser(getUser());
-       pResponse.setClientId(clientId);
-       pResponse.setSubmissionId(submissionId);
-       pResponse.setClientLink(client.getLink());
-       pResponse.setDedupClientId(client.getDedupClientId());
+		for (Response response : responses.getResponses()) {
+			ResponseEntity pResponse = ResponseConverter.modelToEntity(response, null);
+			if (response.getQuestionId() != null) {
+				QuestionEntity questionEntity = daoFactory.getQuestionEntityDao()
+						.getQuestionEntityById(response.getQuestionId());
+				if (questionEntity == null)
+					pResponse.setQuestionEntity(questionEntity);
+			}
+
+			if (response.getSectionId() != null) {
+				SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao()
+						.getSurveySectionEntityById(response.getSectionId());
+				if (sectionEntity == null)
+					pResponse.setSurveySectionEntity(sectionEntity);
+			}
+
+			pResponse.setSurveyEntity(surveyEntity);
+			pResponse.setCreatedAt(LocalDateTime.now());
+			pResponse.setUser(getUser());
+			pResponse.setClientId(clientId);
+			pResponse.setSubmissionId(submissionId);
+			pResponse.setClientLink(client.getLink());
+			pResponse.setDedupClientId(client.getDedupClientId());
 //       pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, response.getResponseText()));
-       daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
-    //   pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity, pResponse));
+			daoFactory.getResponseEntityDao().createResponseEntity(pResponse);
+			// pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity,
+			// pResponse));
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
-	   }
+		}
 	   
 	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(clientId, surveyId, submissionId);
 	   
