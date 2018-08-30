@@ -2,6 +2,7 @@ package com.servinglynk.hmis.warehouse.rest.common;
 
 import static com.servinglynk.hmis.warehouse.common.ErrorCodes.ERR_CODE_UNKNOWN;
 
+import java.nio.file.AccessDeniedException;
 import java.security.InvalidParameterException;
 import java.util.Map;
 
@@ -65,7 +66,14 @@ public class ExceptionMapper {
 			r.setErrorCode("REQUEST_AUTHENTICATION_FAILED");
 			r.setErrorMessage("REQUEST_AUTHENTICATION_FAILED");
 			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
-		}catch (org.springframework.http.converter.HttpMessageNotReadableException ex) {
+		}catch (AccessDeniedException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("ACCESS_DENIED");
+			r.setErrorMessage(ex.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_FORBIDDEN);
+		}
+		catch (org.springframework.http.converter.HttpMessageNotReadableException ex) {
 			ex.printStackTrace();
 			logger.info(ex.getMessage());
 			r.setErrorCode("INVALID_REQUEST_BODY");

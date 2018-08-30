@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.service.impl; 
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -45,10 +46,12 @@ public class QuestionServiceImpl extends ServiceBase implements QuestionService 
 
 
    @Transactional
-   public Question updateQuestion(Question question,String caller){
+   public Question updateQuestion(Question question,String caller) throws Exception {
        QuestionEntity pQuestion = daoFactory.getQuestionEntityDao().getQuestionEntityById(question.getQuestionId());
        if(pQuestion==null) throw new QuestionNotFoundException();
-
+       if(pQuestion.isHudQuestion()) 
+    	   throw new AccessDeniedException("HUD questions are not editable");
+       
        QuestionConverter.modelToEntity(question, pQuestion);
 
        if(question.getPickListGroupId()!=null) {

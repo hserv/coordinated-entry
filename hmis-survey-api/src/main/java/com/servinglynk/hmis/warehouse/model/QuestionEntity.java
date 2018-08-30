@@ -54,6 +54,9 @@ public class QuestionEntity extends BaseEntity {
 	@Column(name="QUESTION_WEIGHT")
 	private int questionWeight;
 	
+	@Column(name="UPDATE_URL_TEMPLATE")
+	private String updateUrlTemplate;
+	
 	@ManyToOne
 	@JoinColumn(name="QUESTION_GROUP_ID")
 	private QuestionGroupEntity questionGroupEntity;
@@ -185,5 +188,11 @@ public class QuestionEntity extends BaseEntity {
 	}
 	public void setSubcategory(String subcategory) {
 		this.subcategory = subcategory;
+	}
+	public String getUpdateUrlTemplate() {
+		return updateUrlTemplate;
+	}
+	public void setUpdateUrlTemplate(String updateUrlTemplate) {
+		this.updateUrlTemplate = updateUrlTemplate;
 	}
 }

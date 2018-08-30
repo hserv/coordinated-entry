@@ -55,6 +55,8 @@ public class Questionv2 extends ClientModel {
 	
 	private PickListValues2 pickList;
 
+	private String updateUrlTemplate;
+	
 	public UUID getQuestionId() {
 		return questionId;
 	}
@@ -198,4 +200,14 @@ public class Questionv2 extends ClientModel {
 	public void setPickList(PickListValues2 pickList) {
 		this.pickList = pickList;
 	}
+
+	public String getUpdateUrlTemplate() {
+		return updateUrlTemplate;
+	}
+
+	public void setUpdateUrlTemplate(String updateUrlTemplate) {
+		this.updateUrlTemplate = updateUrlTemplate;
+	}
+	
+	
 }
