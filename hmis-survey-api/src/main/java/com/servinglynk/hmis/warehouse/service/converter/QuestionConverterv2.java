@@ -23,7 +23,7 @@ public class QuestionConverterv2   {
        if(model.isVisibility()==null)entity.setVisibility(false);
        if(model.getCategory()!=null)entity.setCategory(model.getCategory());
        if(model.getSubcategory()!=null)entity.setSubcategory(model.getSubcategory());
-       
+       if(model.getUpdateUrlTemplate()!=null) entity.setUpdateUrlTemplate(model.getUpdateUrlTemplate());
        return entity;    
    }
 
@@ -50,6 +50,7 @@ public class QuestionConverterv2   {
     	   model.setQuestionGroupId(entity.getQuestionGroupEntity().getId());
        
        if(entity.getPicklistValues()!=null) model.setPickListValues(entity.getPicklistValues());
+       if(entity.getUpdateUrlTemplate()!=null) model.setUpdateUrlTemplate(entity.getUpdateUrlTemplate());
        return model;
    }
 

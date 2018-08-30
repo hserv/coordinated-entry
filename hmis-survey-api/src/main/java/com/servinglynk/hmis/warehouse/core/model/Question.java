@@ -44,7 +44,8 @@ public class Question extends ClientModel{
       private UUID questionGroupId;
 
       private UUID pickListGroupId;
-
+      
+      private String updateUrlTemplate;
 
 
       public UUID getQuestionId(){
@@ -125,5 +126,11 @@ public class Question extends ClientModel{
       public void setPickListGroupId(UUID pickListGroupId){
           this.pickListGroupId = pickListGroupId;
       }
+	public String getUpdateUrlTemplate() {
+		return updateUrlTemplate;
+	}
+	public void setUpdateUrlTemplate(String updateUrlTemplate) {
+		this.updateUrlTemplate = updateUrlTemplate;
+	}
 
  }
