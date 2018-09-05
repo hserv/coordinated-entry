@@ -80,6 +80,9 @@ public class QuestionEntity extends BaseEntity {
 	@Column(name="subcategory")
 	private String subcategory;
 	
+	@Column(name="uri_object_field")
+	private String uriObjectField;
+	
 	
 	public UUID getId() {
 		return id;
@@ -194,5 +197,11 @@ public class QuestionEntity extends BaseEntity {
 	}
 	public void setUpdateUrlTemplate(String updateUrlTemplate) {
 		this.updateUrlTemplate = updateUrlTemplate;
+	}
+	public String getUriObjectField() {
+		return uriObjectField;
+	}
+	public void setUriObjectField(String uriObjectField) {
+		this.uriObjectField = uriObjectField;
 	}
 }
