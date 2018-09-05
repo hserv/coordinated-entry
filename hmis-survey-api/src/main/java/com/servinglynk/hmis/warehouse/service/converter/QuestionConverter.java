@@ -26,6 +26,7 @@ public class QuestionConverter   {
     	  if(model.getPickListGroupId()==null) throw new InvalidParameterException("Picklist Group required");
        }
        if(model.getUpdateUrlTemplate()!=null) entity.setUpdateUrlTemplate(model.getUpdateUrlTemplate());
+       if(model.getUriObjectField()!=null) entity.setUriObjectField(model.getUriObjectField());
  //       entity.setQuestionGroupId(model.getQuestionGroupId());
 //       entity.setPickListGroupId(model.getPickListGroupId());
        return entity;    
@@ -57,6 +58,7 @@ public class QuestionConverter   {
     	   model.setQuestionGroupId(entity.getQuestionGroupEntity().getId());
        
        if(entity.getUpdateUrlTemplate()!=null) model.setUpdateUrlTemplate(entity.getUpdateUrlTemplate());
+       if(entity.getUriObjectField()!=null) model.setUriObjectField(entity.getUriObjectField());
 //       model.setQuestionGroupId(entity.getQuestionGroupId());
 //       model.setPickListGroupId(entity.getPickListGroupId());
        return model;

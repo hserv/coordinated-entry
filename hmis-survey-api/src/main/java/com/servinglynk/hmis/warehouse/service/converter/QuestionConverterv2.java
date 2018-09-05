@@ -24,6 +24,7 @@ public class QuestionConverterv2   {
        if(model.getCategory()!=null)entity.setCategory(model.getCategory());
        if(model.getSubcategory()!=null)entity.setSubcategory(model.getSubcategory());
        if(model.getUpdateUrlTemplate()!=null) entity.setUpdateUrlTemplate(model.getUpdateUrlTemplate());
+       if(model.getUriObjectField()!=null) entity.setUriObjectField(model.getUriObjectField());
        return entity;    
    }
 
@@ -51,6 +52,7 @@ public class QuestionConverterv2   {
        
        if(entity.getPicklistValues()!=null) model.setPickListValues(entity.getPicklistValues());
        if(entity.getUpdateUrlTemplate()!=null) model.setUpdateUrlTemplate(entity.getUpdateUrlTemplate());
+       if(entity.getUriObjectField()!=null) model.setUriObjectField(entity.getUriObjectField());
        return model;
    }
 
