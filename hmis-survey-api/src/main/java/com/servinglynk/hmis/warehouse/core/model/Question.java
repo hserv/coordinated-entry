@@ -46,6 +46,8 @@ public class Question extends ClientModel{
       private UUID pickListGroupId;
       
       private String updateUrlTemplate;
+      
+  	private String uriObjectField;
 
 
       public UUID getQuestionId(){
@@ -131,6 +133,12 @@ public class Question extends ClientModel{
 	}
 	public void setUpdateUrlTemplate(String updateUrlTemplate) {
 		this.updateUrlTemplate = updateUrlTemplate;
+	}
+	public String getUriObjectField() {
+		return uriObjectField;
+	}
+	public void setUriObjectField(String uriObjectField) {
+		this.uriObjectField = uriObjectField;
 	}
 
  }

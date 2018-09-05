@@ -57,6 +57,8 @@ public class Questionv2 extends ClientModel {
 
 	private String updateUrlTemplate;
 	
+	private String uriObjectField;
+	
 	public UUID getQuestionId() {
 		return questionId;
 	}
@@ -207,6 +209,14 @@ public class Questionv2 extends ClientModel {
 
 	public void setUpdateUrlTemplate(String updateUrlTemplate) {
 		this.updateUrlTemplate = updateUrlTemplate;
+	}
+
+	public String getUriObjectField() {
+		return uriObjectField;
+	}
+
+	public void setUriObjectField(String uriObjectField) {
+		this.uriObjectField = uriObjectField;
 	}
 	
 	
