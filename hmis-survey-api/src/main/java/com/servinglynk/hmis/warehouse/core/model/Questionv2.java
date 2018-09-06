@@ -55,6 +55,7 @@ public class Questionv2 extends ClientModel {
 	
 	private PickListValues2 pickList;
 
+	@JsonProperty("updateUriTemplate")
 	private String updateUrlTemplate;
 	
 	private String uriObjectField;
