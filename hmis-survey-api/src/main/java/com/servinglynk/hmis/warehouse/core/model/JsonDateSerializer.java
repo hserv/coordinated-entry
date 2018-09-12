@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 public class JsonDateSerializer extends JsonSerializer<LocalDateTime> {
 	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 	@Override
 	public void serialize(LocalDateTime date, JsonGenerator gen, SerializerProvider provider)
 	throws IOException, JsonProcessingException {
