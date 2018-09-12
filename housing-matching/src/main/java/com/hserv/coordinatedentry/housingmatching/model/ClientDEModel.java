@@ -91,7 +91,7 @@ public class ClientDEModel {
 	}
 	public void populateValues(BaseClient client,Parameters parameters){
 		if(client.getVeteranStatus()!=null)
-			parameters.addParameter(new Parameter("veteranStatus", Integer.parseInt(client.getVeteranStatus())));
+			parameters.addParameter(new Parameter("veteranStatus", client.getVeteranStatus()));
 	//		this.setVeteranStatus(Integer.parseInt(client.getVeteranStatus()));
 		if(client.getGender()!=null)
 			parameters.addParameter(new Parameter("gender",client.getGender()));
