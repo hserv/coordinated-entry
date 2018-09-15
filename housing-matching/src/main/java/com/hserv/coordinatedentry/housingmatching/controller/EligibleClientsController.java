@@ -195,14 +195,12 @@ public class EligibleClientsController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@APIMapping(value="update-eligible-client-by-id")
 	public ResponseEntity<String> updateEligibleClientById(@PathVariable String id,
-			@Validated @RequestBody EligibleClientModel eligibleClientModel) {
+			@Validated @RequestBody EligibleClientModel eligibleClientModel) throws Exception {
 		ResponseEntity<String> responseEntity = null;
-		try {
+	
 			boolean status = eligibleClientService.updateEligibleClient(UUID.fromString(id), eligibleClientModel);
 			responseEntity = ResponseEntity.ok("{\"updated\": \""+ status +"\"}\"");
-		} catch (Exception ex) {
-			responseEntity = new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
-		}
+		
 		return responseEntity;
 	}
 }

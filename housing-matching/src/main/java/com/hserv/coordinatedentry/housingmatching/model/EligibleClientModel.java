@@ -46,7 +46,7 @@ public class EligibleClientModel {
 	private ClientModel client;
 	private UUID clientDedupId;
 	
-	@JsonDeserialize(using=JsonTimestampDeserializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonSerialize(using=JsonTimestampSerializer.class)
 	private LocalDateTime surveySubmissionDate;
 	
