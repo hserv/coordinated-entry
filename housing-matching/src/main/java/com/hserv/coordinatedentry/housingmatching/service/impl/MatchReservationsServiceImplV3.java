@@ -343,7 +343,7 @@ public class MatchReservationsServiceImplV3 implements MatchReservationsServiceV
 	
 	@Async
 	public void matchingProcess(Integer maxClients,Session session , String trustedAppId,UUID processId) {
-		
+		try {
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
 		logger.setProcessId(processId);
 		
@@ -402,6 +402,9 @@ public class MatchReservationsServiceImplV3 implements MatchReservationsServiceV
 			housingUnitIndex++;
 		}
 		batchProcessService.endBatch(processId);
+		}catch (Exception e) {
+			batchProcessService.endBatch(processId);
+		}
 	}
 	
 	public Map<String, Object> map(List<Parameter> parameters) {

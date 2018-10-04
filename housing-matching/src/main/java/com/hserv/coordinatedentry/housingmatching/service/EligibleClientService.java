@@ -36,9 +36,9 @@ public interface EligibleClientService {
 	
 	List<EligibleClient> getEligibleClients(Integer programType ,String projectGroup,String spdatLabel);
 	
-	BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken);
+	BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken) throws Exception ;
 	
-	Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken);
+	Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken) throws Exception;
 	
-	BaseClient getClientInfoByDedupId(UUID clientDedupId,String trustedAppId,String sessionToken);
+	BaseClient getClientInfoByDedupId(UUID clientDedupId,String trustedAppId,String sessionToken) throws Exception;
 }

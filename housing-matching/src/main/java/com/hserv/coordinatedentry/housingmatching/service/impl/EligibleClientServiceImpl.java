@@ -236,7 +236,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken)  {
+	public BaseClient getClientInfo(UUID clientId,String trustedAppId,String sessionToken)  throws Exception {
 		SearchRequest request = new SearchRequest();
 		request.setTrustedAppId(trustedAppId);
 		request.setSearchEntity("clients");
@@ -247,12 +247,13 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 			clients = (List<BaseClient>) searchServiceClient.search(request);
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 		if(!clients.isEmpty()) return clients.get(0);
 		return null;
 	}	
 	
-	public BaseClient getClientInfoByDedupId(UUID clientDedupId,String trustedAppId,String sessionToken)  {
+	public BaseClient getClientInfoByDedupId(UUID clientDedupId,String trustedAppId,String sessionToken)  throws Exception {
 		SearchRequest request = new SearchRequest();
 		request.setTrustedAppId(trustedAppId);
 		request.setSearchEntity("clients");
@@ -262,13 +263,13 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		try {
 			clients = (List<BaseClient>) searchServiceClient.search(request);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 		if(!clients.isEmpty()) return clients.get(0);
 		return null;
 	}
 	
-	public Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken) {
+	public Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken) throws Exception {
 		HttpHeaders headers = getHttpHeaders();
 		headers.add("X-HMIS-TrustedApp-Id", trustedAppId);
 		headers.add("Authorization", "HMISUserAuth session_token=" + sessionToken);
@@ -288,6 +289,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		}catch (Exception e) {
 			e.printStackTrace();
 			parameters = new Parameters();
+			throw e;
 		}
 		return parameters;
 	}

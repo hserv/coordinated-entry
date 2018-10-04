@@ -123,7 +123,7 @@ public class ClientDEModel {
 	}
 	
 	public void populateValues(List<HouseholdMembership> members,String trustedAppId,String sessionToken,Parameters parameters,BaseClient baseClient){
-	
+		try {
 		Integer childCount =0 ;
 		for(HouseholdMembership membership : members){
 			BaseClient client =	eligibleClientService.getClientInfo(membership.getGlobalClientId(), trustedAppId, sessionToken);
@@ -146,7 +146,9 @@ public class ClientDEModel {
 		}else{
 			parameters.addParameter(new Parameter("momAndNumberOfKids", null));
 		}				
-		
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 	
