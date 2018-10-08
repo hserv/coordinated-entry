@@ -130,7 +130,7 @@ public class QuestionServiceImplv2 extends ServiceBase implements QuestionServic
         	  Questionv2 questionv2 = QuestionConverterv2.entityToModel(entity);
      	   if(entity.getPickListGroupEntity()!=null) {
     		   PickListValues2 values2 = new PickListValues2();
-    		   List<PickListValueEntity> pickListValueEntities =	entity.getPickListGroupEntity().getPickListValueEntities();
+    		   List<PickListValueEntity> pickListValueEntities = daoFactory.getPickListValueEntityDao().getAllPickListGroupPickListValueEntities(entity.getId(),null,null);	
     		   for(PickListValueEntity valueEntity : pickListValueEntities) {
     			   
     			   values2.addPickListValue(PickListValueConverter.entityToModel(valueEntity));

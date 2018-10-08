@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +38,11 @@ public class PickListValueEntityDaoImpl extends QueryExecutorImpl implements Pic
        DetachedCriteria criteria=DetachedCriteria.forClass(PickListValueEntity.class);
        criteria.createAlias("pickListGroupEntity","pickListGroupEntity");
        criteria.add(Restrictions.eq("pickListGroupEntity.id", pickListGroupId));
-       return (List<PickListValueEntity>) findByCriteria(criteria,startIndex,maxItems);
+       criteria.addOrder(Order.asc("sortOrder"));
+       if(startIndex!=null && maxItems!=null)
+    	   return (List<PickListValueEntity>) findByCriteria(criteria,startIndex,maxItems);
+       else
+    	   return (List<PickListValueEntity>) findByCriteria(criteria);
    }
    public long getPickListGroupPickListValueEntitiesCount(UUID pickListGroupId){
        DetachedCriteria criteria=DetachedCriteria.forClass(PickListValueEntity.class);
