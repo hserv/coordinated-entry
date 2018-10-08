@@ -29,6 +29,9 @@ public class PickListValueEntity extends BaseEntity {
 	@Column(name="VALUE_TEXT")
 	private String valueText;
 	
+	@Column(name="SORT_ORDER")
+	private Long sortOrder;
+	
 	@ManyToOne
 	@JoinColumn(name="PICKLIST_GROUP_ID")
 	private PickListGroupEntity pickListGroupEntity;
@@ -55,5 +58,11 @@ public class PickListValueEntity extends BaseEntity {
 	}
 	public void setPickListGroupEntity(PickListGroupEntity pickListGroupEntity) {
 		this.pickListGroupEntity = pickListGroupEntity;
+	}
+	public Long getSortOrder() {
+		return sortOrder;
+	}
+	public void setSortOrder(Long sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 }
