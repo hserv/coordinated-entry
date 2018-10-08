@@ -49,7 +49,26 @@ public class BatchProcessServiceImpl implements BatchProcessService {
 			System.out.println("Batch process record created   "+batchProcessEntity.getId());
 			return batchProcessEntity.getId();
 		}catch (Exception e) {
-			throw new ProcessAlreadyRunningException(); 
+			List<BatchProcessEntity> jobs= repositoryFactory.getBatchProcessRepository().findByProjectGroupCodeAndStatus(projectGroup, Constants.BATCH_STATUS_INPROGRESS);
+			for(BatchProcessEntity job : jobs) {
+				int diff =job.getStartedAt().compareTo(LocalDateTime.now().minusHours(2));
+				if(diff<0) {
+					endBatch(job.getId(),false);
+				}
+			}
+			try{
+				BatchProcessEntity batchProcessEntity = new BatchProcessEntity();
+				batchProcessEntity.setInitiateBy(user);
+				batchProcessEntity.setStatus(Constants.BATCH_STATUS_INPROGRESS);
+				batchProcessEntity.setProcessType(Constants.SCORES_PROCESS_BATCH);
+				batchProcessEntity.setStartedAt(LocalDateTime.now());
+				batchProcessEntity.setIsProcessing(1L);
+				repositoryFactory.getBatchProcessRepository().save(batchProcessEntity);
+				System.out.println("Batch process record created   "+batchProcessEntity.getId());
+				return batchProcessEntity.getId();
+			}catch (Exception ex) {
+				throw new ProcessAlreadyRunningException(); 
+			}
 		}
 	}
 	

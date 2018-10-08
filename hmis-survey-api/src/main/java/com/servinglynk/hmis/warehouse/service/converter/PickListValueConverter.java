@@ -10,6 +10,7 @@ public class PickListValueConverter  {
        entity.setPickListValueCode(model.getPickListValueCode());
        entity.setValueText(model.getValueText());
 //       entity.setPickListGroupId(model.getPickListGroupId());
+       if(model.getSortOrder()!=null) entity.setSortOrder(model.getSortOrder());
        return entity;    
    }
 
@@ -19,6 +20,7 @@ public class PickListValueConverter  {
        model.setPickListValueId(entity.getId());
        model.setPickListValueCode(entity.getPickListValueCode());
        model.setValueText(entity.getValueText());
+       if(entity.getSortOrder()!=null) model.setSortOrder(entity.getSortOrder());
 //       model.setPickListGroupId(entity.getPickListGroupId());
        return model;
    }

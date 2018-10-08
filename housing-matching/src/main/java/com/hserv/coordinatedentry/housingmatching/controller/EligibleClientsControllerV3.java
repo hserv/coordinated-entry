@@ -138,7 +138,7 @@ public class EligibleClientsControllerV3 extends BaseController {
 	@RequestMapping(method = RequestMethod.POST)
 	@APIMapping(value="create-eligible-client")
 	public ResponseEntity<String> createEligibleClient(
-			 @RequestBody EligibleClientModel eligibleClientModel,HttpServletRequest request) {
+			 @RequestBody EligibleClientModel eligibleClientModel,HttpServletRequest request) throws Exception {
 		
 		String trustedApp= trustedAppHelper.retrieveTrustedAppId(request);
 		Session session = sessionHelper.getSession(request);
