@@ -42,6 +42,8 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setClientDedupId(eligibleClient.getClientDedupId());
 			eligibleClientModel.setSurveySubmissionDate(eligibleClient.getSurveySubmissionDate());
 			eligibleClientModel.setSurveySubmissionDate(eligibleClient.getSurveySubmissionDate());
+			eligibleClientModel.setBonusScore(eligibleClient.getBonusScore());
+			eligibleClientModel.setTotalScore(eligibleClient.getTotalScore());
 		}
 		return eligibleClientModel;
 	}
@@ -76,6 +78,8 @@ public class EligibleClientsTranslator {
 				clientModel.setClientDedupId(eligibleClient.getClient().getDedupClientId());
 				eligibleClientModel.setClient(clientModel);
 			}
+			eligibleClientModel.setBonusScore(eligibleClient.getBonusScore());
+			eligibleClientModel.setTotalScore(eligibleClient.getTotalScore());
 		}
 		return eligibleClientModel;
 	}
@@ -101,6 +105,14 @@ public class EligibleClientsTranslator {
 		MatchStrategy strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 		int additionalScore = strategy.getAdditionalScore(19,eligibleClientModel.getSpdatLabel().getValue());
 		eligibleClient.setCocScore(eligibleClientModel.getSurveyScore().intValue()+additionalScore);
+		if(eligibleClientModel.getBonusScore()!=null) {
+			eligibleClient.setBonusScore(eligibleClientModel.getBonusScore());
+			eligibleClient.setTotalScore(eligibleClientModel.getSurveyScore().intValue()+eligibleClientModel.getBonusScore());
+		}else {
+			eligibleClient.setBonusScore(0);
+			eligibleClient.setTotalScore(eligibleClientModel.getSurveyScore().intValue());
+		}
+
 		
 		return eligibleClient;
 	}
