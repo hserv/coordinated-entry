@@ -44,6 +44,7 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setSurveySubmissionDate(eligibleClient.getSurveySubmissionDate());
 			eligibleClientModel.setBonusScore(eligibleClient.getBonusScore());
 			eligibleClientModel.setTotalScore(eligibleClient.getTotalScore());
+			eligibleClientModel.setReaddedReason(eligibleClient.getReaddedReason());
 		}
 		return eligibleClientModel;
 	}
@@ -80,6 +81,7 @@ public class EligibleClientsTranslator {
 			}
 			eligibleClientModel.setBonusScore(eligibleClient.getBonusScore());
 			eligibleClientModel.setTotalScore(eligibleClient.getTotalScore());
+			eligibleClientModel.setReaddedReason(eligibleClient.getReaddedReason());
 		}
 		return eligibleClientModel;
 	}
@@ -112,7 +114,7 @@ public class EligibleClientsTranslator {
 			eligibleClient.setBonusScore(0);
 			eligibleClient.setTotalScore(eligibleClientModel.getSurveyScore().intValue());
 		}
-
+		eligibleClient.setReaddedReason(eligibleClientModel.getReaddedReason());
 		
 		return eligibleClient;
 	}

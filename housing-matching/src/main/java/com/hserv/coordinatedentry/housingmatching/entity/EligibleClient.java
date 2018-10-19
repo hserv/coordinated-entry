@@ -91,6 +91,9 @@ public class EligibleClient extends BaseEntity {
 	@Column(name="TOTAL_SCORE")
 	private Integer totalScore;
 	
+	@Column(name="READDED_REASON")
+	private String readdedReason;
+	
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -280,5 +283,13 @@ public class EligibleClient extends BaseEntity {
 
 	public void setTotalScore(Integer totalScore) {
 		this.totalScore = totalScore;
+	}
+
+	public String getReaddedReason() {
+		return readdedReason;
+	}
+
+	public void setReaddedReason(String readdedReason) {
+		this.readdedReason = readdedReason;
 	}
 }

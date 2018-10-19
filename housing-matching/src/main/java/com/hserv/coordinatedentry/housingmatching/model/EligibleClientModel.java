@@ -54,6 +54,8 @@ public class EligibleClientModel {
 	
 	private Integer totalScore;
 	
+	private String readdedReason;
+	
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String link;
 	
@@ -170,5 +172,11 @@ public class EligibleClientModel {
 	}
 	public void setTotalScore(Integer totalScore) {
 		this.totalScore = totalScore;
+	}
+	public String getReaddedReason() {
+		return readdedReason;
+	}
+	public void setReaddedReason(String readdedReason) {
+		this.readdedReason = readdedReason;
 	}
 }
