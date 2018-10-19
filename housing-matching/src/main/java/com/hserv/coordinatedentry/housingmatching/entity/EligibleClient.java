@@ -85,6 +85,15 @@ public class EligibleClient extends BaseEntity {
 	@Column(name = "survey_submission_date")
 	private LocalDateTime surveySubmissionDate;
 	
+	@Column(name="BONUS_SCORE")
+	private Integer bonusScore;
+	
+	@Column(name="TOTAL_SCORE")
+	private Integer totalScore;
+	
+	@Column(name="READDED_REASON")
+	private String readdedReason;
+	
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -260,4 +269,27 @@ public class EligibleClient extends BaseEntity {
 		this.surveySubmissionDate = surveySubmissionDate;
 	}
 
+	public Integer getBonusScore() {
+		return bonusScore;
+	}
+
+	public void setBonusScore(Integer bonusScore) {
+		this.bonusScore = bonusScore;
+	}
+
+	public Integer getTotalScore() {
+		return totalScore;
+	}
+
+	public void setTotalScore(Integer totalScore) {
+		this.totalScore = totalScore;
+	}
+
+	public String getReaddedReason() {
+		return readdedReason;
+	}
+
+	public void setReaddedReason(String readdedReason) {
+		this.readdedReason = readdedReason;
+	}
 }

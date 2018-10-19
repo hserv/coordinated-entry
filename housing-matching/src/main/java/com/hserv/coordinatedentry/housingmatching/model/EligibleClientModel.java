@@ -50,6 +50,12 @@ public class EligibleClientModel {
 	@JsonSerialize(using=JsonTimestampSerializer.class)
 	private LocalDateTime surveySubmissionDate;
 	
+	private Integer bonusScore;
+	
+	private Integer totalScore;
+	
+	private String readdedReason;
+	
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String link;
 	
@@ -154,5 +160,23 @@ public class EligibleClientModel {
 	}
 	public void setSurveySubmissionDate(LocalDateTime surveySubmissionDate) {
 		this.surveySubmissionDate = surveySubmissionDate;
+	}
+	public Integer getBonusScore() {
+		return bonusScore;
+	}
+	public void setBonusScore(Integer bonusScore) {
+		this.bonusScore = bonusScore;
+	}
+	public Integer getTotalScore() {
+		return totalScore;
+	}
+	public void setTotalScore(Integer totalScore) {
+		this.totalScore = totalScore;
+	}
+	public String getReaddedReason() {
+		return readdedReason;
+	}
+	public void setReaddedReason(String readdedReason) {
+		this.readdedReason = readdedReason;
 	}
 }
