@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.interceptor.APIMapping;
 import com.hserv.coordinatedentry.housingmatching.model.ClientModel;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientAuditsModel;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientsModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
@@ -202,5 +203,16 @@ public class EligibleClientsController extends BaseController {
 			responseEntity = ResponseEntity.ok("{\"updated\": \""+ status +"\"}\"");
 		
 		return responseEntity;
+	}
+	
+	
+	@RequestMapping(value = "/{clientId}/history", method = RequestMethod.GET)
+	@APIMapping(value="create-eligible-client")
+	public EligibleClientAuditsModel getEligibleClientsAudit(@PathVariable("clientId") UUID clientId,HttpServletRequest request) {
+		Session session = sessionHelper.getSession(request);
+
+		String projectGroupCode = session.getAccount().getProjectGroup().getProjectGroupCode();
+
+		return eligibleClientService.getEligibleClientsAudit(clientId,projectGroupCode);
 	}
 }

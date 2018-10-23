@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,13 +30,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientAuditRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.entity.EligibleClientAudit;
 import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
 import com.hserv.coordinatedentry.housingmatching.entity.Match;
+import com.hserv.coordinatedentry.housingmatching.enums.SpdatLabelEnum;
+import com.hserv.coordinatedentry.housingmatching.model.CommunityType;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientAuditModel;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientAuditsModel;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
+import com.hserv.coordinatedentry.housingmatching.service.MatchStrategy;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
@@ -61,6 +69,9 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Autowired
 	RepositoryFactory repositoryFactory;
 
+	@Autowired
+	private EligibleClientAuditRepository eligibleClientAuditRepository;
+	
 	
 /*	public List<EligibleClientModel> getEligibleClientsBack(int num , String programType) {
 		List<EligibleClientModel> eligibleClientModels = new ArrayList<>();
@@ -301,5 +312,35 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		headers.add("Content-Type", "application/json; charset=UTF-8");
 		
 		return headers;
+	}
+
+	@Transactional
+	public EligibleClientAuditsModel getEligibleClientsAudit(UUID clientId,String projectGroupCode) {
+		EligibleClientAuditsModel auditsModel = new EligibleClientAuditsModel();
+		 List<EligibleClientAudit> audits = eligibleClientAuditRepository.findByClientIdAndProjectGroupCodeOrderByDateUpdatedDesc(clientId, projectGroupCode);
+		 
+		 for(EligibleClientAudit audit : audits) {
+			 EligibleClientAuditModel model = new EligibleClientAuditModel();
+			 
+			 model.setProgramType(audit.getProgramType());
+			 model.setClientId(audit.getClientId());
+			 model.setMatched(audit.getMatched());
+			 model.setSpdatLabel(SpdatLabelEnum.lookupEnum(audit.getSpdatLabel()));
+			 model.setSurveyScore(audit.getSurveyScore());
+			 model.setSurveyDate(audit.getSurveyDate());
+			 model.setLink(audit.getClientLink());
+			 model.setDateCreated(audit.getDateCreated());
+			 model.setDateUpdated(audit.getDateUpdated());
+			 model.setIgnoreMatchProcess(audit.isIgnoreMatchProcess());
+			 model.setRemarks(audit.getRemarks());
+			 model.setClientDedupId(audit.getClientDedupId());
+			 model.setSurveySubmissionDate(audit.getSurveySubmissionDate());
+			 model.setSurveySubmissionDate(audit.getSurveySubmissionDate());
+			 model.setBonusScore(audit.getBonusScore());
+			 model.setTotalScore(audit.getTotalScore());
+			 model.setReaddedReason(audit.getReaddedReason());
+			 	auditsModel.addEligibleClientAudit(model);
+		 }
+		return auditsModel;
 	}
 }

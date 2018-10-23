@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
+import com.hserv.coordinatedentry.housingmatching.model.EligibleClientAuditsModel;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Parameters;
@@ -41,4 +42,6 @@ public interface EligibleClientService {
 	Parameters getClientDataElements(UUID clientId,String trustedAppId,String sessionToken) throws Exception;
 	
 	BaseClient getClientInfoByDedupId(UUID clientDedupId,String trustedAppId,String sessionToken) throws Exception;
+
+	EligibleClientAuditsModel getEligibleClientsAudit(UUID clientId, String projectGroupCode);
 }
