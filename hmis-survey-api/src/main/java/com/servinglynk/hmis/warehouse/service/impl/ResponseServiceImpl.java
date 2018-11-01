@@ -42,14 +42,14 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 			if (response.getQuestionId() != null) {
 				QuestionEntity questionEntity = daoFactory.getQuestionEntityDao()
 						.getQuestionEntityById(response.getQuestionId());
-				if (questionEntity == null)
+				if (questionEntity != null)
 					pResponse.setQuestionEntity(questionEntity);
 			}
 
 			if (response.getSectionId() != null) {
 				SurveySectionEntity sectionEntity = daoFactory.getSurveySectionEntityDao()
 						.getSurveySectionEntityById(response.getSectionId());
-				if (sectionEntity == null)
+				if (sectionEntity != null)
 					pResponse.setSurveySectionEntity(sectionEntity);
 			}
 
