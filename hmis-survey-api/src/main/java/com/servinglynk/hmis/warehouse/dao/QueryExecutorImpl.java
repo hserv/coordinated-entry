@@ -15,6 +15,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.ejb.criteria.expression.function.LocateFunction;
 import org.hibernate.internal.CriteriaImpl;
@@ -225,7 +226,9 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 	public long countRows(DetachedCriteria dCriteria){
 		dCriteria.add(Restrictions.eq("deleted", false));
 		dCriteria.add(Restrictions.eq("projectGroupCode",  SecurityContextUtil.getUserAccount().getProjectGroup().getProjectGroupCode()));
-		return dCriteria.getExecutableCriteria(getCurrentSession()).list().size();
+		dCriteria.setProjection(Projections.rowCount());
+
+		return (Long) dCriteria.getExecutableCriteria(getCurrentSession()).uniqueResult();
 		 //TBD
 	}
 	
