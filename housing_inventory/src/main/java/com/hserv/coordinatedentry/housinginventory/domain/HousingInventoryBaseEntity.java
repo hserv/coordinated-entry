@@ -13,6 +13,7 @@ import javax.persistence.PreUpdate;
 import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.SecurityContextUtil;
@@ -28,6 +29,7 @@ public class HousingInventoryBaseEntity implements Serializable {
 
 	@JsonDeserialize(using=JsonTimestampDeserializer.class)
 	@JsonSerialize(using=JsonTimestampSerializer.class)
+	@JsonIgnore
     @Column(name="date_created")
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
 	private LocalDateTime dateCreated;
@@ -38,17 +40,20 @@ public class HousingInventoryBaseEntity implements Serializable {
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
 	private LocalDateTime dateUpdated;
 	
+	@JsonIgnore
 	@Column(name="project_group_code")
 	private String projectGroupCode;
 	
 	@Column(name="user_id")
+	@JsonIgnore
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID userId;
 
 	@Column(name="deleted")
+	@JsonIgnore
 	private boolean deleted;
 	
-
+	@JsonIgnore
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
 	}
@@ -56,7 +61,7 @@ public class HousingInventoryBaseEntity implements Serializable {
 	public void setDateCreated(LocalDateTime dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-
+	@JsonIgnore
 	public LocalDateTime getDateUpdated() {
 		return dateUpdated;
 	}
@@ -86,7 +91,7 @@ public class HousingInventoryBaseEntity implements Serializable {
 			projectGroupCode=SecurityContextUtil.getUserProjectGroup();
 		}
 	}
-	
+	@JsonIgnore
 	public UUID getUserId() {
 		return userId;
 	}
@@ -94,7 +99,7 @@ public class HousingInventoryBaseEntity implements Serializable {
 	public void setUserId(UUID userId) {
 		this.userId = userId;
 	}
-
+	@JsonIgnore
 	public String getProjectGroupCode() {
 		return projectGroupCode;
 	}
@@ -103,7 +108,7 @@ public class HousingInventoryBaseEntity implements Serializable {
 		this.projectGroupCode = projectGroupCode;
 	}	
 	
-
+	@JsonIgnore
 	public boolean isDeleted() {
 		return deleted;
 	}
