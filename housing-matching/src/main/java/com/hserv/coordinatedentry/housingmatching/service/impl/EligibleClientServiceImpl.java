@@ -84,7 +84,13 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Override
 	public EligibleClientModel getEligibleClientDetail(UUID clientID,String version) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		EligibleClient eligibleClient = eligibleClientsRepository.findByClientIdAndProjectGroupCodeAndDeleted(clientID,projectGroup,false);
+		List<UUID> sharedClients = SecurityContextUtil.getSharedClients();
+		EligibleClient eligibleClient = null;
+		if(sharedClients.contains(clientID)) {
+			 eligibleClient = eligibleClientsRepository.findByClientIdAndDeleted(clientID,false);			
+		}else {
+		 eligibleClient = eligibleClientsRepository.findByClientIdAndProjectGroupCodeAndDeleted(clientID,projectGroup,false);
+		}
 		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible not found "+clientID);
 		if(version!=null && version.equalsIgnoreCase("v2"))
 			return eligibleClientsTranslator.translateV2(eligibleClient);
@@ -96,17 +102,34 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable, String filter) {
 		List<EligibleClient> clients  =new ArrayList<EligibleClient>(); 
 		 Long count =0L;
-		if(filter.equalsIgnoreCase("inactive")) {
-			clients = eligibleClientsRepository.getInactiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
-			count = eligibleClientsRepository.getInactiveEligibleClientsCount(projectGroupCode);
-		}else if(filter.equalsIgnoreCase("active")) {
-			clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
-			count = eligibleClientsRepository.getActiveEligibleClientsCount(projectGroupCode);
-		}else {
-			clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
-			count = eligibleClientsRepository.getAllEligibleClientsCount(projectGroupCode);
-		}
-		 
+		 List<UUID> sharedClientsList = SecurityContextUtil.getSharedClients();
+		 String sharedClients = "";
+		 if(sharedClientsList.isEmpty()) {
+					if(filter.equalsIgnoreCase("inactive")) {
+						clients = eligibleClientsRepository.getInactiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+						count = eligibleClientsRepository.getInactiveEligibleClientsCount(projectGroupCode);
+					}else if(filter.equalsIgnoreCase("active")) {
+						clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+						count = eligibleClientsRepository.getActiveEligibleClientsCount(projectGroupCode);
+					}else {
+						clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+						count = eligibleClientsRepository.getAllEligibleClientsCount(projectGroupCode);
+					}
+		 }else {
+			 
+				if(filter.equalsIgnoreCase("inactive")) {
+					clients = eligibleClientsRepository.getInactiveEligibleClientsWithSharedClients(projectGroupCode,sharedClients,pageable.getPageSize(),pageable.getOffset());
+					count = eligibleClientsRepository.getInactiveEligibleClientsCountWithSharedClients(projectGroupCode,sharedClients);
+				}else if(filter.equalsIgnoreCase("active")) {
+					clients = eligibleClientsRepository.getActiveEligibleClientsWithSharedClients(projectGroupCode,sharedClients,pageable.getPageSize(),pageable.getOffset());
+					count = eligibleClientsRepository.getActiveEligibleClientsCountWithSharedClients(projectGroupCode,sharedClients);
+				}else {
+					clients = eligibleClientsRepository.getActiveEligibleClientsWithSharedClients(projectGroupCode,sharedClients,pageable.getPageSize(),pageable.getOffset());
+					count = eligibleClientsRepository.getAllEligibleClientsCountWithSharedClients(projectGroupCode,sharedClients);
+				}
+
+			 
+		 }
 
 		return new PageImpl<>(clients,pageable,count);
 	}

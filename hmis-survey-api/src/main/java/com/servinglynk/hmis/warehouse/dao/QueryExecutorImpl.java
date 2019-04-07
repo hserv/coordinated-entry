@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Criteria;
@@ -302,5 +303,35 @@ protected List<?> findByNamedQueryAndNamedParam(String queryName,
 		return queryObject.uniqueResult();
 	}
 	
+	
+	protected List<?> getByCriteria(DetachedCriteria detachedCriteria,Integer firstResult,Integer maxResults){
+		Criteria criteria = detachedCriteria.getExecutableCriteria(getCurrentSession());
+		if(firstResult!=null && maxResults!=null) {
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(maxResults);		
+		}
+		return criteria.list();
+	}
+	
+	protected List<?> getByCriteria(DetachedCriteria detachedCriteria){
+		return detachedCriteria.getExecutableCriteria(getCurrentSession()).list();
+}
+
+	protected List<?> find(DetachedCriteria detachedCriteria){
+		return detachedCriteria.getExecutableCriteria(getCurrentSession()).list();
+}
+
+	protected long getRowsCount(DetachedCriteria dCriteria){
+		dCriteria.setProjection(Projections.rowCount());
+		Criteria criteria = dCriteria.getExecutableCriteria(getCurrentSession());
+		return (Long) criteria.uniqueResult();
+		 //TBD
+	}
+	
+
+	protected List<UUID> findIdsByNativeQuery(String query){
+		return getCurrentSession().createSQLQuery(query).addScalar("id", org.hibernate.type.PostgresUUIDType.INSTANCE)
+				.list();
+	}
 
 }
