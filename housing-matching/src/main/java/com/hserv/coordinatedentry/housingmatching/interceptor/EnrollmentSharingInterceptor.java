@@ -34,8 +34,8 @@ public class EnrollmentSharingInterceptor extends HandlerInterceptorAdapter {
 		
 		if(request.getRequestURI().contains("/health")) return true;
 		
-	//	String value =	propertyReaderServiceImpl.readSharingRuleProperty();
-	//	if(value==null || value.equalsIgnoreCase("false")) return true;
+		String value =	propertyReaderServiceImpl.readSharingRuleProperty();
+		if(value==null || value.equalsIgnoreCase("false")) return true;
 
 		
 		
