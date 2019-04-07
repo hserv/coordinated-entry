@@ -127,7 +127,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 					clients = eligibleClientsDaoV3.getActiveEligibleClientsWithSharedClients(projectGroupCode,sharedClientsList,pageable.getPageSize(),pageable.getOffset());
 					count = eligibleClientsDaoV3.getActiveEligibleClientsCountWithSharedClients(projectGroupCode,sharedClientsList);
 				}else {
-					//clients = eligibleClientsDaoV3.getActiveEligibleClientsWithSharedClients(projectGroupCode,sharedClientsList,pageable.getPageSize(),pageable.getOffset());
+					clients = eligibleClientsDaoV3.getActiveEligibleClientsWithSharedClients(projectGroupCode,sharedClientsList,pageable.getPageSize(),pageable.getOffset());
 					count = eligibleClientsDaoV3.getAllEligibleClientsCountWithSharedClients(projectGroupCode,sharedClientsList);
 				}
 
