@@ -85,17 +85,17 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	
 	
 	@Query(value="SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
-			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE ( tm.project_group_code = :projectGroupCode OR tm.client_id IN ( :clients ) ) " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE ( tm.project_group_code = :projectGroupCode OR cast( tm.client_id as varchar) IN ( :clients ) ) " + 
 			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
-			" AND ( T.project_group_code = :projectGroupCode OR T.client_id IN ( :clients ) ) " + 
+			" AND ( T.project_group_code = :projectGroupCode OR cast( T.client_id as varchar) IN ( :clients ) ) " + 
 			" AND T .ignore_match_process = FALSE ORDER BY T .client_dedup_id, survey_score desc  LIMIT  :limit OFFSET :start ",nativeQuery=true)
-	List<EligibleClient> getActiveEligibleClientsWithSharedClients(@Param("projectGroupCode") String projectGroupCode,@Param("clients") String clients,@Param("limit") Integer limit,@Param("start") Integer start);
+	List<EligibleClient> getActiveEligibleClientsWithSharedClients(@Param("projectGroupCode") String projectGroupCode,@Param("clients") List<UUID> clients,@Param("limit") Integer limit,@Param("start") Integer start);
 	
 	
 	@Query(value="SELECT COUNT(*) FROM (SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
-			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE ( tm.project_group_code = :projectGroupCode OR tm.client_id IN ( :clients ) ) " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE ( tm.project_group_code = :projectGroupCode OR cast( tm.client_id  as varchar) IN ( :clients ) ) " + 
 			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
-			" AND ( T.project_group_code = :projectGroupCode OR T.client_id IN ( :clients ) ) " + 
+			" AND ( T.project_group_code = :projectGroupCode OR cast( T.client_id as varchar) IN ( :clients ) ) " + 
 			" ORDER BY T .client_dedup_id, survey_score desc ) ABC ",nativeQuery=true)
 	Long getAllEligibleClientsCountWithSharedClients(@Param("projectGroupCode") String projectGroupCode,@Param("clients") String clients);
 	
@@ -108,11 +108,11 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 	
 	
 	@Query(value="SELECT COUNT(*) FROM (SELECT DISTINCT ON (T.client_dedup_id)  T.client_dedup_id,* FROM housing_inventory.eligible_clients T " + 
-			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE ( tm.project_group_code = :projectGroupCode OR tm.client_id IN ( :clients ) ) " + 
+			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE ( tm.project_group_code = :projectGroupCode OR cast( tm.client_id  as varchar) IN ( :clients ) ) " + 
 			"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
-			"  AND ( T.project_group_code = :projectGroupCode OR T.client_id IN ( :clients ) ) " + 
+			"  AND ( T.project_group_code = :projectGroupCode OR cast(T.client_id  as varchar) IN ( :clients ) ) " + 
 			" AND T .ignore_match_process = FALSE ORDER BY T .client_dedup_id, survey_score desc ) ABC ",nativeQuery=true)
-	Long getActiveEligibleClientsCountWithSharedClients(@Param("projectGroupCode") String projectGroupCode,@Param("clients") String clients);
+	Long getActiveEligibleClientsCountWithSharedClients(@Param("projectGroupCode") String projectGroupCode,@Param("clients") List<UUID> clients);
 	
 	
 	@Transactional(readOnly = false)
