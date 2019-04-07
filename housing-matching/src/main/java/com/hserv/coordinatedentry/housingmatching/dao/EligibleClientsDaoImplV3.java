@@ -76,7 +76,7 @@ public class EligibleClientsDaoImplV3  implements EligibleClientsDaoV3 {
 				"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE ( tm.project_group_code = '"+projectGroupCode+"' OR tm.client_id IN ( "+clients+" ) ) " + 
 				"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
 				" AND ( T.project_group_code = '"+projectGroupCode+"' OR T.client_id IN ( "+clients+" ) ) " + 
-				" ORDER BY T .client_dedup_id, survey_score desc  LIMIT  :limit OFFSET :start ";
+				" ORDER BY T .client_dedup_id, survey_score desc  LIMIT "+limit+" OFFSET "+start+"";
 		
 		System.out.println("query is "+query);
 		
@@ -97,7 +97,7 @@ public class EligibleClientsDaoImplV3  implements EligibleClientsDaoV3 {
 				"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE ( tm.project_group_code = '"+projectGroupCode+"' OR tm.client_id IN ( "+clients+" ) ) " + 
 				"	AND deleted = FALSE GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
 				" AND ( T.project_group_code = '"+projectGroupCode+"' OR T.client_id IN ( "+clients+" ) ) " + 
-				" AND T .ignore_match_process = TRUE ORDER BY T .client_dedup_id, survey_score desc  LIMIT  :limit OFFSET :start ";
+				" AND T .ignore_match_process = TRUE ORDER BY T .client_dedup_id, survey_score desc  LIMIT  "+limit+" OFFSET "+start+"";
 		
 		System.out.println("query is "+query);
 		
