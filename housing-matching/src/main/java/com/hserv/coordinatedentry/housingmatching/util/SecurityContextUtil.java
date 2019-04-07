@@ -1,5 +1,9 @@
 package com.hserv.coordinatedentry.housingmatching.util;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +47,17 @@ public class SecurityContextUtil {
 				return session.getAccount().getProjectGroup().getSenderEmail();
 		}
 		return null;
+	}
+	
+	public static List<UUID> getSharedClients() {
+		Session session = null;
+		SecurityContext context =  SecurityContextHolder.getContext();
+		Authentication authentication =  context.getAuthentication();
+		if(authentication.getPrincipal()!=null){
+			session = (Session) authentication.getPrincipal();
+				return session.getSharedClients();
+		}
+		return new ArrayList<UUID>();
 	}
 	
 }
