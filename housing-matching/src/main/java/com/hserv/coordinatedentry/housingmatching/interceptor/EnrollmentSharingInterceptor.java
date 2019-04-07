@@ -32,9 +32,13 @@ public class EnrollmentSharingInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		
-		String value =	propertyReaderServiceImpl.readSharingRuleProperty();
-		if(value==null || value.equalsIgnoreCase("false")) return true;
+		if(request.getRequestURI().contains("/health")) return true;
+		
+	//	String value =	propertyReaderServiceImpl.readSharingRuleProperty();
+	//	if(value==null || value.equalsIgnoreCase("false")) return true;
 
+		
+		
 		
 //		if(request.getMethod().equalsIgnoreCase("GET")) {
 			System.out.println("Inside sharing interceptor ");
