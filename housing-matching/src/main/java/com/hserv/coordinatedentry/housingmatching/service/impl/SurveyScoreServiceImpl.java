@@ -155,14 +155,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 						eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagValue()));
 						eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
 						eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
-						Long surveyScore = clientSurveyScore.getSurveyScore();
-						int finalSurveyScore = 0;
-						if(surveyScore != null) {
-							finalSurveyScore=surveyScore.intValue()+eligibleClient.getBonusScore();
-						}else {
-							finalSurveyScore=eligibleClient.getBonusScore();
-						}
-						eligibleClient.setTotalScore(finalSurveyScore);
+						eligibleClient.setTotalScore(clientSurveyScore.getSurveyScore().intValue()+eligibleClient.getBonusScore());
 
 						if(client!=null)
 							eligibleClient.setClientLink(client.getLink());		
