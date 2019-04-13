@@ -10,7 +10,7 @@ import com.servinglynk.hmis.warehouse.core.model.Session;
 
 public interface SurveyScoreService {
 	
-	public void calculateScore(Session session, UUID processId) throws Exception ;
+	public boolean calculateScore(Session session, UUID processId) throws Exception ;
 
 	public Page<EligibleClient> getScores(Pageable pageable);
 	
