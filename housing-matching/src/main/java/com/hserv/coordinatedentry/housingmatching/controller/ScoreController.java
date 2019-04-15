@@ -75,12 +75,8 @@ public class ScoreController extends BaseController {
 		DeferredResult<String> deferredResult = new DeferredResult<>();
 		//	surveyScoreService.checkAnyProcessRunning(session.getAccount().getProjectGroup().getProjectGroupCode());
 			UUID processId = batchProcessService.startScoresBatch(session.getAccount().getProjectGroup().getProjectGroupCode(), session.getAccount().getEmailAddress());
-			boolean executedSuccesfully = surveyScoreService.calculateScore(session,processId);
-			if(!executedSuccesfully) {
-				deferredResult.setResult("process failed: 'failure'");
-			}else {
-				deferredResult.setResult("triggered: 'ok'");
-			}
+			surveyScoreService.calculateScore(session,processId);
+			deferredResult.setResult("triggered: 'ok'");
 		return deferredResult;
 	}
 	

@@ -115,8 +115,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	@Override
 	@Transactional
 	@Async
-	public boolean calculateScore(Session session,UUID processId) {
-		boolean executedSuccessfully = true;
+	public void calculateScore(Session session,UUID processId) {
 		try{
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
 		
@@ -188,9 +187,8 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		batchProcessService.endBatch(processId, true);	
 		}catch (Exception e) {
 				e.printStackTrace();
-				executedSuccessfully = false;
 				batchProcessService.endBatch(processId, false);			
 		}
-		return executedSuccessfully;
+
 	}
 }
