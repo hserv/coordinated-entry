@@ -157,11 +157,14 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 						eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
 						Long surveyScore = clientSurveyScore.getSurveyScore();
 						int finalSurveyScore = 0;
+						Integer bonusScore = eligibleClient.getBonusScore();
 						if(surveyScore != null) {
-							finalSurveyScore=surveyScore.intValue()+eligibleClient.getBonusScore();
-						}else {
-							finalSurveyScore=eligibleClient.getBonusScore();
+							finalSurveyScore=surveyScore.intValue();
 						}
+						if(bonusScore != null) {
+							finalSurveyScore = finalSurveyScore + bonusScore.intValue();
+						}
+						
 						eligibleClient.setTotalScore(finalSurveyScore);
 
 						if(client!=null)
