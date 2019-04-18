@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.servinglynk.hmis.warehouse.common.security.LoggedInUser;
@@ -16,6 +17,7 @@ import com.servinglynk.hmis.warehouse.model.GlobalProjectMapEntity;
 import com.servinglynk.hmis.warehouse.model.SharingRuleEntity;
 import com.servinglynk.hmis.warehouse.service.SharingRuleService;
 
+@Component
 public class SharingRuleServiceImpl extends ServiceBase implements SharingRuleService {
 	
 	
