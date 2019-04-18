@@ -34,6 +34,7 @@ public class ClientSurveySubmissionConverter {
 			client.setPhoneNumber(entity.getClientId().getPhoneNumber());
 			client.setId(entity.getClientId().getId());
 			model.setClient(client);
+			model.setClientLink("/hmis-clientapi/rest/v"+entity.getClientId().getSchemaYear()+"/clients/"+entity.getClientId().getId());
 		}
 
 		return model;
