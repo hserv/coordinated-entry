@@ -19,6 +19,7 @@ import com.servinglynk.hmis.warehouse.service.exception.PickListGroupNotFoundExc
 import com.servinglynk.hmis.warehouse.service.exception.PickListValueNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionGroupNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundException;
+import com.servinglynk.hmis.warehouse.service.exception.ResourceNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SectionQuestionMappingNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SectionScoreNotFoundException;
@@ -137,6 +138,12 @@ public class ExceptionMapper {
 			logger.info(ex.getMessage());
 			logger.error(ex.getMessage(), ex);
 			r.setErrorCode(ERR_CODE_SURVEY_SECTION_NOT_FOUND);
+			r.setErrorMessage(ex.getMessage());
+			r.setStatusCode(HttpServletResponse.SC_NOT_FOUND);
+		}catch (ResourceNotFoundException ex) {
+			logger.info(ex.getMessage());
+			logger.error(ex.getMessage(), ex);
+			r.setErrorCode("REQUESTED_RESOURCE_NOTFOUND");
 			r.setErrorMessage(ex.getMessage());
 			r.setStatusCode(HttpServletResponse.SC_NOT_FOUND);
 		}
