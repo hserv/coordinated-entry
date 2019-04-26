@@ -18,7 +18,6 @@ import com.servinglynk.hmis.warehouse.model.SurveySectionEntity;
 import com.servinglynk.hmis.warehouse.service.ResponseService;
 import com.servinglynk.hmis.warehouse.service.converter.ResponseConverter;
 import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundException;
-import com.servinglynk.hmis.warehouse.service.exception.ResourceNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundException;
@@ -114,13 +113,9 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
    public Responses getResponsesBySubmissionId(UUID surveyId,UUID submissionId,Integer startIndex,Integer maxItems){
 	
 	   Responses responses = new Responses();
-	   SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(surveyId);
-	   if(surveyEntity==null) throw new ResourceNotFoundException("Survey not found "+surveyId);
-
-	   List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSubmissionResponses(surveyId, submissionId, startIndex, maxItems);
-  
-	   if(entities.isEmpty())  throw new ResourceNotFoundException("Submission not found"+submissionId);
 	   
+	   List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSubmissionResponses(surveyId, submissionId, startIndex, maxItems);
+   
 	   for(ResponseEntity entity:entities){
 		   responses.addResponse(ResponseConverter.entityToModel(entity));
 	   }
