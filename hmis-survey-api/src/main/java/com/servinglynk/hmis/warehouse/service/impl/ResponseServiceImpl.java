@@ -11,17 +11,16 @@ import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
 import com.servinglynk.hmis.warehouse.model.SurveySectionEntity;
 import com.servinglynk.hmis.warehouse.service.ResponseService;
 import com.servinglynk.hmis.warehouse.service.converter.ResponseConverter;
-import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.ResourceNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
-import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundException;
 
 
 @Component
@@ -86,7 +85,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
    //    pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(pResponse.getQuestionEntity(), pResponse));
        daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
        response.setResponseId(pResponse.getId());
-	   serviceFactory.getSectionScoreService().updateSectionScores(pResponse.getClientId(), pResponse.getSurveyEntity().getId(), null,caller);
+	//   serviceFactory.getSectionScoreService().updateSectionScores(pResponse.getClientId(), pResponse.getSurveyEntity().getId(), null,caller);
        return response;
    }
    
@@ -108,6 +107,12 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 	   for(ResponseEntity entity : responses){
 	       daoFactory.getResponseEntityDao().deleteResponseEntity(entity);
 	   }
+	   
+	   List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getAllSurveySubmissions(surveyId,submissionId);
+	   for(ClientSurveySubmissionEntity entity : entities) {
+		   daoFactory.getClientSurveySubmissionDao().deleteSubmission(entity);
+	   }
+
    }
 
    @Transactional
