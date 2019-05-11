@@ -21,5 +21,9 @@ public interface ClientSurveySubmissionDao {
 			Integer startIndex, Integer maxItems);
 
 	long clientSurveySubmissionsCount(String name, UUID globalClientId);
+	
+	List<ClientSurveySubmissionEntity> getAllSurveySubmissions(UUID surveyId, UUID submissionId);
+
+	void deleteSubmission(ClientSurveySubmissionEntity entity);
 
 }
