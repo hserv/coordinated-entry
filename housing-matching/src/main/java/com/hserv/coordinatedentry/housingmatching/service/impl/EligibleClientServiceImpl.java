@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,10 +26,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsDaoV3;
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
@@ -84,7 +85,13 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Override
 	public EligibleClientModel getEligibleClientDetail(UUID clientID,String version) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		EligibleClient eligibleClient = eligibleClientsRepository.findByClientIdAndProjectGroupCodeAndDeleted(clientID,projectGroup,false);
+		List<UUID> sharedClients = SecurityContextUtil.getSharedClients();
+		EligibleClient eligibleClient = null;
+		if(sharedClients.contains(clientID)) {
+			 eligibleClient = eligibleClientsRepository.findByClientIdAndDeleted(clientID,false);			
+		}else {
+		 eligibleClient = eligibleClientsRepository.findByClientIdAndProjectGroupCodeAndDeleted(clientID,projectGroup,false);
+		}
 		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible not found "+clientID);
 		if(version!=null && version.equalsIgnoreCase("v2"))
 			return eligibleClientsTranslator.translateV2(eligibleClient);
@@ -92,21 +99,40 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		return eligibleClientModel;
 	}
 	
+	@Autowired EligibleClientsDaoV3 eligibleClientsDaoV3;
+	
 	@Override
 	public Page<EligibleClient> getEligibleClients(String projectGroupCode, Pageable pageable, String filter) {
 		List<EligibleClient> clients  =new ArrayList<EligibleClient>(); 
 		 Long count =0L;
-		if(filter.equalsIgnoreCase("inactive")) {
-			clients = eligibleClientsRepository.getInactiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
-			count = eligibleClientsRepository.getInactiveEligibleClientsCount(projectGroupCode);
-		}else if(filter.equalsIgnoreCase("active")) {
-			clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
-			count = eligibleClientsRepository.getActiveEligibleClientsCount(projectGroupCode);
-		}else {
-			clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
-			count = eligibleClientsRepository.getAllEligibleClientsCount(projectGroupCode);
-		}
-		 
+		 List<UUID> sharedClientsList = SecurityContextUtil.getSharedClients();
+		 String sharedClients = "'"+StringUtils.join(sharedClientsList.toArray(), ',').replaceAll(",", "','")+"'";
+		 if(sharedClientsList.isEmpty()) {
+					if(filter.equalsIgnoreCase("inactive")) {
+						clients = eligibleClientsRepository.getInactiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+						count = eligibleClientsRepository.getInactiveEligibleClientsCount(projectGroupCode);
+					}else if(filter.equalsIgnoreCase("active")) {
+						clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+						count = eligibleClientsRepository.getActiveEligibleClientsCount(projectGroupCode);
+					}else {
+						clients = eligibleClientsRepository.getActiveEligibleClients(projectGroupCode,pageable.getPageSize(),pageable.getOffset());
+						count = eligibleClientsRepository.getAllEligibleClientsCount(projectGroupCode);
+					}
+		 }else {
+			 
+				if(filter.equalsIgnoreCase("inactive")) {
+					clients = eligibleClientsDaoV3.getInactiveEligibleClientsWithSharedClients(projectGroupCode,sharedClientsList,pageable.getPageSize(),pageable.getOffset());
+					count = eligibleClientsDaoV3.getInactiveEligibleClientsCountWithSharedClients(projectGroupCode,sharedClientsList);
+				}else if(filter.equalsIgnoreCase("active")) {
+					clients = eligibleClientsDaoV3.getActiveEligibleClientsWithSharedClients(projectGroupCode,sharedClientsList,pageable.getPageSize(),pageable.getOffset());
+					count = eligibleClientsDaoV3.getActiveEligibleClientsCountWithSharedClients(projectGroupCode,sharedClientsList);
+				}else {
+					clients = eligibleClientsDaoV3.getActiveEligibleClientsWithSharedClients(projectGroupCode,sharedClientsList,pageable.getPageSize(),pageable.getOffset());
+					count = eligibleClientsDaoV3.getAllEligibleClientsCountWithSharedClients(projectGroupCode,sharedClientsList);
+				}
+
+			 
+		 }
 
 		return new PageImpl<>(clients,pageable,count);
 	}
@@ -153,7 +179,7 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	@Override
 	public boolean createEligibleClient(EligibleClientModel eligibleClientModel) {
 		boolean status = false;
-		if(!StringUtils.isEmpty(eligibleClientModel.getClientId()) &&
+		if(!StringUtils.isEmpty(eligibleClientModel.getClientId()+"") &&
 				!eligibleClientsRepository.exists(eligibleClientModel.getClientId())){
 			eligibleClientsRepository.saveAndFlush(eligibleClientsTranslator.translate(eligibleClientModel,null));
 			status = true;

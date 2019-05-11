@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hserv.coordinatedentry.housingmatching.interceptor.AuthenticationInterceptor;
+import com.hserv.coordinatedentry.housingmatching.interceptor.EnrollmentSharingInterceptor;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 import com.servinglynk.hmis.warehouse.core.web.interceptor.TrustedAppHelper;
 
@@ -50,11 +51,17 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	public AuthenticationInterceptor getAuthenticationInterceptor(){
 		return new AuthenticationInterceptor();
 	}
+	
+	@Bean
+	public EnrollmentSharingInterceptor enrollmentSharingInterceptor() {
+		return new EnrollmentSharingInterceptor();
+	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		//registry.addInterceptor(new LoggingInterceptor());
 		registry.addInterceptor(getAuthenticationInterceptor());
+		registry.addInterceptor(enrollmentSharingInterceptor());
 	}
 	
 	@Bean

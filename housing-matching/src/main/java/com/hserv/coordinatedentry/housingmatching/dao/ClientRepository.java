@@ -13,5 +13,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.Client;
 public interface ClientRepository extends JpaRepository<Client, Serializable> {
 	
 	List<Client> findByDedupClientIdAndProjectGroupCodeOrderBySchemaYearDesc(UUID dedupClientId,String projectGroupCode);
+	
+	Client findById(UUID clientId);
 
 }

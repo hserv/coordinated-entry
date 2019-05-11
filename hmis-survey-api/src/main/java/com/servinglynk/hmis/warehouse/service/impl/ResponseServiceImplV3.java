@@ -12,6 +12,7 @@ import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
+import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
@@ -19,10 +20,9 @@ import com.servinglynk.hmis.warehouse.model.SurveySectionEntity;
 import com.servinglynk.hmis.warehouse.service.ResponseServiceV3;
 import com.servinglynk.hmis.warehouse.service.converter.ResponseConverter;
 import com.servinglynk.hmis.warehouse.service.converter.ResponseConverterV3;
-import com.servinglynk.hmis.warehouse.service.exception.QuestionNotFoundException;
+import com.servinglynk.hmis.warehouse.service.exception.ResourceNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
-import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundException;
 
 
 @Component
@@ -110,6 +110,12 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 	   for(ResponseEntity entity : responses){
 	       daoFactory.getResponseEntityDao().deleteResponseEntity(entity);
 	   }
+	   
+	   List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getAllSurveySubmissions(surveyId,submissionId);
+	   for(ClientSurveySubmissionEntity entity : entities) {
+		   daoFactory.getClientSurveySubmissionDao().deleteSubmission(entity);
+	   }
+
    }
 
    @Transactional
@@ -117,8 +123,15 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 	
 	   Responses responses = new Responses();
 	   
+	   SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(surveyId);
+	   if(surveyEntity==null) throw new ResourceNotFoundException("Survey not found "+surveyId);
+	   
 	   List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSubmissionResponses(surveyId, submissionId, startIndex, maxItems);
    
+	   if(entities.isEmpty())  throw new ResourceNotFoundException("Submission not found"+submissionId);
+	   
+	   
+	   
 	   for(ResponseEntity entity:entities){
 		   ClientEntity clientEntity = daoFactory.getClientDao().getClient(entity.getDedupClientId());
 		   responses.addResponse(ResponseConverterV3.entityToModel(entity,clientEntity));

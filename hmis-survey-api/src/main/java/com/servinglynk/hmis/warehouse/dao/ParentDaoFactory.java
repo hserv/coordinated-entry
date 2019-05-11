@@ -28,4 +28,6 @@ public interface ParentDaoFactory  {
 	 ClientDao getClientDao();
 	 
 	 ClientSurveySubmissionDao getClientSurveySubmissionDao();
+	 
+	 SharingRuleDao getSharingRuleDao();
 }

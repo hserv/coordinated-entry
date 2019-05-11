@@ -81,4 +81,14 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 
 		return countRows(criteria);
 	}
+	public List<ClientSurveySubmissionEntity> getAllSurveySubmissions(UUID surveyId, UUID submissionId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
+		criteria.add(Restrictions.eq("surveyId", surveyId));
+		criteria.add(Restrictions.eq("submissionId",submissionId));
+		return (List<ClientSurveySubmissionEntity>) findByCriteria(criteria);
+	}
+
+	public void deleteSubmission(ClientSurveySubmissionEntity entity) {
+			delete(entity);
+	}
 }
