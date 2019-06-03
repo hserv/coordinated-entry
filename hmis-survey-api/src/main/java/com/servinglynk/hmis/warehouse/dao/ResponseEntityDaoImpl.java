@@ -74,5 +74,12 @@ public long getSubmissionResponsesCount(UUID surveyId, UUID submissionId) {
     criteria.add(Restrictions.eq("surveyEntity.id", surveyId));
     criteria.add(Restrictions.eq("submissionId", submissionId));
 	return countRows(criteria);
-}   
+}
+	public ResponseEntity getResponseBySubmission(UUID submissionId) {
+	    DetachedCriteria criteria=DetachedCriteria.forClass(ResponseEntity.class);
+	    criteria.add(Restrictions.eq("submissionId", submissionId));
+	    List<ResponseEntity> responseEntities = (List<ResponseEntity>) findByCriteria(criteria);
+	    if(responseEntities.isEmpty()) return null;
+	    return responseEntities.get(0);
+	}   
 }

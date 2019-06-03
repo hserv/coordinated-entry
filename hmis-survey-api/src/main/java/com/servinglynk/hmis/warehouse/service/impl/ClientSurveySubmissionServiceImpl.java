@@ -7,11 +7,13 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
 
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
+import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.service.ClientSurveySubmissionService;
 import com.servinglynk.hmis.warehouse.service.converter.ClientSurveySubmissionConverter;
 import com.servinglynk.hmis.warehouse.service.exception.ResourceNotFoundException;
@@ -54,7 +56,10 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getAllClientSurveySubmissions(clientId,startIndex,maxItems);
 		
 		for(ClientSurveySubmissionEntity entity : entities ) {
-			submissions.addClientSurveySubmission(ClientSurveySubmissionConverter.entityToModel(entity));
+			ResponseEntity responseEntity =		daoFactory.getResponseEntityDao().getResponseBySubmission(entity.getSubmissionId());
+			ClientSurveySubmission model = ClientSurveySubmissionConverter.entityToModel(entity);
+			if(responseEntity!=null) model.setSubmissionDate(responseEntity.getEffectiveDate());
+			submissions.addClientSurveySubmission(model);
 		}
 		
 		long count = daoFactory.getClientSurveySubmissionDao().clientSurveySubmissionsCount(clientId);

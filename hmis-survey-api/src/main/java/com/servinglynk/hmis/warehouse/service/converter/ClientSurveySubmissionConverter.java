@@ -21,7 +21,6 @@ public class ClientSurveySubmissionConverter {
 		model.setId(entity.getId());
 		model.setSubmissionId(entity.getSubmissionId());
 		model.setSurveyId(entity.getSurveyId());
-
 		
 		if (entity.getClientId() != null) {
 			Client client = new Client();
