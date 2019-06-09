@@ -45,11 +45,13 @@ public class ClientSurveySubmissionController extends BaseController{
 	public ClientSurveySubmissions getSearchClientSurveySubmissions(@RequestParam("q") String queryString,
             @RequestParam(value="startIndex", required=false) Integer startIndex, 
             @RequestParam(value="maxItems", required=false) Integer maxItems,
+            @RequestParam(value="sort",defaultValue="submissionDate",required=false) String sort,
+            @RequestParam(value="order",defaultValue="asc",required=false) String order,
             HttpServletRequest request) throws Exception {
 		 if (startIndex == null) startIndex =0;
-         if (maxItems == null || maxItems > 30) maxItems =30;
+         if (maxItems == null || maxItems > 100) maxItems =100;
 
-		return serviceFactory.getClientSurveySubmissionService().getSearchClientSurveySubmissions(queryString, startIndex,maxItems);
+		return serviceFactory.getClientSurveySubmissionService().getSearchClientSurveySubmissions(queryString, startIndex,maxItems,sort,order);
 	}
 
 }

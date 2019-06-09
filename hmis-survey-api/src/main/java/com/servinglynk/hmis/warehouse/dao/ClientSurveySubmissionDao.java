@@ -18,7 +18,7 @@ public interface ClientSurveySubmissionDao {
 	
 	long clientSurveySubmissionsCount(UUID clientId);
 	List<ClientSurveySubmissionEntity> getSearchClientSurveySubmissions(String name, UUID globalClientId,
-			Integer startIndex, Integer maxItems);
+			Integer startIndex, Integer maxItems,String sortField,String order);
 
 	long clientSurveySubmissionsCount(String name, UUID globalClientId);
 	

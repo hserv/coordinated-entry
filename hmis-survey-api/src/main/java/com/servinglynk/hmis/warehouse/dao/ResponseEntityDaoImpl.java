@@ -2,9 +2,12 @@ package com.servinglynk.hmis.warehouse.dao;
 
 
 import java.util.UUID;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
@@ -82,4 +85,15 @@ public long getSubmissionResponsesCount(UUID surveyId, UUID submissionId) {
 	    if(responseEntities.isEmpty()) return null;
 	    return responseEntities.get(0);
 	}   
+	
+	public LocalDateTime getSurveyDate(UUID clientId, UUID surveyId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(ResponseEntity.class);
+		criteria.createAlias("surveyEntity", "surveyEntity");
+		criteria.add(Restrictions.eq("clientId", clientId));
+		criteria.add(Restrictions.eq("surveyEntity.id", surveyId));
+		criteria.addOrder(Order.asc("effectiveDate"));
+		List<ResponseEntity> entities =(List<ResponseEntity>) findByCriteria(criteria);
+		if(!entities.isEmpty()) return entities.get(0).getEffectiveDate();
+		return null;
+	}
 }
