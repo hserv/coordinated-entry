@@ -19,6 +19,7 @@ import com.servinglynk.hmis.warehouse.model.ClientEntity;
 
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
+import com.servinglynk.hmis.warehouse.model.SurveyEntity;
 import com.servinglynk.hmis.warehouse.service.ClientSurveySubmissionService;
 import com.servinglynk.hmis.warehouse.service.converter.ClientSurveySubmissionConverter;
 import com.servinglynk.hmis.warehouse.service.exception.ResourceNotFoundException;
@@ -29,11 +30,12 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 
 	@Transactional
 	public void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId) {
+		SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(surveyId);
 		ClientEntity clientEntity = daoFactory.getClientDao().getClientById(clientId);
 		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
 		entity.setClientId(clientEntity);
 		entity.setSubmissionId(submissionId);
-		entity.setSurveyId(surveyId);
+		entity.setSurveyId(surveyEntity);
 		entity.setCreatedAt(LocalDateTime.now());
 		entity.setUpdatedAt(LocalDateTime.now());
 		entity.setUser(getUser());

@@ -15,6 +15,7 @@ public class ClientSurveySubmission extends ClientModel {
 	private UUID id;
 	private UUID clientId;
 	private UUID surveyId; 
+	private Survey survey;
 	private UUID submissionId;
    	private UUID globalEnrollmentId;
    	
@@ -74,5 +75,11 @@ public class ClientSurveySubmission extends ClientModel {
 	}
 	public void setSubmissionDate(LocalDateTime submissionDate) {
 		this.submissionDate = submissionDate;
+	}
+	public Survey getSurvey() {
+		return survey;
+	}
+	public void setSurvey(Survey survey) {
+		this.survey = survey;
 	}  	
 }

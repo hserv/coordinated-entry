@@ -54,10 +54,11 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 			Integer startIndex, Integer maxItems,String sortField, String order) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
 		criteria.createAlias("clientId", "clientId");
+		criteria.createAlias("surveyId", "surveyId");
 		if(globalClientId!=null) {
 			Criterion clientId =Restrictions.eq("clientId.id", globalClientId);
 			Criterion clientDedupId =Restrictions.eq("clientId.dedupClientId", globalClientId);
-			Criterion surveyId =Restrictions.eq("surveyId", globalClientId);
+			Criterion surveyId =Restrictions.eq("surveyId.id", globalClientId);
 			criteria.add(Restrictions.or(clientId,clientDedupId,surveyId));
 		}
 		if(name!=null) {
@@ -65,7 +66,8 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 			  Criterion lastName = Restrictions.ilike("clientId.lastName",name,MatchMode.ANYWHERE);
 			  Criterion middleName = Restrictions.ilike("clientId.middleName",name,MatchMode.ANYWHERE);
 			  Criterion clientName = Restrictions.sqlRestriction("(concat(first_name,last_name) ilike '%"+name.replaceAll(" ","")+"%') ");
-			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName));
+			  Criterion surveyName = Restrictions.ilike("surveyId.surveyTitle", name);
+			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName,surveyName));
 
 		}
 		
@@ -82,10 +84,11 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 	public long clientSurveySubmissionsCount(String name, UUID globalClientId) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
 		criteria.createAlias("clientId", "clientId");
+		criteria.createAlias("surveyId", "surveyId");
 		if(globalClientId!=null) {
 			Criterion clientId =Restrictions.eq("clientId.id", globalClientId);
 			Criterion clientDedupId =Restrictions.eq("clientId.dedupClientId", globalClientId);
-			Criterion surveyId =Restrictions.eq("surveyId", globalClientId);
+			Criterion surveyId =Restrictions.eq("surveyId.id", globalClientId);
 			criteria.add(Restrictions.or(clientId,clientDedupId,surveyId));
 		}
 		if(name!=null) {
@@ -93,14 +96,16 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 			  Criterion lastName = Restrictions.ilike("clientId.lastName",name,MatchMode.ANYWHERE);
 			  Criterion middleName = Restrictions.ilike("clientId.middleName",name,MatchMode.ANYWHERE);
 			  Criterion clientName = Restrictions.sqlRestriction("(concat(first_name,last_name) ilike '%"+name.replaceAll(" ","")+"%') ");
-			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName));
+			  Criterion surveyName = Restrictions.ilike("surveyId.surveyTitle", name);
+			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName,surveyName));
 
 		}
 		return countRows(criteria);
 	}
 	public List<ClientSurveySubmissionEntity> getAllSurveySubmissions(UUID surveyId, UUID submissionId) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
-		criteria.add(Restrictions.eq("surveyId", surveyId));
+		criteria.createAlias("surveyId", "surveyId");
+		criteria.add(Restrictions.eq("surveyId.id", surveyId));
 		criteria.add(Restrictions.eq("submissionId",submissionId));
 		return (List<ClientSurveySubmissionEntity>) findByCriteria(criteria);
 	}

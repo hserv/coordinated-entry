@@ -37,9 +37,9 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	private ClientEntity clientId;
 
 		
-	@Type(type="pg-uuid")
-	@Column(name="SURVEY_ID")
-	private UUID surveyId; 
+	@JoinColumn(name="SURVEY_ID")
+	@OneToOne(fetch=FetchType.LAZY)
+	private SurveyEntity surveyId; 
 	
 	@Type(type="pg-uuid")
 	@Column(name="SUBMISSION_ID")
@@ -66,11 +66,11 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 		this.clientId = clientId;
 	}
 
-	public UUID getSurveyId() {
+	public SurveyEntity getSurveyId() {
 		return surveyId;
 	}
 
-	public void setSurveyId(UUID surveyId) {
+	public void setSurveyId(SurveyEntity surveyId) {
 		this.surveyId = surveyId;
 	}
 
