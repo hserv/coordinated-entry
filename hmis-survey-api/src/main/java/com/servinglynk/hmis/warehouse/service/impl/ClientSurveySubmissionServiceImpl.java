@@ -96,7 +96,10 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 			name = queryString;
 		}
 		
-		if(sortColumn.equalsIgnoreCase("surveyId"))   sortField ="surveyId";
+		if(!sortColumn.equalsIgnoreCase("submissionDate")) {
+			 if(sortColumn.equalsIgnoreCase("surveyId"))  sortField ="surveyId.id";
+			 if(sortColumn.equalsIgnoreCase("surveyTitle")) sortField ="surveyId.surveyTitle";
+		}
 		
 		List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getSearchClientSurveySubmissions(name,globalClientId,startIndex,maxItems,sortField,order);
 		
@@ -108,7 +111,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 			clientSurveySubmissions.add(model);
 		}
 		
-		if(sortField!=null) {
+		if(sortField==null) {
 			if(order==null || order.equalsIgnoreCase("asc")) {
 				Collections.sort(clientSurveySubmissions, new SubmissionDateAscComparator());
 			}else {
