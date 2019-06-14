@@ -23,6 +23,7 @@ import com.servinglynk.hmis.warehouse.service.converter.ResponseConverterV3;
 import com.servinglynk.hmis.warehouse.service.exception.ResourceNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
+import com.servinglynk.hmis.warehouse.util.DateUtil;
 
 
 @Component
@@ -33,7 +34,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 	   Response returnResponse = new Response();
 	   
 	   UUID submissionId = UUID.randomUUID();
-	   
+	   LocalDateTime effectiveDate =null;
 	   
 	   SurveyEntity surveyEntity = daoFactory.getSurveyEntityDao().getSurveyEntityById(surveyId);
 	   if(surveyEntity==null) throw new SurveyNotFoundException();
@@ -68,9 +69,10 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 			// pResponse.setQuestionScore(serviceFactory.getSectionScoreService().calculateQuestionScore(questionEntity,
 			// pResponse));
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
+			effectiveDate = DateUtil.least(effectiveDate, response.getEffectiveDate());
 		}
 	   
-	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId);
+	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate);
 	   
 	   returnResponse.setSubmissionId(submissionId);
        return returnResponse;

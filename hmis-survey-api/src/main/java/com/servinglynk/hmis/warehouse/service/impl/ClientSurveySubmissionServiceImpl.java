@@ -2,7 +2,6 @@ package com.servinglynk.hmis.warehouse.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -16,9 +15,7 @@ import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
 import com.servinglynk.hmis.warehouse.core.model.Sort;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
-
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
-import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
 import com.servinglynk.hmis.warehouse.service.ClientSurveySubmissionService;
 import com.servinglynk.hmis.warehouse.service.converter.ClientSurveySubmissionConverter;
@@ -29,13 +26,14 @@ import com.servinglynk.hmis.warehouse.util.SecurityContextUtil;
 public class ClientSurveySubmissionServiceImpl extends ServiceBase implements ClientSurveySubmissionService {
 
 	@Transactional
-	public void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId) {
+	public void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId,LocalDateTime submissionDate) {
 		SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(surveyId);
 		ClientEntity clientEntity = daoFactory.getClientDao().getClientById(clientId);
 		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
 		entity.setClientId(clientEntity);
 		entity.setSubmissionId(submissionId);
 		entity.setSurveyId(surveyEntity);
+		entity.setSubmissionDate(submissionDate);
 		entity.setCreatedAt(LocalDateTime.now());
 		entity.setUpdatedAt(LocalDateTime.now());
 		entity.setUser(getUser());
@@ -61,31 +59,19 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		ClientSurveySubmissions submissions = new ClientSurveySubmissions();
 		List<ClientSurveySubmission> clientSurveySubmissions = new ArrayList<ClientSurveySubmission>();
 		String sortField=null;
-		if(!sortColumn.equalsIgnoreCase("submissionDate")) {
+
 			 if(sortColumn.equalsIgnoreCase("surveyId"))  sortField ="surveyId.id";
 			 if(sortColumn.equalsIgnoreCase("surveyTitle")) sortField ="surveyId.surveyTitle";
-		}
+			 if(sortColumn.equalsIgnoreCase("submissionDate")) sortField = "submissionDate";
 
-		
 		List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getAllClientSurveySubmissions(clientId,queryString,sortField,order,startIndex,maxItems);
 		
 		for(ClientSurveySubmissionEntity entity : entities ) {
 
 			ClientSurveySubmission model = ClientSurveySubmissionConverter.entityToModel(entity);
-			LocalDateTime responseSubmissionDate = daoFactory.getResponseEntityDao().getSurveyDate(model.getClientId(),model.getSurveyId());
-			if(responseSubmissionDate==null) responseSubmissionDate = daoFactory.getSectionScoreDao().getSurveyScoreDate(model.getClientId(),model.getSurveyId());
-			model.setSubmissionDate(responseSubmissionDate);
 			clientSurveySubmissions.add(model);
 		}
-		
-		if(sortField==null) {
-			if(order==null || order.equalsIgnoreCase("asc")) {
-				Collections.sort(clientSurveySubmissions, new SubmissionDateAscComparator());
-			}else {
-				Collections.sort(clientSurveySubmissions, new SubmissionDateDescComparator());				
-			}
-		}
-		
+				
 		submissions.setClientSurveySubmissions(clientSurveySubmissions);
 		
 		long count = daoFactory.getClientSurveySubmissionDao().clientSurveySubmissionsCount(clientId,queryString);
@@ -118,28 +104,16 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 			name = queryString;
 		}
 		
-		if(!sortColumn.equalsIgnoreCase("submissionDate")) {
 			 if(sortColumn.equalsIgnoreCase("surveyId"))  sortField ="surveyId.id";
 			 if(sortColumn.equalsIgnoreCase("surveyTitle")) sortField ="surveyId.surveyTitle";
 			 if(sortColumn.equalsIgnoreCase("clientName")) sortField ="clientId.firstName";
-		}
+			 if(sortColumn.equalsIgnoreCase("submissionDate")) sortField = "submissionDate";
 		
 		List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getSearchClientSurveySubmissions(name,globalClientId,startIndex,maxItems,sortField,order);
 		
 		for(ClientSurveySubmissionEntity entity : entities ) {
 			ClientSurveySubmission model = ClientSurveySubmissionConverter.entityToModel(entity);
-			LocalDateTime responseSubmissionDate = daoFactory.getResponseEntityDao().getSurveyDate(model.getClientId(),model.getSurveyId());
-			if(responseSubmissionDate==null) responseSubmissionDate = daoFactory.getSectionScoreDao().getSurveyScoreDate(model.getClientId(),model.getSurveyId());
-			model.setSubmissionDate(responseSubmissionDate);
 			clientSurveySubmissions.add(model);
-		}
-		
-		if(sortField==null) {
-			if(order==null || order.equalsIgnoreCase("asc")) {
-				Collections.sort(clientSurveySubmissions, new SubmissionDateAscComparator());
-			}else {
-				Collections.sort(clientSurveySubmissions, new SubmissionDateDescComparator());				
-			}
 		}
 		
 		submissions.setClientSurveySubmissions(clientSurveySubmissions);
@@ -185,6 +159,17 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 			        return 1;
 			    }
 				return s2.getSubmissionDate().compareTo(s1.getSubmissionDate());
+		}
+	}
+	
+	@Transactional
+	public void updateClientSurveySubmissionDate(UUID surveyId, UUID clientId) {
+		List<ClientSurveySubmissionEntity>	entities =	daoFactory.getClientSurveySubmissionDao().getSubmissionBySurveyIdAndClientId(surveyId,clientId);
+		for(ClientSurveySubmissionEntity entity : entities) {
+			if(entity.getSubmissionDate()==null) {
+				entity.setSubmissionDate(LocalDateTime.now());
+				daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
+			}
 		}
 	}
 }
