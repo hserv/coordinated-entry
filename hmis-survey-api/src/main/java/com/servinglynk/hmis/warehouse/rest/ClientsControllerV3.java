@@ -112,8 +112,10 @@ public class ClientsControllerV3 extends BaseController {
 			   @PathVariable("surveyid")  UUID surveyid,
 			   @PathVariable( "submissionid" ) UUID submissionid,	               
 			   @RequestParam(value="startIndex", required=false,defaultValue="0") Integer startIndex, 
-               @RequestParam(value="maxItems", required=false,defaultValue="30") Integer maxItems,
+               @RequestParam(value="maxItems", required=false,defaultValue="100") Integer maxItems,
                HttpServletRequest request) throws Exception {
+           if (startIndex == null) startIndex =0;
+           if (maxItems == null || maxItems > 100) maxItems =100;
 		   Session session= sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);

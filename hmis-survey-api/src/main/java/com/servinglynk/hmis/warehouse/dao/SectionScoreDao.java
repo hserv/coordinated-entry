@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,4 +24,5 @@ public interface SectionScoreDao {
 	List<SectionScoreEntity> getClientScoresByDedupClientId(UUID dedupClientId, UUID surveyId, UUID sectionId,
 			Integer startIndex, Integer maxItems);
 	long getClientScoresCountByDedupClientId(UUID dedupClientId, UUID surveyId, UUID sectionId);
+	LocalDateTime getSurveyScoreDate(UUID clientId, UUID surveyId);
 }

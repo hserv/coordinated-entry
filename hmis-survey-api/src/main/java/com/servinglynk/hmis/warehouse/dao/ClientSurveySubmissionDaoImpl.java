@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
@@ -33,34 +34,72 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 	}
 	
 	
-	public List<ClientSurveySubmissionEntity> getAllClientSurveySubmissions(UUID clientId,Integer startIndex, Integer maxItems){
+	public List<ClientSurveySubmissionEntity> getAllClientSurveySubmissions(UUID clientId,String queryString, String sortField, String order,Integer startIndex, Integer maxItems){
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
 		criteria.createAlias("clientId", "clientId");
-		criteria.add(Restrictions.eq("clientId.id", clientId));
+		criteria.createAlias("surveyId", "surveyId");
+		Criterion clientIdCr = Restrictions.eq("clientId.id", clientId);
+		Criterion dedupIdCr  = Restrictions.eq("clientId.dedupClientId", clientId);
+		criteria.add(Restrictions.or(clientIdCr,dedupIdCr));
+		if(queryString!=null) {
+			try	{
+					UUID surveyId =UUID.fromString(queryString);
+					criteria.add(Restrictions.eq("surveyId.id", surveyId));
+				}catch (Exception e) {
+					criteria.add(Restrictions.ilike("surveyId.surveyTitle", MatchMode.ANYWHERE));
+				}
+			
+		}
 
 		return (List<ClientSurveySubmissionEntity>) findByCriteria(criteria,startIndex,maxItems);
 	}
 
 
-	public long clientSurveySubmissionsCount(UUID clientId){
+	public long clientSurveySubmissionsCount(UUID clientId,String queryString){
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
 		criteria.createAlias("clientId", "clientId");
-		criteria.add(Restrictions.eq("clientId.id", clientId));
+		criteria.createAlias("surveyId", "surveyId");
+		Criterion clientIdCr = Restrictions.eq("clientId.id", clientId);
+		Criterion dedupIdCr  = Restrictions.eq("clientId.dedupClientId", clientId);
+		criteria.add(Restrictions.or(clientIdCr,dedupIdCr));
+		if(queryString!=null) {
+			try	{
+					UUID surveyId =UUID.fromString(queryString);
+					criteria.add(Restrictions.eq("surveyId.id", surveyId));
+				}catch (Exception e) {
+					criteria.add(Restrictions.ilike("surveyId.surveyTitle", MatchMode.ANYWHERE));
+				}
+			
+		}
 		return countRows(criteria);
 	}
 
 	public List<ClientSurveySubmissionEntity> getSearchClientSurveySubmissions(String name, UUID globalClientId,
-			Integer startIndex, Integer maxItems) {
+			Integer startIndex, Integer maxItems,String sortField, String order) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
 		criteria.createAlias("clientId", "clientId");
-		if(globalClientId!=null)	criteria.add(Restrictions.eq("clientId.id", globalClientId));
+		criteria.createAlias("surveyId", "surveyId");
+		if(globalClientId!=null) {
+			Criterion clientId =Restrictions.eq("clientId.id", globalClientId);
+			Criterion clientDedupId =Restrictions.eq("clientId.dedupClientId", globalClientId);
+			Criterion surveyId =Restrictions.eq("surveyId.id", globalClientId);
+			criteria.add(Restrictions.or(clientId,clientDedupId,surveyId));
+		}
 		if(name!=null) {
 			  Criterion firstName = Restrictions.ilike("clientId.firstName",name,MatchMode.ANYWHERE);
 			  Criterion lastName = Restrictions.ilike("clientId.lastName",name,MatchMode.ANYWHERE);
 			  Criterion middleName = Restrictions.ilike("clientId.middleName",name,MatchMode.ANYWHERE);
 			  Criterion clientName = Restrictions.sqlRestriction("(concat(first_name,last_name) ilike '%"+name.replaceAll(" ","")+"%') ");
-			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName));
+			  Criterion surveyName = Restrictions.ilike("surveyId.surveyTitle", name,MatchMode.ANYWHERE);
+			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName,surveyName));
 
+		}
+		
+		if(sortField!=null) {
+			if(order.equalsIgnoreCase("asc"))
+					criteria.addOrder(Order.asc(sortField));
+			if(order.equalsIgnoreCase("desc"))
+					criteria.addOrder(Order.desc(sortField));
 		}
 		return (List<ClientSurveySubmissionEntity>) findByCriteria(criteria,startIndex,maxItems);
 
@@ -69,21 +108,28 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 	public long clientSurveySubmissionsCount(String name, UUID globalClientId) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
 		criteria.createAlias("clientId", "clientId");
-		if(globalClientId!=null)	criteria.add(Restrictions.eq("clientId.id", globalClientId));
+		criteria.createAlias("surveyId", "surveyId");
+		if(globalClientId!=null) {
+			Criterion clientId =Restrictions.eq("clientId.id", globalClientId);
+			Criterion clientDedupId =Restrictions.eq("clientId.dedupClientId", globalClientId);
+			Criterion surveyId =Restrictions.eq("surveyId.id", globalClientId);
+			criteria.add(Restrictions.or(clientId,clientDedupId,surveyId));
+		}
 		if(name!=null) {
 			  Criterion firstName = Restrictions.ilike("clientId.firstName",name,MatchMode.ANYWHERE);
 			  Criterion lastName = Restrictions.ilike("clientId.lastName",name,MatchMode.ANYWHERE);
 			  Criterion middleName = Restrictions.ilike("clientId.middleName",name,MatchMode.ANYWHERE);
 			  Criterion clientName = Restrictions.sqlRestriction("(concat(first_name,last_name) ilike '%"+name.replaceAll(" ","")+"%') ");
-			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName));
+			  Criterion surveyName = Restrictions.ilike("surveyId.surveyTitle", name);
+			  criteria.add(Restrictions.or(firstName,lastName,middleName,clientName,surveyName));
 
 		}
-
 		return countRows(criteria);
 	}
 	public List<ClientSurveySubmissionEntity> getAllSurveySubmissions(UUID surveyId, UUID submissionId) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
-		criteria.add(Restrictions.eq("surveyId", surveyId));
+		criteria.createAlias("surveyId", "surveyId");
+		criteria.add(Restrictions.eq("surveyId.id", surveyId));
 		criteria.add(Restrictions.eq("submissionId",submissionId));
 		return (List<ClientSurveySubmissionEntity>) findByCriteria(criteria);
 	}
