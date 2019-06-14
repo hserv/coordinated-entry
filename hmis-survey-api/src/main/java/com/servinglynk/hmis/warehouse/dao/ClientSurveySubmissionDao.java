@@ -26,4 +26,6 @@ public interface ClientSurveySubmissionDao {
 
 	void deleteSubmission(ClientSurveySubmissionEntity entity);
 
+	List<ClientSurveySubmissionEntity> getSubmissionBySurveyIdAndClientId(UUID surveyId, UUID clientId);
+
 }

@@ -137,4 +137,13 @@ public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements 
 	public void deleteSubmission(ClientSurveySubmissionEntity entity) {
 			delete(entity);
 	}
+
+	public List<ClientSurveySubmissionEntity> getSubmissionBySurveyIdAndClientId(UUID surveyId, UUID clientId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
+		criteria.createAlias("surveyId", "surveyId");
+		criteria.createAlias("clientId", "clientId");
+		criteria.add(Restrictions.eq("surveyId.id", surveyId));
+		criteria.add(Restrictions.eq("clientId.id", clientId));
+		return (List<ClientSurveySubmissionEntity>) findByCriteria(criteria);
+	}
 }

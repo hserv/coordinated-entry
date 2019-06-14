@@ -20,6 +20,7 @@ public class ClientSurveySubmissionConverter {
 		model.setGlobalEnrollmentId(entity.getGlobalEnrollmentId());
 		model.setId(entity.getId());
 		model.setSubmissionId(entity.getSubmissionId());
+		model.setSubmissionDate(entity.getSubmissionDate());
 		if(entity.getSurveyId()!=null) {
 			model.setSurveyId(entity.getSurveyId().getId());
 			model.setSurvey(SurveyConverter.entityToModel(entity.getSurveyId()));
