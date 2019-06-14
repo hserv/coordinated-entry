@@ -57,10 +57,17 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 	}
 	
 	@Transactional
-	public ClientSurveySubmissions getAllClientSurveySubmissions(UUID clientId,Integer startIndex,Integer maxItems) {
+	public ClientSurveySubmissions getAllClientSurveySubmissions(UUID clientId,String queryString, String sortColumn, String order,Integer startIndex,Integer maxItems) {
 		ClientSurveySubmissions submissions = new ClientSurveySubmissions();
+		List<ClientSurveySubmission> clientSurveySubmissions = new ArrayList<ClientSurveySubmission>();
+		String sortField=null;
+		if(!sortColumn.equalsIgnoreCase("submissionDate")) {
+			 if(sortColumn.equalsIgnoreCase("surveyId"))  sortField ="surveyId.id";
+			 if(sortColumn.equalsIgnoreCase("surveyTitle")) sortField ="surveyId.surveyTitle";
+		}
+
 		
-		List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getAllClientSurveySubmissions(clientId,startIndex,maxItems);
+		List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getAllClientSurveySubmissions(clientId,queryString,sortField,order,startIndex,maxItems);
 		
 		for(ClientSurveySubmissionEntity entity : entities ) {
 
@@ -68,12 +75,27 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 			LocalDateTime responseSubmissionDate = daoFactory.getResponseEntityDao().getSurveyDate(model.getClientId(),model.getSurveyId());
 			if(responseSubmissionDate==null) responseSubmissionDate = daoFactory.getSectionScoreDao().getSurveyScoreDate(model.getClientId(),model.getSurveyId());
 			model.setSubmissionDate(responseSubmissionDate);
-			submissions.addClientSurveySubmission(model);
+			clientSurveySubmissions.add(model);
 		}
 		
-		long count = daoFactory.getClientSurveySubmissionDao().clientSurveySubmissionsCount(clientId);
-		 SortedPagination pagination = new SortedPagination();
-		 
+		if(sortField==null) {
+			if(order==null || order.equalsIgnoreCase("asc")) {
+				Collections.sort(clientSurveySubmissions, new SubmissionDateAscComparator());
+			}else {
+				Collections.sort(clientSurveySubmissions, new SubmissionDateDescComparator());				
+			}
+		}
+		
+		submissions.setClientSurveySubmissions(clientSurveySubmissions);
+		
+		long count = daoFactory.getClientSurveySubmissionDao().clientSurveySubmissionsCount(clientId,queryString);
+
+		SortedPagination pagination = new SortedPagination();
+	        Sort sort = new Sort();
+	        sort.setField(sortColumn);
+	        sort.setOrder(order);
+	        pagination.setSort(sort);
+	        pagination.setMaximum(maxItems);
 	        pagination.setFrom(startIndex);
 	        pagination.setReturned(submissions.getClientSurveySubmissions().size());
 	        pagination.setTotal((int)count);
@@ -99,6 +121,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		if(!sortColumn.equalsIgnoreCase("submissionDate")) {
 			 if(sortColumn.equalsIgnoreCase("surveyId"))  sortField ="surveyId.id";
 			 if(sortColumn.equalsIgnoreCase("surveyTitle")) sortField ="surveyId.surveyTitle";
+			 if(sortColumn.equalsIgnoreCase("clientName")) sortField ="clientId.firstName";
 		}
 		
 		List<ClientSurveySubmissionEntity> entities = daoFactory.getClientSurveySubmissionDao().getSearchClientSurveySubmissions(name,globalClientId,startIndex,maxItems,sortField,order);
@@ -140,14 +163,28 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 	class SubmissionDateAscComparator implements Comparator<ClientSurveySubmission> {
 		
 		public int compare(ClientSurveySubmission s1, ClientSurveySubmission s2) {
-			return s1.getSubmissionDate().compareTo(s2.getSubmissionDate());
+			
+			 if (s1.getSubmissionDate() == null) {
+			        return (s2.getSubmissionDate() == null) ? 0 : -1;
+			    }
+			    if (s2.getSubmissionDate() == null) {
+			        return 1;
+			    }
+				return s1.getSubmissionDate().compareTo(s2.getSubmissionDate());
 		}
 	}
 	
 	class SubmissionDateDescComparator implements Comparator<ClientSurveySubmission> {
 		
 		public int compare(ClientSurveySubmission s1, ClientSurveySubmission s2) {
-			return s2.getSubmissionDate().compareTo(s1.getSubmissionDate());
+			
+			 if (s2.getSubmissionDate() == null) {
+			        return (s1.getSubmissionDate() == null) ? 0 : -1;
+			    }
+			    if (s1.getSubmissionDate() == null) {
+			        return 1;
+			    }
+				return s2.getSubmissionDate().compareTo(s1.getSubmissionDate());
 		}
 	}
 }

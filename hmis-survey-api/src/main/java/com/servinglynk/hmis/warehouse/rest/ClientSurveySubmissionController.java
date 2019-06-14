@@ -23,13 +23,16 @@ public class ClientSurveySubmissionController extends BaseController{
 	@RequestMapping(method=RequestMethod.GET,value="/{clientId}")
 	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
 	public ClientSurveySubmissions getAllClientSurveySubmissions(@PathVariable("clientId") UUID clientId ,
+			@RequestParam(value="q",required=false) String queryString,
+            @RequestParam(value="sort",defaultValue="submissionDate",required=false) String sort,
+            @RequestParam(value="order",defaultValue="asc",required=false) String order,
             @RequestParam(value="startIndex", required=false) Integer startIndex, 
             @RequestParam(value="maxItems", required=false) Integer maxItems,
             HttpServletRequest request) throws Exception {
 		 if (startIndex == null) startIndex =0;
-         if (maxItems == null || maxItems > 30) maxItems =30;
+         if (maxItems == null || maxItems > 100) maxItems =100;
 
-		return serviceFactory.getClientSurveySubmissionService().getAllClientSurveySubmissions(clientId, startIndex,maxItems);
+		return serviceFactory.getClientSurveySubmissionService().getAllClientSurveySubmissions(clientId, queryString,sort,order,startIndex,maxItems);
 	}
 	
 	
@@ -42,7 +45,7 @@ public class ClientSurveySubmissionController extends BaseController{
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	public ClientSurveySubmissions getSearchClientSurveySubmissions(@RequestParam("q") String queryString,
+	public ClientSurveySubmissions getSearchClientSurveySubmissions(@RequestParam(value="q",required=false) String queryString,
             @RequestParam(value="startIndex", required=false) Integer startIndex, 
             @RequestParam(value="maxItems", required=false) Integer maxItems,
             @RequestParam(value="sort",defaultValue="submissionDate",required=false) String sort,
