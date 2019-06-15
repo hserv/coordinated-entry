@@ -20,7 +20,11 @@ public class ClientSurveySubmissionConverter {
 		model.setGlobalEnrollmentId(entity.getGlobalEnrollmentId());
 		model.setId(entity.getId());
 		model.setSubmissionId(entity.getSubmissionId());
-		model.setSurveyId(entity.getSurveyId());
+		model.setSubmissionDate(entity.getSubmissionDate());
+		if(entity.getSurveyId()!=null) {
+			model.setSurveyId(entity.getSurveyId().getId());
+			model.setSurvey(SurveyConverter.entityToModel(entity.getSurveyId()));
+		}
 
 		
 		if (entity.getClientId() != null) {
@@ -33,6 +37,7 @@ public class ClientSurveySubmissionConverter {
 			client.setMiddleName(entity.getClientId().getMiddleName());
 			client.setPhoneNumber(entity.getClientId().getPhoneNumber());
 			client.setId(entity.getClientId().getId());
+			client.setDedupClientId(entity.getClientId().getDedupClientId());
 			model.setClient(client);
 			model.setClientLink("/hmis-clientapi/rest/v"+entity.getClientId().getSchemaYear()+"/clients/"+entity.getClientId().getId());
 		}

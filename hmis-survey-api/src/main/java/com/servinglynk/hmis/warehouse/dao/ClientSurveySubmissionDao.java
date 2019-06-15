@@ -14,16 +14,18 @@ public interface ClientSurveySubmissionDao {
 	
 	ClientSurveySubmissionEntity getById(UUID id);
 	
-	List<ClientSurveySubmissionEntity> getAllClientSurveySubmissions(UUID clientId, Integer startIndex, Integer maxItems);
+	List<ClientSurveySubmissionEntity> getAllClientSurveySubmissions(UUID clientId, String queryString, String sortField, String order, Integer startIndex, Integer maxItems);
 	
-	long clientSurveySubmissionsCount(UUID clientId);
+	long clientSurveySubmissionsCount(UUID clientId, String queryString);
 	List<ClientSurveySubmissionEntity> getSearchClientSurveySubmissions(String name, UUID globalClientId,
-			Integer startIndex, Integer maxItems);
+			Integer startIndex, Integer maxItems,String sortField,String order);
 
 	long clientSurveySubmissionsCount(String name, UUID globalClientId);
 	
 	List<ClientSurveySubmissionEntity> getAllSurveySubmissions(UUID surveyId, UUID submissionId);
 
 	void deleteSubmission(ClientSurveySubmissionEntity entity);
+
+	List<ClientSurveySubmissionEntity> getSubmissionBySurveyIdAndClientId(UUID surveyId, UUID clientId);
 
 }

@@ -43,7 +43,7 @@ public class ClientsControllerV2  extends BaseController {
 	                       @RequestParam(value="maxItems", required=false) Integer maxItems,
 	                       HttpServletRequest request) throws Exception {
 	           if (startIndex == null) startIndex =0;
-	           if (maxItems == null || maxItems > 30) maxItems =30;
+	           if (maxItems == null || maxItems > 100) maxItems =100;
 	           Session session = sessionHelper.getSession(request);
 		        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 		        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
