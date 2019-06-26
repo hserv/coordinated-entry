@@ -129,8 +129,10 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 	   if(surveyEntity==null) throw new ResourceNotFoundException("Survey not found "+surveyId);
 	   
 	   List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSubmissionResponses(surveyId, submissionId, startIndex, maxItems);
-   
-	   if(entities.isEmpty())  throw new ResourceNotFoundException("Submission not found"+submissionId);
+
+       long count = daoFactory.getResponseEntityDao().getSubmissionResponsesCount(surveyId,submissionId);
+	   
+	   if(count==0)  throw new ResourceNotFoundException("Submission not found"+submissionId);
 	   
 	   
 	   
@@ -139,12 +141,13 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 		   responses.addResponse(ResponseConverterV3.entityToModel(entity,clientEntity));
 	   }
 	   
-       long count = daoFactory.getResponseEntityDao().getSubmissionResponsesCount(surveyId,submissionId);
+
        SortedPagination pagination = new SortedPagination();
 
        pagination.setFrom(startIndex);
        pagination.setReturned(responses.getResponses().size());
        pagination.setTotal((int)count);
+       pagination.setMaximum(100);
        responses.setPagination(pagination);
        return responses; 
 

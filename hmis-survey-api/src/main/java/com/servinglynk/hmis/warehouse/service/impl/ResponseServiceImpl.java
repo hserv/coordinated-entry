@@ -126,8 +126,10 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 	   if(surveyEntity==null) throw new ResourceNotFoundException("Survey not found "+surveyId);
 	   
 	   List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSubmissionResponses(surveyId, submissionId, startIndex, maxItems);
-   
-	   if(entities.isEmpty())  throw new ResourceNotFoundException("Submission not found"+submissionId);
+
+       long count = daoFactory.getResponseEntityDao().getSubmissionResponsesCount(surveyId,submissionId);
+	   
+	   if(count==0)  throw new ResourceNotFoundException("Submission not found"+submissionId);
 	   
 	   
 	   
@@ -135,11 +137,12 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 		   responses.addResponse(ResponseConverter.entityToModel(entity));
 	   }
 	   
-       long count = daoFactory.getResponseEntityDao().getSubmissionResponsesCount(surveyId,submissionId);
+
        SortedPagination pagination = new SortedPagination();
 
        pagination.setFrom(startIndex);
        pagination.setReturned(responses.getResponses().size());
+       pagination.setMaximum(100);
        pagination.setTotal((int)count);
        responses.setPagination(pagination);
        return responses; 
@@ -183,6 +186,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
  
         pagination.setFrom(startIndex);
         pagination.setReturned(Responses.getResponses().size());
+        pagination.setMaximum(100);
         pagination.setTotal((int)count);
         Responses.setPagination(pagination);
         return Responses; 
