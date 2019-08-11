@@ -2,18 +2,21 @@ package com.servinglynk.hmis.warehouse.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.servinglynk.hmis.warehouse.common.MQDateUtil;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
 import com.servinglynk.hmis.warehouse.core.model.Sort;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.AMQEvent;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
@@ -41,6 +44,25 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		
 		daoFactory.getClientSurveySubmissionDao().create(entity);
 		
+		
+		// creating active mq request
+		AMQEvent amqEvent = new AMQEvent();
+
+		amqEvent.setEventType("survey.responses");
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("clientId", clientId);
+		data.put("dedupClientId", clientEntity.getDedupClientId());
+		data.put("submissionId", submissionId);
+		data.put("surveyId",surveyId);
+		data.put("submissionDate",MQDateUtil.dateTimeToString(submissionDate));
+		data.put("deleted", false);
+		data.put("projectGroupCode", SecurityContextUtil.getUserProjectGroup());
+		data.put("userId",SecurityContextUtil.getUserAccount().getAccountId());
+		amqEvent.setPayload(data);
+		amqEvent.setModule("ces");
+		amqEvent.setSubsystem("survey");
+		messageSender.sendAmqMessage(amqEvent);
+	
 	}
 	
 	@Transactional
