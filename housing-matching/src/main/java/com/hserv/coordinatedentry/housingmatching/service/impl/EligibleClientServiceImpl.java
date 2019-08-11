@@ -2,7 +2,9 @@ package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -39,12 +41,14 @@ import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
+import com.servinglynk.hmis.warehouse.client.MessageSender;
 import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
 import com.servinglynk.hmis.warehouse.core.model.Parameters;
 import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.model.AMQEvent;
 
 @Service
 public class EligibleClientServiceImpl implements EligibleClientService {
@@ -61,6 +65,9 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	
 	@Autowired
 	RepositoryFactory repositoryFactory;
+	
+	@Autowired
+	MessageSender messageSender;
 
 	
 /*	public List<EligibleClientModel> getEligibleClientsBack(int num , String programType) {
@@ -172,6 +179,22 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		if(client!=null && !client.isDeleted()){
 				eligibleClientsRepository.delete(client);
 			status = true;
+			
+			// creating active mq request
+			AMQEvent amqEvent = new AMQEvent();
+	
+			amqEvent.setEventType("house.matching.activelist");
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("clientId", client.getClientId());
+			data.put("dedupClientId", client.getClientDedupId());
+			data.put("deleted", true);
+			data.put("projectGroupCode", client.getProjectGroupCode());
+			data.put("userId", client.getUserId());
+			data.put("clientId",client.getClientId());
+			amqEvent.setPayload(data);
+			amqEvent.setModule("ces");
+			amqEvent.setSubsystem("housematching");
+			messageSender.sendAmqMessage(amqEvent);
 		}
 		return status;
 	}

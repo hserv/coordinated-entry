@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -22,6 +23,7 @@ import com.servinglynk.hmis.warehouse.core.web.interceptor.SessionHelper;
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
 @EnableAsync
+@Import(com.servinglynk.hmis.warehouse.config.AMQConfiguration.class)
 public class Application extends SpringBootServletInitializer {
     
 	
