@@ -57,8 +57,11 @@ public class ResponseEntityDaoImpl extends QueryExecutorImpl implements Response
    }
 public ResponseEntity getResponseBySubmission(UUID submissionId, UUID responseId) {
     DetachedCriteria criteria=DetachedCriteria.forClass(ResponseEntity.class);
-
-	return null;
+    criteria.add(Restrictions.eq("id",responseId));
+    criteria.add(Restrictions.eq("submissionId", submissionId));
+    List<ResponseEntity> entities = (List<ResponseEntity>) findByCriteria(criteria);
+    if(entities.isEmpty()) return null;
+	return entities.get(0);
 }
 public List<ResponseEntity> getAllSubmissionResponses(UUID surveyId, UUID submissionId, Integer startIndex,
 		Integer maxItems) {

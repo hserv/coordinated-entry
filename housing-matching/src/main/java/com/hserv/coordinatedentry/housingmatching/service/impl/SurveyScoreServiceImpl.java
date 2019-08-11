@@ -2,7 +2,9 @@ package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,10 @@ import com.hserv.coordinatedentry.housingmatching.translator.SurveyScoreTranslat
 import com.hserv.coordinatedentry.housingmatching.util.Constants;
 import com.hserv.coordinatedentry.housingmatching.util.DateUtil;
 import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
+import com.servinglynk.hmis.warehouse.client.MessageSender;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.model.AMQEvent;
 
 
 
@@ -62,6 +66,9 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 	
 	@Autowired
 	BatchProcessService batchProcessService;
+	
+	@Autowired
+	MessageSender messageSender;
 	
 	@Autowired
 	Environment env;
@@ -171,6 +178,23 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 							eligibleClient.setClientLink(client.getLink());		
 			
 						eligibleClientsRepository.save(eligibleClient);	
+						
+
+						// creating active mq request
+						AMQEvent amqEvent = new AMQEvent();
+				
+						amqEvent.setEventType("house.matching.activelist");
+						Map<String, Object> data = new HashMap<String, Object>();
+						data.put("clientId", client.getClientId());
+						data.put("dedupClientId", eligibleClient.getClientDedupId());
+						data.put("deleted", false);
+						data.put("projectGroupCode", eligibleClient.getProjectGroupCode());
+						data.put("userId", eligibleClient.getUserId());
+						data.put("clientId",eligibleClient.getClientId());
+						amqEvent.setPayload(data);
+						amqEvent.setModule("ces");
+						amqEvent.setSubsystem("housematching");
+						messageSender.sendAmqMessage(amqEvent);
 						
 					    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient,false);
 						if(matches.isEmpty()){

@@ -7,7 +7,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<parent-version>2.14.20</parent-version>
+		<parent-version>2.15.13</parent-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 		<log4j-version>1.2.17</log4j-version>
@@ -152,7 +152,11 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>2.5.4</version>
 		</dependency>
-
+ <dependency>
+	<groupId>com.servinglynk.hmis.warehouse</groupId>
+	<artifactId>mq-core-client</artifactId>
+	<version>${parent-version}</version>
+	</dependency>
 		<dependency>
 			<groupId>com.servinglynk.hmis.warehouse</groupId>
 			<artifactId>hmis-core-common</artifactId>
@@ -215,11 +219,16 @@
 			<artifactId>hmis-base-serialize</artifactId>
 			<version>2.14.20</version>
 		</dependency>
+		<dependency>
+    <groupId>javax.annotation</groupId>
+    <artifactId>javax.annotation-api</artifactId>
+    <version>1.3.2</version>
+</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
+	<!-- 		<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
@@ -240,7 +249,7 @@
 					<webXml>${project.basedir}\src\main\webapp\WEB-INF\web.xml</webXml>
 				</configuration>
 			</plugin>
-			<plugin>
+ -->			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>

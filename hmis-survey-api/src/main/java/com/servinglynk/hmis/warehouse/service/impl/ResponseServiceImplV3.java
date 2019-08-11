@@ -1,16 +1,20 @@
 package com.servinglynk.hmis.warehouse.service.impl; 
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.servinglynk.hmis.warehouse.common.MQDateUtil;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.AMQEvent;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
@@ -24,6 +28,7 @@ import com.servinglynk.hmis.warehouse.service.exception.ResourceNotFoundExceptio
 import com.servinglynk.hmis.warehouse.service.exception.ResponseNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
 import com.servinglynk.hmis.warehouse.util.DateUtil;
+import com.servinglynk.hmis.warehouse.util.SecurityContextUtil;
 
 
 @Component
@@ -99,6 +104,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 
 	   for(Response response : responses.getResponses()){
 		   ResponseEntity entity = daoFactory.getResponseEntityDao().getResponseBySubmission(submissionId,response.getResponseId());
+	       if(entity==null) throw new ResponseNotFoundException();
 		   if(entity!=null){
 			   this.updateResponse(response, caller);
 		   }
@@ -117,6 +123,27 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 	   for(ClientSurveySubmissionEntity entity : entities) {
 		   daoFactory.getClientSurveySubmissionDao().deleteSubmission(entity);
 	   }
+	   
+		// creating active mq request
+		if(!entities.isEmpty()){
+			// creating active mq request
+			AMQEvent amqEvent = new AMQEvent();
+
+			amqEvent.setEventType("survey.responses");
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("clientId", responses.get(0).getClient().getId());
+			data.put("dedupClientId", responses.get(0).getClient().getDedupClientId());
+			data.put("submissionId", submissionId);
+			data.put("surveyId",surveyId);
+			data.put("submissionDate",MQDateUtil.dateTimeToString(entities.get(0).getSubmissionDate()));
+			data.put("deleted", true);
+			data.put("projectGroupCode", SecurityContextUtil.getUserProjectGroup());
+			data.put("userId",SecurityContextUtil.getUserAccount().getAccountId());
+			amqEvent.setPayload(data);
+			amqEvent.setModule("ces");
+			amqEvent.setSubsystem("survey");
+			messageSender.sendAmqMessage(amqEvent);
+		} 
 
    }
 
