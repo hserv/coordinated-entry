@@ -48,7 +48,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		// creating active mq request
 		AMQEvent amqEvent = new AMQEvent();
 
-		amqEvent.setEventType("survey.responses");
+		amqEvent.setEventType("survey.submissions");
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("clientId", clientId);
 		data.put("dedupClientId", clientEntity.getDedupClientId());
