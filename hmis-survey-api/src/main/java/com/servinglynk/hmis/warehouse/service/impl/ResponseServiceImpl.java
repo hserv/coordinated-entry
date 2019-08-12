@@ -126,7 +126,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 			// creating active mq request
 			AMQEvent amqEvent = new AMQEvent();
 
-			amqEvent.setEventType("survey.responses");
+			amqEvent.setEventType("survey.submissions");
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("clientId", responses.get(0).getClient().getId());
 			data.put("dedupClientId", responses.get(0).getClient().getDedupClientId());
