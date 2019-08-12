@@ -183,7 +183,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 						// creating active mq request
 						AMQEvent amqEvent = new AMQEvent();
 				
-						amqEvent.setEventType("house.matching.activelist");
+						amqEvent.setEventType("eligibleClients");
 						Map<String, Object> data = new HashMap<String, Object>();
 						data.put("clientId", client.getClientId());
 						data.put("dedupClientId", eligibleClient.getClientDedupId());
@@ -195,7 +195,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 						amqEvent.setModule("ces");
 						amqEvent.setSubsystem("housematching");
 						messageSender.sendAmqMessage(amqEvent);
-						
+		
 					    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient,false);
 						if(matches.isEmpty()){
 							Match  match = new Match();
