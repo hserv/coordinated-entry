@@ -1,4 +1,4 @@
-package com.hserv.coordinatedentry.housingmatching.service.impl;
+package com.servinglynk.hmis.warehouse.service.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,35 +8,13 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.hserv.coordinatedentry.housingmatching.dao.PropertyDao;
-import com.hserv.coordinatedentry.housingmatching.entity.PropertyEntity;
-
-
-
-public class PropertyReaderServiceImpl {
-
-	@Autowired
-	PropertyDao propertyDao;
+public class PropertyReader {
 	
-	@Autowired
-	Environment env;
-
-	@Transactional
-	public String readSharingRuleProperty() {
-			PropertyEntity propertyEntity =propertyDao.readSharingRuleProperty();
-			if(propertyEntity==null)
-								return null;
-			else
-			return	propertyEntity.getValue();
-	}
-	
-	
-	private final static Logger logger = Logger.getLogger(PropertyReaderServiceImpl.class);
+	private final static Logger logger = Logger.getLogger(PropertyReader.class);
 
 	private Properties properties = new Properties();
 	
@@ -99,5 +77,16 @@ public class PropertyReaderServiceImpl {
 		logger.info("Initializing property cache for table[" + table + "] service [" + serviceName + "] .........................END");
 	}
 
+
+	public void refresh(String serviceName) {
+		load("common");
+		load("core-service");
+		load(serviceName);
+
+	}
+
+	public String getProperty(String name) {
+		return properties.getProperty(name);
+	}
 
 }

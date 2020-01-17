@@ -4,14 +4,9 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
-
-
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.servinglynk.hmis.warehouse.client.MessageSender;
 import com.servinglynk.hmis.warehouse.dao.ParentDaoFactory;
 import com.servinglynk.hmis.warehouse.dao.ParentDaoFactoryImpl;
 import com.servinglynk.hmis.warehouse.service.Service;
@@ -29,6 +24,9 @@ public abstract class ServiceBase implements Service {
 	@Autowired
 	protected ParentServiceFactory serviceFactory;
 
+	@Autowired
+	protected MessageSender messageSender;
+	
 	public ParentDaoFactory getParentDaoFactory() {
 		return daoFactory;
 	}

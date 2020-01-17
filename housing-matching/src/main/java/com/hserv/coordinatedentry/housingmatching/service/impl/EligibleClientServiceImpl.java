@@ -2,7 +2,9 @@ package com.hserv.coordinatedentry.housingmatching.service.impl;
 
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -14,7 +16,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -28,23 +29,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsDaoV3;
 import com.hserv.coordinatedentry.housingmatching.dao.EligibleClientsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
-import com.hserv.coordinatedentry.housingmatching.entity.HousingInventory;
-import com.hserv.coordinatedentry.housingmatching.entity.Match;
 import com.hserv.coordinatedentry.housingmatching.model.EligibleClientModel;
 import com.hserv.coordinatedentry.housingmatching.service.EligibleClientService;
 import com.hserv.coordinatedentry.housingmatching.translator.EligibleClientsTranslator;
 import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
+import com.servinglynk.hmis.warehouse.client.MessageSender;
 import com.servinglynk.hmis.warehouse.client.model.SearchRequest;
 import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
 import com.servinglynk.hmis.warehouse.core.model.JSONObjectMapper;
 import com.servinglynk.hmis.warehouse.core.model.Parameters;
-import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.model.AMQEvent;
 
 @Service
 public class EligibleClientServiceImpl implements EligibleClientService {
@@ -61,6 +60,9 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 	
 	@Autowired
 	RepositoryFactory repositoryFactory;
+	
+	@Autowired
+	MessageSender messageSender;
 
 	
 /*	public List<EligibleClientModel> getEligibleClientsBack(int num , String programType) {
@@ -172,8 +174,25 @@ public class EligibleClientServiceImpl implements EligibleClientService {
 		if(client!=null && !client.isDeleted()){
 				eligibleClientsRepository.delete(client);
 			status = true;
+			
+			// creating active mq request
+			AMQEvent amqEvent = new AMQEvent();
+	
+			amqEvent.setEventType("eligibleClients");
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("clientId", client.getClientId());
+			data.put("dedupClientId", client.getClientDedupId());
+			data.put("deleted", true);
+			data.put("projectGroupCode", client.getProjectGroupCode());
+			data.put("userId", client.getUserId());
+			data.put("clientId",client.getClientId());
+			amqEvent.setPayload(data);
+			amqEvent.setModule("ces");
+			amqEvent.setSubsystem("housematching");
+			messageSender.sendAmqMessage(amqEvent);
 		}
-		return status;
+		
+			return status;
 	}
 
 	@Override

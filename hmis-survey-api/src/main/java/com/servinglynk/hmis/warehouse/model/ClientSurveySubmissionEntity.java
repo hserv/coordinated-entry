@@ -1,20 +1,17 @@
 package com.servinglynk.hmis.warehouse.model;
 
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -37,9 +34,9 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	private ClientEntity clientId;
 
 		
-	@Type(type="pg-uuid")
-	@Column(name="SURVEY_ID")
-	private UUID surveyId; 
+	@JoinColumn(name="SURVEY_ID")
+	@OneToOne(fetch=FetchType.LAZY)
+	private SurveyEntity surveyId; 
 	
 	@Type(type="pg-uuid")
 	@Column(name="SUBMISSION_ID")
@@ -48,6 +45,10 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@Type(type="pg-uuid")
    	@Column(name="GLOBAL_ENROLLMENT_ID")
    	private UUID globalEnrollmentId;
+	
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")	
+	@Column(name="SUBMISSION_DATE")
+	private LocalDateTime submissionDate;
 
 	public UUID getId() {
 		return id;
@@ -66,11 +67,11 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 		this.clientId = clientId;
 	}
 
-	public UUID getSurveyId() {
+	public SurveyEntity getSurveyId() {
 		return surveyId;
 	}
 
-	public void setSurveyId(UUID surveyId) {
+	public void setSurveyId(SurveyEntity surveyId) {
 		this.surveyId = surveyId;
 	}
 
@@ -90,9 +91,11 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 		this.globalEnrollmentId = globalEnrollmentId;
 	}
 
-	
-	
-    
-    
+	public LocalDateTime getSubmissionDate() {
+		return submissionDate;
+	}
 
+	public void setSubmissionDate(LocalDateTime submissionDate) {
+		this.submissionDate = submissionDate;
+	}
 }

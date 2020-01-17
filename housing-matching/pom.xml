@@ -20,6 +20,7 @@
 		<java.version>1.8</java.version>
 		<org.mapstruct.version>1.0.0.Final</org.mapstruct.version>
 		<hikaricp.version>2.4.3</hikaricp.version>
+				<parent-version>2.15.13</parent-version>
 	</properties>
 
 
@@ -32,14 +33,45 @@
 			<version>3.2.0.GA</version>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>4.0.0.RELEASE</version>
-        </dependency>		
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-aop</artifactId>
+    <version>4.3.25.RELEASE</version>
+</dependency>
+		
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-core</artifactId>
+    <version>4.2.12.RELEASE</version>
+    <exclusions>
+    					<exclusion>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-aop</artifactId>
+				</exclusion>
+    </exclusions>
+</dependency>
+ <dependency>
+	<groupId>com.servinglynk.hmis.warehouse</groupId>
+	<artifactId>mq-core-client</artifactId>
+	<version>${parent-version}</version>
+				<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+				 <groupId>org.apache.logging.log4j</groupId>
+				    <artifactId>log4j-slf4j-impl</artifactId>
+				</exclusion>
+				<exclusion>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-aop</artifactId>
+				</exclusion>
+			</exclusions>
+	</dependency>
 		<dependency>
 			<groupId>com.servinglynk.hmis.warehouse</groupId>
 			<artifactId>core-client</artifactId>
-			<version>2.0</version>
+			<version>${parent-version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -50,11 +82,21 @@
 		<dependency>
 			<groupId>com.servinglynk.hmis.warehouse</groupId>
 			<artifactId>hmis-base-serialize</artifactId>
-			<version>2.14.20</version>
+			<version>${parent-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>log4j-over-slf4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -123,7 +165,7 @@
 			<artifactId>xstream</artifactId>
 			<version>1.4.7</version>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
@@ -132,7 +174,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 	<build>
 		<plugins>
