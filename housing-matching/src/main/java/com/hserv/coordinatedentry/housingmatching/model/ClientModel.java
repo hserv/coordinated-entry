@@ -13,6 +13,7 @@ public class ClientModel {
 	private String phoneNumber;
 	private String emailAddress;
 	private UUID clientDedupId;
+	private String schemaYear;
 	
 	public String getFirstName() {
 		return firstName;
@@ -61,5 +62,11 @@ public class ClientModel {
 	}
 	public void setClientDedupId(UUID clientDedupId) {
 		this.clientDedupId = clientDedupId;
+	}
+	public String getSchemaYear() {
+		return schemaYear;
+	}
+	public void setSchemaYear(String schemaYear) {
+		this.schemaYear = schemaYear;
 	}
 }

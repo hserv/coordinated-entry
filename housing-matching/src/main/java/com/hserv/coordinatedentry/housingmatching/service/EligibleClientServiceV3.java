@@ -15,4 +15,6 @@ public interface EligibleClientServiceV3 {
 	
 	EligibleClientModel getEligibleClientDetail(UUID clientDedupId,String version);
 
+	boolean deleteEligibleClientByDedupId(UUID dedupClientId);
+
 }

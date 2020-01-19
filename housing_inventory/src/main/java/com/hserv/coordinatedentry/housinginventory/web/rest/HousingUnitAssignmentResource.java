@@ -29,7 +29,7 @@ import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @RestController
-@RequestMapping("/housing-units")
+@RequestMapping({"/housing-units","/housingunits"})
 public class HousingUnitAssignmentResource extends BaseResource{
 
 	

@@ -1,7 +1,6 @@
 package com.hserv.coordinatedentry.housinginventory.web.rest;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,13 +27,8 @@ import com.hserv.coordinatedentry.housinginventory.service.HousingUnitAddressSer
 import com.hserv.coordinatedentry.housinginventory.web.rest.util.HeaderUtil;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
-import java.net.URI;
-
 @RestController
-@RequestMapping("/housing-units")
+@RequestMapping({"/housing-units","/housingunits"})
 public class HousingUnitAddressResource extends BaseResource{
 
 	@Autowired
