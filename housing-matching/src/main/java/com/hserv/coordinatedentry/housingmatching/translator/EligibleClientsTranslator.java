@@ -77,7 +77,9 @@ public class EligibleClientsTranslator {
 				clientModel.setMiddleName(eligibleClient.getClient().getMiddleName());
 				clientModel.setPhoneNumber(eligibleClient.getClient().getPhoneNumber());
 				clientModel.setClientDedupId(eligibleClient.getClient().getDedupClientId());
+				clientModel.setSchemaYear(eligibleClient.getClient().getSchemaYear());
 				eligibleClientModel.setClient(clientModel);
+			
 			}
 			eligibleClientModel.setBonusScore(eligibleClient.getBonusScore());
 			eligibleClientModel.setTotalScore(eligibleClient.getTotalScore());
@@ -93,17 +95,17 @@ public class EligibleClientsTranslator {
 			 eligibleClient.setClientId(eligibleClientModel.getClientId());
 		}
 
-		eligibleClient.setRemarks(eligibleClientModel.getRemarks());
-		eligibleClient.setProgramType(eligibleClientModel.getProgramType());
-		eligibleClient.setMatched(eligibleClientModel.getMatched());
-		eligibleClient.setSpdatLabel(eligibleClientModel.getSpdatLabel().getValue());
-		eligibleClient.setSurveyScore(eligibleClientModel.getSurveyScore());
-		eligibleClient.setSurveyDate(eligibleClientModel.getSurveyDate());
-		eligibleClient.setZipCode(eligibleClientModel.getZipcode());
-		eligibleClient.setSurveyType(eligibleClientModel.getSurveyType());
-		eligibleClient.setClientLink(eligibleClientModel.getLink());
-		eligibleClient.setIgnoreMatchProcess(eligibleClientModel.isIgnoreMatchProcess());
-		eligibleClient.setClientDedupId(eligibleClientModel.getClientDedupId());
+		if(eligibleClientModel.getRemarks()!=null) eligibleClient.setRemarks(eligibleClientModel.getRemarks());
+		if(eligibleClientModel.getProgramType()!=null)eligibleClient.setProgramType(eligibleClientModel.getProgramType());
+		if(eligibleClientModel.getMatched()!=null) eligibleClient.setMatched(eligibleClientModel.getMatched());
+		if(eligibleClientModel.getSpdatLabel()!=null) eligibleClient.setSpdatLabel(eligibleClientModel.getSpdatLabel().getValue());
+		if(eligibleClientModel.getSurveyScore()!=null) eligibleClient.setSurveyScore(eligibleClientModel.getSurveyScore());
+		if(eligibleClientModel.getSurveyDate()!=null) eligibleClient.setSurveyDate(eligibleClientModel.getSurveyDate());
+		if(eligibleClientModel.getZipcode()!=null) eligibleClient.setZipCode(eligibleClientModel.getZipcode());
+		if(eligibleClientModel.getSurveyType()!=null) eligibleClient.setSurveyType(eligibleClientModel.getSurveyType());
+		if(eligibleClientModel.getLink()!=null) eligibleClient.setClientLink(eligibleClientModel.getLink());
+        eligibleClient.setIgnoreMatchProcess(eligibleClientModel.isIgnoreMatchProcess());
+		if(eligibleClientModel.getClientDedupId()!=null) eligibleClient.setClientDedupId(eligibleClientModel.getClientDedupId());
 		MatchStrategy strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 		int additionalScore = strategy.getAdditionalScore(19,eligibleClientModel.getSpdatLabel().getValue());
 		eligibleClient.setCocScore(eligibleClientModel.getSurveyScore().intValue()+additionalScore);

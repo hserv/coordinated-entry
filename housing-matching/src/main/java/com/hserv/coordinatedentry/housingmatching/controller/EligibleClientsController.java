@@ -107,23 +107,6 @@ public class EligibleClientsController extends BaseController {
 			responseEntity = ResponseEntity.ok("{\"updated\": \""+ status +"\"}\"");
 		return responseEntity;
 	}*/
-
-	/**
-	 * Deletes the entire eligible-clients list.
-	 * 
-	 */
-	@RequestMapping(value = "", method = RequestMethod.DELETE)
-	@APIMapping(value="delete-eligible-clients")
-	public ResponseEntity<String> deleteEligibleClients() {
-		ResponseEntity<String> responseEntity = null;
-		try {
-			boolean status = eligibleClientService.deleteAll();
-			responseEntity = ResponseEntity.ok("{\"deleted\": \""+ status +"\"}\"");
-		} catch (Exception ex) {
-			responseEntity = new ResponseEntity<String>("fail", HttpStatus.EXPECTATION_FAILED);
-		}
-		return responseEntity;
-	}
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	@APIMapping(value="create-eligible-clients")
