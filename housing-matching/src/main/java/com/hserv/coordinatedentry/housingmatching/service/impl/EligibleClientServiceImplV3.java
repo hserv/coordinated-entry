@@ -54,10 +54,21 @@ public class EligibleClientServiceImplV3 implements EligibleClientServiceV3 {
 
 	public EligibleClientModel getEligibleClientDetail(UUID clientDedupId,String version) {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		EligibleClient eligibleClient = eligibleClientsDao.getEligibleClients(clientDedupId, projectGroup);
-		if(eligibleClient==null) throw new ResourceNotFoundException("Eligible not found "+clientDedupId);
+		List<EligibleClient> eligibleClient = eligibleClientsRepository.getActiveEligibleClientByDedupId( projectGroup,clientDedupId.toString());
+		if(eligibleClient.isEmpty()) throw new ResourceNotFoundException("Eligible not found "+clientDedupId);
 		
-		return eligibleClientsTranslator.translateV2(eligibleClient);
+		return eligibleClientsTranslator.translateV2(eligibleClient.get(0));
+	}
+
+
+
+	@Override
+	public boolean deleteEligibleClientByDedupId(UUID dedupClientId) {
+		String projectGroup = SecurityContextUtil.getUserProjectGroup();
+		List<EligibleClient> eligibleClient = eligibleClientsRepository.getActiveEligibleClientByDedupId( projectGroup,dedupClientId.toString());
+		if(eligibleClient.isEmpty()) throw new ResourceNotFoundException("Eligible not found "+dedupClientId);
+		eligibleClientsRepository.delete(eligibleClient.get(0));
+		return true;
 	}
 
 }

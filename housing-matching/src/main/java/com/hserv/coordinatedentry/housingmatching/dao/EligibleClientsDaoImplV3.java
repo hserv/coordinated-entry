@@ -36,25 +36,6 @@ public class EligibleClientsDaoImplV3  implements EligibleClientsDaoV3 {
 	@Autowired
 	private ClientRepository clientRepository;
 	
-	public EligibleClient getEligibleClients(UUID clientDedupId,String projectGroupCode) {
-		
-		org.hibernate.Session session =  entityManager.unwrap(org.hibernate.Session.class);
-		
-		DetachedCriteria criteria = DetachedCriteria.forClass(EligibleClient.class);
-		criteria.createAlias("client", "client");
-		criteria.add(Restrictions.eq("projectGroupCode", projectGroupCode));
-		criteria.add(Restrictions.eq("deleted", false));
-		criteria.add(Restrictions.eq("client.dedupClientId", clientDedupId));
-		criteria.add(Restrictions.eq("client.projectGroupCode", projectGroupCode));
-		criteria.addOrder(Order.desc("dateCreated"));
-
-		Criteria eCriteria = criteria.getExecutableCriteria(session);
-		List<EligibleClient> enities =  eCriteria.list();
-		if(enities.isEmpty()) return null;
-		return enities.get(0);
-	}
-
-	
 	public List<EligibleClient> getActiveEligibleClientsWithSharedClients(String projectGroupCode,List<UUID> sharedclients,Integer limit,Integer start){
 	
 		List<EligibleClient> eligibleClients = new ArrayList<>();

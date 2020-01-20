@@ -28,7 +28,7 @@ import com.servinglynk.hmis.warehouse.client.search.ISearchServiceClient;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @RestController
-@RequestMapping("/v2/housing-units")
+@RequestMapping({"/v2/housing-units","/v2/housingunits"})
 public class HousingInventoryResourceV2  extends BaseResource{
 	
 

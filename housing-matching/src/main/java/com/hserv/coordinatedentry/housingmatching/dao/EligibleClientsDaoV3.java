@@ -7,7 +7,7 @@ import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 
 public interface EligibleClientsDaoV3 {
 
-	EligibleClient getEligibleClients(UUID clientDedupId,String projectGroupCode);
+//	EligibleClient getEligibleClients(UUID clientDedupId,String projectGroupCode);
 	
 	List<EligibleClient> getActiveEligibleClientsWithSharedClients(String projectGroupCode,List<UUID> sharedclients,Integer limit,Integer start);
 	List<EligibleClient> getAllEligibleClientsWithSharedClients(String projectGroupCode,List<UUID> clients, Integer limit,Integer start);

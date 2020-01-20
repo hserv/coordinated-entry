@@ -88,26 +88,27 @@ public class EligibleClientsControllerV3 extends BaseController {
 
 		@Override
 		public Resource<EligibleClientModel> toResource(EligibleClient arg0) {
-			EligibleClientModel model = eligibleClientsTranslator.translate(arg0);
-			if(arg0.getClient()!=null) {
-				ClientModel clientModel = new ClientModel();
-				
-				String projectGroup = SecurityContextUtil.getUserProjectGroup();
-				List<Client> clients = clientRepository.findByDedupClientIdAndProjectGroupCodeOrderBySchemaYearDesc(arg0.getClientDedupId(), projectGroup);
-				Client client = arg0.getClient();
-				if(!clients.isEmpty()) client = clients.get(0);
-				if(client.getDob()!=null) clientModel.setDob(Date.from( client.getDob().atZone(ZoneId.systemDefault()).toInstant()));
-				clientModel.setEmailAddress(client.getEmailAddress());
-				clientModel.setFirstName(client.getFirstName());
-				clientModel.setLastName(client.getLastName());
-				clientModel.setMiddleName(client.getMiddleName());
-				clientModel.setPhoneNumber(client.getPhoneNumber());
-				clientModel.setId(client.getId());
-				model.setClient(clientModel);
-			}
+			EligibleClientModel model = eligibleClientsTranslator.translateV2(arg0);
+			/*
+			 * if(arg0.getClient()!=null) { ClientModel clientModel = new ClientModel();
+			 * 
+			 * String projectGroup = SecurityContextUtil.getUserProjectGroup(); List<Client>
+			 * clients =
+			 * clientRepository.findByDedupClientIdAndProjectGroupCodeOrderBySchemaYearDesc(
+			 * arg0.getClientDedupId(), projectGroup); Client client = arg0.getClient();
+			 * if(!clients.isEmpty()) client = clients.get(0); if(client.getDob()!=null)
+			 * clientModel.setDob(Date.from(
+			 * client.getDob().atZone(ZoneId.systemDefault()).toInstant()));
+			 * clientModel.setEmailAddress(client.getEmailAddress());
+			 * clientModel.setFirstName(client.getFirstName());
+			 * clientModel.setLastName(client.getLastName());
+			 * clientModel.setMiddleName(client.getMiddleName());
+			 * clientModel.setPhoneNumber(client.getPhoneNumber());
+			 * clientModel.setId(client.getId()); model.setClient(clientModel); }
+			 */
 			Resource<EligibleClientModel> resource = new Resource<EligibleClientModel>(model);
-			if(arg0.getClientLink()!=null)
-				resource.add(new Link(arg0.getClientLink()).withRel("client"));
+			if(arg0.getClient()!=null)
+				resource.add(new Link("/hmis-clientapi/rest/"+arg0.getClient().getSchemaYear()+"/clients/"+arg0.getClient().getId()).withRel("client"));
 			return resource;
 		}
 	}
@@ -139,11 +140,7 @@ public class EligibleClientsControllerV3 extends BaseController {
 	@APIMapping(value="create-eligible-client")
 	public ResponseEntity<String> createEligibleClient(
 			 @RequestBody EligibleClientModel eligibleClientModel,HttpServletRequest request) throws Exception {
-		
-		String trustedApp= trustedAppHelper.retrieveTrustedAppId(request);
-		Session session = sessionHelper.getSession(request);
-		
-		BaseClient client = eligibleClientService.getClientInfoByDedupId(eligibleClientModel.getClientDedupId(), trustedApp, session.getToken());
+		EligibleClientModel client =  eligibleClientServiceV3.getEligibleClientDetail(eligibleClientModel.getClientDedupId(),"v2");
 		eligibleClientModel.setClientId(client.getClientId());
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -155,19 +152,52 @@ public class EligibleClientsControllerV3 extends BaseController {
 		return responseEntity;
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	
+
+	@RequestMapping(method = RequestMethod.PUT,value = "/{dedupClientId}")
+	@APIMapping(value="create-eligible-client")
+	public ResponseEntity<String> updateEligibleClient(@PathVariable UUID dedupClientId,
+			 @RequestBody EligibleClientModel eligibleClientModel,HttpServletRequest request) throws Exception {		
+		EligibleClientModel client =  eligibleClientServiceV3.getEligibleClientDetail(dedupClientId,"v2");
+		ResponseEntity<String> responseEntity = null;
+		try {
+			eligibleClientModel.setClientId(client.getClientId());
+			eligibleClientModel.setClientDedupId(client.getClientDedupId());
+			boolean status = eligibleClientService.updateEligibleClient(client.getClientId(),eligibleClientModel);
+			responseEntity = ResponseEntity.ok("{\"added\": \""+ status +"\"}\"");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			responseEntity = new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+		}
+		return responseEntity;
+	}
+	
+	@RequestMapping(value = "/{dedupClientId}", method = RequestMethod.GET)
 	@APIMapping(value="get-eligible-client-by-id")
-	public ResponseEntity<Resource>  getEligibleClientById(@PathVariable UUID id) {
-		EligibleClientModel client =  eligibleClientServiceV3.getEligibleClientDetail(id,"v2");
+	public ResponseEntity<Resource>  getEligibleClientByDedupId(@PathVariable UUID dedupClientId) {
+		EligibleClientModel client =  eligibleClientServiceV3.getEligibleClientDetail(dedupClientId,"v2");
 		Resource<EligibleClientModel> resource =null;
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
-		List<Client> clients = clientRepository.findByDedupClientIdAndProjectGroupCodeOrderBySchemaYearDesc(client.getClientDedupId(), projectGroup);
-
-		if(!clients.isEmpty())
-			resource = new Resource<EligibleClientModel>(client,new Link("/hmis-clientapi/rest/"+clients.get(0).getId()+"/clients/"+clients.get(0).getId()).withRel("client")); 
+		if(client.getClient()!=null)
+			resource = new Resource<EligibleClientModel>(client,new Link("/hmis-clientapi/rest/"+client.getClient().getSchemaYear()+"/clients/"+client.getClient().getId()).withRel("client")); 
 		else
 			resource = new Resource<EligibleClientModel>(client);
 		return new ResponseEntity<Resource>(resource,HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/{dedupClientId}", method = RequestMethod.DELETE)
+	@APIMapping(value="get-eligible-client-by-id")
+	public ResponseEntity<String>  deleteEligibleClientByDedupId(@PathVariable UUID dedupClientId) {
+		ResponseEntity<String> responseEntity = null;
+		try {
+			boolean status =  eligibleClientServiceV3.deleteEligibleClientByDedupId(dedupClientId);
+			responseEntity = ResponseEntity.ok("{\"deleted\": \""+ status +"\"}\"");
+		} catch (Exception ex) {
+			responseEntity = new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+		}
+		return responseEntity;
+
 	}
 
 }
