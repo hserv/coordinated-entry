@@ -126,7 +126,29 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		try{
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
 		
-		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponses(session.getAccount().getProjectGroup().getProjectGroupCode());
+		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponses(session.getAccount().getProjectGroup().getProjectGroupCode(),null);
+		
+		List<EligibleClient> eligibleClients = new ArrayList<EligibleClient>();
+		MatchStrategy strategy;
+		for(ClientSurveyScore clientSurveyScore : surveyResponseModel.getClientsSurveyScores()){
+				this.processClientsScore(clientSurveyScore,session);
+		}
+		batchProcessService.endBatch(processId, true);	
+		}catch (Exception e) {
+				e.printStackTrace();
+				batchProcessService.endBatch(processId, false);			
+		}
+
+	}
+	
+	@SuppressWarnings("unused")
+	@Transactional
+	@Async
+	public void calculateScoreOld(Session session,UUID processId) {
+		try{
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
+		
+		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponses(session.getAccount().getProjectGroup().getProjectGroupCode(),null);
 		
 		List<EligibleClient> eligibleClients = new ArrayList<EligibleClient>();
 		MatchStrategy strategy;
@@ -217,5 +239,89 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 				batchProcessService.endBatch(processId, false);			
 		}
 
+	}
+
+	
+	public void processClientsScore(ClientSurveyScore clientSurveyScore,Session session) throws Exception {
+		MatchStrategy strategy;
+		EligibleClient eligibleClient = eligibleClientsRepository.findOne(clientSurveyScore.getClientId());
+		if(eligibleClient==null || ( eligibleClient!=null &&  eligibleClient.getMatched() == false )){
+				if(eligibleClient==null){
+						eligibleClient = new EligibleClient();
+						eligibleClient.setMatched(false);
+						eligibleClient.setProjectGroupCode(clientSurveyScore.getProjectGroupCode());
+						eligibleClient.setRemarks("Ignore match flag auto set by system to false");
+						eligibleClient.setBonusScore(0);
+				}
+					eligibleClient.setSurveyDate(clientSurveyScore.getSurveyDate());
+				
+					LocalDateTime responseSubmissionDate = surveyMSService.getSurveyDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
+					if(responseSubmissionDate==null) responseSubmissionDate = surveyMSService.getSurveyScoreDate(clientSurveyScore.getClientId(),clientSurveyScore.getSurveyId());
+					if(responseSubmissionDate!=null)eligibleClient.setSurveySubmissionDate(responseSubmissionDate);
+					
+					eligibleClient.setClientId(clientSurveyScore.getClientId());
+					BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
+					strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
+					int additionalScore =0;
+					if(client!=null && client.getDob()!=null){
+							additionalScore = strategy.getAdditionalScore(DateUtil.calculateAge(client.getDob()),clientSurveyScore.getSurveyTagValue());
+							eligibleClient.setClientDedupId(client.getDedupClientId());
+					}
+						
+					eligibleClient.setClientId(clientSurveyScore.getClientId());
+					//  Get survey tag value : SINGLE_AUDULT pass individual true
+					//                         FAMILY pass family true
+					eligibleClient.setCocScore(clientSurveyScore.getSurveyScore().intValue()+additionalScore);
+					eligibleClient.setProgramType(strategy.getProgramType(clientSurveyScore.getSurveyScore().intValue(),clientSurveyScore.getSurveyTagValue()));
+					eligibleClient.setSpdatLabel(clientSurveyScore.getSurveyTagValue());
+					eligibleClient.setSurveyScore(clientSurveyScore.getSurveyScore().intValue());
+					Long surveyScore = clientSurveyScore.getSurveyScore();
+					int finalSurveyScore = 0;
+					Integer bonusScore = eligibleClient.getBonusScore();
+					if(surveyScore != null) {
+						finalSurveyScore=surveyScore.intValue();
+					}
+					if(bonusScore != null) {
+						finalSurveyScore = finalSurveyScore + bonusScore.intValue();
+					}
+					
+					eligibleClient.setTotalScore(finalSurveyScore);
+
+					if(client!=null)
+						eligibleClient.setClientLink(client.getLink());		
+		
+					eligibleClientsRepository.save(eligibleClient);	
+					
+
+					// creating active mq request
+					AMQEvent amqEvent = new AMQEvent();
+			
+					amqEvent.setEventType("eligibleClients");
+					Map<String, Object> data = new HashMap<String, Object>();
+					data.put("clientId", client.getClientId());
+					data.put("dedupClientId", eligibleClient.getClientDedupId());
+					data.put("deleted", false);
+					data.put("projectGroupCode", eligibleClient.getProjectGroupCode());
+					data.put("userId", eligibleClient.getUserId());
+					data.put("clientId",eligibleClient.getClientId());
+					amqEvent.setPayload(data);
+					amqEvent.setModule("ces");
+					amqEvent.setSubsystem("housematching");
+					messageSender.sendAmqMessage(amqEvent);
+	
+				    List<Match> matches = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient,false);
+					if(matches.isEmpty()){
+						Match  match = new Match();
+						match.setEligibleClient(eligibleClient);
+						match.setManualMatch(false);
+				//		match.setMatchDate(new Date());
+						match.setMatchStatus(0);
+						match.setProgramType(session.getAccount().getProjectGroup().getProjectGroupCode());
+			//			repositoryFactory.getMatchReservationsRepository().save(match);
+
+		}
+		}
+		//eligibleClients.add(eligibleClient);
+	
 	}
 }
