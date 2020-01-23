@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.model.AMQEvent;
 
 public interface SurveyScoreService {
 	
@@ -23,5 +24,8 @@ public interface SurveyScoreService {
 	public boolean updateScoreByClientId(int score, UUID clientId);
 	
 	void checkAnyProcessRunning(String projectGroupCode);
+	
+	
+	void processClientScore(AMQEvent amqEvent) throws Exception;
 	
 }

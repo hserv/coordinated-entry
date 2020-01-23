@@ -37,7 +37,9 @@ import com.hserv.coordinatedentry.housingmatching.util.Constants;
 import com.hserv.coordinatedentry.housingmatching.util.DateUtil;
 import com.hserv.coordinatedentry.housingmatching.util.SecurityContextUtil;
 import com.servinglynk.hmis.warehouse.client.MessageSender;
+import com.servinglynk.hmis.warehouse.core.model.Account;
 import com.servinglynk.hmis.warehouse.core.model.BaseClient;
+import com.servinglynk.hmis.warehouse.core.model.ProjectGroup;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.model.AMQEvent;
 
@@ -324,4 +326,27 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		//eligibleClients.add(eligibleClient);
 	
 	}
+
+	@Transactional
+    public void processClientScore(AMQEvent amqEvent) throws Exception {
+    	
+    	Map<String, Object> payload = amqEvent.getPayload();
+		
+    	Account account = new Account();
+    	ProjectGroup projectGroup = new ProjectGroup();
+    	projectGroup.setProjectGroupCode(payload.get("projectGroupCode").toString());
+    	account.setAccountId(UUID.fromString(payload.get("userId").toString()));
+    	account.setProjectGroup(projectGroup);
+    	Session session = new Session();
+    	session.setToken(payload.get("token").toString());
+    	session.setAccount(account);
+    	
+    	UUID clientId =UUID.fromString(payload.get("clientId").toString());
+    	
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));
+		
+		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponses(session.getAccount().getProjectGroup().getProjectGroupCode(),clientId);
+		ClientSurveyScore score =	surveyResponseModel.getClientsSurveyScores().get(0);
+		this.processClientsScore(score, null);
+    }
 }
