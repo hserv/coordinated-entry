@@ -80,7 +80,7 @@ public class SurveyMSServiceImpl implements SurveyMSService {
 		return responseEntity.getBody();
 	}*/
 	
-	public ClientsSurveyScores fetchSurveyResponses(String projectGroup){
+	public ClientsSurveyScores fetchSurveyResponses(String projectGroup,UUID clientId){
 		ClientsSurveyScores scores = new ClientsSurveyScores();
 		org.hibernate.Session session =  entityManager.unwrap(org.hibernate.Session.class);
 
@@ -100,6 +100,9 @@ public class SurveyMSServiceImpl implements SurveyMSService {
 		criteria.setProjection(projectionList);
 		criteria.add(Restrictions.eq("surveyEntity.projectGroupCode",projectGroup));
 		criteria.add(Restrictions.eq("deleted", false));
+		if(clientId!=null) {
+			criteria.add(Restrictions.eq("clientId", clientId));
+		}
 		criteria.setResultTransformer(Transformers.aliasToBean(ClientSurveyScore.class));
 		
 		Criteria eCriteria = criteria.getExecutableCriteria(session);

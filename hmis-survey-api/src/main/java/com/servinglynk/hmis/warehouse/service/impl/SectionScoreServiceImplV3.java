@@ -66,6 +66,7 @@ public class SectionScoreServiceImplV3 extends ServiceBase implements SectionSco
 	public void updateSectionScores(UUID clientId,UUID surveyId,UUID sectionId,String caller){
 		deleteSectionScores(clientId, surveyId, sectionId);
 		this.calculateSectionScore(surveyId, clientId,caller);
+		serviceFactory.getSectionScoreService().updateEligibleClient(clientId);
 		
 	}
 	
@@ -160,6 +161,7 @@ public class SectionScoreServiceImplV3 extends ServiceBase implements SectionSco
 		}
 		
 		sectionScore.setSectionScoreId(sectionScoreEntity.getId());
+		serviceFactory.getSectionScoreService().updateEligibleClient(sectionScore.getClientId());
 		return sectionScore;
 	}
 
@@ -171,6 +173,7 @@ public class SectionScoreServiceImplV3 extends ServiceBase implements SectionSco
 		sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
 		sectionScoreEntity.setUser(getUser());
 		daoFactory.getSectionScoreDao().updateSectionScore(sectionScoreEntity);
+		serviceFactory.getSectionScoreService().updateEligibleClient(sectionScore.getClientId());
 	}
 	
 }

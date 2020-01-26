@@ -19,4 +19,7 @@ public interface SectionScoreService {
 	 ClientsSurveyScores calculateClientSurveyScore(Integer startIndex,Integer maxItems,String projectGroupCode);
 	 SectionScore createSectionScores(SectionScore sectionScore, Session session);
 	void updateSectionScores(SectionScore sectionScore,Session session);
+	
+	 // MQ Request
+	 void updateEligibleClient(UUID clientId);
 }
