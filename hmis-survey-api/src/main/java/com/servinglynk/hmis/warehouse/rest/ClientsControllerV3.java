@@ -182,7 +182,7 @@ public class ClientsControllerV3 extends BaseController {
 		   Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
-		   serviceFactory.getSectionScoreServiceV3().updateSectionScores(clientDedupId, surveyid, sectionid,session.getAccount().getUsername());
+		   serviceFactory.getSectionScoreServiceV3().updateSectionScores(client.getClientId(), surveyid, sectionid,session.getAccount().getUsername());
 	   }
 	   
 	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.POST)
@@ -271,7 +271,7 @@ public class ClientsControllerV3 extends BaseController {
            Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
-		   serviceFactory.getSectionScoreServiceV3().updateSectionScores(clientDedupId, surveyid, null,session.getAccount().getUsername());
+		   serviceFactory.getSectionScoreServiceV3().updateSectionScores(client.getClientId(), surveyid, null,session.getAccount().getUsername());
 	   }
 	   
 	   @RequestMapping(method=RequestMethod.GET)

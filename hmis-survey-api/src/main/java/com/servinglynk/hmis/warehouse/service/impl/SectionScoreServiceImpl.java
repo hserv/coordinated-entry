@@ -1,7 +1,9 @@
 package com.servinglynk.hmis.warehouse.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.expression.EvaluationContext;
@@ -18,6 +20,7 @@ import com.servinglynk.hmis.warehouse.core.model.SectionScore;
 import com.servinglynk.hmis.warehouse.core.model.SectionScores;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.model.AMQEvent;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 import com.servinglynk.hmis.warehouse.model.SectionScoreEntity;
@@ -28,6 +31,7 @@ import com.servinglynk.hmis.warehouse.service.converter.SectionScoreConverter;
 import com.servinglynk.hmis.warehouse.service.exception.SectionScoreNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveyNotFoundException;
 import com.servinglynk.hmis.warehouse.service.exception.SurveySectionNotFoundException;
+import com.servinglynk.hmis.warehouse.util.SecurityContextUtil;
 
 @Component
 public class SectionScoreServiceImpl extends ServiceBase implements SectionScoreService {
@@ -64,6 +68,7 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 	public void updateSectionScores(UUID clientId,UUID surveyId,UUID sectionId,String caller){
 		deleteSectionScores(clientId, surveyId, sectionId);
 		this.calculateSectionScore(surveyId, clientId,caller);
+		this.updateEligibleClient(clientId);
 		
 	}
 	
@@ -159,6 +164,7 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 		}
 		
 		sectionScore.setSectionScoreId(sectionScoreEntity.getId());
+		this.updateEligibleClient(sectionScore.getClientId());
 		return sectionScore;
 	}
 
@@ -170,6 +176,23 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 		sectionScoreEntity.setUpdatedAt(LocalDateTime.now());
 		sectionScoreEntity.setUser(getUser());
 		daoFactory.getSectionScoreDao().updateSectionScore(sectionScoreEntity);
+		this.updateEligibleClient(sectionScore.getClientId());
 	}
 	
+	
+	public void updateEligibleClient(UUID clientId) {
+		// creating active mq request
+		AMQEvent amqEvent = new AMQEvent();
+
+		amqEvent.setEventType("survey.scores.submissions");
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("clientId", clientId);
+		data.put("projectGroupCode", SecurityContextUtil.getUserProjectGroup());
+		data.put("userId",SecurityContextUtil.getUserAccount().getAccountId());
+		data.put("token",SecurityContextUtil.getSession().getToken());
+		amqEvent.setPayload(data);
+		amqEvent.setModule("ces");
+		amqEvent.setSubsystem("survey");
+		messageSender.sendAmqMessage(amqEvent);
+	}
 }

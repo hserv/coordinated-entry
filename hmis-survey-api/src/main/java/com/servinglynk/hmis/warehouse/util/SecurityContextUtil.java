@@ -20,6 +20,15 @@ public class SecurityContextUtil {
 			return null;
 	}
 	
+	public static Session getSession(){
+		SecurityContext context =  SecurityContextHolder.getContext();
+		Authentication authentication =  context.getAuthentication();
+		if(authentication.getPrincipal()!=null){
+			return (Session) authentication.getPrincipal();
+		}
+		return null;
+}
+	
 	
 	public static String getUserProjectGroup(){
 		Session session = null;
