@@ -245,10 +245,12 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 
 	
 	public void processClientsScore(ClientSurveyScore clientSurveyScore,Session session) throws Exception {
+		System.out.println(clientSurveyScore.getClientId()+" processing started");
 		MatchStrategy strategy;
 		EligibleClient eligibleClient = eligibleClientsRepository.findOne(clientSurveyScore.getClientId());
 		if(eligibleClient==null || ( eligibleClient!=null &&  eligibleClient.getMatched() == false )){
 				if(eligibleClient==null){
+					System.out.println("Eligible client not found. Creating new eligible client");
 						eligibleClient = new EligibleClient();
 						eligibleClient.setMatched(false);
 						eligibleClient.setProjectGroupCode(clientSurveyScore.getProjectGroupCode());
@@ -265,6 +267,7 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 					BaseClient client = eligibleClientService.getClientInfo(clientSurveyScore.getClientId(), "MASTER_TRUSTED_APP", session.getToken());
 					strategy = communityServiceLocator.locate(CommunityType.MONTEREY);
 					int additionalScore =0;
+						if(client!=null) System.out.println("client search complated "+client.getDedupClientId());
 					if(client!=null && client.getDob()!=null){
 							additionalScore = strategy.getAdditionalScore(DateUtil.calculateAge(client.getDob()),clientSurveyScore.getSurveyTagValue());
 							eligibleClient.setClientDedupId(client.getDedupClientId());
@@ -293,14 +296,14 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 						eligibleClient.setClientLink(client.getLink());		
 		
 					eligibleClientsRepository.save(eligibleClient);	
-					
+					System.out.println("Eligible client creating process completed");
 
 					// creating active mq request
 					AMQEvent amqEvent = new AMQEvent();
 			
 					amqEvent.setEventType("eligibleClients");
 					Map<String, Object> data = new HashMap<String, Object>();
-					data.put("clientId", client.getClientId());
+					data.put("clientId", eligibleClient.getClientId());
 					data.put("dedupClientId", eligibleClient.getClientDedupId());
 					data.put("deleted", false);
 					data.put("projectGroupCode", eligibleClient.getProjectGroupCode());
@@ -329,6 +332,8 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 
 	@Transactional
     public void processClientScore(AMQEvent amqEvent) throws Exception {
+		
+		System.out.append("Processing client Id"+amqEvent.toJSONString());
     	
     	Map<String, Object> payload = amqEvent.getPayload();
 		
@@ -347,6 +352,6 @@ public class SurveyScoreServiceImpl implements SurveyScoreService {
 		
 		ClientsSurveyScores surveyResponseModel = surveyMSService.fetchSurveyResponses(session.getAccount().getProjectGroup().getProjectGroupCode(),clientId);
 		ClientSurveyScore score =	surveyResponseModel.getClientsSurveyScores().get(0);
-		this.processClientsScore(score, null);
+		this.processClientsScore(score, session);
     }
 }
