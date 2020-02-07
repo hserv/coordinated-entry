@@ -188,10 +188,10 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 	public void updateClientSurveySubmissionDate(UUID surveyId, UUID clientId) {
 		List<ClientSurveySubmissionEntity>	entities =	daoFactory.getClientSurveySubmissionDao().getSubmissionBySurveyIdAndClientId(surveyId,clientId);
 		for(ClientSurveySubmissionEntity entity : entities) {
-			if(entity.getSubmissionDate()==null) {
+		//	if(entity.getSubmissionDate()==null) {
 				entity.setSubmissionDate(LocalDateTime.now());
 				daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
-			}
+		//	}
 		}
 	}
 }
