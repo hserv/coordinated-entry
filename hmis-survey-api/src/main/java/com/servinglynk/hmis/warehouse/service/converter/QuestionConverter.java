@@ -51,7 +51,7 @@ public class QuestionConverter   {
        model.setHudQuestion(entity.isHudQuestion());
        model.setLocked(entity.isLocked());
        model.setQuestionWeight(entity.getQuestionWeight());
-       
+       model.setPickListValues(entity.getPicklistValues());
        if(entity.getPickListGroupEntity()!=null)
     	   	model.setPickListGroupId(entity.getPickListGroupEntity().getId());
        if(entity.getQuestionGroupEntity()!=null)

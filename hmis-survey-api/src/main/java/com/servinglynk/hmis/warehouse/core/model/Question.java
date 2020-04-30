@@ -48,6 +48,8 @@ public class Question extends ClientModel{
       private String updateUrlTemplate;
       
   	private String uriObjectField;
+  	  
+  	  private String pickListValues;
 
 
       public UUID getQuestionId(){
@@ -140,5 +142,10 @@ public class Question extends ClientModel{
 	public void setUriObjectField(String uriObjectField) {
 		this.uriObjectField = uriObjectField;
 	}
-
+	public String getPickListValues() {
+		return pickListValues;
+	}
+	public void setPickListValues(String pickListValues) {
+		this.pickListValues = pickListValues;
+	}
  }
