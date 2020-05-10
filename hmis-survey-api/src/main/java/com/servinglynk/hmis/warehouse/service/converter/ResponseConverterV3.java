@@ -6,6 +6,7 @@ import java.util.Date;
 import com.servinglynk.hmis.warehouse.core.model.Client;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
+import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.model.ResponseEntity;
 public class ResponseConverterV3 {
 
@@ -27,6 +28,10 @@ public class ResponseConverterV3 {
        model.setResponseId(entity.getId());
        model.setRefused(entity.isRefused());
        model.setResponseText(entity.getResponseText());
+       QuestionEntity questionEntity = entity.getQuestionEntity();
+       if(questionEntity != null) {
+    	   model.setQuestionId(questionEntity.getId());
+       }
        model.setQuestionScore(entity.getQuestionScore());
        model.setAppId(entity.getAppId());
        if(entity.getSurveySectionEntity()!=null) model.setSectionId(entity.getSurveySectionEntity().getId());
