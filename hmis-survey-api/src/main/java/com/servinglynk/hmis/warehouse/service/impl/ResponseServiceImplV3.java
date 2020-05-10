@@ -45,7 +45,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 			if (response.getQuestionId() != null) {
 				QuestionEntity questionEntity = daoFactory.getQuestionEntityDao()
 						.getQuestionEntityById(response.getQuestionId());
-				if (questionEntity == null)
+				if (questionEntity != null)
 					pResponse.setQuestionEntity(questionEntity);
 			}
 
