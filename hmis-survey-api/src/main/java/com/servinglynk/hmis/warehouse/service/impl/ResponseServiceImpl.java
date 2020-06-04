@@ -37,7 +37,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 	   Response returnResponse = new Response();
 	   
 	   UUID submissionId = UUID.randomUUID();
-	   LocalDateTime effectiveDate =null;
+	   LocalDateTime effectiveDate =LocalDateTime.now();
 	   
 	   SurveyEntity surveyEntity = daoFactory.getSurveyEntityDao().getSurveyEntityById(surveyId);
 	   if(surveyEntity==null) throw new SurveyNotFoundException();
