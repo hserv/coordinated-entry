@@ -8,8 +8,8 @@ public enum QuestionTypeEnum {
 	TEXT("TEXT"),
 	CHECKBOX("CHECKBOX"),
 	RADIOBUTTON("RADIOBUTTON"),
-	DROPDOWN("DROPDOWN");
-	
+	DROPDOWN("DROPDOWN"),
+	DATE("DATE");
 	
 	QuestionTypeEnum(final String state) {
 		this.status = state;
