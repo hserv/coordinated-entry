@@ -137,7 +137,7 @@ public class ClientsControllerV3 extends BaseController {
 	           Session session = sessionHelper.getSession(request);
 		        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 		        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
-	        return serviceFactory.getResponseServiceV3().getAllSurveyResponses(surveyid,startIndex,maxItems,null); 
+	        return serviceFactory.getResponseServiceV3().getAllSurveyResponsesByClientDedupId(surveyid,clientDedupId,startIndex,maxItems,null); 
 	   }
 	   
 	   @RequestMapping(value="/{clientDedupId}/surveys/{surveyid}/sections/{sectionid}/scores",method=RequestMethod.GET)

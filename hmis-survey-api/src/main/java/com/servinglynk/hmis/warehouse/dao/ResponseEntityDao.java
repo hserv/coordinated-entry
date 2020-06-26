@@ -17,6 +17,9 @@ public interface ResponseEntityDao {
    long getSurveyResponsesCount(UUID surveyid);
 ResponseEntity getResponseBySubmission(UUID submissionId, UUID responseId);
 List<ResponseEntity> getAllSubmissionResponses(UUID surveyId, UUID submissionId, Integer startIndex, Integer maxItems);
+List<ResponseEntity> getAllSurveyResponsesForClient(UUID surveyId, UUID clientDedupId, Integer startIndex, Integer maxItems);
+long getSurveyResponsesForClientCount(UUID surveyid,UUID clientDedupId);
+
 long getSubmissionResponsesCount(UUID surveyId, UUID submissionId);
 ResponseEntity getResponseBySubmission(UUID submissionId);
 LocalDateTime getSurveyDate(UUID clientId, UUID surveyId);

@@ -12,7 +12,7 @@ public interface ResponseServiceV3 {
    Response deleteResponse(UUID ResponseId,String caller);
    Response getResponseById(UUID ResponseId, String version);
    Responses getAllSurveyResponses(UUID surveyid, Integer startIndex, Integer maxItems, String version);
-   
+   Responses getAllSurveyResponsesByClientDedupId(UUID surveyid,UUID clientDedupId, Integer startIndex, Integer maxItems, String version);
    void updateResponsesBySubmissionId(UUID submissionId,Responses responses,String caller);
    void deleteResponsesBySubmissionId(UUID surveyId,UUID submissionId,String caller);
    Responses getResponsesBySubmissionId(UUID surveyId,UUID submissionId,Integer startIndex,Integer maxItems);
