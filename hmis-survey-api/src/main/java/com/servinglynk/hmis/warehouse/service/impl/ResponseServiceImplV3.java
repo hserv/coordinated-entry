@@ -216,4 +216,22 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
         Responses.setPagination(pagination);
         return Responses; 
    }
+   
+   @Transactional
+   public Responses getAllSurveyResponsesByClientDedupId(UUID surveyid,UUID clientDedupId, Integer startIndex, Integer maxItems, String version){
+       Responses Responses = new Responses();
+        List<ResponseEntity> entities = daoFactory.getResponseEntityDao().getAllSurveyResponsesForClient(surveyid,clientDedupId,startIndex,maxItems);
+        for(ResponseEntity entity : entities){
+        		ClientEntity clientEntity = daoFactory.getClientDao().getClient(entity.getDedupClientId());
+        		Responses.addResponse(ResponseConverterV3.entityToModelDetail(entity,clientEntity));
+        }
+        long count = daoFactory.getResponseEntityDao().getSurveyResponsesForClientCount(surveyid,clientDedupId);
+        SortedPagination pagination = new SortedPagination();
+ 
+        pagination.setFrom(startIndex);
+        pagination.setReturned(Responses.getResponses().size());
+        pagination.setTotal((int)count);
+        Responses.setPagination(pagination);
+        return Responses; 
+   }
 }

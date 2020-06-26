@@ -55,6 +55,27 @@ public class ResponseEntityDaoImpl extends QueryExecutorImpl implements Response
        criteria.add(Restrictions.eq("surveyEntity.id", surveyid));
        return countRows(criteria);
    }
+   @SuppressWarnings("unchecked")
+   public List<ResponseEntity> getAllSurveyResponsesForClient(UUID surveyid,UUID dedupClientId,Integer startIndex, Integer maxItems){
+       DetachedCriteria criteria=DetachedCriteria.forClass(ResponseEntity.class);
+       criteria.createAlias("surveyEntity", "surveyEntity");
+       criteria.add(Restrictions.eq("surveyEntity.id", surveyid));
+       criteria.add(Restrictions.eq("dedupClientId", dedupClientId));
+       
+      // criteria.createAlias("surveySectionEntity", "surveySectionEntity");
+      // criteria.add(Restrictions.eq("surveySectionEntity.id", sectionId));
+       
+       if(startIndex==0 && maxItems==0)        return (List<ResponseEntity>) findByCriteria(criteria);
+       
+       return (List<ResponseEntity>) findByCriteria(criteria,startIndex,maxItems);
+   }
+   public long getSurveyResponsesForClientCount(UUID surveyid,UUID dedupClientId ){
+       DetachedCriteria criteria=DetachedCriteria.forClass(ResponseEntity.class);
+       criteria.createAlias("surveyEntity", "surveyEntity");
+       criteria.add(Restrictions.eq("surveyEntity.id", surveyid));
+       criteria.add(Restrictions.eq("dedupClientId", dedupClientId));
+       return countRows(criteria);
+   }
 public ResponseEntity getResponseBySubmission(UUID submissionId, UUID responseId) {
     DetachedCriteria criteria=DetachedCriteria.forClass(ResponseEntity.class);
     criteria.add(Restrictions.eq("id",responseId));
@@ -74,6 +95,7 @@ public List<ResponseEntity> getAllSubmissionResponses(UUID surveyId, UUID submis
     else
     	return (List<ResponseEntity>) findByCriteria(criteria);
 }
+
 public long getSubmissionResponsesCount(UUID surveyId, UUID submissionId) {
     DetachedCriteria criteria=DetachedCriteria.forClass(ResponseEntity.class);
     criteria.createAlias("surveyEntity", "surveyEntity");
