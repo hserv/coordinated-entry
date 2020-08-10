@@ -2,11 +2,12 @@ package com.servinglynk.hmis.warehouse.service;
 
 import java.util.UUID;
 
+import com.servinglynk.hmis.warehouse.core.model.CreateSurveyProject;
 import com.servinglynk.hmis.warehouse.core.model.SurveyProject;
 import com.servinglynk.hmis.warehouse.core.model.SurveyProjects;
 public interface SurveyProjectService {
 
-   SurveyProject createSurveyProject(UUID surveyid, SurveyProject SurveyProject,String caller);
+   SurveyProjects createSurveyProject(UUID surveyid, CreateSurveyProject surveyProject,String caller);
    SurveyProject updateSurveyProject(UUID surveyid, SurveyProject SurveyProject,String caller);
    SurveyProject deleteSurveyProject(UUID SurveyProjectId,String caller);
    SurveyProject getSurveyProjectById(UUID SurveyProjectId);

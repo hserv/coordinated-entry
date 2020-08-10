@@ -6,14 +6,14 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("surveyProject")
-public class SurveyProject extends ClientModel{
+public class CreateSurveyProject extends ClientModel{
 
 
       private UUID surveyProjectId;
 
       private UUID surveyId;
       
-      private UUID globalProjectId;
+      private Set<GlobalProject> globalProjects;
       
       private String schemaVersion;
 
@@ -24,11 +24,11 @@ public class SurveyProject extends ClientModel{
 	public void setSurveyProjectId(UUID surveyProjectId) {
 		this.surveyProjectId = surveyProjectId;
 	}
-	public UUID getGlobalProjectId() {
-		return globalProjectId;
+	public Set<GlobalProject> getGlobalProjects() {
+		return globalProjects;
 	}
-	public void setGlobalProjectId(UUID globalProjectId) {
-		this.globalProjectId = globalProjectId;
+	public void setGlobalProjects(Set<GlobalProject> globalProjects) {
+		this.globalProjects = globalProjects;
 	}
 	public String getSchemaVersion() {
 		return schemaVersion;
