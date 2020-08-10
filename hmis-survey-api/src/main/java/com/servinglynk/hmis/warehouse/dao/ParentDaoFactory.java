@@ -16,7 +16,8 @@ public interface ParentDaoFactory  {
 
 	 SectionQuestionMappingEntityDao getSectionQuestionMappingEntityDao();
 
-
+	 SurveyProjectEntityDao getSurveyProjectEntityDao();
+	 
 	 SurveyEntityDao getSurveyEntityDao();
 
 	 SurveySectionEntityDao getSurveySectionEntityDao();

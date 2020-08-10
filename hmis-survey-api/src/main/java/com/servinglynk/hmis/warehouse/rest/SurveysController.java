@@ -159,5 +159,57 @@ public class SurveysController extends BaseController {
         serviceFactory.getSectionQuestionMappingService().deleteSectionQuestionMapping(questionid, session.getAccount().getUsername());
         response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
    }
+   /*** Survey global project relation  Begins ***/
+   @RequestMapping(method=RequestMethod.POST,value="/{surveyid}/projects")
+   @APIMapping(value="SURVEY_API_CREATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public SurveySection createSurveyProject(@PathVariable("surveyid") UUID surveyid,
+		   @Valid @RequestBody SurveySection surveySection,HttpServletRequest request) throws Exception{
+         Session session = sessionHelper.getSession(request); 
+         serviceFactory.getSurveySectionService().createSurveySection(surveyid,surveySection,session.getAccount().getUsername()); 
+         SurveySection returnSurveySection = new SurveySection();
+         returnSurveySection.setSurveySectionId(surveySection.getSurveySectionId());
+         return returnSurveySection;
+   }
+
+   @RequestMapping(value="/{surveyid}/projects/{projectid}",method=RequestMethod.PUT)
+   @APIMapping(value="SURVEY_API_UPDATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public void updateSurveyProject(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "projectid" ) UUID projectid,@Valid @RequestBody SurveySection surveySection,HttpServletRequest request) throws Exception{
+        Session session = sessionHelper.getSession(request); 
+        surveySection.setSurveySectionId(projectid);
+        surveySection.setSurveyId(surveyid);
+        serviceFactory.getSurveySectionService().updateSurveySection(surveyid,surveySection,session.getAccount().getUsername()); 
+   }
+
+   @RequestMapping(value="/{surveyid}/surveysections/{projectid}",method=RequestMethod.DELETE)
+   @APIMapping(value="SURVEY_API_DELETE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public void deleteSurveyProjects(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "projectid" ) UUID projectid,HttpServletRequest request,HttpServletResponse response) throws Exception{
+        Session session = sessionHelper.getSession(request); 
+        serviceFactory.getSurveyService().getSurveyById(surveyid);
+        serviceFactory.getSurveySectionService().deleteSurveySection(projectid,session.getAccount().getUsername()); 
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
+   }
+
+   @RequestMapping(value="/{surveyid}/projects/{projectid}",method=RequestMethod.GET)
+   @APIMapping(value="SURVEY_API_GET_SURVEYSECTION_BY_ID",checkTrustedApp=true,checkSessionToken=true)
+   public SurveySection getSurveyProjectById(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "projectid" ) UUID projectid,HttpServletRequest request) throws Exception{
+       serviceFactory.getSurveyService().getSurveyById(surveyid);
+	   return serviceFactory.getSurveySectionService().getSurveySectionById(projectid); 
+   }
+
+   @RequestMapping(method=RequestMethod.GET,value="/{surveyid}/projects")
+   @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public SurveySections getAllSurveyProjets(@PathVariable("surveyid") UUID surveyid,
+                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
+                       @RequestParam(value="maxItems", required=false) Integer maxItems,
+                       HttpServletRequest request) throws Exception {
+           if (startIndex == null) startIndex =0;
+           if (maxItems == null || maxItems > 30) maxItems =30;
+           serviceFactory.getSurveyService().getSurveyById(surveyid);
+        return serviceFactory.getSurveySectionService().getAllSurveySurveySections(surveyid,startIndex,maxItems); 
+   }
+   
 
 }
