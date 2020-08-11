@@ -15,6 +15,8 @@ public class ParentDaoFactoryImpl  implements ParentDaoFactory {
 	@Autowired ClientSurveySubmissionDao clientSurveySubmissionDao;
 	
 	@Autowired SharingRuleDao sharingRuleDao;
+	
+	@Autowired SurveyProjectEntityDao surveyProjectEntityDao;
 
 	public SurveyDao getSurveyDao() {
 		return surveyDao;
@@ -156,5 +158,13 @@ public class ParentDaoFactoryImpl  implements ParentDaoFactory {
 
 	public void setSharingRuleDao(SharingRuleDao sharingRuleDao) {
 		this.sharingRuleDao = sharingRuleDao;
+	}
+
+	public SurveyProjectEntityDao getSurveyProjectEntityDao() {
+		return surveyProjectEntityDao;
+	}
+
+	public void setSurveyProjectEntityDao(SurveyProjectEntityDao surveyProjectEntityDao) {
+		this.surveyProjectEntityDao = surveyProjectEntityDao;
 	}
 }

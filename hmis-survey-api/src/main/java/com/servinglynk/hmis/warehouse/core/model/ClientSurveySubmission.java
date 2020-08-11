@@ -6,7 +6,6 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.servinglynk.hmis.warehouse.core.model.ClientModel;
 
 @JsonRootName("clientsurveysubmission")
 public class ClientSurveySubmission extends ClientModel {

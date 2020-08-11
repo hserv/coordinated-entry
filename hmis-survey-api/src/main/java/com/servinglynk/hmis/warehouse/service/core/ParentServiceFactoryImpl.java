@@ -17,6 +17,7 @@ import com.servinglynk.hmis.warehouse.service.SectionQuestionMappingService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreServiceV3;
 import com.servinglynk.hmis.warehouse.service.SharingRuleService;
+import com.servinglynk.hmis.warehouse.service.SurveyProjectService;
 import com.servinglynk.hmis.warehouse.service.SurveySectionService;
 import com.servinglynk.hmis.warehouse.service.SurveyService;
 import com.servinglynk.hmis.warehouse.service.SurveyServicev2;
@@ -33,6 +34,7 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 	@Autowired ClientService clientService;
 	@Autowired ClientSurveySubmissionService clientSurveySubmissionService;
 	@Autowired SharingRuleService sharingRuleService;
+	@Autowired SurveyProjectService surveyProjectService;
 
 	public SurveyService getSurveyService() {
 		return surveyService;
@@ -190,5 +192,13 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 
 	public void setSharingRuleService(SharingRuleService sharingRuleService) {
 		this.sharingRuleService = sharingRuleService;
+	}
+
+	public SurveyProjectService getSurveyProjectService() {
+		return surveyProjectService;
+	}
+
+	public void setSurveyProjectService(SurveyProjectService surveyProjectService) {
+		this.surveyProjectService = surveyProjectService;
 	}
 }

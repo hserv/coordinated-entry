@@ -2,15 +2,11 @@ package com.servinglynk.hmis.warehouse.core.model;
 
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.servinglynk.hmis.warehouse.util.QuestionDataTypeEnum;
-import com.servinglynk.hmis.warehouse.util.QuestionTypeEnum;
 
 @JsonRootName("question")
 public class Questionv2 extends ClientModel {
