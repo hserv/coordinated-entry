@@ -1,11 +1,13 @@
 package com.servinglynk.hmis.warehouse.rest; 
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
 import com.servinglynk.hmis.warehouse.core.model.CreateSurveyProject;
+import com.servinglynk.hmis.warehouse.core.model.ParamResponse;
 import com.servinglynk.hmis.warehouse.core.model.SectionQuestionMappings;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.Survey;
@@ -23,6 +26,8 @@ import com.servinglynk.hmis.warehouse.core.model.SurveyProjects;
 import com.servinglynk.hmis.warehouse.core.model.SurveySection;
 import com.servinglynk.hmis.warehouse.core.model.SurveySections;
 import com.servinglynk.hmis.warehouse.core.model.Surveys;
+import com.servinglynk.hmis.warehouse.enums.HmisVersionEnum;
+import com.servinglynk.hmis.warehouse.enums.SurveyCategoryEnum;
 
 @RestController
 @RequestMapping("/surveys")
@@ -218,5 +223,19 @@ public class SurveysController extends BaseController {
         return serviceFactory.getSurveyProjectService().getAllSurveySurveyProjects(surveyid,startIndex,maxItems); 
    }
    
-
+   @RequestMapping(method=RequestMethod.GET,value="/params/{name}")
+   @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public List<ParamResponse> getSurveyParams(@PathVariable("name") String name,
+                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
+                       @RequestParam(value="maxItems", required=false) Integer maxItems,
+                       HttpServletRequest request) throws Exception {
+	   if(StringUtils.isNotBlank(name)) {
+		   if(StringUtils.equals("version", name)) {
+			   return HmisVersionEnum.getPickList();
+		   } else if (StringUtils.equals("category", name)) {
+			   return SurveyCategoryEnum.getPickList();
+		   }
+	   }
+           return HmisVersionEnum.getPickList();
+   }
 }

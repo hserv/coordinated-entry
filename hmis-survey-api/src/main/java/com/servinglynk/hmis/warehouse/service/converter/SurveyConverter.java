@@ -13,6 +13,8 @@ public class SurveyConverter{
        entity.setLocked(model.getLocked());
        entity.setCopySurveyId(model.getCopySurveyId());
        entity.setLocked(model.getLocked());
+       entity.setHmisVersion(model.getHmisVersion());
+       entity.setSurveyCategory(model.getSurveyCategory());
        return entity;    
    }
 
@@ -26,6 +28,10 @@ public class SurveyConverter{
        model.setProjectGroupCode(entity.getProjectGroupCode());
        model.setLocked(entity.isLocked());
        model.setCopySurveyId(entity.isCopySurveyId());
+       if(entity.getHmisVersion() != null)
+    	   model.setHmisVersion(entity.getHmisVersion());
+       if(entity.getSurveyCategory() != null)
+    	   model.setSurveyCategory(entity.getSurveyCategory());
        return model;
    }
 }

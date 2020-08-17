@@ -14,6 +14,8 @@ public class SurveyConverterv2{
        entity.setCopySurveyId(model.getCopySurveyId());
        entity.setLocked(model.getLocked());
        entity.setSurveyDefinition(model.getSurveyDefinition()); 
+       entity.setHmisVersion(model.getHmisVersion());
+       entity.setSurveyCategory(model.getSurveyCategory());
        return entity;    
    }
 
@@ -28,6 +30,10 @@ public class SurveyConverterv2{
        model.setLocked(entity.isLocked());
        model.setCopySurveyId(entity.isCopySurveyId());
        model.setSurveyDefinition(entity.getSurveyDefinition());
+       if(entity.getHmisVersion() != null)
+    	   model.setHmisVersion(entity.getHmisVersion());
+       if(entity.getSurveyCategory() != null)
+    	   model.setSurveyCategory(entity.getSurveyCategory());
        return model;
    }
 }
