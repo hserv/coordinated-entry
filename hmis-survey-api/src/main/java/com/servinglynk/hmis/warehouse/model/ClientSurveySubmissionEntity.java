@@ -47,6 +47,9 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
    	@Column(name="GLOBAL_ENROLLMENT_ID")
    	private UUID globalEnrollmentId;
 	
+   	@Column(name="HMIS_POST_STATUS")
+   	private String hmisPostStatus;
+	
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")	
 	@Column(name="SUBMISSION_DATE")
 	private LocalDateTime submissionDate;
@@ -134,5 +137,13 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 
 	public void setInformationDate(LocalDate informationDate) {
 		this.informationDate = informationDate;
+	}
+	
+	public String getHmisPostStatus() {
+		return hmisPostStatus;
+	}
+
+	public void setHmisPostStatus(String hmisPostStatus) {
+		this.hmisPostStatus = hmisPostStatus;
 	}
 }
