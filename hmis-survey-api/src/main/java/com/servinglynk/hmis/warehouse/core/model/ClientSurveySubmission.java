@@ -113,5 +113,11 @@ public class ClientSurveySubmission extends ClientModel {
 	}
 	public void setInformationDate(LocalDateTime informationDate) {
 		this.informationDate = informationDate;
+	}
+	public String getHmisPostingStatus() {
+		return hmisPostingStatus;
+	}
+	public void setHmisPostingStatus(String hmisPostingStatus) {
+		this.hmisPostingStatus = hmisPostingStatus;
 	}  	
 }

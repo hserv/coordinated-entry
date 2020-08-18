@@ -75,6 +75,16 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
 
 	}
+	@Transactional
+	public void updateHmisPostingStatus(UUID clientSurveySubmissionId, String hmisPostingStatus) {
+		ClientSurveySubmissionEntity entity = daoFactory.getClientSurveySubmissionDao().getById(clientSurveySubmissionId);
+		if(entity==null) throw new ResourceNotFoundException("Client Survey submission not found");
+		entity.setHmisPostStatus(hmisPostingStatus);
+		entity.setUpdatedAt(LocalDateTime.now());
+		entity.setUser(getUser());
+		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
+	}
+	
 	
 	@Transactional
 	public ClientSurveySubmissions getAllClientSurveySubmissions(UUID clientId,String queryString, String sortColumn, String order,Integer startIndex,Integer maxItems) {
