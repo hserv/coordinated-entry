@@ -32,6 +32,10 @@ public class Surveyv2 extends ClientModel {
 	private boolean copySurveyId;
 
 	private String surveyDefinition;
+	
+	private String hmisVersion;
+	
+	private String surveyCategory;
 
 	public UUID getSurveyId() {
 		return surveyId;
@@ -96,4 +100,21 @@ public class Surveyv2 extends ClientModel {
 	public void setSurveyDefinition(String surveyDefinition) {
 		this.surveyDefinition = surveyDefinition;
 	}
+
+	public String getHmisVersion() {
+		return hmisVersion;
+	}
+
+	public void setHmisVersion(String hmisVersion) {
+		this.hmisVersion = hmisVersion;
+	}
+
+	public String getSurveyCategory() {
+		return surveyCategory;
+	}
+
+	public void setSurveyCategory(String surveyCategory) {
+		this.surveyCategory = surveyCategory;
+	}
+	
 }

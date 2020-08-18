@@ -30,6 +30,10 @@ public class Survey extends ClientModel {
 	private boolean locked;
 
 	private boolean copySurveyId;
+	
+	private String hmisVersion;
+	
+	private String surveyCategory;
 
 
 	public UUID getSurveyId() {
@@ -86,5 +90,21 @@ public class Survey extends ClientModel {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
+	}
+
+	public String getHmisVersion() {
+		return hmisVersion;
+	}
+
+	public void setHmisVersion(String hmisVersion) {
+		this.hmisVersion = hmisVersion;
+	}
+
+	public String getSurveyCategory() {
+		return surveyCategory;
+	}
+
+	public void setSurveyCategory(String surveyCategory) {
+		this.surveyCategory = surveyCategory;
 	}
 }

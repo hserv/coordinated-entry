@@ -39,9 +39,17 @@ public class SurveyEntity extends BaseEntity {
 	private boolean copySurveyId;
 	@Column(name="SURVEY_DEFINITION")
 	private String surveyDefinition;
+	@Column(name="SURVEY_CATEGORY")
+	private String surveyCategory;
+	@Column(name="HMIS_VERSION")
+	private String hmisVersion;
+	
 	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
 	@Where(clause=" IS_ACTIVE = 'TRUE' ")
 	List<SurveySectionEntity> surveySectionEntities = new ArrayList<SurveySectionEntity>();
+	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
+	@Where(clause=" IS_ACTIVE = 'TRUE' ")
+	List<SurveyProjectEntity> surveyProjectEntities = new ArrayList<SurveyProjectEntity>();
 	
 	public UUID getId() {
 		return id;
@@ -91,10 +99,28 @@ public class SurveyEntity extends BaseEntity {
 	public void setSurveySectionEntities(List<SurveySectionEntity> surveySectionEntities) {
 		this.surveySectionEntities = surveySectionEntities;
 	}
+	public List<SurveyProjectEntity> getSurveyProjectEntities() {
+		return surveyProjectEntities;
+	}
+	public void setSurveyProjectEntities(List<SurveyProjectEntity> surveyProjectEntities) {
+		this.surveyProjectEntities = surveyProjectEntities;
+	}
 	public String getSurveyDefinition() {
 		return surveyDefinition;
 	}
 	public void setSurveyDefinition(String surveyDefinition) {
 		this.surveyDefinition = surveyDefinition;
+	}
+	public String getSurveyCategory() {
+		return surveyCategory;
+	}
+	public void setSurveyCategory(String surveyCategory) {
+		this.surveyCategory = surveyCategory;
+	}
+	public String getHmisVersion() {
+		return hmisVersion;
+	}
+	public void setHmisVersion(String hmisVersion) {
+		this.hmisVersion = hmisVersion;
 	}
 }
