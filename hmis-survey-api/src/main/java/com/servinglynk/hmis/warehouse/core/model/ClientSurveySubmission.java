@@ -17,10 +17,23 @@ public class ClientSurveySubmission extends ClientModel {
 	private Survey survey;
 	private UUID submissionId;
    	private UUID globalEnrollmentId;
+   	private String hmisPostingStatus;
    	
 	@JsonDeserialize(using=JsonTimestampDeserializer.class)
 	@JsonSerialize(using=JsonTimestampSerializer.class)
    	private LocalDateTime submissionDate;
+	
+	@JsonDeserialize(using=JsonTimestampDeserializer.class)
+	@JsonSerialize(using=JsonTimestampSerializer.class)
+   	private LocalDateTime entryDate;
+	
+	@JsonDeserialize(using=JsonTimestampDeserializer.class)
+	@JsonSerialize(using=JsonTimestampSerializer.class)
+   	private LocalDateTime exitDate;
+	
+	@JsonDeserialize(using=JsonTimestampDeserializer.class)
+	@JsonSerialize(using=JsonTimestampSerializer.class)
+   	private LocalDateTime informationDate;
 
    	private Client client;
 
@@ -80,5 +93,23 @@ public class ClientSurveySubmission extends ClientModel {
 	}
 	public void setSurvey(Survey survey) {
 		this.survey = survey;
+	}
+	public LocalDateTime getEntryDate() {
+		return entryDate;
+	}
+	public void setEntryDate(LocalDateTime entryDate) {
+		this.entryDate = entryDate;
+	}
+	public LocalDateTime getExitDate() {
+		return exitDate;
+	}
+	public void setExitDate(LocalDateTime exitDate) {
+		this.exitDate = exitDate;
+	}
+	public LocalDateTime getInformationDate() {
+		return informationDate;
+	}
+	public void setInformationDate(LocalDateTime informationDate) {
+		this.informationDate = informationDate;
 	}  	
 }

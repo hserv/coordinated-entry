@@ -15,7 +15,9 @@ public class ResponseConverter {
        entity.setResponseText(model.getResponseText());
        entity.setAppId(model.getAppId());
        entity.setEffectiveDate(model.getEffectiveDate());
+       entity.setHmisLink(model.getHmisLink());
        if(model.getDedupClientId()!=null) entity.setDedupClientId(model.getDedupClientId());
+       
 //       entity.setClientId(model.getClientId());
        return entity;    
    }
@@ -35,6 +37,7 @@ public class ResponseConverter {
        model.setSubmissionId(entity.getSubmissionId());
        model.setEffectiveDate(entity.getEffectiveDate());
        model.setDedupClientId(entity.getDedupClientId());
+       model.setHmisLink(entity.getHmisLink());
        return model;
    }
    
@@ -52,6 +55,7 @@ public class ResponseConverter {
        model.setSubmissionId(entity.getSubmissionId());
        model.setEffectiveDate(entity.getEffectiveDate());
        model.setDedupClientId(entity.getDedupClientId());
+       model.setHmisLink(entity.getHmisLink());
        if(entity.getClient()!=null) {
     	   Client client = new Client();
     	   if(entity.getClient().getDob()!=null) client.setDob(Date.from(entity.getClient().getDob().atZone(ZoneId.systemDefault()).toInstant()));

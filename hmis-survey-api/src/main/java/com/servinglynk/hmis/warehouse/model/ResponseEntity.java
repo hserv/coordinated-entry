@@ -73,7 +73,10 @@ public class ResponseEntity extends BaseEntity {
     
     @Column(name="CLIENT_LINK")
     private String clientLink;
-	
+    
+    @Column(name="HMIS_LINK")
+    private String hmisLink;
+    
 	public UUID getId() {
 		return id;
 	}
@@ -162,5 +165,11 @@ public class ResponseEntity extends BaseEntity {
 	}
 	public void setDedupClientId(UUID dedupClientId) {
 		this.dedupClientId = dedupClientId;
+	}
+	public String getHmisLink() {
+		return hmisLink;
+	}
+	public void setHmisLink(String hmisLink) {
+		this.hmisLink = hmisLink;
 	}
 }

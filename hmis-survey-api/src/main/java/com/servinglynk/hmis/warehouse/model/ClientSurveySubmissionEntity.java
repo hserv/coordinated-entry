@@ -1,6 +1,7 @@
 package com.servinglynk.hmis.warehouse.model;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -49,7 +50,19 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")	
 	@Column(name="SUBMISSION_DATE")
 	private LocalDateTime submissionDate;
+	
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDate")	
+	@Column(name="ENTRY_DATE")
+	private LocalDate entryDate;
+	
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDate")	
+	@Column(name="EXIT_DATE")
+	private LocalDate exitDate;
 
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDate")	
+	@Column(name="INFORMATION_DATE")
+	private LocalDate informationDate;
+	
 	public UUID getId() {
 		return id;
 	}
@@ -97,5 +110,29 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 
 	public void setSubmissionDate(LocalDateTime submissionDate) {
 		this.submissionDate = submissionDate;
+	}
+
+	public LocalDate getEntryDate() {
+		return entryDate;
+	}
+
+	public void setEntryDate(LocalDate entryDate) {
+		this.entryDate = entryDate;
+	}
+
+	public LocalDate getExitDate() {
+		return exitDate;
+	}
+
+	public void setExitDate(LocalDate exitDate) {
+		this.exitDate = exitDate;
+	}
+
+	public LocalDate getInformationDate() {
+		return informationDate;
+	}
+
+	public void setInformationDate(LocalDate informationDate) {
+		this.informationDate = informationDate;
 	}
 }
