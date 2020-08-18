@@ -15,7 +15,7 @@ public enum SurveyCategoryEnum {
 	/** Enum Constant. */
 	THREE("3","Project exit"),
 	/** Enum Constant. */
-	FIVE("3","Project annual assessment");
+	FIVE("5","Project annual assessment");
 	/**
 	 * Internal storage of status field value, see the Enum spec for
  	 * clarification.
