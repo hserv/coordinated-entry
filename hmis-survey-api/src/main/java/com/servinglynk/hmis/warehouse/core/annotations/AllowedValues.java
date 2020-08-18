@@ -23,6 +23,7 @@ import com.servinglynk.hmis.warehouse.validator.AllowedValuesValidator;
 public @interface AllowedValues {
 	
 	 String message() default "";
+	 boolean allowNullDefault() default false;
 	 String[] values() default "";
 	 Class[] groups() default {};
 	 Class[] payload() default {};

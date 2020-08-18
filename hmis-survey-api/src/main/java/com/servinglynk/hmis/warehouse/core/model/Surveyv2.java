@@ -21,7 +21,7 @@ public class Surveyv2 extends ClientModel {
 	@NotEmpty(message = "Survey Owner is required")
 	private String surveyOwner;
 
-	@AllowedValues(values = { "SINGLE_ADULT", "FAMILY", "YOUTH",
+	@AllowedValues( values = { "SINGLE_ADULT", "FAMILY", "YOUTH",
 			"HUD" }, message = "Allowed values for tag value are SINGLE_ADULT,FAMILY,YOUTH,HUD")
 	private String tagValue;
 
@@ -30,9 +30,12 @@ public class Surveyv2 extends ClientModel {
 	private boolean locked;
 
 	private boolean copySurveyId;
-
-	private String surveyDefinition;
 	
+	@AllowedValues( allowNullDefault = true, values = { "v2014", "v2015", "v2016", "v2017",
+	"v2020" }, message = "Allowed values for tag value are v2014,v2015,v2016,v2017,5")
+	private String surveyDefinition;
+	@AllowedValues( allowNullDefault = true, values = { "0", "1", "2", "3",
+	"5" }, message = "Allowed values for tag value are 0,1,2,3,5")
 	private String hmisVersion;
 	
 	private String surveyCategory;

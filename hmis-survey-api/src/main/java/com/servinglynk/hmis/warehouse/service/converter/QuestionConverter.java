@@ -2,6 +2,8 @@ package com.servinglynk.hmis.warehouse.service.converter;
 
 import java.security.InvalidParameterException;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.servinglynk.hmis.warehouse.core.model.Question;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 import com.servinglynk.hmis.warehouse.util.QuestionDataTypeEnum;
@@ -27,6 +29,12 @@ public class QuestionConverter   {
        }
        if(model.getUpdateUrlTemplate()!=null) entity.setUpdateUrlTemplate(model.getUpdateUrlTemplate());
        if(model.getUriObjectField()!=null) entity.setUriObjectField(model.getUriObjectField());
+       if(model.getQuestionClassification() != null)  {
+    	   entity.setQuestionClassification(model.getQuestionClassification());
+    	   if(StringUtils.equals(model.getQuestionClassification(), "HUD")) {
+    		   entity.setHudQuestion(true);  
+    	   }
+       }
  //       entity.setQuestionGroupId(model.getQuestionGroupId());
 //       entity.setPickListGroupId(model.getPickListGroupId());
        return entity;    
@@ -56,6 +64,13 @@ public class QuestionConverter   {
     	   	model.setPickListGroupId(entity.getPickListGroupEntity().getId());
        if(entity.getQuestionGroupEntity()!=null)
     	   model.setQuestionGroupId(entity.getQuestionGroupEntity().getId());
+       
+       if(entity.getQuestionClassification() != null) {
+    	   model.setQuestionClassification(model.getQuestionClassification());
+    	   if(StringUtils.equals(entity.getQuestionClassification(), "HUD")) {
+    		   model.setHudQuestion(true);  
+    	   }
+       }
        
        if(entity.getUpdateUrlTemplate()!=null) model.setUpdateUrlTemplate(entity.getUpdateUrlTemplate());
        if(entity.getUriObjectField()!=null) model.setUriObjectField(entity.getUriObjectField());
