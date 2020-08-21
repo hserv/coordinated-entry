@@ -50,6 +50,9 @@ public class SurveyEntity extends BaseEntity {
 	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
 	@Where(clause=" IS_ACTIVE = 'TRUE' ")
 	List<SurveyProjectEntity> surveyProjectEntities = new ArrayList<SurveyProjectEntity>();
+	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
+	@Where(clause=" IS_ACTIVE = 'TRUE' ")
+	List<SurveyCategoryEntity> surveyCategoryEntities = new ArrayList<SurveyCategoryEntity>();
 	
 	public UUID getId() {
 		return id;
@@ -122,5 +125,11 @@ public class SurveyEntity extends BaseEntity {
 	}
 	public void setHmisVersion(String hmisVersion) {
 		this.hmisVersion = hmisVersion;
+	}
+	public List<SurveyCategoryEntity> getSurveyCategoryEntities() {
+		return surveyCategoryEntities;
+	}
+	public void setSurveyCategoryEntities(List<SurveyCategoryEntity> surveyCategoryEntities) {
+		this.surveyCategoryEntities = surveyCategoryEntities;
 	}
 }

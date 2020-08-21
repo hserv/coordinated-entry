@@ -1,6 +1,13 @@
 package com.servinglynk.hmis.warehouse.service.converter; 
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.collections.CollectionUtils;
+
 import com.servinglynk.hmis.warehouse.core.model.Surveyv2;
+import com.servinglynk.hmis.warehouse.model.SurveyCategoryEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
 public class SurveyConverterv2{
 
@@ -15,7 +22,6 @@ public class SurveyConverterv2{
        entity.setLocked(model.getLocked());
        entity.setSurveyDefinition(model.getSurveyDefinition()); 
        entity.setHmisVersion(model.getHmisVersion());
-       entity.setSurveyCategory(model.getSurveyCategory());
        return entity;    
    }
 
@@ -30,10 +36,16 @@ public class SurveyConverterv2{
        model.setLocked(entity.isLocked());
        model.setCopySurveyId(entity.isCopySurveyId());
        model.setSurveyDefinition(entity.getSurveyDefinition());
+       Set<String> surveyCategories = new HashSet<String>();
+       List<SurveyCategoryEntity> surveyCategoryEntities = entity.getSurveyCategoryEntities();
+       if(CollectionUtils.isNotEmpty(surveyCategoryEntities)) {
+    	   for(SurveyCategoryEntity surveyCategoryEntity: surveyCategoryEntities)
+    		   if(surveyCategoryEntity != null) {
+    			   surveyCategories.add(surveyCategoryEntity.getSurveyCategory());
+    		   }
+       }
        if(entity.getHmisVersion() != null)
     	   model.setHmisVersion(entity.getHmisVersion());
-       if(entity.getSurveyCategory() != null)
-    	   model.setSurveyCategory(entity.getSurveyCategory());
        return model;
    }
 }

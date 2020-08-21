@@ -13,7 +13,13 @@ public interface ClientSurveySubmissionService {
 	
 	
 	void updateClientSurveySubmission(UUID clientSurveySubmissionId, UUID globalEnrollmentId);
+<<<<<<< Updated upstream
 
+=======
+	
+	void updateHmisPostingStatus(UUID clientSurveySubmissionId, String  hmisPostingStatus);
+	
+>>>>>>> Stashed changes
 	ClientSurveySubmissions getSearchClientSurveySubmissions(String queryString, Integer startIndex, Integer maxItems, String sort, String order);
 
 	void updateClientSurveySubmissionDate(UUID surveyId, UUID clientId);

@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.core.model;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -38,7 +39,7 @@ public class Surveyv2 extends ClientModel {
 	"5" }, message = "Allowed values for tag value are 0,1,2,3,5")
 	private String hmisVersion;
 	
-	private String surveyCategory;
+	private Set<SurveyCategory> surveyCategories;
 
 	public UUID getSurveyId() {
 		return surveyId;
@@ -112,12 +113,11 @@ public class Surveyv2 extends ClientModel {
 		this.hmisVersion = hmisVersion;
 	}
 
-	public String getSurveyCategory() {
-		return surveyCategory;
+	public Set<SurveyCategory> getSurveyCategories() {
+		return surveyCategories;
 	}
 
-	public void setSurveyCategory(String surveyCategory) {
-		this.surveyCategory = surveyCategory;
+	public void setSurveyCategories(Set<SurveyCategory> surveyCategories) {
+		this.surveyCategories = surveyCategories;
 	}
-	
 }

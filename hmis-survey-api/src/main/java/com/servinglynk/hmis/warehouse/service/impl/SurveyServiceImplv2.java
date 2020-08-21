@@ -2,13 +2,16 @@ package com.servinglynk.hmis.warehouse.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
+import com.servinglynk.hmis.warehouse.core.model.SurveyCategory;
 import com.servinglynk.hmis.warehouse.core.model.Surveysv2;
 import com.servinglynk.hmis.warehouse.core.model.Surveyv2;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
@@ -27,6 +30,10 @@ public class SurveyServiceImplv2 extends ServiceBase implements SurveyServicev2 
        pSurvey.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
        pSurvey.setUser(getUser());
        daoFactory.getSurveyEntityDao().createSurveyEntity(pSurvey);
+       Set<SurveyCategory> surveyCategories = survey.getSurveyCategories();
+       if(CollectionUtils.isNotEmpty(surveyCategories)) {
+    	   serviceFactory.getSurveyCategoryService().createSurveyCategory(pSurvey.getId(), surveyCategories, getUser());
+       }
        survey.setSurveyId(pSurvey.getId());
        return survey;
    }
