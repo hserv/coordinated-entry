@@ -32,11 +32,8 @@ public class Surveyv2 extends ClientModel {
 
 	private boolean copySurveyId;
 	
-	@AllowedValues( allowNullDefault = true, values = { "v2014", "v2015", "v2016", "v2017",
-	"v2020" }, message = "Allowed values for tag value are v2014,v2015,v2016,v2017,5")
-	private String surveyDefinition;
-	@AllowedValues( allowNullDefault = true, values = { "0", "1", "2", "3",
-	"5" }, message = "Allowed values for tag value are 0,1,2,3,5")
+	@AllowedValues( allowNullDefault = true, values = { "v2014", "v2015", "v2016", "v2017","v2020" }, 
+			        message = "Allowed values for tag value are v2014,v2015,v2016,v2017, 2018,v2020" )
 	private String hmisVersion;
 	
 	private Set<SurveyCategory> surveyCategories;
@@ -97,13 +94,6 @@ public class Surveyv2 extends ClientModel {
 		this.locked = locked;
 	}
 
-	public String getSurveyDefinition() {
-		return surveyDefinition;
-	}
-
-	public void setSurveyDefinition(String surveyDefinition) {
-		this.surveyDefinition = surveyDefinition;
-	}
 
 	public String getHmisVersion() {
 		return hmisVersion;

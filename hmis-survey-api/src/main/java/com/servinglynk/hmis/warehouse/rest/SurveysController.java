@@ -189,7 +189,7 @@ public class SurveysController extends BaseController {
         serviceFactory.getSurveyProjectService().updateSurveyProject(surveyid,surveyProject,session.getAccount().getUsername()); 
    }
 
-   @RequestMapping(value="/{surveyid}/surveysections/{surveyprojectid}",method=RequestMethod.DELETE)
+   @RequestMapping(value="/{surveyid}/projects/{surveyprojectid}",method=RequestMethod.DELETE)
    @APIMapping(value="SURVEY_API_DELETE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
    public void deleteSurveyProjects(@PathVariable("surveyid") UUID surveyid,
 		   @PathVariable( "surveyprojectid" ) UUID projectid,HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -221,6 +221,16 @@ public class SurveysController extends BaseController {
         	  return serviceFactory.getSurveyProjectService().getAllSurveyByGlobaProjectId(globalProjectId, startIndex, maxItems);
            }
         return serviceFactory.getSurveyProjectService().getAllSurveySurveyProjects(surveyid,startIndex,maxItems); 
+   }
+   
+   @RequestMapping(value="/{surveyid}/category/{surveycategoryid}",method=RequestMethod.DELETE)
+   @APIMapping(value="SURVEY_API_DELETE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public void deleteSurveyCategories(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "surveyprojectid" ) UUID projectid,HttpServletRequest request,HttpServletResponse response) throws Exception{
+        Session session = sessionHelper.getSession(request); 
+        serviceFactory.getSurveyService().getSurveyById(surveyid);
+        serviceFactory.getSurveyProjectService().deleteSurveyProject(projectid,session.getAccount().getUsername()); 
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
    }
    
    @RequestMapping(method=RequestMethod.GET,value="/params/{name}")

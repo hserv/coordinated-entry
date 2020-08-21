@@ -20,7 +20,6 @@ public class SurveyConverterv2{
        entity.setLocked(model.getLocked());
        entity.setCopySurveyId(model.getCopySurveyId());
        entity.setLocked(model.getLocked());
-       entity.setSurveyDefinition(model.getSurveyDefinition()); 
        entity.setHmisVersion(model.getHmisVersion());
        return entity;    
    }
@@ -35,7 +34,6 @@ public class SurveyConverterv2{
        model.setProjectGroupCode(entity.getProjectGroupCode());
        model.setLocked(entity.isLocked());
        model.setCopySurveyId(entity.isCopySurveyId());
-       model.setSurveyDefinition(entity.getSurveyDefinition());
        Set<String> surveyCategories = new HashSet<String>();
        List<SurveyCategoryEntity> surveyCategoryEntities = entity.getSurveyCategoryEntities();
        if(CollectionUtils.isNotEmpty(surveyCategoryEntities)) {

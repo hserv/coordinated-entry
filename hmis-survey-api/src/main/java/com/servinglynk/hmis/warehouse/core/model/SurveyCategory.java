@@ -1,22 +1,12 @@
 package com.servinglynk.hmis.warehouse.core.model; 
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-@JsonRootName("surveyProject")
+@JsonRootName("surveyCategory")
 public class SurveyCategory extends ClientModel{
 
-      private UUID surveyId;
+	private String category;
       
-      private String category;
-      
-	public UUID getSurveyId(){
-          return surveyId;
-    }
-    public void setSurveyId(UUID surveyId){
-        this.surveyId = surveyId;
-    }
 	public String getCategory() {
 		return category;
 	}

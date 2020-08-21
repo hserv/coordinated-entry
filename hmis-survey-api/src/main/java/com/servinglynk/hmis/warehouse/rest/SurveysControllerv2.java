@@ -1,11 +1,13 @@
 package com.servinglynk.hmis.warehouse.rest; 
 
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
 import com.servinglynk.hmis.warehouse.core.model.Session;
+import com.servinglynk.hmis.warehouse.core.model.SurveyCategory;
 import com.servinglynk.hmis.warehouse.core.model.Surveysv2;
 import com.servinglynk.hmis.warehouse.core.model.Surveyv2;
 
@@ -27,6 +30,10 @@ public class SurveysControllerv2 extends BaseController {
    public Surveyv2 createSurvey(@Valid @RequestBody Surveyv2 survey,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
          serviceFactory.getSurveyServicev2().createSurvey(survey,session); 
+         Set<SurveyCategory> surveyCategories = survey.getSurveyCategories();
+         if(CollectionUtils.isNotEmpty(surveyCategories)) {
+      	   serviceFactory.getSurveyCategoryService().createSurveyCategory(survey.getSurveyId(), surveyCategories);
+         }
          Surveyv2 returnsurvey = new Surveyv2();
          returnsurvey.setSurveyId(survey.getSurveyId());
          return returnsurvey;

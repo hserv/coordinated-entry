@@ -30,10 +30,6 @@ public class SurveyServiceImplv2 extends ServiceBase implements SurveyServicev2 
        pSurvey.setProjectGroupCode(session.getAccount().getProjectGroup().getProjectGroupCode());
        pSurvey.setUser(getUser());
        daoFactory.getSurveyEntityDao().createSurveyEntity(pSurvey);
-       Set<SurveyCategory> surveyCategories = survey.getSurveyCategories();
-       if(CollectionUtils.isNotEmpty(surveyCategories)) {
-    	   serviceFactory.getSurveyCategoryService().createSurveyCategory(pSurvey.getId(), surveyCategories, getUser());
-       }
        survey.setSurveyId(pSurvey.getId());
        return survey;
    }

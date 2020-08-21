@@ -39,8 +39,6 @@ public class SurveyEntity extends BaseEntity {
 	private boolean copySurveyId;
 	@Column(name="SURVEY_DEFINITION")
 	private String surveyDefinition;
-	@Column(name="SURVEY_CATEGORY")
-	private String surveyCategory;
 	@Column(name="HMIS_VERSION")
 	private String hmisVersion;
 	
@@ -113,12 +111,6 @@ public class SurveyEntity extends BaseEntity {
 	}
 	public void setSurveyDefinition(String surveyDefinition) {
 		this.surveyDefinition = surveyDefinition;
-	}
-	public String getSurveyCategory() {
-		return surveyCategory;
-	}
-	public void setSurveyCategory(String surveyCategory) {
-		this.surveyCategory = surveyCategory;
 	}
 	public String getHmisVersion() {
 		return hmisVersion;

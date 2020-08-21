@@ -26,7 +26,6 @@ public class SurveyCategoryEntity extends BaseEntity {
 	@JoinColumn(name="SURVEY_ID")
 	private SurveyEntity surveyEntity;
 	
-	@org.hibernate.annotations.Type(type="pg-uuid")
 	@Column(name="SURVEY_CATEGORY")
 	private String surveyCategory;
 	
