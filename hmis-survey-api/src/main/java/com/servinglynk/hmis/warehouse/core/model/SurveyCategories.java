@@ -1,7 +1,7 @@
 package com.servinglynk.hmis.warehouse.core.model; 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -11,12 +11,12 @@ public class SurveyCategories extends PaginatedModel{
 
 
        @JsonProperty("surveyCategories") 
-       List<SurveyCategory>  surveyCategories = new ArrayList<SurveyCategory>();
-       public List<SurveyCategory> getSurveyCategories() {
+       Set<SurveyCategory>  surveyCategories = new HashSet<SurveyCategory>();
+       public Set<SurveyCategory> getSurveyCategories() {
            return surveyCategories;
        }
 
-        public void setSurveyCategories(List<SurveyCategory> surveyProjects) {
+        public void setSurveyCategories(Set<SurveyCategory> surveyProjects) {
            this.surveyCategories = surveyProjects;
        }
  

@@ -62,6 +62,22 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		amqEvent.setModule("ces");
 		amqEvent.setSubsystem("survey");
 		messageSender.sendAmqMessage(amqEvent);
+		
+		if()
+		amqEvent.setEventType("hmis.posting");
+		Map<String, Object> hmisData = new HashMap<String, Object>();
+		hmisData.put("clientId", clientId);
+		hmisData.put("dedupClientId", clientEntity.getDedupClientId());
+		hmisData.put("submissionId", submissionId);
+		hmisData.put("surveyId",surveyId);
+		hmisData.put("submissionDate",MQDateUtil.dateTimeToString(submissionDate));
+		hmisData.put("deleted", false);
+		hmisData.put("projectGroupCode", SecurityContextUtil.getUserProjectGroup());
+		hmisData.put("userId",SecurityContextUtil.getUserAccount().getAccountId());
+		amqEvent.setPayload(data);
+		amqEvent.setModule("ces");
+		amqEvent.setSubsystem("survey");
+		messageSender.sendAmqMessage(amqEvent);
 	
 	}
 	

@@ -227,11 +227,10 @@ public class SurveysController extends BaseController {
    
    @RequestMapping(method=RequestMethod.POST,value="/{surveyid}/categories")
    @APIMapping(value="SURVEY_API_CREATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
-   public SurveyCategory createSurveyCategory(@PathVariable("surveyid") UUID surveyid,
-		   @Valid @RequestBody SurveyCategory surveyCategory,HttpServletRequest request) throws Exception{
-         Session session = sessionHelper.getSession(request); 
-         serviceFactory.getSurveyCategoryService().createSurveyCategory(surveyid, surveyCategory,session.getAccount().getUsername());
-         return surveyCategory;
+   public SurveyCategories createSurveyCategory(@PathVariable("surveyid") UUID surveyid,
+		   @Valid @RequestBody SurveyCategories surveyCategories,HttpServletRequest request) throws Exception{
+         serviceFactory.getSurveyCategoryService().createSurveyCategory(surveyid, surveyCategories.getSurveyCategories());
+         return surveyCategories;
    }
    
    @RequestMapping(value="/{surveyid}/categories/{surveycategoryid}",method=RequestMethod.DELETE)
