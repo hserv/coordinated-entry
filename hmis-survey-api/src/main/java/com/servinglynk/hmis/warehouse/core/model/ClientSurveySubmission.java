@@ -18,6 +18,7 @@ public class ClientSurveySubmission extends ClientModel {
 	private UUID submissionId;
    	private UUID globalEnrollmentId;
    	private String hmisPostingStatus;
+   	private String surveyCategory;
    	
 	@JsonDeserialize(using=JsonTimestampDeserializer.class)
 	@JsonSerialize(using=JsonTimestampSerializer.class)
@@ -111,5 +112,17 @@ public class ClientSurveySubmission extends ClientModel {
 	}
 	public void setInformationDate(LocalDateTime informationDate) {
 		this.informationDate = informationDate;
+	}
+	public String getHmisPostingStatus() {
+		return hmisPostingStatus;
+	}
+	public void setHmisPostingStatus(String hmisPostingStatus) {
+		this.hmisPostingStatus = hmisPostingStatus;
+	}
+	public String getSurveyCategory() {
+		return surveyCategory;
+	}
+	public void setSurveyCategory(String surveyCategory) {
+		this.surveyCategory = surveyCategory;
 	}  	
 }

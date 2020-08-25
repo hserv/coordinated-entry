@@ -66,6 +66,9 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@Column(name="INFORMATION_DATE")
 	private LocalDate informationDate;
 	
+	@Column(name="SURVEY_CATEGORY")
+	private String surveyCaterogy;
+	
 	public UUID getId() {
 		return id;
 	}
@@ -145,5 +148,13 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 
 	public void setHmisPostStatus(String hmisPostStatus) {
 		this.hmisPostStatus = hmisPostStatus;
+	}
+
+	public String getSurveyCaterogy() {
+		return surveyCaterogy;
+	}
+
+	public void setSurveyCaterogy(String surveyCaterogy) {
+		this.surveyCaterogy = surveyCaterogy;
 	}
 }

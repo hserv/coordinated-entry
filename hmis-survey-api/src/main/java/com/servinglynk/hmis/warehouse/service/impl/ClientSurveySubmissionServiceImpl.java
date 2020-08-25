@@ -8,12 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.servinglynk.hmis.warehouse.common.MQDateUtil;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
+import com.servinglynk.hmis.warehouse.core.model.HmisPostingModel;
+import com.servinglynk.hmis.warehouse.core.model.QuestionResponseModel;
+import com.servinglynk.hmis.warehouse.core.model.Questionv2;
+import com.servinglynk.hmis.warehouse.core.model.Response;
+import com.servinglynk.hmis.warehouse.core.model.Responses;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.Sort;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.AMQEvent;
@@ -63,42 +70,78 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		amqEvent.setSubsystem("survey");
 		messageSender.sendAmqMessage(amqEvent);
 		
-		if()
-		amqEvent.setEventType("hmis.posting");
-		Map<String, Object> hmisData = new HashMap<String, Object>();
-		hmisData.put("clientId", clientId);
-		hmisData.put("dedupClientId", clientEntity.getDedupClientId());
-		hmisData.put("submissionId", submissionId);
-		hmisData.put("surveyId",surveyId);
-		hmisData.put("submissionDate",MQDateUtil.dateTimeToString(submissionDate));
-		hmisData.put("deleted", false);
-		hmisData.put("projectGroupCode", SecurityContextUtil.getUserProjectGroup());
-		hmisData.put("userId",SecurityContextUtil.getUserAccount().getAccountId());
-		amqEvent.setPayload(data);
-		amqEvent.setModule("ces");
-		amqEvent.setSubsystem("survey");
-		messageSender.sendAmqMessage(amqEvent);
-	
 	}
 	
 	@Transactional
-	public void updateClientSurveySubmission(UUID clientSurveySubmissionId, UUID globalEnrollmentId) {
+	public void updateClientSurveySubmission(UUID clientSurveySubmissionId, ClientSurveySubmission clientSurveySubmission, Session session) {
 		ClientSurveySubmissionEntity entity = daoFactory.getClientSurveySubmissionDao().getById(clientSurveySubmissionId);
 		if(entity==null) throw new ResourceNotFoundException("Client Survey submission not found");
-		entity.setGlobalEnrollmentId(globalEnrollmentId);
+		entity.setHmisPostStatus(clientSurveySubmission.getHmisPostingStatus());
+		entity.setEntryDate(clientSurveySubmission.getEntryDate().toLocalDate());
+		entity.setExitDate(clientSurveySubmission.getExitDate().toLocalDate());
+		entity.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
+		entity.setInformationDate(clientSurveySubmission.getInformationDate().toLocalDate());
+		entity.setSurveyCaterogy(clientSurveySubmission.getSurveyCategory());
 		entity.setUpdatedAt(LocalDateTime.now());
 		entity.setUser(getUser());
+		
 		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
-
-	}
-	@Transactional
-	public void updateHmisPostingStatus(UUID clientSurveySubmissionId, String hmisPostingStatus) {
-		ClientSurveySubmissionEntity entity = daoFactory.getClientSurveySubmissionDao().getById(clientSurveySubmissionId);
-		if(entity==null) throw new ResourceNotFoundException("Client Survey submission not found");
-		entity.setHmisPostStatus(hmisPostingStatus);
-		entity.setUpdatedAt(LocalDateTime.now());
-		entity.setUser(getUser());
-		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
+		
+		if(clientSurveySubmission.getHmisPostingStatus() != null) {
+			try {
+			UUID surveyId = clientSurveySubmission.getSurvey().getSurveyId();
+			List<QuestionResponseModel> questionResponses = new ArrayList<QuestionResponseModel>();
+			Responses responesBySubmissionId = serviceFactory.getResponseServiceV3().getResponsesBySubmissionId(surveyId, clientSurveySubmissionId, null, null);
+			if(responesBySubmissionId != null) {
+				List<Response> responses = responesBySubmissionId.getResponses();
+				if(CollectionUtils.isNotEmpty(responses)) {
+					for(Response response : responses) {
+						QuestionResponseModel questionResponse = new QuestionResponseModel();
+						questionResponse.setResponseId(response.getResponseId());
+						questionResponse.setResponseText(response.getResponseText());
+						UUID questionId = response.getQuestionId();
+						try {
+							Questionv2  question = serviceFactory.getQuestionServicev2().getQuestionById(questionId);
+							questionResponse.setQuestionClassification(question.getQuestionClassification());
+							questionResponse.setQuestionText(question.getDisplayText());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						questionResponses.add(questionResponse);
+					}
+				}
+			}
+			HmisPostingModel hmisPostingModel = new HmisPostingModel();
+			hmisPostingModel.setClientId(entity.getClientId().getId());
+			hmisPostingModel.setDedupClientId(entity.getClientId().getDedupClientId());
+			hmisPostingModel.setSurveyId(surveyId);
+			hmisPostingModel.setSubmissionDate(entity.getSubmissionDate());
+			hmisPostingModel.setEntryDate(entity.getEntryDate().atStartOfDay());
+			hmisPostingModel.setExitDate(entity.getExitDate().atStartOfDay());
+			hmisPostingModel.setInformationDate(entity.getInformationDate().atStartOfDay());
+			hmisPostingModel.setSurveyCategory(entity.getSurveyCaterogy());
+			hmisPostingModel.setProjectGroupCode(SecurityContextUtil.getUserProjectGroup());
+			hmisPostingModel.setUserId(SecurityContextUtil.getUserAccount().getAccountId());
+			// creating active mq request
+			AMQEvent amqEvent = new AMQEvent();
+			amqEvent.setEventType("hmis.posting");
+			Map<String, Object> data = new HashMap<String, Object>();
+			
+			amqEvent.setModule("ces");
+			amqEvent.setSubsystem("survey");
+			
+			data.put("sessionToken", session.getToken());
+			data.put("clientId",session.getClientTypeId());
+			data.put("userId", session.getAccount().getAccountId());
+			data.put("projectGroupCode", session.getAccount().getProjectGroup().getProjectGroupCode());
+			data.put("hmisPosting", hmisPostingModel.toJSONString());
+			amqEvent.setPayload(data);
+			messageSender.sendAmqMessage(amqEvent);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Transactional

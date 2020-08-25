@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 
 @RestController
 @RequestMapping("/clientsurveysubmissions")
@@ -38,10 +39,10 @@ public class ClientSurveySubmissionController extends BaseController{
 	
 	@RequestMapping(method=RequestMethod.PUT,value="/{clientSubmissionId}")
 	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	public void updateGlobalEnrollmentId(@RequestBody ClientSurveySubmission clientSurveySubmission , @PathVariable("clientSubmissionId") UUID clientSubmissionId ) throws Exception {
-		serviceFactory.getClientSurveySubmissionService().updateClientSurveySubmission(clientSubmissionId, clientSurveySubmission.getGlobalEnrollmentId());
+	public void updateGlobalEnrollmentId(@RequestBody ClientSurveySubmission clientSurveySubmission , @PathVariable("clientSubmissionId") UUID clientSubmissionId, HttpServletRequest request) throws Exception {
+		Session session = sessionHelper.getSession(request);
+		serviceFactory.getClientSurveySubmissionService().updateClientSurveySubmission(clientSubmissionId, clientSurveySubmission,session);
 	}
-	
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)

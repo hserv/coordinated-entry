@@ -7,7 +7,7 @@ import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 public interface ResponseServiceV3 {
 
-   Response createResponse(UUID surveyId,Responses response,BaseClient client,String caller );
+   Response createResponse(UUID surveyId,Responses responses,BaseClient client,String caller, String postToHmis);
    Response updateResponse(Response Response,String caller);
    Response deleteResponse(UUID ResponseId,String caller);
    Response getResponseById(UUID ResponseId, String version);
