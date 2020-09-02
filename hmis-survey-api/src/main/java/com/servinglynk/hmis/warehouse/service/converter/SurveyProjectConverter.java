@@ -2,6 +2,7 @@ package com.servinglynk.hmis.warehouse.service.converter;
 
 import com.servinglynk.hmis.warehouse.core.model.CreateSurveyProject;
 import com.servinglynk.hmis.warehouse.core.model.SurveyProject;
+import com.servinglynk.hmis.warehouse.model.SurveyEntity;
 import com.servinglynk.hmis.warehouse.model.SurveyProjectEntity;
 public class SurveyProjectConverter{
 
@@ -20,6 +21,12 @@ public class SurveyProjectConverter{
        model.setSchemaVersion(entity.getSchemaVersion());
        model.setDateCreated(entity.getCreatedAt());
        model.setDateUpdated(entity.getUpdatedAt());
+       SurveyEntity surveyEntity = entity.getSurveyEntity();
+       if(surveyEntity !=null) {
+    	   model.setSurveyId(surveyEntity.getId());
+    	   model.setSurveyTitle(surveyEntity.getSurveyTitle());
+       }
+       
        return model;
    }
    

@@ -8,12 +8,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.servinglynk.hmis.warehouse.common.MQDateUtil;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
+import com.servinglynk.hmis.warehouse.core.model.HmisPostingModel;
+import com.servinglynk.hmis.warehouse.core.model.QuestionResponseModel;
+import com.servinglynk.hmis.warehouse.core.model.Questionv2;
+import com.servinglynk.hmis.warehouse.core.model.Response;
+import com.servinglynk.hmis.warehouse.core.model.Responses;
+import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.Sort;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.AMQEvent;
@@ -27,15 +35,17 @@ import com.servinglynk.hmis.warehouse.util.SecurityContextUtil;
 
 @Component
 public class ClientSurveySubmissionServiceImpl extends ServiceBase implements ClientSurveySubmissionService {
-
+	final static Logger logger = Logger.getLogger(ClientSurveySubmissionServiceImpl.class);
+	
 	@Transactional
-	public void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId,LocalDateTime submissionDate) {
+	public void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId,LocalDateTime submissionDate, String surveyCategory) {
 		SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(surveyId);
 		ClientEntity clientEntity = daoFactory.getClientDao().getClientById(clientId);
 		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
 		entity.setClientId(clientEntity);
 		entity.setSubmissionId(submissionId);
 		entity.setSurveyId(surveyEntity);
+		entity.setSurveyCategory(surveyCategory);
 		entity.setSubmissionDate(submissionDate);
 		entity.setCreatedAt(LocalDateTime.now());
 		entity.setUpdatedAt(LocalDateTime.now());
@@ -44,10 +54,8 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		
 		daoFactory.getClientSurveySubmissionDao().create(entity);
 		
-		
 		// creating active mq request
 		AMQEvent amqEvent = new AMQEvent();
-
 		amqEvent.setEventType("survey.submissions");
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("clientId", clientId);
@@ -62,18 +70,92 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		amqEvent.setModule("ces");
 		amqEvent.setSubsystem("survey");
 		messageSender.sendAmqMessage(amqEvent);
-	
 	}
 	
 	@Transactional
-	public void updateClientSurveySubmission(UUID clientSurveySubmissionId, UUID globalEnrollmentId) {
+	public void updateClientSurveySubmission(UUID clientSurveySubmissionId, ClientSurveySubmission clientSurveySubmission, Session session) {
 		ClientSurveySubmissionEntity entity = daoFactory.getClientSurveySubmissionDao().getById(clientSurveySubmissionId);
 		if(entity==null) throw new ResourceNotFoundException("Client Survey submission not found");
-		entity.setGlobalEnrollmentId(globalEnrollmentId);
+		entity.setHmisPostStatus(clientSurveySubmission.getHmisPostingStatus());
 		entity.setUpdatedAt(LocalDateTime.now());
 		entity.setUser(getUser());
-		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
+		
+		if(clientSurveySubmission.getEntryDate() != null)
+			entity.setEntryDate(clientSurveySubmission.getEntryDate().toLocalDate());
+		if(clientSurveySubmission.getExitDate() != null)
+			entity.setExitDate(clientSurveySubmission.getExitDate().toLocalDate());
+		if(clientSurveySubmission.getGlobalEnrollmentId() != null)
+			entity.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
+		if(clientSurveySubmission.getInformationDate() != null )
+			entity.setInformationDate(clientSurveySubmission.getInformationDate().toLocalDate());
 
+		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
+		SurveyEntity surveyEntity = entity.getSurveyId();
+		if(clientSurveySubmission.getHmisPostingStatus() != null && surveyEntity !=null && surveyEntity.getId() != null) {
+			try {
+			List<QuestionResponseModel> questionResponses = new ArrayList<QuestionResponseModel>();
+			Responses responesBySubmissionId = serviceFactory.getResponseServiceV3().getResponsesBySubmissionId(surveyEntity.getId(), entity.getSubmissionId(), null, null);
+			if(responesBySubmissionId != null) {
+				List<Response> responses = responesBySubmissionId.getResponses();
+				if(CollectionUtils.isNotEmpty(responses)) {
+					for(Response response : responses) {
+						QuestionResponseModel questionResponse = null;
+						try {
+							UUID questionId = response.getQuestionId();
+							Questionv2  question = serviceFactory.getQuestionServicev2().getQuestionById(questionId);
+							if(question.getHudQuestion() || question.getQuestionClassification() != null) {
+								questionResponse = new QuestionResponseModel();
+								questionResponse.setQuestionClassification(question.getQuestionClassification());
+								questionResponse.setQuestionText(question.getDisplayText());
+								questionResponse.setUpdateUrlTemplate(question.getUpdateUrlTemplate());
+								questionResponse.setResponseId(response.getResponseId());
+								questionResponse.setResponseText(response.getResponseText());
+								questionResponse.setHmisLink(response.getHmisLink());
+								questionResponse.setUriObjectField(question.getUriObjectField());
+								questionResponses.add(questionResponse);
+							}
+						} catch (Exception e) {
+							logger.error(" Error when trying to build the questionResponseModel ", e);
+						}
+					}
+				}
+			}
+			HmisPostingModel hmisPostingModel = new HmisPostingModel();
+			
+			if(entity.getClientId() != null) {
+				hmisPostingModel.setDedupClientId(entity.getClientId().getDedupClientId());
+				hmisPostingModel.setClientId(entity.getClientId().getId());
+			}
+			hmisPostingModel.setSurveyId(surveyEntity.getId());
+			hmisPostingModel.setSubmissionDate(entity.getSubmissionDate());
+			if(entity.getEntryDate() != null)
+				hmisPostingModel.setEntryDate(entity.getEntryDate().atStartOfDay());
+			if(entity.getExitDate() != null)
+				hmisPostingModel.setExitDate(entity.getExitDate().atStartOfDay());
+			if(entity.getInformationDate() != null)
+				hmisPostingModel.setInformationDate(entity.getInformationDate().atStartOfDay());
+			hmisPostingModel.setSurveyCategory(entity.getSurveyCategory());
+			hmisPostingModel.setProjectGroupCode(SecurityContextUtil.getUserProjectGroup());
+			hmisPostingModel.setUserId(SecurityContextUtil.getUserAccount().getAccountId());
+			hmisPostingModel.setSchemaVersion(surveyEntity.getHmisVersion());
+			hmisPostingModel.setQuestionResponses(questionResponses);
+			// creating active mq request
+			AMQEvent amqEvent = new AMQEvent();
+			amqEvent.setEventType("hmis.posting");
+			Map<String, Object> data = new HashMap<String, Object>();
+			amqEvent.setModule("ces");
+			amqEvent.setSubsystem("survey");
+			data.put("sessionToken", session.getToken());
+			data.put("clientId",session.getClientTypeId());
+			data.put("userId", session.getAccount().getAccountId());
+			data.put("projectGroupCode", session.getAccount().getProjectGroup().getProjectGroupCode());
+			data.put("hmisPosting", hmisPostingModel.toJSONString());
+			amqEvent.setPayload(data);
+			messageSender.sendAmqMessage(amqEvent);
+			} catch (Exception e) {
+				logger.error(" Error posting MQ hmis.posting ", e);
+			}
+		}
 	}
 	@Transactional
 	public void updateHmisPostingStatus(UUID clientSurveySubmissionId, String hmisPostingStatus) {

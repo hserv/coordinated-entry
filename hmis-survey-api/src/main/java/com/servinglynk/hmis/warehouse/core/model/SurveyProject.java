@@ -1,6 +1,5 @@
 package com.servinglynk.hmis.warehouse.core.model; 
 
-import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -8,10 +7,11 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName("surveyProject")
 public class SurveyProject extends ClientModel{
 
-
       private UUID surveyProjectId;
 
       private UUID surveyId;
+      
+      private String surveyTitle;
       
       private UUID globalProjectId;
       
@@ -42,4 +42,10 @@ public class SurveyProject extends ClientModel{
     public void setSurveyId(UUID surveyId){
         this.surveyId = surveyId;
     }
+	public String getSurveyTitle() {
+		return surveyTitle;
+	}
+	public void setSurveyTitle(String surveyTitle) {
+		this.surveyTitle = surveyTitle;
+	}
  }

@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -33,8 +34,7 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@JoinColumn(name="CLIENT_ID")
 	@OneToOne(fetch=FetchType.LAZY)
 	private ClientEntity clientId;
-
-		
+	
 	@JoinColumn(name="SURVEY_ID")
 	@OneToOne(fetch=FetchType.LAZY)
 	private SurveyEntity surveyId; 
@@ -65,6 +65,9 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDate")	
 	@Column(name="INFORMATION_DATE")
 	private LocalDate informationDate;
+	
+	@Column(name="SURVEY_CATEGORY")
+	private String surveyCategory;
 	
 	public UUID getId() {
 		return id;
@@ -145,5 +148,12 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 
 	public void setHmisPostStatus(String hmisPostStatus) {
 		this.hmisPostStatus = hmisPostStatus;
+	}
+	public String getSurveyCategory() {
+		return surveyCategory;
+	}
+
+	public void setSurveyCategory(String surveyCaterogy) {
+		this.surveyCategory = surveyCaterogy;
 	}
 }

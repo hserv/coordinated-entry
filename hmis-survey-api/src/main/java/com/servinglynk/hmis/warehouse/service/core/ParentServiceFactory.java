@@ -14,6 +14,7 @@ import com.servinglynk.hmis.warehouse.service.SectionQuestionMappingService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreService;
 import com.servinglynk.hmis.warehouse.service.SectionScoreServiceV3;
 import com.servinglynk.hmis.warehouse.service.SharingRuleService;
+import com.servinglynk.hmis.warehouse.service.SurveyCategoryService;
 import com.servinglynk.hmis.warehouse.service.SurveyProjectService;
 import com.servinglynk.hmis.warehouse.service.SurveySectionService;
 import com.servinglynk.hmis.warehouse.service.SurveyService;
@@ -38,6 +39,8 @@ public interface ParentServiceFactory  {
 	SurveySectionService getSurveySectionService();
 	
 	SurveyProjectService getSurveyProjectService();
+	
+	SurveyCategoryService getSurveyCategoryService();
 	
 	SectionScoreService getSectionScoreService();
 

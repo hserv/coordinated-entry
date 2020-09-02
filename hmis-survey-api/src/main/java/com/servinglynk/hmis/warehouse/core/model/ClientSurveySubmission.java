@@ -20,6 +20,7 @@ public class ClientSurveySubmission extends ClientModel {
    	private UUID globalEnrollmentId;
    	@AllowedValues( allowNullDefault = true, values = { "INITIAL", "SUBMITTED", "UPDATED"}, message = "Allowed values for tag value are INITIAL,SUBMITTED,RESUBMITTED")
    	private String hmisPostingStatus;
+   	private String surveyCategory;
    	
 	@JsonDeserialize(using=JsonTimestampDeserializer.class)
 	@JsonSerialize(using=JsonTimestampSerializer.class)
@@ -119,5 +120,11 @@ public class ClientSurveySubmission extends ClientModel {
 	}
 	public void setHmisPostingStatus(String hmisPostingStatus) {
 		this.hmisPostingStatus = hmisPostingStatus;
+	}
+	public String getSurveyCategory() {
+		return surveyCategory;
+	}
+	public void setSurveyCategory(String surveyCategory) {
+		this.surveyCategory = surveyCategory;
 	}  	
 }

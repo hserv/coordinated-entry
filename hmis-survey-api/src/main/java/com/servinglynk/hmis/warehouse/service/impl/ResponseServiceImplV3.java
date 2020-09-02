@@ -77,7 +77,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 			effectiveDate = DateUtil.least(effectiveDate, response.getEffectiveDate());
 		}
 	   
-	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate);
+	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate, surveyEntity.getSurveyCategory());
 	   
 	   returnResponse.setSubmissionId(submissionId);
        return returnResponse;
