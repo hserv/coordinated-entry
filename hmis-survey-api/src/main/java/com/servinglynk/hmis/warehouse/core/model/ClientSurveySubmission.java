@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.servinglynk.hmis.warehouse.core.annotations.AllowedValues;
 
 @JsonRootName("clientsurveysubmission")
 public class ClientSurveySubmission extends ClientModel {
@@ -17,6 +18,7 @@ public class ClientSurveySubmission extends ClientModel {
 	private Survey survey;
 	private UUID submissionId;
    	private UUID globalEnrollmentId;
+   	@AllowedValues( allowNullDefault = true, values = { "INITIAL", "SUBMITTED", "UPDATED"}, message = "Allowed values for tag value are INITIAL,SUBMITTED,RESUBMITTED")
    	private String hmisPostingStatus;
    	private String surveyCategory;
    	

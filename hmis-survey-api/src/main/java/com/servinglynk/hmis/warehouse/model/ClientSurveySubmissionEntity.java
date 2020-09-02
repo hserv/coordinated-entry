@@ -149,7 +149,6 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	public void setHmisPostStatus(String hmisPostStatus) {
 		this.hmisPostStatus = hmisPostStatus;
 	}
-
 	public String getSurveyCategory() {
 		return surveyCategory;
 	}
