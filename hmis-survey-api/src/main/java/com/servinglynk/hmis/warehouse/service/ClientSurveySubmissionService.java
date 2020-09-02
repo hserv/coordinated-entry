@@ -15,10 +15,6 @@ public interface ClientSurveySubmissionService {
 	
 	void updateClientSurveySubmission(UUID clientSurveySubmissionId, ClientSurveySubmission  clientSurveySubmission, Session session);
 	
-	void updateClientSurveySubmission(UUID clientSurveySubmissionId, UUID globalEnrollmentId);
-  
-	void updateHmisPostingStatus(UUID clientSurveySubmissionId, String  hmisPostingStatus);
-  
 	ClientSurveySubmissions getSearchClientSurveySubmissions(String queryString, Integer startIndex, Integer maxItems, String sort, String order);
 
 	void updateClientSurveySubmissionDate(UUID surveyId, UUID clientId);

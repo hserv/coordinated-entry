@@ -32,12 +32,11 @@ public class ClientsControllerV3 extends BaseController {
 	   @APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
 	   public Response createResponse(@PathVariable("clientDedupId") UUID clientDedupId,
 			   @PathVariable("surveyid")  UUID surveyid,
-			   @RequestParam("post-hmis")  String  postHmis,
 			   @Valid  @RequestBody Responses response,HttpServletRequest request) throws Exception{
 	        Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        BaseClient client =clientValidator.validateDedupId(clientDedupId, trustedApp, session);
-	       return serviceFactory.getResponseServiceV3().createResponse(surveyid,response,client,session.getAccount().getUsername(),postHmis); 
+	       return serviceFactory.getResponseServiceV3().createResponse(surveyid,response,client,session.getAccount().getUsername()); 
 	       
 	   }
 

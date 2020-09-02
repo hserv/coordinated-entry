@@ -4,6 +4,8 @@ package com.servinglynk.hmis.warehouse.service.converter;
 import java.time.ZoneId;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.servinglynk.hmis.warehouse.core.model.Client;
 
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
@@ -44,4 +46,24 @@ public class ClientSurveySubmissionConverter {
 
 		return model;
 	}
+	
+	
+	public static ClientSurveySubmissionEntity modelToEntity(ClientSurveySubmission clientSurveySubmission,ClientSurveySubmissionEntity entity) {
+
+		if(StringUtils.isNotBlank(clientSurveySubmission.getHmisPostingStatus()))
+			entity.setHmisPostStatus(clientSurveySubmission.getHmisPostingStatus());
+		if(clientSurveySubmission.getGlobalEnrollmentId() != null)
+			entity.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
+		if(clientSurveySubmission.getEntryDate() != null)
+			entity.setEntryDate(clientSurveySubmission.getEntryDate().toLocalDate());
+		if(clientSurveySubmission.getExitDate() != null)
+			entity.setExitDate(clientSurveySubmission.getExitDate().toLocalDate());
+		if(clientSurveySubmission.getGlobalEnrollmentId() != null)
+			entity.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
+		if(clientSurveySubmission.getInformationDate() != null )
+			entity.setInformationDate(clientSurveySubmission.getInformationDate().toLocalDate());
+
+		return entity;
+	}
+	
 }

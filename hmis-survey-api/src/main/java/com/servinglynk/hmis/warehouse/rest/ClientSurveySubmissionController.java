@@ -44,13 +44,6 @@ public class ClientSurveySubmissionController extends BaseController{
 		serviceFactory.getClientSurveySubmissionService().updateClientSurveySubmission(clientSubmissionId, clientSurveySubmission,session);
 	}
 	
-
-	@RequestMapping(method=RequestMethod.PUT,value="/{clientSubmissionId}/post-hmis")
-	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	public void postHmis(@RequestBody ClientSurveySubmission clientSurveySubmission , @PathVariable("clientSubmissionId") UUID clientSubmissionId ) throws Exception {
-		serviceFactory.getClientSurveySubmissionService().updateHmisPostingStatus(clientSubmissionId, clientSurveySubmission.getHmisPostingStatus());
-	}
-
 	@RequestMapping(method=RequestMethod.GET)
 	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
 	public ClientSurveySubmissions getSearchClientSurveySubmissions(@RequestParam(value="q",required=false) String queryString,

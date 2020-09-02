@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,20 +75,11 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 	
 	@Transactional
 	public void updateClientSurveySubmission(UUID clientSurveySubmissionId, ClientSurveySubmission clientSurveySubmission, Session session) {
-		ClientSurveySubmissionEntity entity = daoFactory.getClientSurveySubmissionDao().getById(clientSurveySubmissionId);
-		if(entity==null) throw new ResourceNotFoundException("Client Survey submission not found");
-		entity.setHmisPostStatus(clientSurveySubmission.getHmisPostingStatus());
-		entity.setUpdatedAt(LocalDateTime.now());
-		entity.setUser(getUser());
-		
-		if(clientSurveySubmission.getEntryDate() != null)
-			entity.setEntryDate(clientSurveySubmission.getEntryDate().toLocalDate());
-		if(clientSurveySubmission.getExitDate() != null)
-			entity.setExitDate(clientSurveySubmission.getExitDate().toLocalDate());
-		if(clientSurveySubmission.getGlobalEnrollmentId() != null)
-			entity.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
-		if(clientSurveySubmission.getInformationDate() != null )
-			entity.setInformationDate(clientSurveySubmission.getInformationDate().toLocalDate());
+		ClientSurveySubmissionEntity clientSurveySubmissionEntity = daoFactory.getClientSurveySubmissionDao().getById(clientSurveySubmissionId);
+		if(clientSurveySubmissionEntity==null) throw new ResourceNotFoundException("Client Survey submission not found");
+		clientSurveySubmissionEntity.setUpdatedAt(LocalDateTime.now());
+		clientSurveySubmissionEntity.setUser(getUser());
+		ClientSurveySubmissionEntity entity = ClientSurveySubmissionConverter.modelToEntity(clientSurveySubmission, clientSurveySubmissionEntity);
 
 		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
 		SurveyEntity surveyEntity = entity.getSurveyId();
@@ -121,7 +113,6 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 				}
 			}
 			HmisPostingModel hmisPostingModel = new HmisPostingModel();
-			
 			if(entity.getClientId() != null) {
 				hmisPostingModel.setDedupClientId(entity.getClientId().getDedupClientId());
 				hmisPostingModel.setClientId(entity.getClientId().getId());
@@ -157,16 +148,6 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 			}
 		}
 	}
-	@Transactional
-	public void updateHmisPostingStatus(UUID clientSurveySubmissionId, String hmisPostingStatus) {
-		ClientSurveySubmissionEntity entity = daoFactory.getClientSurveySubmissionDao().getById(clientSurveySubmissionId);
-		if(entity==null) throw new ResourceNotFoundException("Client Survey submission not found");
-		entity.setHmisPostStatus(hmisPostingStatus);
-		entity.setUpdatedAt(LocalDateTime.now());
-		entity.setUser(getUser());
-		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
-	}
-	
 	
 	@Transactional
 	public ClientSurveySubmissions getAllClientSurveySubmissions(UUID clientId,String queryString, String sortColumn, String order,Integer startIndex,Integer maxItems) {
@@ -286,4 +267,5 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		//	}
 		}
 	}
+
 }
