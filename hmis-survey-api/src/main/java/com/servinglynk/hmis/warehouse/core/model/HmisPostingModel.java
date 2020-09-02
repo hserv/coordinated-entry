@@ -20,6 +20,8 @@ public class HmisPostingModel extends ClientModel{
 	private String surveyCategory;
 	private String projectGroupCode;
 	private UUID userId;
+	private UUID globalProjectId;
+	private String hmisPostingStatus;
 	private String schemaVersion;
 	List<QuestionResponseModel> questionResponses = new ArrayList<>();
 	
@@ -95,4 +97,17 @@ public class HmisPostingModel extends ClientModel{
 	public void setDedupClientId(UUID dedupClientId) {
 		this.dedupClientId = dedupClientId;
 	}
+	public String getHmisPostingStatus() {
+		return hmisPostingStatus;
+	}
+	public void setHmisPostingStatus(String hmisPostingStatus) {
+		this.hmisPostingStatus = hmisPostingStatus;
+	}
+	public UUID getGlobalProjectId() {
+		return globalProjectId;
+	}
+	public void setGlobalProjectId(UUID globalProjectId) {
+		this.globalProjectId = globalProjectId;
+	}
+	
 }

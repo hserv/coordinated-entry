@@ -35,7 +35,7 @@ import com.servinglynk.hmis.warehouse.util.SecurityContextUtil;
 public class ResponseServiceImplV3 extends ServiceBase implements ResponseServiceV3  {
 
    @Transactional
-   public Response createResponse(UUID surveyId,Responses responses,BaseClient client,String caller, String postToHmis){
+   public Response createResponse(UUID surveyId,Responses responses,BaseClient client,String caller){
 	   Response returnResponse = new Response();
 	   
 	   UUID submissionId = UUID.randomUUID();
@@ -77,7 +77,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 			effectiveDate = DateUtil.least(effectiveDate, response.getEffectiveDate());
 		}
 	   
-	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate);
+	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate, surveyEntity.getSurveyCategory());
 	   
 	   returnResponse.setSubmissionId(submissionId);
        return returnResponse;

@@ -209,16 +209,15 @@ public class SurveysController extends BaseController {
 	   return serviceFactory.getSurveyProjectService().getSurveyProjectById(projectid); 
    }
 
-   @RequestMapping(method=RequestMethod.GET,value="/{surveyid}/projects")
+   @RequestMapping(method=RequestMethod.GET,value="/{globalprojectid}/projects")
    @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
-   public SurveyProjects getAllSurveyProjets(@PathVariable("surveyid") UUID surveyid,
+   public SurveyProjects getAllSurveyProjets(@PathVariable("globalprojectid") UUID globalProjectId,
                        @RequestParam(value="startIndex", required=false) Integer startIndex, 
                        @RequestParam(value="maxItems", required=false) Integer maxItems,
-                       @RequestParam(value="globalProjectId", required=false) UUID globalProjectId,
+                       @RequestParam(value="surveyid", required=false) UUID surveyid,
                        HttpServletRequest request) throws Exception {
            if (startIndex == null) startIndex =0;
            if (maxItems == null || maxItems > 30) maxItems =30;
-           serviceFactory.getSurveyService().getSurveyById(surveyid);
            if(globalProjectId != null) {
         	  return serviceFactory.getSurveyProjectService().getAllSurveyByGlobaProjectId(globalProjectId, startIndex, maxItems);
            }

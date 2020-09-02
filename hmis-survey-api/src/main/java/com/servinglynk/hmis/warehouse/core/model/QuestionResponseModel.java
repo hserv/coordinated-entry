@@ -9,6 +9,10 @@ public class QuestionResponseModel  extends ClientModel {
 	private String responseText;
 	private UUID responseId;
 	private String questionClassification;
+	private String updateUrlTemplate;
+	private String uriObjectField;
+	private String hmisLink;
+	
 	public UUID getQuestionId() {
 		return questionId;
 	}
@@ -38,5 +42,23 @@ public class QuestionResponseModel  extends ClientModel {
 	}
 	public void setQuestionClassification(String questionClassification) {
 		this.questionClassification = questionClassification;
+	}
+	public String getUpdateUrlTemplate() {
+		return updateUrlTemplate;
+	}
+	public void setUpdateUrlTemplate(String updateUrlTemplate) {
+		this.updateUrlTemplate = updateUrlTemplate;
+	}
+	public String getHmisLink() {
+		return hmisLink;
+	}
+	public void setHmisLink(String hmisLink) {
+		this.hmisLink = hmisLink;
+	}
+	public String getUriObjectField() {
+		return uriObjectField;
+	}
+	public void setUriObjectField(String uriObjectField) {
+		this.uriObjectField = uriObjectField;
 	}
 }

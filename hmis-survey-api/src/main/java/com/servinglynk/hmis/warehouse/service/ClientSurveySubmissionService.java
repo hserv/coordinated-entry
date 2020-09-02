@@ -9,7 +9,7 @@ import com.servinglynk.hmis.warehouse.core.model.Session;
 
 public interface ClientSurveySubmissionService {
 	
-	void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId, LocalDateTime submissionDate);
+	void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId, LocalDateTime submissionDate, String surveyCategory);
 	
 	ClientSurveySubmissions getAllClientSurveySubmissions(UUID clientId,String queryString, String sort, String order, Integer startIndex, Integer maxItems);
 	
