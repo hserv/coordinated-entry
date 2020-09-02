@@ -7,6 +7,7 @@
 	<packaging>war</packaging>
 
 	<properties>
+		<java-version>1.8</java-version>
 		<parent-version>2.21.8</parent-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
