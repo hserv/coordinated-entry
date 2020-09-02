@@ -23,7 +23,7 @@ public class HmisPostingModel extends ClientModel{
 	private UUID globalProjectId;
 	private String hmisPostingStatus;
 	private String schemaVersion;
-	List<QuestionResponseModel> questionResponses = new ArrayList<>();
+	List<QuestionResponseModel> questionResponses = new ArrayList<QuestionResponseModel>();
 	
 	public UUID getClientId() {
 		return clientId;
