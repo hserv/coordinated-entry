@@ -20,6 +20,7 @@ public class HmisPostingModel extends ClientModel{
 	private String surveyCategory;
 	private String projectGroupCode;
 	private UUID userId;
+	private UUID globalEnrollmentId;
 	private UUID globalProjectId;
 	private String hmisPostingStatus;
 	private String schemaVersion;
@@ -109,5 +110,10 @@ public class HmisPostingModel extends ClientModel{
 	public void setGlobalProjectId(UUID globalProjectId) {
 		this.globalProjectId = globalProjectId;
 	}
-	
+	public UUID getGlobalEnrollmentId() {
+		return globalEnrollmentId;
+	}
+	public void setGlobalEnrollmentId(UUID globalEnrollmentId) {
+		this.globalEnrollmentId = globalEnrollmentId;
+	}
 }

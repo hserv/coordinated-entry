@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -46,6 +45,11 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@Type(type="pg-uuid")
    	@Column(name="GLOBAL_ENROLLMENT_ID")
    	private UUID globalEnrollmentId;
+	
+    
+	@Type(type="pg-uuid")
+   	@Column(name="GLOBAL_PROJECT_ID")
+   	private UUID globalProjectId;
 	
    	@Column(name="HMIS_POST_STATUS")
    	private String hmisPostStatus;
@@ -156,4 +160,13 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	public void setSurveyCategory(String surveyCaterogy) {
 		this.surveyCategory = surveyCaterogy;
 	}
+
+	public UUID getGlobalProjectId() {
+		return globalProjectId;
+	}
+
+	public void setGlobalProjectId(UUID globalProjectId) {
+		this.globalProjectId = globalProjectId;
+	}
+	
 }

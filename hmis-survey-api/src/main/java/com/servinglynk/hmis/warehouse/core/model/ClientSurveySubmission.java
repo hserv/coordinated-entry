@@ -18,6 +18,7 @@ public class ClientSurveySubmission extends ClientModel {
 	private Survey survey;
 	private UUID submissionId;
    	private UUID globalEnrollmentId;
+	private UUID globalProjectId;
    	@AllowedValues( allowNullDefault = true, values = { "INITIAL", "SUBMITTED", "UPDATED"}, message = "Allowed values for tag value are INITIAL,SUBMITTED,RESUBMITTED")
    	private String hmisPostingStatus;
    	private String surveyCategory;
@@ -71,7 +72,12 @@ public class ClientSurveySubmission extends ClientModel {
 	}
 	public void setGlobalEnrollmentId(UUID globalEnrollmentId) {
 		this.globalEnrollmentId = globalEnrollmentId;
-
+	}
+	public UUID getGlobalProjectId() {
+		return globalProjectId;
+	}
+	public void setGlobalProjectId(UUID globalProjectId) {
+		this.globalProjectId = globalProjectId;
 	}
 	public Client getClient() {
 		return client;
