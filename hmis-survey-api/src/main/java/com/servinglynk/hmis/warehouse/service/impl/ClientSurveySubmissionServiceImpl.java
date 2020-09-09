@@ -39,7 +39,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 	final static Logger logger = Logger.getLogger(ClientSurveySubmissionServiceImpl.class);
 	
 	@Transactional
-	public void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId,LocalDateTime submissionDate, String surveyCategory) {
+	public UUID createClientSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId,LocalDateTime submissionDate, String surveyCategory) {
 		SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(surveyId);
 		ClientEntity clientEntity = daoFactory.getClientDao().getClientById(clientId);
 		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
@@ -52,8 +52,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		entity.setUpdatedAt(LocalDateTime.now());
 		entity.setUser(getUser());
 		entity.setProjectGroupCode(SecurityContextUtil.getUserProjectGroup());
-		
-		daoFactory.getClientSurveySubmissionDao().create(entity);
+		UUID clientSurveySubmissionId = daoFactory.getClientSurveySubmissionDao().create(entity);
 		
 		// creating active mq request
 		AMQEvent amqEvent = new AMQEvent();
@@ -71,6 +70,8 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		amqEvent.setModule("ces");
 		amqEvent.setSubsystem("survey");
 		messageSender.sendAmqMessage(amqEvent);
+		
+		return clientSurveySubmissionId;
 	}
 	
 	@Transactional

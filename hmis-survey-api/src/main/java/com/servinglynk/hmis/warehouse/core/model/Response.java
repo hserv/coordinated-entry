@@ -38,6 +38,8 @@ public class Response extends ClientModel {
 
 	private UUID submissionId;
 	
+	private UUID clientSurveySubmissionId;
+	
 	private Client client;
 	
 	@JsonDeserialize(using=JsonTimestampDeserializer.class)
@@ -177,6 +179,12 @@ public class Response extends ClientModel {
 	}
 	public void setSurveyCategory(String surveyCategory) {
 		this.surveyCategory = surveyCategory;
+	}
+	public UUID getClientSurveySubmissionId() {
+		return clientSurveySubmissionId;
+	}
+	public void setClientSurveySubmissionId(UUID clientSurveySubmissionId) {
+		this.clientSurveySubmissionId = clientSurveySubmissionId;
 	}
 	
 }

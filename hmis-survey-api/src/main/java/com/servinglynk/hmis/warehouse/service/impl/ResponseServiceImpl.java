@@ -76,7 +76,7 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 			surveyCategory = response.getSurveyCategory();
 		}
 	   
-	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(clientId, surveyId, submissionId,effectiveDate,surveyCategory);
+	   serviceFactory.getClientSurveySubmissionService().createClientSurveySubmission(clientId, surveyId, submissionId,effectiveDate,surveyCategory);
 	   
 	   returnResponse.setSubmissionId(submissionId);
        return returnResponse;

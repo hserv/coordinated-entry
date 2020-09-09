@@ -16,9 +16,11 @@ import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 @Component
 public class ClientSurveySubmissionDaoImpl extends QueryExecutorImpl implements ClientSurveySubmissionDao {
 	
-	public void create(ClientSurveySubmissionEntity entity) {
-		entity.setId(UUID.randomUUID());
+	public UUID create(ClientSurveySubmissionEntity entity) {
+		UUID id = UUID.randomUUID();
+		entity.setId(id);
 		insert(entity);
+		return id;
 	}
 	
 	public void updateClientSurveySubmission(ClientSurveySubmissionEntity entity) {
