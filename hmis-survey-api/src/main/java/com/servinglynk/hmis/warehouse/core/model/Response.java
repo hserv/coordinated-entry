@@ -31,7 +31,9 @@ public class Response extends ClientModel {
 	private String hmisLink;
 
 	private UUID surveyId;
-
+	
+	private String surveyCategory;
+	
 	private boolean refused;
 
 	private UUID submissionId;
@@ -170,4 +172,11 @@ public class Response extends ClientModel {
 	public void setHmisLink(String hmisLink) {
 		this.hmisLink = hmisLink;
 	}
+	public String getSurveyCategory() {
+		return surveyCategory;
+	}
+	public void setSurveyCategory(String surveyCategory) {
+		this.surveyCategory = surveyCategory;
+	}
+	
 }
