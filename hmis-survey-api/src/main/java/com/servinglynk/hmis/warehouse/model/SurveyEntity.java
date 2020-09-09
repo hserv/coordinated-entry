@@ -41,8 +41,6 @@ public class SurveyEntity extends BaseEntity {
 	private String surveyDefinition;
 	@Column(name="HMIS_VERSION")
 	private String hmisVersion;
-	@Column(name="SURVEY_CATEGORY")
-	private String surveyCategory;
 	
 	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
 	@Where(clause=" IS_ACTIVE = 'TRUE' ")
@@ -126,11 +124,4 @@ public class SurveyEntity extends BaseEntity {
 	public void setSurveyCategoryEntities(List<SurveyCategoryEntity> surveyCategoryEntities) {
 		this.surveyCategoryEntities = surveyCategoryEntities;
 	}
-	public String getSurveyCategory() {
-		return surveyCategory;
-	}
-	public void setSurveyCategory(String surveyCategory) {
-		this.surveyCategory = surveyCategory;
-	}
-	
 }

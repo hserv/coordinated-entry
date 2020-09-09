@@ -23,6 +23,14 @@ public class ClientSurveySubmissionConverter {
 		model.setId(entity.getId());
 		model.setSubmissionId(entity.getSubmissionId());
 		model.setSubmissionDate(entity.getSubmissionDate());
+		model.setSurveyCategory(entity.getSurveyCategory());
+		if(entity.getEntryDate() !=null)
+			model.setEntryDate(entity.getEntryDate().atStartOfDay());
+		if(entity.getExitDate() !=null)
+			model.setExitDate(entity.getExitDate().atStartOfDay());
+		if(entity.getInformationDate() !=null)
+			model.setInformationDate(entity.getInformationDate().atStartOfDay());
+		model.setHmisPostingStatus(entity.getHmisPostStatus());
 		if(entity.getSurveyId()!=null) {
 			model.setSurveyId(entity.getSurveyId().getId());
 			model.setSurvey(SurveyConverter.entityToModel(entity.getSurveyId()));
