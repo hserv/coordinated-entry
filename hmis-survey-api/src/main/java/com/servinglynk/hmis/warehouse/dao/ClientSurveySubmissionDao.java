@@ -8,7 +8,7 @@ import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 public interface ClientSurveySubmissionDao {
 
 	
-	void create(ClientSurveySubmissionEntity entity);
+	UUID create(ClientSurveySubmissionEntity entity);
 	
 	void updateClientSurveySubmission(ClientSurveySubmissionEntity entity);
 	

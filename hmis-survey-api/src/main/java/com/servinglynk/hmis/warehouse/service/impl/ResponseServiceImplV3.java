@@ -79,9 +79,10 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 			surveyCategory = response.getSurveyCategory();
 		}
 	   
-	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate, surveyCategory);
+	   UUID clientSurveySubmissionId = serviceFactory.getClientSurveySubmissionService().createClientSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate, surveyCategory);
 	   
 	   returnResponse.setSubmissionId(submissionId);
+	   returnResponse.setClientSurveySubmissionId(clientSurveySubmissionId);
        return returnResponse;
    }
 
