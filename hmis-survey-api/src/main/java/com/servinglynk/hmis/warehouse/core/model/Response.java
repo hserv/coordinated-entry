@@ -13,6 +13,8 @@ public class Response extends ClientModel {
 	private UUID responseId;
 
 	private String responseText;
+	
+	private String pickListValueCode;
 
 	private int questionScore;
 
@@ -186,5 +188,12 @@ public class Response extends ClientModel {
 	public void setClientSurveySubmissionId(UUID clientSurveySubmissionId) {
 		this.clientSurveySubmissionId = clientSurveySubmissionId;
 	}
-	
+
+	public String getPickListValueCode() {
+		return pickListValueCode;
+	}
+
+	public void setPickListValueCode(String pickListValueCode) {
+		this.pickListValueCode = pickListValueCode;
+	}
 }
