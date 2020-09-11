@@ -1,6 +1,7 @@
 package com.servinglynk.hmis.warehouse.core.model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -27,17 +28,11 @@ public class ClientSurveySubmission extends ClientModel {
 	@JsonSerialize(using=JsonTimestampSerializer.class)
    	private LocalDateTime submissionDate;
 	
-	@JsonDeserialize(using=JsonTimestampDeserializer.class)
-	@JsonSerialize(using=JsonTimestampSerializer.class)
-   	private LocalDateTime entryDate;
+   	private Date entryDate;
 	
-	@JsonDeserialize(using=JsonTimestampDeserializer.class)
-	@JsonSerialize(using=JsonTimestampSerializer.class)
-   	private LocalDateTime exitDate;
+   	private Date exitDate;
 	
-	@JsonDeserialize(using=JsonTimestampDeserializer.class)
-	@JsonSerialize(using=JsonTimestampSerializer.class)
-   	private LocalDateTime informationDate;
+   	private Date informationDate;
 
    	private Client client;
 
@@ -103,22 +98,22 @@ public class ClientSurveySubmission extends ClientModel {
 	public void setSurvey(Survey survey) {
 		this.survey = survey;
 	}
-	public LocalDateTime getEntryDate() {
+	public Date getEntryDate() {
 		return entryDate;
 	}
-	public void setEntryDate(LocalDateTime entryDate) {
+	public void setEntryDate(Date entryDate) {
 		this.entryDate = entryDate;
 	}
-	public LocalDateTime getExitDate() {
+	public Date getExitDate() {
 		return exitDate;
 	}
-	public void setExitDate(LocalDateTime exitDate) {
+	public void setExitDate(Date exitDate) {
 		this.exitDate = exitDate;
 	}
-	public LocalDateTime getInformationDate() {
+	public Date getInformationDate() {
 		return informationDate;
 	}
-	public void setInformationDate(LocalDateTime informationDate) {
+	public void setInformationDate(Date informationDate) {
 		this.informationDate = informationDate;
 	}
 	public String getHmisPostingStatus() {

@@ -7,7 +7,6 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 
 import com.servinglynk.hmis.warehouse.core.model.Client;
-
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.model.ClientSurveySubmissionEntity;
 
@@ -16,7 +15,7 @@ public class ClientSurveySubmissionConverter {
 	
 	public static ClientSurveySubmission entityToModel(ClientSurveySubmissionEntity entity) {
 		ClientSurveySubmission model = new ClientSurveySubmission();
-
+		ZoneId defaultZoneId = ZoneId.systemDefault();
 		model.setClientId(entity.getClientId().getId());
 
 		model.setGlobalEnrollmentId(entity.getGlobalEnrollmentId());
@@ -24,19 +23,18 @@ public class ClientSurveySubmissionConverter {
 		model.setSubmissionId(entity.getSubmissionId());
 		model.setSubmissionDate(entity.getSubmissionDate());
 		model.setSurveyCategory(entity.getSurveyCategory());
-		if(entity.getEntryDate() !=null)
-			model.setEntryDate(entity.getEntryDate().atStartOfDay());
+		if(entity.getEntryDate() !=null) 
+			model.setEntryDate(Date.from(entity.getEntryDate().atStartOfDay(defaultZoneId).toInstant()));
 		if(entity.getExitDate() !=null)
-			model.setExitDate(entity.getExitDate().atStartOfDay());
+			model.setExitDate(Date.from(entity.getExitDate().atStartOfDay(defaultZoneId).toInstant()));
 		if(entity.getInformationDate() !=null)
-			model.setInformationDate(entity.getInformationDate().atStartOfDay());
+			model.setInformationDate(Date.from(entity.getInformationDate().atStartOfDay(defaultZoneId).toInstant()));
+		
 		model.setHmisPostingStatus(entity.getHmisPostStatus());
 		if(entity.getSurveyId()!=null) {
 			model.setSurveyId(entity.getSurveyId().getId());
 			model.setSurvey(SurveyConverter.entityToModel(entity.getSurveyId()));
 		}
-
-		
 		if (entity.getClientId() != null) {
 			Client client = new Client();
 			if (entity.getClientId().getDob() != null)
@@ -51,7 +49,6 @@ public class ClientSurveySubmissionConverter {
 			model.setClient(client);
 			model.setClientLink("/hmis-clientapi/rest/v"+entity.getClientId().getSchemaYear()+"/clients/"+entity.getClientId().getId());
 		}
-
 		return model;
 	}
 	
@@ -63,13 +60,19 @@ public class ClientSurveySubmissionConverter {
 		if(clientSurveySubmission.getGlobalEnrollmentId() != null)
 			entity.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
 		if(clientSurveySubmission.getEntryDate() != null)
-			entity.setEntryDate(clientSurveySubmission.getEntryDate().toLocalDate());
+			entity.setEntryDate(clientSurveySubmission.getEntryDate().toInstant()
+				      .atZone(ZoneId.systemDefault())
+				      .toLocalDate());
 		if(clientSurveySubmission.getExitDate() != null)
-			entity.setExitDate(clientSurveySubmission.getExitDate().toLocalDate());
+			entity.setExitDate(clientSurveySubmission.getExitDate().toInstant()
+				      .atZone(ZoneId.systemDefault())
+				      .toLocalDate());
 		if(clientSurveySubmission.getGlobalEnrollmentId() != null)
 			entity.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
 		if(clientSurveySubmission.getInformationDate() != null )
-			entity.setInformationDate(clientSurveySubmission.getInformationDate().toLocalDate());
+			entity.setInformationDate(clientSurveySubmission.getInformationDate().toInstant()
+				      .atZone(ZoneId.systemDefault())
+				      .toLocalDate());
 
 		return entity;
 	}

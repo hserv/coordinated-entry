@@ -1,6 +1,7 @@
 package com.servinglynk.hmis.warehouse.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -99,11 +100,17 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 					hmisPostingModel.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
 					hmisPostingModel.setSubmissionDate(clientSurveySubmission.getSubmissionDate());
 					if(clientSurveySubmission.getEntryDate() != null)
-						hmisPostingModel.setEntryDate(clientSurveySubmission.getEntryDate());
+						hmisPostingModel.setEntryDate(clientSurveySubmission.getEntryDate().toInstant()
+							      .atZone(ZoneId.systemDefault())
+							      .toLocalDateTime());
 					if(clientSurveySubmission.getExitDate() != null)
-						hmisPostingModel.setExitDate(clientSurveySubmission.getExitDate());
+						hmisPostingModel.setExitDate(clientSurveySubmission.getExitDate().toInstant()
+						      .atZone(ZoneId.systemDefault())
+						      .toLocalDateTime());
 					if(clientSurveySubmission.getInformationDate() != null)
-						hmisPostingModel.setInformationDate(clientSurveySubmission.getInformationDate());
+						hmisPostingModel.setInformationDate(clientSurveySubmission.getInformationDate().toInstant()
+							      .atZone(ZoneId.systemDefault())
+							      .toLocalDateTime());
 					
 					hmisPostingModel.setProjectGroupCode(SecurityContextUtil.getUserProjectGroup());
 					hmisPostingModel.setUserId(SecurityContextUtil.getUserAccount().getAccountId());
