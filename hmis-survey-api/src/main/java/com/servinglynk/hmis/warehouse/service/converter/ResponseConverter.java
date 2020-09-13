@@ -14,6 +14,7 @@ public class ResponseConverter {
        entity.setRefused(model.isRefused());
        entity.setResponseText(model.getResponseText());
        entity.setAppId(model.getAppId());
+       entity.setPickListValueCode(model.getPickListValueCode());
        entity.setEffectiveDate(model.getEffectiveDate());
        entity.setHmisLink(model.getHmisLink());
        if(model.getDedupClientId()!=null) entity.setDedupClientId(model.getDedupClientId());
@@ -28,6 +29,7 @@ public class ResponseConverter {
        model.setResponseId(entity.getId());
        model.setRefused(entity.isRefused());
        model.setResponseText(entity.getResponseText());
+       model.setPickListValueCode(entity.getPickListValueCode());
        model.setQuestionScore(entity.getQuestionScore());
        model.setAppId(entity.getAppId());
        if(entity.getSurveySectionEntity()!=null) model.setSectionId(entity.getSurveySectionEntity().getId());
@@ -46,6 +48,7 @@ public class ResponseConverter {
        model.setResponseId(entity.getId());
        model.setRefused(entity.isRefused());
        model.setResponseText(entity.getResponseText());
+       model.setPickListValueCode(entity.getPickListValueCode());
        model.setQuestionScore(entity.getQuestionScore());
        model.setAppId(entity.getAppId());
        if(entity.getSurveySectionEntity()!=null) model.setSectionId(entity.getSurveySectionEntity().getId());
