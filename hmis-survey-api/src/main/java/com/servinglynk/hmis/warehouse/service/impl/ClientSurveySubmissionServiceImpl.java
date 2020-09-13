@@ -131,6 +131,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 									questionResponse.setUpdateUrlTemplate(question.getUpdateUrlTemplate());
 									questionResponse.setResponseId(response.getResponseId());
 									questionResponse.setResponseText(response.getResponseText());
+									questionResponse.setPickListValueCode(response.getPickListValueCode());
 									questionResponse.setHmisLink(response.getHmisLink());
 									questionResponse.setUriObjectField(question.getUriObjectField());
 									questionResponses.add(questionResponse);

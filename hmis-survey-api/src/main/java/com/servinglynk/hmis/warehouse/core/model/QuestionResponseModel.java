@@ -6,6 +6,7 @@ public class QuestionResponseModel  extends ClientModel {
 
 	private UUID questionId;
 	private String questionText;
+	private String pickListValueCode;
 	private String responseText;
 	private UUID responseId;
 	private String questionClassification;
@@ -60,5 +61,11 @@ public class QuestionResponseModel  extends ClientModel {
 	}
 	public void setUriObjectField(String uriObjectField) {
 		this.uriObjectField = uriObjectField;
+	}
+	public String getPickListValueCode() {
+		return pickListValueCode;
+	}
+	public void setPickListValueCode(String pickListValueCode) {
+		this.pickListValueCode = pickListValueCode;
 	}
 }
