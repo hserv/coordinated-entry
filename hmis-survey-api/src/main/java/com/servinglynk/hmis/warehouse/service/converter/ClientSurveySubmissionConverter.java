@@ -23,6 +23,7 @@ public class ClientSurveySubmissionConverter {
 		model.setSubmissionId(entity.getSubmissionId());
 		model.setSubmissionDate(entity.getSubmissionDate());
 		model.setSurveyCategory(entity.getSurveyCategory());
+		model.setHmisLink(entity.getHmisLink());
 		if(entity.getEntryDate() !=null) 
 			model.setEntryDate(Date.from(entity.getEntryDate().atStartOfDay(defaultZoneId).toInstant()));
 		if(entity.getExitDate() !=null)
@@ -73,7 +74,7 @@ public class ClientSurveySubmissionConverter {
 			entity.setInformationDate(clientSurveySubmission.getInformationDate().toInstant()
 				      .atZone(ZoneId.systemDefault())
 				      .toLocalDate());
-
+		entity.setHmisLink(clientSurveySubmission.getHmisLink());
 		return entity;
 	}
 	

@@ -28,7 +28,6 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
     @org.hibernate.annotations.Type(type="pg-uuid")
 	@Column(name = "id")
 	private UUID id;
-	
 
 	@JoinColumn(name="CLIENT_ID")
 	@OneToOne(fetch=FetchType.LAZY)
@@ -46,7 +45,9 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
    	@Column(name="GLOBAL_ENROLLMENT_ID")
    	private UUID globalEnrollmentId;
 	
-    
+	@Column(name="HMIS_LINK")
+	private String hmisLink;
+	
 	@Type(type="pg-uuid")
    	@Column(name="GLOBAL_PROJECT_ID")
    	private UUID globalProjectId;
@@ -168,5 +169,12 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	public void setGlobalProjectId(UUID globalProjectId) {
 		this.globalProjectId = globalProjectId;
 	}
-	
+
+	public String getHmisLink() {
+		return hmisLink;
+	}
+
+	public void setHmisLink(String hmisLink) {
+		this.hmisLink = hmisLink;
+	}
 }

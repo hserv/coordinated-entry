@@ -20,6 +20,7 @@ public class ClientSurveySubmission extends ClientModel {
 	private UUID submissionId;
    	private UUID globalEnrollmentId;
 	private UUID globalProjectId;
+	private String hmisLink;
    	@AllowedValues( allowNullDefault = true, values = { "INITIAL", "SUBMITTED", "UPDATED"}, message = "Allowed values for tag value are INITIAL,SUBMITTED,RESUBMITTED")
    	private String hmisPostingStatus;
    	private String surveyCategory;
@@ -127,5 +128,11 @@ public class ClientSurveySubmission extends ClientModel {
 	}
 	public void setSurveyCategory(String surveyCategory) {
 		this.surveyCategory = surveyCategory;
-	}  	
+	}
+	public String getHmisLink() {
+		return hmisLink;
+	}
+	public void setHmisLink(String hmisLink) {
+		this.hmisLink = hmisLink;
+	}  
 }
