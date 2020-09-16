@@ -85,15 +85,16 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 
 		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
 		SurveyEntity surveyEntity = entity.getSurveyId();
+		HmisPostingModel hmisPostingModel = null;
 		if(clientSurveySubmission.getHmisPostingStatus() != null && surveyEntity !=null && surveyEntity.getId() != null) {
-			try {
+				hmisPostingModel = new HmisPostingModel();
 				Responses responesBySubmissionId = serviceFactory.getResponseServiceV3().getResponsesBySubmissionId(surveyEntity.getId(), entity.getSubmissionId(), null, null);
-				HmisPostingModel hmisPostingModel = new HmisPostingModel();
 				if(responesBySubmissionId != null) {
 					if(entity.getClientId() != null) {
 						hmisPostingModel.setDedupClientId(entity.getClientId().getDedupClientId());
 						hmisPostingModel.setClientId(entity.getClientId().getId());
 					}
+					hmisPostingModel.setClientSurveySubmissionId(clientSurveySubmissionId);
 					hmisPostingModel.setGlobalProjectId(clientSurveySubmission.getGlobalProjectId());
 					hmisPostingModel.setSurveyCategory(clientSurveySubmission.getSurveyCategory());
 					hmisPostingModel.setSurveyId(surveyEntity.getId());
@@ -143,6 +144,8 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 						hmisPostingModel.setQuestionResponses(questionResponses);
 					}
 				}
+			}
+			try {
 				// creating active mq request
 				AMQEvent amqEvent = new AMQEvent();
 				amqEvent.setEventType("survey.submissions");
@@ -157,7 +160,8 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 				data.put("userId",SecurityContextUtil.getUserAccount().getAccountId());
 				data.put("trustedAppId", session.getClientTypeId());
 				data.put("sessionToken",SecurityContextUtil.getSession().getToken());
-				data.put("hmisPosting", hmisPostingModel.toJSONString());
+				if(hmisPostingModel !=null)
+					data.put("hmisPosting", hmisPostingModel.toJSONString());
 				amqEvent.setModule("ces");
 				amqEvent.setSubsystem("survey");
 				amqEvent.setPayload(data);
@@ -165,7 +169,6 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 			} catch (Exception e) {
 				logger.error(" Error posting MQ hmis.posting ", e);
 			}
-		}
 	}
 	
 	@Transactional

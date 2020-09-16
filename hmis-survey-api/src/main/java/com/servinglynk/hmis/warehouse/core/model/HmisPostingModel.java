@@ -22,6 +22,7 @@ public class HmisPostingModel extends ClientModel{
 	private UUID userId;
 	private UUID globalEnrollmentId;
 	private UUID globalProjectId;
+	private UUID clientSurveySubmissionId;
 	private String hmisPostingStatus;
 	private String schemaVersion;
 	List<QuestionResponseModel> questionResponses = new ArrayList<QuestionResponseModel>();
@@ -115,5 +116,11 @@ public class HmisPostingModel extends ClientModel{
 	}
 	public void setGlobalEnrollmentId(UUID globalEnrollmentId) {
 		this.globalEnrollmentId = globalEnrollmentId;
+	}
+	public UUID getClientSurveySubmissionId() {
+		return clientSurveySubmissionId;
+	}
+	public void setClientSurveySubmissionId(UUID clientSurveySubmissionId) {
+		this.clientSurveySubmissionId = clientSurveySubmissionId;
 	}
 }
