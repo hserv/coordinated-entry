@@ -209,9 +209,9 @@ public class SurveysController extends BaseController {
 	   return serviceFactory.getSurveyProjectService().getSurveyProjectById(projectid); 
    }
 
-   @RequestMapping(method=RequestMethod.GET,value="/{globalprojectid}/projects")
+   @RequestMapping(method=RequestMethod.GET,value="/{globalprojectid}/surveyprojects")
    @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
-   public SurveyProjects getAllSurveyProjets(@PathVariable("globalprojectid") UUID globalProjectId,
+   public SurveyProjects getAllSurveyFromProject(@PathVariable("globalprojectid") UUID globalProjectId,
                        @RequestParam(value="startIndex", required=false) Integer startIndex, 
                        @RequestParam(value="maxItems", required=false) Integer maxItems,
                        @RequestParam(value="surveyid", required=false) UUID surveyid,
@@ -223,6 +223,20 @@ public class SurveysController extends BaseController {
            }
         return serviceFactory.getSurveyProjectService().getAllSurveySurveyProjects(surveyid,startIndex,maxItems); 
    }
+   
+   @RequestMapping(method=RequestMethod.GET,value="/{surveyid}/projects")
+   @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public SurveyProjects getAllSurveyProjets(
+                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
+                       @RequestParam(value="maxItems", required=false) Integer maxItems,
+                       @PathVariable(value="surveyid") UUID surveyid,
+                       HttpServletRequest request) throws Exception {
+           if (startIndex == null) startIndex =0;
+           if (maxItems == null || maxItems > 30) maxItems =30;
+           
+           return serviceFactory.getSurveyProjectService().getAllSurveySurveyProjects(surveyid,startIndex,maxItems); 
+   }
+   
    
    @RequestMapping(method=RequestMethod.POST,value="/{surveyid}/categories")
    @APIMapping(value="SURVEY_API_CREATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
