@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.rest; 
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,9 +31,15 @@ public class SurveysControllerv2 extends BaseController {
    public Surveyv2 createSurvey(@Valid @RequestBody Surveyv2 survey,HttpServletRequest request) throws Exception{
         Session session = sessionHelper.getSession(request); 
          serviceFactory.getSurveyServicev2().createSurvey(survey,session); 
-         Set<SurveyCategory> surveyCategories = survey.getSurveyCategories();
+         Set<String> surveyCategories =	survey.getSurveyCategories();
          if(CollectionUtils.isNotEmpty(surveyCategories)) {
-      	   serviceFactory.getSurveyCategoryService().createSurveyCategory(survey.getSurveyId(), surveyCategories);
+        	Set<SurveyCategory> surveyCategoriesModel = new HashSet<>();
+        	for(String category :  surveyCategories) {
+        		SurveyCategory surveyCategory = new SurveyCategory();
+        		surveyCategory.setCategory(category);
+        		surveyCategoriesModel.add(surveyCategory);
+        	}
+      	   serviceFactory.getSurveyCategoryService().createSurveyCategory(survey.getSurveyId(), surveyCategoriesModel);
          }
          Surveyv2 returnsurvey = new Surveyv2();
          returnsurvey.setSurveyId(survey.getSurveyId());
