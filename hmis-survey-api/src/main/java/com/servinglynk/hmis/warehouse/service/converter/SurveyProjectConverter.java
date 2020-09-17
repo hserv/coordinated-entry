@@ -9,7 +9,7 @@ public class SurveyProjectConverter{
    public static SurveyProjectEntity modelToEntity (SurveyProject model ,SurveyProjectEntity entity) {
        if(entity==null) entity = new SurveyProjectEntity();
        entity.setId(model.getSurveyProjectId());
-       entity.setSchemaVersion(model.getSchemaVersion());
+       entity.setProjectName(model.getProjectName());
        return entity;    
    }
 
@@ -18,9 +18,9 @@ public class SurveyProjectConverter{
        SurveyProject model = new SurveyProject();
        model.setSurveyProjectId(entity.getId());
        model.setGlobalProjectId(entity.getGlobalProjectId());
-       model.setSchemaVersion(entity.getSchemaVersion());
        model.setDateCreated(entity.getCreatedAt());
        model.setDateUpdated(entity.getUpdatedAt());
+       model.setProjectName(entity.getProjectName());
        SurveyEntity surveyEntity = entity.getSurveyEntity();
        if(surveyEntity !=null) {
     	   model.setSurveyId(surveyEntity.getId());
@@ -33,7 +33,6 @@ public class SurveyProjectConverter{
    public static SurveyProjectEntity modelToEntity (CreateSurveyProject model ,SurveyProjectEntity entity) {
        if(entity==null) entity = new SurveyProjectEntity();
        entity.setId(model.getSurveyProjectId());
-       entity.setSchemaVersion(model.getSchemaVersion());
        return entity;    
    }
 
