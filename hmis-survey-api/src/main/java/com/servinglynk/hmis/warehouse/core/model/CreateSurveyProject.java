@@ -15,8 +15,6 @@ public class CreateSurveyProject extends ClientModel{
       
       private Set<GlobalProject> globalProjects;
       
-      private String schemaVersion;
-
       
     public UUID getSurveyProjectId() {
 		return surveyProjectId;
@@ -29,12 +27,6 @@ public class CreateSurveyProject extends ClientModel{
 	}
 	public void setGlobalProjects(Set<GlobalProject> globalProjects) {
 		this.globalProjects = globalProjects;
-	}
-	public String getSchemaVersion() {
-		return schemaVersion;
-	}
-	public void setSchemaVersion(String schemaVersion) {
-		this.schemaVersion = schemaVersion;
 	}
 	public UUID getSurveyId(){
           return surveyId;

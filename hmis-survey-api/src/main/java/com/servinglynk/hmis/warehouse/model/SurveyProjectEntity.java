@@ -30,9 +30,11 @@ public class SurveyProjectEntity extends BaseEntity {
 	@org.hibernate.annotations.Type(type="pg-uuid")
 	@Column(name="GLOBAL_PROJECT_ID")
 	private UUID globalProjectId;
+
+	@Column(name="PROJECT_NAME")
+	private String projectName;
+
 	
-	@Column(name="SCHEMA_VERSION")
-	private String schemaVersion;
 	
 	public UUID getId() {
 		return id;
@@ -52,10 +54,11 @@ public class SurveyProjectEntity extends BaseEntity {
 	public void setGlobalProjectId(UUID globalProjectId) {
 		this.globalProjectId = globalProjectId;
 	}
-	public String getSchemaVersion() {
-		return schemaVersion;
+	public String getProjectName() {
+		return projectName;
 	}
-	public void setSchemaVersion(String schemaVersion) {
-		this.schemaVersion = schemaVersion;
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
+	
 }

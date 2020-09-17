@@ -15,6 +15,8 @@ public class SurveyProject extends ClientModel{
       
       private UUID globalProjectId;
       
+      private String projectName;
+      
       private String schemaVersion;
 
       
@@ -48,4 +50,11 @@ public class SurveyProject extends ClientModel{
 	public void setSurveyTitle(String surveyTitle) {
 		this.surveyTitle = surveyTitle;
 	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	
  }

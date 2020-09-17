@@ -38,6 +38,7 @@ public class SurveyProjectServiceImpl extends ServiceBase implements SurveyProje
 			       pSurveyProject.setSurveyEntity(surveyEntity);
 			       pSurveyProject.setCreatedAt(LocalDateTime.now());
 			       pSurveyProject.setUser(getUser());
+			       pSurveyProject.setProjectName(globalProject.getProjectName());
 			       pSurveyProject.setGlobalProjectId(globalProject.getGlobalProjectId());
 			       daoFactory.getSurveyProjectEntityDao().createSurveyProjectEntity(pSurveyProject);
 			       surveyProject.setSurveyProjectId(pSurveyProject.getId());
@@ -61,7 +62,6 @@ public class SurveyProjectServiceImpl extends ServiceBase implements SurveyProje
        surveySection.setSurveyProjectId(pSurveyProject.getId());
        return surveySection;
    }
-
 
    @Transactional
    public SurveyProject deleteSurveyProject(UUID SurveyProjectId,String caller){
