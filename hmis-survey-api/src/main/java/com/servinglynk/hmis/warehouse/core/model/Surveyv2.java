@@ -36,7 +36,7 @@ public class Surveyv2 extends ClientModel {
 			        message = "Allowed values for tag value are v2014,v2015,v2016,v2017, 2018,v2020" )
 	private String hmisVersion;
 	
-	private Set<SurveyCategory> surveyCategories;
+	private Set<String> surveyCategories;
 
 	public UUID getSurveyId() {
 		return surveyId;
@@ -103,11 +103,11 @@ public class Surveyv2 extends ClientModel {
 		this.hmisVersion = hmisVersion;
 	}
 
-	public Set<SurveyCategory> getSurveyCategories() {
+	public Set<String> getSurveyCategories() {
 		return surveyCategories;
 	}
 
-	public void setSurveyCategories(Set<SurveyCategory> surveyCategories) {
+	public void setSurveyCategories(Set<String> surveyCategories) {
 		this.surveyCategories = surveyCategories;
 	}
 }
