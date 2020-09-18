@@ -14,6 +14,7 @@ public class SurveyConverter{
        entity.setCopySurveyId(model.getCopySurveyId());
        entity.setLocked(model.getLocked());
        entity.setHmisVersion(model.getHmisVersion());
+       entity.setSurveyDefinition(model.getSurveyDefinition());
        return entity;    
    }
 
