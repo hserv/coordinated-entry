@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.core.model;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -9,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.servinglynk.hmis.warehouse.core.annotations.AllowedValues;
 
 @JsonRootName("survey")
-public class Surveyv2 extends ClientModel {
+public class Surveyv3 extends ClientModel {
 
 	private UUID surveyId;
 
@@ -21,7 +22,7 @@ public class Surveyv2 extends ClientModel {
 	@NotEmpty(message = "Survey Owner is required")
 	private String surveyOwner;
 
-	@AllowedValues(values = { "SINGLE_ADULT", "FAMILY", "YOUTH",
+	@AllowedValues( values = { "SINGLE_ADULT", "FAMILY", "YOUTH",
 			"HUD" }, message = "Allowed values for tag value are SINGLE_ADULT,FAMILY,YOUTH,HUD")
 	private String tagValue;
 
@@ -30,7 +31,13 @@ public class Surveyv2 extends ClientModel {
 	private boolean locked;
 
 	private boolean copySurveyId;
-
+	
+	@AllowedValues( allowNullDefault = true, values = { "v2014", "v2015", "v2016", "v2017","v2020" }, 
+			        message = "Allowed values for tag value are v2014,v2015,v2016,v2017, 2018,v2020" )
+	private String hmisVersion;
+	
+	private Set<String> surveyCategories;
+	
 	private String surveyDefinition;
 
 	public UUID getSurveyId() {
@@ -89,6 +96,23 @@ public class Surveyv2 extends ClientModel {
 		this.locked = locked;
 	}
 
+
+	public String getHmisVersion() {
+		return hmisVersion;
+	}
+
+	public void setHmisVersion(String hmisVersion) {
+		this.hmisVersion = hmisVersion;
+	}
+
+	public Set<String> getSurveyCategories() {
+		return surveyCategories;
+	}
+
+	public void setSurveyCategories(Set<String> surveyCategories) {
+		this.surveyCategories = surveyCategories;
+	}
+
 	public String getSurveyDefinition() {
 		return surveyDefinition;
 	}
@@ -96,4 +120,5 @@ public class Surveyv2 extends ClientModel {
 	public void setSurveyDefinition(String surveyDefinition) {
 		this.surveyDefinition = surveyDefinition;
 	}
+	
 }
