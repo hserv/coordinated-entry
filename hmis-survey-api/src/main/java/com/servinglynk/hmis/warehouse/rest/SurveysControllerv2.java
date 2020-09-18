@@ -32,7 +32,7 @@ public class SurveysControllerv2 extends BaseController {
         Session session = sessionHelper.getSession(request); 
          serviceFactory.getSurveyServicev2().createSurvey(survey,session); 
          Set<String> surveyCategories =	survey.getSurveyCategories();
-         if(CollectionUtils.isNotEmpty(surveyCategories)) {
+         if(CollectionUtils.isNotEmpty(surveyCategories)) {	
         	Set<SurveyCategory> surveyCategoriesModel = new HashSet<>();
         	for(String category :  surveyCategories) {
         		SurveyCategory surveyCategory = new SurveyCategory();
@@ -71,7 +71,7 @@ public class SurveysControllerv2 extends BaseController {
    @RequestMapping(method=RequestMethod.GET)
    @APIMapping(value="SURVEY_API_GET_ALL_SURVEY",checkTrustedApp=true,checkSessionToken=true)
    public Surveysv2 getAllSurveys(
-                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
+                       @RequestParam(value="	", required=false) Integer startIndex, 
                        @RequestParam(value="maxItems", required=false) Integer maxItems,
                        HttpServletRequest request) throws Exception {
            if (startIndex == null) startIndex =0;

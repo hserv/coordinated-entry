@@ -37,6 +37,8 @@ public class Surveyv2 extends ClientModel {
 	private String hmisVersion;
 	
 	private Set<String> surveyCategories;
+	
+	private String surveyDefinition;
 
 	public UUID getSurveyId() {
 		return surveyId;
@@ -110,4 +112,13 @@ public class Surveyv2 extends ClientModel {
 	public void setSurveyCategories(Set<String> surveyCategories) {
 		this.surveyCategories = surveyCategories;
 	}
+
+	public String getSurveyDefinition() {
+		return surveyDefinition;
+	}
+
+	public void setSurveyDefinition(String surveyDefinition) {
+		this.surveyDefinition = surveyDefinition;
+	}
+	
 }

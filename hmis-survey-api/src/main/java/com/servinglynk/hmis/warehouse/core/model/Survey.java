@@ -34,6 +34,8 @@ public class Survey extends ClientModel {
 	
 	private String hmisVersion;
 	
+	private String surveyDefinition;
+	
 	private Set<String> surveyCategories;
 
 
@@ -107,5 +109,13 @@ public class Survey extends ClientModel {
 
 	public void setSurveyCategories(Set<String> surveyCategories) {
 		this.surveyCategories = surveyCategories;
+	}
+
+	public String getSurveyDefinition() {
+		return surveyDefinition;
+	}
+
+	public void setSurveyDefinition(String surveyDefinition) {
+		this.surveyDefinition = surveyDefinition;
 	}
 }
