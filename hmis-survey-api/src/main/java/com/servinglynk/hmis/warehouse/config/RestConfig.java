@@ -103,11 +103,6 @@ public class RestConfig extends WebMvcConfigurerAdapter {
 	}
 	
 	@Bean
-	public ProjectsController projectsController(){
-		return new ProjectsController();
-	}
-	
-	@Bean
 	public ApiAuthCheckInterceptor authCheckInterceptor(){
 		return new ApiAuthCheckInterceptor();
 	}

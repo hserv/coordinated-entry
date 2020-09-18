@@ -22,6 +22,7 @@ import com.servinglynk.hmis.warehouse.service.SurveyProjectService;
 import com.servinglynk.hmis.warehouse.service.SurveySectionService;
 import com.servinglynk.hmis.warehouse.service.SurveyService;
 import com.servinglynk.hmis.warehouse.service.SurveyServicev2;
+import com.servinglynk.hmis.warehouse.service.SurveyServicev3;
 
 @Component
 public class ParentServiceFactoryImpl  implements ParentServiceFactory {
@@ -29,6 +30,7 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 
 	@Autowired SurveyService surveyService;
 	@Autowired SurveyServicev2 surveyServicev2;
+	@Autowired SurveyServicev3 surveyServicev3;
 	@Autowired QuestionServicev2 questionServicev2;
 	@Autowired ResponseServiceV3 responseServiceV3;
 	@Autowired SectionScoreServiceV3 sectionScoreServiceV3;
@@ -210,5 +212,13 @@ public class ParentServiceFactoryImpl  implements ParentServiceFactory {
 
 	public void setSurveyCategoryService(SurveyCategoryService surveyCategoryService) {
 		this.surveyCategoryService = surveyCategoryService;
+	}
+
+	public SurveyServicev3 getSurveyServicev3() {
+		return surveyServicev3;
+	}
+
+	public void setSurveyServicev3(SurveyServicev3 surveyServicev3) {
+		this.surveyServicev3 = surveyServicev3;
 	}
 }
