@@ -1,7 +1,8 @@
 package com.servinglynk.hmis.warehouse.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -82,69 +83,10 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		clientSurveySubmissionEntity.setUpdatedAt(LocalDateTime.now());
 		clientSurveySubmissionEntity.setUser(getUser());
 		ClientSurveySubmissionEntity entity = ClientSurveySubmissionConverter.modelToEntity(clientSurveySubmission, clientSurveySubmissionEntity);
-
+		
 		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
-		SurveyEntity surveyEntity = entity.getSurveyId();
-		HmisPostingModel hmisPostingModel = null;
-		if(clientSurveySubmission.getHmisPostingStatus() != null && surveyEntity !=null && surveyEntity.getId() != null) {
-				hmisPostingModel = new HmisPostingModel();
-				Responses responesBySubmissionId = serviceFactory.getResponseServiceV3().getResponsesBySubmissionId(surveyEntity.getId(), entity.getSubmissionId(), null, null);
-				if(responesBySubmissionId != null) {
-					if(entity.getClientId() != null) {
-						hmisPostingModel.setDedupClientId(entity.getClientId().getDedupClientId());
-						hmisPostingModel.setClientId(entity.getClientId().getId());
-					}
-					hmisPostingModel.setClientSurveySubmissionId(clientSurveySubmissionId);
-					hmisPostingModel.setGlobalProjectId(clientSurveySubmission.getGlobalProjectId());
-					hmisPostingModel.setSurveyCategory(clientSurveySubmission.getSurveyCategory());
-					hmisPostingModel.setSurveyId(surveyEntity.getId());
-					hmisPostingModel.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
-					hmisPostingModel.setSubmissionDate(clientSurveySubmission.getSubmissionDate());
-					if(clientSurveySubmission.getEntryDate() != null)
-						hmisPostingModel.setEntryDate(clientSurveySubmission.getEntryDate().toInstant()
-							      .atZone(ZoneId.systemDefault())
-							      .toLocalDateTime());
-					if(clientSurveySubmission.getExitDate() != null)
-						hmisPostingModel.setExitDate(clientSurveySubmission.getExitDate().toInstant()
-						      .atZone(ZoneId.systemDefault())
-						      .toLocalDateTime());
-					if(clientSurveySubmission.getInformationDate() != null)
-						hmisPostingModel.setInformationDate(clientSurveySubmission.getInformationDate().toInstant()
-							      .atZone(ZoneId.systemDefault())
-							      .toLocalDateTime());
-					
-					hmisPostingModel.setProjectGroupCode(SecurityContextUtil.getUserProjectGroup());
-					hmisPostingModel.setUserId(SecurityContextUtil.getUserAccount().getAccountId());
-					hmisPostingModel.setSchemaVersion(surveyEntity.getHmisVersion());
-					hmisPostingModel.setHmisPostingStatus(clientSurveySubmission.getHmisPostingStatus());
-					List<Response> responses = responesBySubmissionId.getResponses();
-					if(CollectionUtils.isNotEmpty(responses)) {
-						List<QuestionResponseModel> questionResponses = new ArrayList<QuestionResponseModel>();
-						for(Response response : responses) {
-							QuestionResponseModel questionResponse = null;
-							try {
-								UUID questionId = response.getQuestionId();
-								Questionv2  question = serviceFactory.getQuestionServicev2().getQuestionById(questionId);
-								if(question.getHudQuestion() || StringUtils.equals("HUD", question.getQuestionClassification()) || StringUtils.equals("CES", question.getQuestionClassification()) ) {
-									questionResponse = new QuestionResponseModel();
-									questionResponse.setQuestionClassification(question.getQuestionClassification());
-									questionResponse.setQuestionText(question.getDisplayText());
-									questionResponse.setUpdateUrlTemplate(question.getUpdateUrlTemplate());
-									questionResponse.setResponseId(response.getResponseId());
-									questionResponse.setResponseText(response.getResponseText());
-									questionResponse.setPickListValueCode(response.getPickListValueCode());
-									questionResponse.setHmisLink(response.getHmisLink());
-									questionResponse.setUriObjectField(question.getUriObjectField());
-									questionResponses.add(questionResponse);
-								}
-							} catch (Exception e) {
-								logger.error(" Error when trying to build the questionResponseModel ", e);
-							}
-						}
-						hmisPostingModel.setQuestionResponses(questionResponses);
-					}
-				}
-			}
+		HmisPostingModel hmisPostingModel = buildHmisPostingModel(entity, clientSurveySubmission, clientSurveySubmissionId);
+
 			try {
 				// creating active mq request
 				AMQEvent amqEvent = new AMQEvent();
@@ -169,6 +111,74 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 			} catch (Exception e) {
 				logger.error(" Error posting MQ hmis.posting ", e);
 			}
+	}
+	/***
+	 * Build Hmis posting model for double posting.
+	 * @param entity
+	 * @param clientSurveySubmission
+	 * @param clientSurveySubmissionId
+	 * @return
+	 */
+	private HmisPostingModel buildHmisPostingModel(ClientSurveySubmissionEntity entity, ClientSurveySubmission clientSurveySubmission,UUID clientSurveySubmissionId) {
+		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyy-MM-dd");
+		SurveyEntity surveyEntity = entity.getSurveyId();
+		HmisPostingModel hmisPostingModel = null;
+		if(clientSurveySubmission.getHmisPostingStatus() != null && surveyEntity !=null && surveyEntity.getId() != null) {
+			hmisPostingModel = new HmisPostingModel();
+			Responses responesBySubmissionId = serviceFactory.getResponseServiceV3().getResponsesBySubmissionId(surveyEntity.getId(), entity.getSubmissionId(), null, null);
+			if(responesBySubmissionId != null) {
+				if(entity.getClientId() != null) {
+					hmisPostingModel.setDedupClientId(entity.getClientId().getDedupClientId());
+					hmisPostingModel.setClientId(entity.getClientId().getId());
+				}
+				hmisPostingModel.setClientSurveySubmissionId(clientSurveySubmissionId);
+				hmisPostingModel.setGlobalProjectId(clientSurveySubmission.getGlobalProjectId());
+				hmisPostingModel.setSurveyCategory(clientSurveySubmission.getSurveyCategory());
+				hmisPostingModel.setSurveyId(surveyEntity.getId());
+				hmisPostingModel.setGlobalEnrollmentId(clientSurveySubmission.getGlobalEnrollmentId());
+				if(clientSurveySubmission.getSubmissionDate() !=null)
+				hmisPostingModel.setSubmissionDate(formatter.format(clientSurveySubmission.getSubmissionDate()));
+				if(clientSurveySubmission.getEntryDate() != null)
+					hmisPostingModel.setEntryDate(dateFormatter.format(clientSurveySubmission.getEntryDate()));
+				if(clientSurveySubmission.getExitDate() != null)
+					hmisPostingModel.setExitDate(dateFormatter.format(clientSurveySubmission.getExitDate()));
+				if(clientSurveySubmission.getInformationDate() != null)
+					hmisPostingModel.setInformationDate(dateFormatter.format(clientSurveySubmission.getInformationDate()));
+				
+				hmisPostingModel.setProjectGroupCode(SecurityContextUtil.getUserProjectGroup());
+				hmisPostingModel.setUserId(SecurityContextUtil.getUserAccount().getAccountId());
+				hmisPostingModel.setSchemaVersion(surveyEntity.getHmisVersion());
+				hmisPostingModel.setHmisPostingStatus(clientSurveySubmission.getHmisPostingStatus());
+				List<Response> responses = responesBySubmissionId.getResponses();
+				if(CollectionUtils.isNotEmpty(responses)) {
+					List<QuestionResponseModel> questionResponses = new ArrayList<QuestionResponseModel>();
+					for(Response response : responses) {
+						QuestionResponseModel questionResponse = null;
+						try {
+							UUID questionId = response.getQuestionId();
+							Questionv2  question = serviceFactory.getQuestionServicev2().getQuestionById(questionId);
+							if(question.getHudQuestion() || StringUtils.equals("HUD", question.getQuestionClassification()) || StringUtils.equals("CES", question.getQuestionClassification()) ) {
+								questionResponse = new QuestionResponseModel();
+								questionResponse.setQuestionClassification(question.getQuestionClassification());
+								questionResponse.setQuestionText(question.getDisplayText());
+								questionResponse.setUpdateUrlTemplate(question.getUpdateUrlTemplate());
+								questionResponse.setResponseId(response.getResponseId());
+								questionResponse.setResponseText(response.getResponseText());
+								questionResponse.setPickListValueCode(response.getPickListValueCode());
+								questionResponse.setHmisLink(response.getHmisLink());
+								questionResponse.setUriObjectField(question.getUriObjectField());
+								questionResponses.add(questionResponse);
+							}
+						} catch (Exception e) {
+							logger.error(" Error when trying to build the questionResponseModel ", e);
+						}
+					}
+					hmisPostingModel.setQuestionResponses(questionResponses);
+				}
+			}
+		}
+		return hmisPostingModel;
 	}
 	
 	@Transactional
