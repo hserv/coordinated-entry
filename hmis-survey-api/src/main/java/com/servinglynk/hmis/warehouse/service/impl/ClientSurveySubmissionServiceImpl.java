@@ -158,7 +158,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 						try {
 							UUID questionId = response.getQuestionId();
 							Questionv2  question = serviceFactory.getQuestionServicev2().getQuestionById(questionId);
-							if(question.getHudQuestion() || StringUtils.equals("HUD", question.getQuestionClassification()) || StringUtils.equals("CES", question.getQuestionClassification()) ) {
+							if(question.getHudQuestion() || StringUtils.isNotBlank(question.getQuestionClassification()) ) {
 								questionResponse = new QuestionResponseModel();
 								questionResponse.setQuestionClassification(question.getQuestionClassification());
 								questionResponse.setQuestionText(question.getDisplayText());
