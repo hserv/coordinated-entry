@@ -51,6 +51,7 @@ public class QuestionConverterv2   {
        model.setLocked(entity.isLocked());
        model.setQuestionWeight(entity.getQuestionWeight());
        model.setDefinition(entity.getDefinition());
+       model.setQuestionClassification(entity.getQuestionClassification());
        model.setVisibility(entity.isVisibility());
        model.setCategory(entity.getCategory());
        model.setSubcategory(entity.getSubcategory());
