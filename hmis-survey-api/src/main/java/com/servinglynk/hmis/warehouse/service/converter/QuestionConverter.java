@@ -52,7 +52,7 @@ public class QuestionConverter   {
        }catch (Exception e) {
 
        }	
-    
+       model.setQuestionClassification(entity.getQuestionClassification());
        model.setQuestionType(QuestionTypeEnum.valueOf(entity.getQuestionType()));
        model.setCorrectValueForAssessment(entity.getCorrectValueForAssessment());
        model.setCopyQuestionId(entity.isCopyQuestionId());
