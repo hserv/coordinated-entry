@@ -83,7 +83,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		clientSurveySubmissionEntity.setUpdatedAt(LocalDateTime.now());
 		clientSurveySubmissionEntity.setUser(getUser());
 		ClientSurveySubmissionEntity entity = ClientSurveySubmissionConverter.modelToEntity(clientSurveySubmission, clientSurveySubmissionEntity);
-		
+		logger.info("Before updating client survey submissions:"+clientSurveySubmissionId);
 		daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
 		HmisPostingModel hmisPostingModel = buildHmisPostingModel(entity, clientSurveySubmission, clientSurveySubmissionId);
 
@@ -102,11 +102,14 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 				data.put("userId",SecurityContextUtil.getUserAccount().getAccountId());
 				data.put("trustedAppId", session.getClientTypeId());
 				data.put("sessionToken",SecurityContextUtil.getSession().getToken());
-				if(hmisPostingModel !=null)
+				if(hmisPostingModel !=null) {
 					data.put("hmisPosting", hmisPostingModel.toJSONString());
+					logger.info("hmisPosting :"+hmisPostingModel.toJSONString());
+				}
 				amqEvent.setModule("ces");
 				amqEvent.setSubsystem("survey");
 				amqEvent.setPayload(data);
+				logger.info(" Sending survey.submissions to MQ :"+clientSurveySubmissionId);
 				messageSender.sendAmqMessage(amqEvent);
 			} catch (Exception e) {
 				logger.error(" Error posting MQ hmis.posting ", e);
