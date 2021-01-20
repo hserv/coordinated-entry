@@ -44,4 +44,6 @@ public interface MatchReservationsService {
 	void deleteNote(UUID nodeId) throws Exception;
 
 	public Page<StatusNotesEntity> getStatusNote(UUID resevationId, Integer statuscode,Pageable pageable);
+
+	public void createManualMatch(UUID dedulpClient, MatchReservationModel matchReservationModel) throws Exception;
  }

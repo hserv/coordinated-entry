@@ -24,10 +24,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.hserv.coordinatedentry.housingmatching.dao.HousingUnitsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.entity.GlobalHousehold;
@@ -443,4 +445,26 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		Authentication authentication =  context.getAuthentication();
 	//	notificationService.notifyStatusUpdate(match, recipients,(Session) authentication.getPrincipal(),trustedAppId);
 	}
+	
+	@Autowired HousingUnitsRepository housingUnitsRepository;
+
+	@Transactional
+	public void createManualMatch(UUID dedulpClient, MatchReservationModel matchReservationModel) throws Exception {
+		List<EligibleClient> eligibleClients = repositoryFactory.getEligibleClientsRepository().findByClientDedupIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(dedulpClient,SecurityContextUtil.getUserProjectGroup(),false);
+		if(eligibleClients.isEmpty())
+			throw new ResourceNotFoundException("dedulp client id not eligible for match");
+		
+		List<HousingInventory> housingInventories =		housingUnitsRepository.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(matchReservationModel.getHousingUnitId(),SecurityContextUtil.getUserProjectGroup(), false);
+		if(housingInventories.isEmpty()) throw new ResourceNotFoundException("Housing unit not found");
+		if(housingInventories.get(0).getVacant()!= null && !housingInventories.get(0).getVacant().booleanValue()) throw new AccessDeniedException("Housing unit not vacant");
+	Match matchReservations = matchReservationTranslator.translatev2(matchReservationModel);
+		matchReservations.setEligibleClient(eligibleClients.get(0));
+	repositoryFactory.getMatchReservationsRepository().saveAndFlush(matchReservations);
+	HousingInventory housingInventory = housingInventories.get(0);
+	housingInventory.setVacant(false);
+	housingUnitsRepository.save(housingInventory);
+	EligibleClient eligibleClient = eligibleClients.get(0);
+	eligibleClient.setMatched(true);
+	repositoryFactory.getEligibleClientsRepository().save(eligibleClient);
+}
 }
