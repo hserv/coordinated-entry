@@ -197,7 +197,7 @@ public class MatchReservationsServiceImplV3 implements MatchReservationsServiceV
 				if(match==null)  throw new ResourceNotFoundException("No match reservation found");
 				client = match.getEligibleClient();
 		}
-		List<MatchStatusLevels> nextLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(match.getProgramType(), match.getMatchStatus()+"");
+		List<MatchStatusLevels> nextLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(match.getProjectGroupCode(), match.getMatchStatus()+"");
 		
 		
 		List newStatus = new ArrayList();

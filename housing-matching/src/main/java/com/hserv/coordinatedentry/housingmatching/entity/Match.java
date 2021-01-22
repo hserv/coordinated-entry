@@ -54,7 +54,7 @@ public class Match extends BaseEntity {
 	@Column(name = "inactive")
 	private Boolean inactive;
 
-	@Column(name = "housing_unit_id", nullable = false)
+	@Column(name = "housing_unit_id")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID housingUnitId;
 

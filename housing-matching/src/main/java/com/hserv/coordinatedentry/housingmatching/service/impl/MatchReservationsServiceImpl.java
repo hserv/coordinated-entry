@@ -449,22 +449,47 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	@Autowired HousingUnitsRepository housingUnitsRepository;
 
 	@Transactional
-	public void createManualMatch(UUID dedulpClient, MatchReservationModel matchReservationModel) throws Exception {
-		List<EligibleClient> eligibleClients = repositoryFactory.getEligibleClientsRepository().findByClientDedupIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(dedulpClient,SecurityContextUtil.getUserProjectGroup(),false);
-		if(eligibleClients.isEmpty())
+	public MatchReservationModel createManualMatch(UUID dedulpClient, MatchReservationModel matchReservationModel) throws Exception {
+		List<EligibleClient> eligibleClients = repositoryFactory.getEligibleClientsRepository()
+				.findByClientDedupIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(dedulpClient,
+						SecurityContextUtil.getUserProjectGroup(), false);
+		if (eligibleClients.isEmpty())
 			throw new ResourceNotFoundException("dedulp client id not eligible for match");
-		
-		List<HousingInventory> housingInventories =		housingUnitsRepository.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(matchReservationModel.getHousingUnitId(),SecurityContextUtil.getUserProjectGroup(), false);
-		if(housingInventories.isEmpty()) throw new ResourceNotFoundException("Housing unit not found");
-		if(housingInventories.get(0).getVacant()!= null && !housingInventories.get(0).getVacant().booleanValue()) throw new AccessDeniedException("Housing unit not vacant");
-	Match matchReservations = matchReservationTranslator.translatev2(matchReservationModel);
+
+		List<HousingInventory> housingInventories = housingUnitsRepository
+				.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(matchReservationModel.getHousingUnitId(),
+						SecurityContextUtil.getUserProjectGroup(), false);
+		if (housingInventories.isEmpty())
+			throw new ResourceNotFoundException("Housing unit not found");
+		if (housingInventories.get(0).getVacant() != null && !housingInventories.get(0).getVacant().booleanValue())
+			throw new AccessDeniedException("Housing unit not vacant");
+
+		Match matchReservations = matchReservationTranslator.translatev2(matchReservationModel);
 		matchReservations.setEligibleClient(eligibleClients.get(0));
-	repositoryFactory.getMatchReservationsRepository().saveAndFlush(matchReservations);
-	HousingInventory housingInventory = housingInventories.get(0);
-	housingInventory.setVacant(false);
-	housingUnitsRepository.save(housingInventory);
-	EligibleClient eligibleClient = eligibleClients.get(0);
-	eligibleClient.setMatched(true);
-	repositoryFactory.getEligibleClientsRepository().save(eligibleClient);
-}
+		matchReservations.setMatchStatus(0);
+		matchReservations.setClientDedupId(eligibleClients.get(0).getClientDedupId());
+		matchReservations.setHousingUnitId(matchReservationModel.getHousingUnitId());
+		matchReservations.setProjectGroupCode(SecurityContextUtil.getUserProjectGroup());
+		repositoryFactory.getMatchReservationsRepository().save(matchReservations);
+	
+		HousingInventory housingInventory = housingInventories.get(0);
+		housingInventory.setVacant(false);
+		housingUnitsRepository.save(housingInventory);
+
+		EligibleClient eligibleClient = eligibleClients.get(0);
+		eligibleClient.setMatched(true);
+		repositoryFactory.getEligibleClientsRepository().save(eligibleClient);
+		
+		MatchStatus status = new MatchStatus();
+		status.setComments("Housing unit assigned through manual match");
+		status.setStatus(0);
+		status.setReservationId(matchReservations.getReservationId());
+		status.setClientId(eligibleClients.get(0).getClientId());
+		status.setClientDedupId(eligibleClients.get(0).getClientDedupId());
+		repositoryFactory.getMatchStatusRepository().save(status);
+		
+		MatchReservationModel model = new MatchReservationModel();
+		model.setReservationId(matchReservations.getReservationId());
+		return model;
+	}
 }

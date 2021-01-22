@@ -93,7 +93,7 @@ public class MatchReservationTranslator {
 		} else {
 			return null;
 		}
-		match.setReservationId(matchReservationModel.getReservationId());
+
 		match.setMatchStatus(matchReservationModel.getMatchStatus());
 		match.setMatchDate(matchReservationModel.getMatchDate());
 		match.setManualMatch(true);

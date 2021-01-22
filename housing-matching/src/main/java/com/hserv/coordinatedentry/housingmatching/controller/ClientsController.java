@@ -24,7 +24,7 @@ public class ClientsController extends BaseController {
 	
 	@RequestMapping(value = "/{dedupId}/matches",method = RequestMethod.POST)
 	@APIMapping(checkSessionToken = true, checkTrustedApp = true,value = "CREATE_MATCH")
-	public void manualMatch(@PathVariable("dedupId") UUID dedulpClient, @RequestBody MatchReservationModel matchReservationModel) throws Exception{
-			 matchReservationsService.createManualMatch(dedulpClient,matchReservationModel);
+	public MatchReservationModel manualMatch(@PathVariable("dedupId") UUID dedulpClient, @RequestBody MatchReservationModel matchReservationModel) throws Exception{
+			return matchReservationsService.createManualMatch(dedulpClient,matchReservationModel);
 	}
 }
