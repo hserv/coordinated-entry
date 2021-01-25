@@ -164,22 +164,12 @@ public class MatchControllerV3 extends BaseController {
 	 */
 	@RequestMapping(value = "/client/{id}", method = RequestMethod.PUT)
 	@APIMapping(value="update-match-by-clientId")
-	public ResponseEntity<String> updateMatchByClientId(@PathVariable UUID id,
-			@RequestBody MatchReservationModel matchReservationModel) {
-		ResponseEntity<String> responseEntity = null;
-		try {
+	public void updateMatchByClientId(@PathVariable UUID id,
+			@RequestBody MatchReservationModel matchReservationModel) throws Exception {
+	
 			boolean result = matchReservationsService.updateByClientId(id, matchReservationModel);
 
-			if (result) {
-				responseEntity = ResponseEntity.ok("updated : success");
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			responseEntity = new ResponseEntity<String>("Fail", HttpStatus.EXPECTATION_FAILED);
-		}
-
-		return responseEntity;
+	
 	}
 	
 	

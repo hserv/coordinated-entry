@@ -132,6 +132,8 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 
 	public List<EligibleClient> findByClientDedupIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(UUID clientID,String projectGroup,boolean deleted);
 	
+	public List<EligibleClient> findByClientIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(UUID clientID,String projectGroup,boolean deleted);
+	
 	public EligibleClient findByClientIdAndProjectGroupCodeAndDeleted(UUID clientID, String projectGroup, boolean b);
 
 	
