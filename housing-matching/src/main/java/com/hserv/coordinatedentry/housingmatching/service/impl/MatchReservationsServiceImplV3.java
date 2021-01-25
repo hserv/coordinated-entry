@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.hserv.coordinatedentry.housingmatching.dao.HousingUnitsRepository;
 import com.hserv.coordinatedentry.housingmatching.dao.RepositoryFactory;
 import com.hserv.coordinatedentry.housingmatching.entity.EligibleClient;
 import com.hserv.coordinatedentry.housingmatching.entity.GlobalHousehold;
@@ -162,17 +163,31 @@ public class MatchReservationsServiceImplV3 implements MatchReservationsServiceV
 		return matchReservationTranslator.translate(matchs.get(0));
 	
 	}
+	
+	@Autowired HousingUnitsRepository housingUnitsRepository;
 
 	@Override
-	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel) {
+	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel) throws Exception {
 		String projectGroup = SecurityContextUtil.getUserProjectGroup();
 		List<EligibleClient> eligibleClient = repositoryFactory.getEligibleClientsRepository().findByClientDedupIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(clientId, projectGroup, false);	
 		
-			if(eligibleClient.isEmpty())
-				return false;
+			if(eligibleClient.isEmpty()) throw new ResourceNotFoundException("Client not found");
 			
-		Match matchReservations = matchReservationTranslator.translate(matchReservationModel);
+			List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient.get(0), false);
+			if(matchs.isEmpty()) throw new ResourceNotFoundException("Match reservation not found for the client "+clientId);
+			Match matchReservations = matchReservationTranslator.translate(matchReservationModel,matchs.get(0));
 			matchReservations.setEligibleClient(eligibleClient.get(0));
+
+			if(matchReservationModel.getHousingUnitId()!=null) {
+			List<HousingInventory> housingInventories = housingUnitsRepository
+					.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(matchReservationModel.getHousingUnitId(),
+							SecurityContextUtil.getUserProjectGroup(), false);
+			if (housingInventories.isEmpty())
+				throw new ResourceNotFoundException("Housing unit not found");
+			if (housingInventories.get(0).getVacant() != null && !housingInventories.get(0).getVacant().booleanValue())
+				throw new AccessDeniedException("Housing unit not vacant");
+			matchReservations.setHousingUnitId(housingInventories.get(0).getHousingInventoryId());
+			}
 		repositoryFactory.getMatchReservationsRepository().saveAndFlush(matchReservations);
 		return true;
 	}

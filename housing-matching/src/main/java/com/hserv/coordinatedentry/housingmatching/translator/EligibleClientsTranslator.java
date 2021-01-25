@@ -35,8 +35,8 @@ public class EligibleClientsTranslator {
 			eligibleClientModel.setSurveyScore(eligibleClient.getSurveyScore());
 			eligibleClientModel.setSurveyDate(eligibleClient.getSurveyDate());
 			eligibleClientModel.setLink(eligibleClient.getClientLink());
-			eligibleClientModel.setDateCreated(eligibleClient.getDateCreated());
-			eligibleClientModel.setDateUpdated(eligibleClient.getDateUpdated());
+		//	eligibleClientModel.setDateCreated(eligibleClient.getDateCreated());
+		//	eligibleClientModel.setDateUpdated(eligibleClient.getDateUpdated());
 			eligibleClientModel.setIgnoreMatchProcess(eligibleClient.isIgnoreMatchProcess());
 			eligibleClientModel.setRemarks(eligibleClient.getRemarks());
 			eligibleClientModel.setClientDedupId(eligibleClient.getClientDedupId());

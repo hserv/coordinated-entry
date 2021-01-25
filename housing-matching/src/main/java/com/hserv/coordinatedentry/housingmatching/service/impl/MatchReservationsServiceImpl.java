@@ -164,14 +164,26 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 	}
 
 	@Override
-	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel) {
+	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel) throws Exception{
 	
-			EligibleClient eligibleClient = repositoryFactory.getEligibleClientsRepository().findOne(clientId);
-			if(eligibleClient==null)
-				return false;
+			List<EligibleClient> eligibleClient = repositoryFactory.getEligibleClientsRepository().findByClientIdAndProjectGroupCodeAndDeletedOrderByDateCreatedDesc(clientId,SecurityContextUtil.getUserProjectGroup(),false);
+			if(eligibleClient.isEmpty()) throw new ResourceNotFoundException("Eligible client not found");
+			List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(eligibleClient.get(0), false);
+			if(matchs.isEmpty()) throw new ResourceNotFoundException("Match reservation not found for the client "+clientId);
 			
-		Match matchReservations = matchReservationTranslator.translate(matchReservationModel);
-			matchReservations.setEligibleClient(eligibleClient);
+		Match matchReservations = matchReservationTranslator.translate(matchReservationModel,matchs.get(0));
+		if(matchReservationModel.getHousingUnitId()!=null) {
+		List<HousingInventory> housingInventories = housingUnitsRepository
+				.findByHousingInventoryIdAndProjectGroupCodeAndDeleted(matchReservationModel.getHousingUnitId(),
+						SecurityContextUtil.getUserProjectGroup(), false);
+		if (housingInventories.isEmpty())
+			throw new ResourceNotFoundException("Housing unit not found");
+		if (housingInventories.get(0).getVacant() != null && !housingInventories.get(0).getVacant().booleanValue())
+			throw new AccessDeniedException("Housing unit not vacant");
+	
+		matchReservations.setHousingUnitId(housingInventories.get(0).getHousingInventoryId());
+		}
+			matchReservations.setEligibleClient(eligibleClient.get(0));
 		repositoryFactory.getMatchReservationsRepository().saveAndFlush(matchReservations);
 		return true;
 	}
@@ -181,7 +193,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 		Match match = null;
 		EligibleClient client=null;
 		if(clientId!=null) {
-			 client =	repositoryFactory.getEligibleClientsRepository().findOne(clientId);
+			 client =	repositoryFactory.getEligibleClientsRepository().findByClientIdAndProjectGroupCodeAndDeletedOrderBySurveyDateDesc(clientId,SecurityContextUtil.getUserProjectGroup(),false);
 			List<Match> matches = (List<Match>) repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client,false);
 			if(matches.isEmpty()) throw new ResourceNotFoundException("No match reservation found for this client");
 			match = matches.get(0);
@@ -191,7 +203,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 				if(match==null)  throw new ResourceNotFoundException("No match reservation found");
 				client = match.getEligibleClient();
 		}
-		List<MatchStatusLevels> nextLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(match.getProgramType(), match.getMatchStatus()+"");
+		List<MatchStatusLevels> nextLevels = repositoryFactory.getMatchStatuLevelsRepository().findByProjectGroupCodeAndStatusCode(match.getProjectGroupCode(), match.getMatchStatus()+"");
 		
 		
 		List newStatus = new ArrayList();

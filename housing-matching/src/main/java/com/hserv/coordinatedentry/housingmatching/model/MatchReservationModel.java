@@ -16,8 +16,6 @@ public class MatchReservationModel {
 	private Integer reservationChildren;
 	private Boolean manualMatch;
 	private Boolean inactive;
-	private LocalDateTime dateCreated;
-	private LocalDateTime dateUpdated;
 	private UUID processId;
 	private UUID clientDedupId;
 
@@ -80,18 +78,6 @@ public class MatchReservationModel {
 	}
 	public void setInactive(Boolean inactive) {
 		this.inactive = inactive;
-	}
-	public LocalDateTime getDateCreated() {
-		return dateCreated;
-	}
-	public void setDateCreated(LocalDateTime dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-	public LocalDateTime getDateUpdated() {
-		return dateUpdated;
-	}
-	public void setDateUpdated(LocalDateTime dateUpdated) {
-		this.dateUpdated = dateUpdated;
 	}
 	public UUID getHousingUnitId() {
 		return housingUnitId;
