@@ -13,6 +13,10 @@ import java.util.UUID;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -302,5 +306,38 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		//	}
 		}
 	}
+	@Autowired
+	SessionFactory sessionFactory;
+	
+	@Transactional
+	public void indexSurveyData() {
+		DetachedCriteria criteria = DetachedCriteria.forClass(ClientSurveySubmissionEntity.class);
+	//	criteria.add(Restrictions.eq("projectGroupCode", "PG0001"));
+		criteria.add(Restrictions.eq("deleted", false));
+		criteria.add(Restrictions.sqlRestriction(" CREATED_AT >  CURRENT_DATE - INTERVAL '3 months' "));
+		List<ClientSurveySubmissionEntity> enrollments =	(List<ClientSurveySubmissionEntity>)criteria.getExecutableCriteria(sessionFactory.getCurrentSession()).list();
+		
+		for(ClientSurveySubmissionEntity entity : enrollments) {
+			// creating active mq request
+			AMQEvent amqEvent = new AMQEvent();
+
+			amqEvent.setEventType("survey.submissions");
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("clientId", entity.getClientId().getId());
+			data.put("dedupClientId", entity.getClientId().getDedupClientId());
+			data.put("submissionId", entity.getSubmissionId());
+			data.put("surveyId",entity.getSurveyId().getId());
+			data.put("submissionDate",MQDateUtil.dateTimeToString(entity.getSubmissionDate()));
+			data.put("deleted", false);
+			data.put("projectGroupCode", entity.getProjectGroupCode());
+			data.put("userId",entity.getUser());
+			amqEvent.setPayload(data);
+			amqEvent.setModule("ces");
+			amqEvent.setSubsystem("survey");
+			messageSender.sendAmqMessage(amqEvent);
+		}
+		
+	}
+
 
 }

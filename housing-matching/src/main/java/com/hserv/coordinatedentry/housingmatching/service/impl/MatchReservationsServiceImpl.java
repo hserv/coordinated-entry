@@ -267,7 +267,7 @@ public class MatchReservationsServiceImpl implements MatchReservationsService {
 			EligibleClient client =	repositoryFactory.getEligibleClientsRepository().findOne(clientId);
 			List<Match> matchs = repositoryFactory.getMatchReservationsRepository().findByEligibleClientAndDeletedOrderByDateCreatedDesc(client, false);
 			if(!matchs.isEmpty()) { 
-				statusHistory =	repositoryFactory.getMatchStatusRepository().findByReservationId(matchs.get(0).getReservationId());
+				statusHistory =	repositoryFactory.getMatchStatusRepository().findByReservationIdOrderByDateCreatedDesc(matchs.get(0).getReservationId());
 			}
 			else { 
 				statusHistory = new ArrayList<MatchStatus>(); 
