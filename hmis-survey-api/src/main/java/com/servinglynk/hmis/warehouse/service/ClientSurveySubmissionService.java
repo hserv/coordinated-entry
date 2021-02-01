@@ -18,5 +18,7 @@ public interface ClientSurveySubmissionService {
 	ClientSurveySubmissions getSearchClientSurveySubmissions(String queryString, Integer startIndex, Integer maxItems, String sort, String order);
 
 	void updateClientSurveySubmissionDate(UUID surveyId, UUID clientId);
+	
+	 void indexSurveyData();
 
 }

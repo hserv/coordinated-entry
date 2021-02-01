@@ -33,7 +33,7 @@ public class SurveysControllerv3 extends BaseController {
          serviceFactory.getSurveyServicev3().createSurvey(survey,session); 
          Set<String> surveyCategories =	survey.getSurveyCategories();
          if(CollectionUtils.isNotEmpty(surveyCategories)) {	
-        	Set<SurveyCategory> surveyCategoriesModel = new HashSet<>();
+        	Set<SurveyCategory> surveyCategoriesModel = new HashSet<SurveyCategory>();
         	for(String category :  surveyCategories) {
         		SurveyCategory surveyCategory = new SurveyCategory();
         		surveyCategory.setCategory(category);
