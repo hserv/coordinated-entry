@@ -39,6 +39,9 @@ public class SurveyEntity extends BaseEntity {
 	private boolean copySurveyId;
 	@Column(name="SURVEY_DEFINITION")
 	private String surveyDefinition;
+	@Column(name="HMIS_VERSION")
+	private String hmisVersion;
+	
 	@OneToMany(cascade=CascadeType.REMOVE,mappedBy="surveyEntity",fetch=FetchType.LAZY)
 	@Where(clause=" IS_ACTIVE = 'TRUE' ")
 	List<SurveySectionEntity> surveySectionEntities = new ArrayList<SurveySectionEntity>();
@@ -91,10 +94,17 @@ public class SurveyEntity extends BaseEntity {
 	public void setSurveySectionEntities(List<SurveySectionEntity> surveySectionEntities) {
 		this.surveySectionEntities = surveySectionEntities;
 	}
+
 	public String getSurveyDefinition() {
 		return surveyDefinition;
 	}
 	public void setSurveyDefinition(String surveyDefinition) {
 		this.surveyDefinition = surveyDefinition;
+	}
+	public String getHmisVersion() {
+		return hmisVersion;
+	}
+	public void setHmisVersion(String hmisVersion) {
+		this.hmisVersion = hmisVersion;
 	}
 }

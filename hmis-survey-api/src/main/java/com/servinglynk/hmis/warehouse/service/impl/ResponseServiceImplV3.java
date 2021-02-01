@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +40,14 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 	   Response returnResponse = new Response();
 	   
 	   UUID submissionId = UUID.randomUUID();
-	   LocalDateTime effectiveDate =null;
+
+	   LocalDateTime effectiveDate =LocalDateTime.now();
+
 	   
 	   SurveyEntity surveyEntity = daoFactory.getSurveyEntityDao().getSurveyEntityById(surveyId);
 	   if(surveyEntity==null) throw new SurveyNotFoundException();
 	   
-	   
+	   	String surveyCategory = StringUtils.EMPTY;
 		for (Response response : responses.getResponses()) {
 
 			ResponseEntity pResponse = ResponseConverter.modelToEntity(response, null);
@@ -62,7 +65,7 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 					pResponse.setSurveySectionEntity(sectionEntity);
 			}
 			pResponse.setSurveyEntity(surveyEntity);
-
+			
 			pResponse.setCreatedAt(LocalDateTime.now());
 			pResponse.setUser(getUser());
 			pResponse.setClientId(client.getClientId());
@@ -75,11 +78,16 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 			// pResponse));
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
 			effectiveDate = DateUtil.least(effectiveDate, response.getEffectiveDate());
+
+			surveyCategory = response.getSurveyCategory();
 		}
 	   
-	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate);
+	   UUID clientSurveySubmissionId = serviceFactory.getClientSurveySubmissionService().createClientSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate, surveyCategory);
+
+
 	   
 	   returnResponse.setSubmissionId(submissionId);
+	   returnResponse.setClientSurveySubmissionId(clientSurveySubmissionId);
        return returnResponse;
    }
 

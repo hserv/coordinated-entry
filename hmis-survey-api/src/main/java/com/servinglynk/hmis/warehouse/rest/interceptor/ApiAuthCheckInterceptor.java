@@ -47,6 +47,7 @@ public class ApiAuthCheckInterceptor extends HandlerInterceptorAdapter {
 			com.servinglynk.hmis.warehouse.core.model.Session session = new com.servinglynk.hmis.warehouse.core.model.Session();
 			session.setToken(clientresponse.getAccessToken());
 			session.setAccount(clientresponse.getAccount());
+			session.setClientTypeId(clientresponse.getTrustedApp().getTrustedAppId());
 			this.sessionHelper.setSession(session, request);
 			this.trustedAppHelper.setTrustedApp(clientresponse.getTrustedApp(), request);
 			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(session, ""));

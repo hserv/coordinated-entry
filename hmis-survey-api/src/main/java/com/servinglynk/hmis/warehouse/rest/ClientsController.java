@@ -36,7 +36,7 @@ public class ClientsController extends BaseController {
 	        Session session = sessionHelper.getSession(request);
 	        TrustedApp trustedApp = trustedAppHelper.getTrustedApp(request);
 	        BaseClient client =clientValidator.validateClient(clientid, trustedApp, session);
-	       return serviceFactory.getResponseService().createResponse(clientid,surveyid,response,client,session.getAccount().getUsername()); 
+	       return serviceFactory.getResponseService().createResponse(clientid,surveyid,response,client,session.getAccount().getUsername())	; 
 	       
 	   }
 

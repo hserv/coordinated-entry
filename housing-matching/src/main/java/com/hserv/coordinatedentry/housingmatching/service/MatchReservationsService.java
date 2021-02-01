@@ -31,7 +31,7 @@ public interface MatchReservationsService {
 	
 	public MatchReservationModel findByClientId(UUID clientId);
 	
-	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel);
+	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel) throws Exception;
 	
 	
 	public void updateMatchStatus(UUID reservationID,UUID clientId,MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception;
@@ -44,4 +44,6 @@ public interface MatchReservationsService {
 	void deleteNote(UUID nodeId) throws Exception;
 
 	public Page<StatusNotesEntity> getStatusNote(UUID resevationId, Integer statuscode,Pageable pageable);
+
+	public MatchReservationModel createManualMatch(UUID dedulpClient, MatchReservationModel matchReservationModel) throws Exception;
  }

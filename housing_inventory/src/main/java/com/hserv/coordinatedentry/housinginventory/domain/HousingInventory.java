@@ -21,6 +21,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hserv.coordinatedentry.housinginventory.model.Project;
 
 @SuppressWarnings("serial")
@@ -55,6 +56,7 @@ public class HousingInventory extends HousingInventoryBaseEntity  {
 	private Boolean vacant=true;
 	
 	@Column(name="alias_name")
+	@JsonProperty("name")
 	private String aliasName;
 	
 	@Column(name="schema_year")

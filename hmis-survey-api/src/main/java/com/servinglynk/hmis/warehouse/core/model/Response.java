@@ -13,6 +13,8 @@ public class Response extends ClientModel {
 	private UUID responseId;
 
 	private String responseText;
+	
+	private String pickListValueCode;
 
 	private int questionScore;
 
@@ -27,12 +29,18 @@ public class Response extends ClientModel {
 	private UUID dedupClientId;
 	
 	private String clientLink;
+	
+	private String hmisLink;
 
 	private UUID surveyId;
-
+	
+	private String surveyCategory;
+	
 	private boolean refused;
 
 	private UUID submissionId;
+	
+	private UUID clientSurveySubmissionId;
 	
 	private Client client;
 	
@@ -159,5 +167,33 @@ public class Response extends ClientModel {
 
 	public void setDedupClientId(UUID dedupClientId) {
 		this.dedupClientId = dedupClientId;
+	}
+
+	public String getHmisLink() {
+		return hmisLink;
+	}
+
+	public void setHmisLink(String hmisLink) {
+		this.hmisLink = hmisLink;
+	}
+	public String getSurveyCategory() {
+		return surveyCategory;
+	}
+	public void setSurveyCategory(String surveyCategory) {
+		this.surveyCategory = surveyCategory;
+	}
+	public UUID getClientSurveySubmissionId() {
+		return clientSurveySubmissionId;
+	}
+	public void setClientSurveySubmissionId(UUID clientSurveySubmissionId) {
+		this.clientSurveySubmissionId = clientSurveySubmissionId;
+	}
+
+	public String getPickListValueCode() {
+		return pickListValueCode;
+	}
+
+	public void setPickListValueCode(String pickListValueCode) {
+		this.pickListValueCode = pickListValueCode;
 	}
 }

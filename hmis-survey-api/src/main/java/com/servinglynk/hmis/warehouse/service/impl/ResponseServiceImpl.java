@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,12 +38,14 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 	   Response returnResponse = new Response();
 	   
 	   UUID submissionId = UUID.randomUUID();
-	   LocalDateTime effectiveDate =null;
+
+	   LocalDateTime effectiveDate =LocalDateTime.now();
+
 	   
 	   SurveyEntity surveyEntity = daoFactory.getSurveyEntityDao().getSurveyEntityById(surveyId);
 	   if(surveyEntity==null) throw new SurveyNotFoundException();
 	   
-	   
+	   String surveyCategory = StringUtils.EMPTY;
 		for (Response response : responses.getResponses()) {
 			ResponseEntity pResponse = ResponseConverter.modelToEntity(response, null);
 			if (response.getQuestionId() != null) {
@@ -72,9 +75,15 @@ public class ResponseServiceImpl extends ServiceBase implements ResponseService 
 			// pResponse));
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
 			effectiveDate = DateUtil.least(effectiveDate, response.getEffectiveDate());
+
+			surveyCategory = response.getSurveyCategory();
+		
+	   
+	   serviceFactory.getClientSurveySubmissionService().createClientSurveySubmission(clientId, surveyId, submissionId,effectiveDate,surveyCategory);
+
 		}
 	   
-	   serviceFactory.getClientSurveySubmissionService().createClinetSurveySubmission(clientId, surveyId, submissionId,effectiveDate);
+
 	   
 	   returnResponse.setSubmissionId(submissionId);
        return returnResponse;

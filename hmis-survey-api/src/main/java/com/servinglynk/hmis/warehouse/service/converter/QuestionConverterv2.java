@@ -1,5 +1,7 @@
 package com.servinglynk.hmis.warehouse.service.converter; 
 
+import org.apache.commons.lang.StringUtils;
+
 import com.servinglynk.hmis.warehouse.core.model.Questionv2;
 import com.servinglynk.hmis.warehouse.model.QuestionEntity;
 public class QuestionConverterv2   {
@@ -25,6 +27,12 @@ public class QuestionConverterv2   {
        if(model.getSubcategory()!=null)entity.setSubcategory(model.getSubcategory());
        if(model.getUpdateUrlTemplate()!=null) entity.setUpdateUrlTemplate(model.getUpdateUrlTemplate());
        if(model.getUriObjectField()!=null) entity.setUriObjectField(model.getUriObjectField());
+       if(model.getQuestionClassification() != null)  {
+    	   entity.setQuestionClassification(model.getQuestionClassification());
+    	   if(StringUtils.equals(model.getQuestionClassification(), "HUD")) {
+    		   entity.setHudQuestion(true);  
+    	   }
+       }
        return entity;    
    }
 
@@ -43,10 +51,17 @@ public class QuestionConverterv2   {
        model.setLocked(entity.isLocked());
        model.setQuestionWeight(entity.getQuestionWeight());
        model.setDefinition(entity.getDefinition());
+       model.setQuestionClassification(entity.getQuestionClassification());
        model.setVisibility(entity.isVisibility());
        model.setCategory(entity.getCategory());
        model.setSubcategory(entity.getSubcategory());
-
+       if(entity.getQuestionClassification() != null) {
+    	   model.setQuestionClassification(model.getQuestionClassification());
+    	   if(StringUtils.equals(entity.getQuestionClassification(), "HUD")) {
+    		   model.setHudQuestion(true);  
+    	   }
+       }
+       
        if(entity.getQuestionGroupEntity()!=null)
     	   model.setQuestionGroupId(entity.getQuestionGroupEntity().getId());
        

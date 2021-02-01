@@ -3,6 +3,8 @@ package com.servinglynk.hmis.warehouse.service.converter;
 import java.time.ZoneId;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.servinglynk.hmis.warehouse.core.model.Client;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.model.ClientEntity;
@@ -14,11 +16,18 @@ public class ResponseConverterV3 {
        if(entity==null) entity = new ResponseEntity();
        entity.setId(model.getResponseId());
        entity.setRefused(model.isRefused());
-       entity.setResponseText(model.getResponseText());
-       entity.setAppId(model.getAppId());
-       entity.setEffectiveDate(model.getEffectiveDate());
-       if(model.getDedupClientId()!=null) entity.setDedupClientId(model.getDedupClientId());
-//       entity.setClientId(model.getClientId());
+       if(StringUtils.isNotBlank(model.getResponseText()))
+    	   entity.setResponseText(model.getResponseText());
+       if(StringUtils.isNotBlank(model.getAppId()))
+    	   entity.setAppId(model.getAppId());
+       if(StringUtils.isNotBlank(model.getPickListValueCode()))
+    	   entity.setPickListValueCode(model.getPickListValueCode());
+       if(model.getEffectiveDate() !=null)
+    	   entity.setEffectiveDate(model.getEffectiveDate());
+       if(StringUtils.isNotBlank(model.getHmisLink()))
+    	   entity.setHmisLink(model.getHmisLink());
+       if(model.getDedupClientId()!=null) 
+    	   entity.setDedupClientId(model.getDedupClientId());
        return entity;    
    }
 
@@ -28,6 +37,7 @@ public class ResponseConverterV3 {
        model.setResponseId(entity.getId());
        model.setRefused(entity.isRefused());
        model.setResponseText(entity.getResponseText());
+       model.setPickListValueCode(entity.getPickListValueCode());
        QuestionEntity questionEntity = entity.getQuestionEntity();
        if(questionEntity != null) {
     	   model.setQuestionId(questionEntity.getId());
@@ -41,6 +51,7 @@ public class ResponseConverterV3 {
        model.setSubmissionId(entity.getSubmissionId());
        model.setEffectiveDate(entity.getEffectiveDate());
        model.setDedupClientId(entity.getDedupClientId());
+       model.setHmisLink(entity.getHmisLink());
        return model;
    }
    
@@ -49,6 +60,7 @@ public class ResponseConverterV3 {
        model.setResponseId(entity.getId());
        model.setRefused(entity.isRefused());
        model.setResponseText(entity.getResponseText());
+       model.setPickListValueCode(entity.getPickListValueCode());
        model.setQuestionScore(entity.getQuestionScore());
        model.setAppId(entity.getAppId());
        if(entity.getSurveySectionEntity()!=null) model.setSectionId(entity.getSurveySectionEntity().getId());
@@ -58,6 +70,7 @@ public class ResponseConverterV3 {
        model.setSubmissionId(entity.getSubmissionId());
        model.setEffectiveDate(entity.getEffectiveDate());
        model.setDedupClientId(clientEntity.getDedupClientId());
+       model.setHmisLink(entity.getHmisLink());
        if(entity.getClient()!=null) {
     	   Client client = new Client();
     	  if(clientEntity.getDob()!=null) client.setDob(Date.from(clientEntity.getDob().atZone(ZoneId.systemDefault()).toInstant()));

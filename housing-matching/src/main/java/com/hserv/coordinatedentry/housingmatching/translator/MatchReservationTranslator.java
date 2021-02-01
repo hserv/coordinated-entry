@@ -52,8 +52,6 @@ public class MatchReservationTranslator {
 		matchReservationModel.setMatchStatus(matchReserve.getMatchStatus());
 		matchReservationModel.setMatchDate(matchReserve.getMatchDate());
 		matchReservationModel.setManualMatch(matchReserve.getManualMatch());
-		matchReservationModel.setDateCreated(matchReserve.getDateCreated());
-		matchReservationModel.setDateUpdated(matchReserve.getDateUpdated());
 		matchReservationModel.setReservationAdults(matchReserve.getReservationAdults());
 		matchReservationModel.setReservationChildren(matchReserve.getReservationChildren());
 		matchReservationModel.setInactive(matchReserve.getInactive());
@@ -71,18 +69,36 @@ public class MatchReservationTranslator {
 		} else {
 			return null;
 		}
-		match.setReservationId(matchRerserveModel.getReservationId());
-		match.setMatchStatus(matchRerserveModel.getMatchStatus());
-		match.setMatchDate(matchRerserveModel.getMatchDate());
-		match.setManualMatch(matchRerserveModel.getManualMatch());
-		match.setDateCreated(matchRerserveModel.getDateCreated());
-		match.setDateUpdated(matchRerserveModel.getDateUpdated());
-		match.setReservationAdults(matchRerserveModel.getReservationAdults());
-		match.setReservationChildren(matchRerserveModel.getReservationChildren());
-		match.setInactive(matchRerserveModel.getInactive());
-		match.setNoteId(matchRerserveModel.getNoteId());
-		match.setHousingUnitId(matchRerserveModel.getHousingUnitId());
-	//	match.setHousingUnitId(UUID.fromString(matchRerserveModel.getHousingInventory().getHousingInventories().get(0).getHousingInventory().getHousingUnitId()));
+			
+		if(matchRerserveModel.getMatchDate()!=null) match.setMatchDate(matchRerserveModel.getMatchDate());
+		
+		if(matchRerserveModel.getReservationAdults()!=null) match.setReservationAdults(matchRerserveModel.getReservationAdults());
+		if(matchRerserveModel.getReservationChildren()!=null) match.setReservationChildren(matchRerserveModel.getReservationChildren());
+		return match;
+	}
+
+	public Match translate(MatchReservationModel matchRerserveModel,Match match) {
+		if(matchRerserveModel.getMatchDate()!=null) match.setMatchDate(matchRerserveModel.getMatchDate());
+		
+		if(matchRerserveModel.getReservationAdults()!=null) match.setReservationAdults(matchRerserveModel.getReservationAdults());
+		if(matchRerserveModel.getReservationChildren()!=null) match.setReservationChildren(matchRerserveModel.getReservationChildren());
+		return match;
+	}
+	
+	public Match translatev2(MatchReservationModel matchReservationModel) {
+		Match match = null;
+		if (matchReservationModel != null) {
+			match = new Match();
+		} else {
+			return null;
+		}
+
+		match.setMatchStatus(matchReservationModel.getMatchStatus());
+		match.setMatchDate(matchReservationModel.getMatchDate());
+		match.setManualMatch(true);
+		match.setReservationAdults(matchReservationModel.getReservationAdults());
+		match.setReservationChildren(matchReservationModel.getReservationChildren());
+		match.setInactive(false);
 		return match;
 	}
 

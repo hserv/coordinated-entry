@@ -31,6 +31,9 @@ public class ResponseEntity extends BaseEntity {
 	@Column(name="RESPONSE_TEXT")
 	private String responseText;
 	
+	@Column(name="PICKLIST_VALUE_CODE")
+	private String pickListValueCode;
+	
 	@Column(name="QUESTION_SCORE")
 	private int questionScore;
 	
@@ -73,7 +76,10 @@ public class ResponseEntity extends BaseEntity {
     
     @Column(name="CLIENT_LINK")
     private String clientLink;
-	
+    
+    @Column(name="HMIS_LINK")
+    private String hmisLink;
+    
 	public UUID getId() {
 		return id;
 	}
@@ -162,5 +168,17 @@ public class ResponseEntity extends BaseEntity {
 	}
 	public void setDedupClientId(UUID dedupClientId) {
 		this.dedupClientId = dedupClientId;
+	}
+	public String getHmisLink() {
+		return hmisLink;
+	}
+	public void setHmisLink(String hmisLink) {
+		this.hmisLink = hmisLink;
+	}
+	public String getPickListValueCode() {
+		return pickListValueCode;
+	}
+	public void setPickListValueCode(String pickListValueCode) {
+		this.pickListValueCode = pickListValueCode;
 	}
 }

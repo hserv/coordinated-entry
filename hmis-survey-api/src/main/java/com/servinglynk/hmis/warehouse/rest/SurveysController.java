@@ -1,11 +1,13 @@
 package com.servinglynk.hmis.warehouse.rest; 
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +16,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
+import com.servinglynk.hmis.warehouse.core.model.CreateSurveyProject;
+import com.servinglynk.hmis.warehouse.core.model.ParamResponse;
 import com.servinglynk.hmis.warehouse.core.model.SectionQuestionMappings;
 import com.servinglynk.hmis.warehouse.core.model.Session;
 import com.servinglynk.hmis.warehouse.core.model.Survey;
+import com.servinglynk.hmis.warehouse.core.model.SurveyCategories;
+import com.servinglynk.hmis.warehouse.core.model.SurveyCategory;
+import com.servinglynk.hmis.warehouse.core.model.SurveyProject;
+import com.servinglynk.hmis.warehouse.core.model.SurveyProjects;
 import com.servinglynk.hmis.warehouse.core.model.SurveySection;
 import com.servinglynk.hmis.warehouse.core.model.SurveySections;
 import com.servinglynk.hmis.warehouse.core.model.Surveys;
+import com.servinglynk.hmis.warehouse.enums.HmisVersionEnum;
+import com.servinglynk.hmis.warehouse.enums.SurveyCategoryEnum;
 
 @RestController
 @RequestMapping("/surveys")
@@ -159,5 +169,135 @@ public class SurveysController extends BaseController {
         serviceFactory.getSectionQuestionMappingService().deleteSectionQuestionMapping(questionid, session.getAccount().getUsername());
         response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
    }
+   /*** Survey global project relation  Begins ***/
+   @RequestMapping(method=RequestMethod.POST,value="/{surveyid}/projects")
+   @APIMapping(value="SURVEY_API_CREATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public SurveyProject createSurveyProject(@PathVariable("surveyid") UUID surveyid,
+		   @Valid @RequestBody CreateSurveyProject surveyProject,HttpServletRequest request) throws Exception{
+         Session session = sessionHelper.getSession(request); 
+         serviceFactory.getSurveyProjectService().createSurveyProject(surveyid,surveyProject,session.getAccount().getUsername()); 
+         SurveyProject returnedSurveyProject = new SurveyProject();
+         returnedSurveyProject.setSurveyProjectId(surveyProject.getSurveyProjectId());
+         return returnedSurveyProject;
+   }
 
+   @RequestMapping(value="/{surveyid}/projects/{surveyprojectid}",method=RequestMethod.PUT)
+   @APIMapping(value="SURVEY_API_UPDATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public void updateSurveyProject(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "surveyprojectid" ) UUID projectid,@Valid @RequestBody SurveyProject surveyProject,HttpServletRequest request) throws Exception{
+        Session session = sessionHelper.getSession(request); 
+        surveyProject.setSurveyProjectId(projectid);
+        surveyProject.setSurveyId(surveyid);
+        serviceFactory.getSurveyProjectService().updateSurveyProject(surveyid,surveyProject,session.getAccount().getUsername()); 
+   }
+
+   @RequestMapping(value="/{surveyid}/projects/{surveyprojectid}",method=RequestMethod.DELETE)
+   @APIMapping(value="SURVEY_API_DELETE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public void deleteSurveyProjects(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "surveyprojectid" ) UUID projectid,HttpServletRequest request,HttpServletResponse response) throws Exception{
+        Session session = sessionHelper.getSession(request); 
+        serviceFactory.getSurveyService().getSurveyById(surveyid);
+        serviceFactory.getSurveyProjectService().deleteSurveyProject(projectid,session.getAccount().getUsername()); 
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
+   }
+
+   @RequestMapping(value="/{surveyid}/projects/{surveyprojectid}",method=RequestMethod.GET)
+   @APIMapping(value="SURVEY_API_GET_SURVEYSECTION_BY_ID",checkTrustedApp=true,checkSessionToken=true)
+   public SurveyProject getSurveyProjectById(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "surveyprojectid" ) UUID projectid,HttpServletRequest request) throws Exception{
+       serviceFactory.getSurveyService().getSurveyById(surveyid);
+	   return serviceFactory.getSurveyProjectService().getSurveyProjectById(projectid); 
+   }
+
+   @RequestMapping(method=RequestMethod.GET,value="/{globalprojectid}/surveyprojects")
+   @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public SurveyProjects getAllSurveyFromProject(@PathVariable("globalprojectid") UUID globalProjectId,
+                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
+                       @RequestParam(value="maxItems", required=false) Integer maxItems,
+                       @RequestParam(value="surveyid", required=false) UUID surveyid,
+                       HttpServletRequest request) throws Exception {
+           if (startIndex == null) startIndex =0;
+           if (maxItems == null || maxItems > 30) maxItems =30;
+           if(globalProjectId != null) {
+        	  return serviceFactory.getSurveyProjectService().getAllSurveyByGlobaProjectId(globalProjectId, startIndex, maxItems);
+           }
+        return serviceFactory.getSurveyProjectService().getAllSurveySurveyProjects(surveyid,startIndex,maxItems); 
+   }
+   
+   @RequestMapping(method=RequestMethod.GET,value="/{surveyid}/projects")
+   @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public SurveyProjects getAllSurveyProjets(
+                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
+                       @RequestParam(value="maxItems", required=false) Integer maxItems,
+                       @PathVariable(value="surveyid") UUID surveyid,
+                       HttpServletRequest request) throws Exception {
+           if (startIndex == null) startIndex =0;
+           if (maxItems == null || maxItems > 30) maxItems =30;
+           
+           return serviceFactory.getSurveyProjectService().getAllSurveySurveyProjects(surveyid,startIndex,maxItems); 
+   }
+   
+   
+   @RequestMapping(method=RequestMethod.POST,value="/{surveyid}/categories")
+   @APIMapping(value="SURVEY_API_CREATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public SurveyCategories createSurveyCategory(@PathVariable("surveyid") UUID surveyid,
+		   @Valid @RequestBody SurveyCategories surveyCategories,HttpServletRequest request) throws Exception{
+         serviceFactory.getSurveyCategoryService().createSurveyCategory(surveyid, surveyCategories.getSurveyCategories());
+         return surveyCategories;
+   }
+   
+   @RequestMapping(value="/{surveyid}/categories/{surveycategoryid}",method=RequestMethod.DELETE)
+   @APIMapping(value="SURVEY_API_DELETE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public void deleteSurveyCategories(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "surveycategoryid" ) UUID surveycategoryid,HttpServletRequest request,HttpServletResponse response) throws Exception{
+        Session session = sessionHelper.getSession(request); 
+        serviceFactory.getSurveyService().getSurveyById(surveyid);
+        serviceFactory.getSurveyCategoryService().deleteSurveyCategory(surveycategoryid,session.getAccount().getUsername()); 
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT); 
+   }
+   
+   @RequestMapping(value="/{surveyid}/categories/{surveycategoryid}",method=RequestMethod.PUT)
+   @APIMapping(value="SURVEY_API_UPDATE_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public void updateSurveyCategory(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "surveycategoryid" ) UUID surveycategoryid,@Valid @RequestBody SurveyCategory surveyCategory,HttpServletRequest request) throws Exception{
+        Session session = sessionHelper.getSession(request); 
+        surveyCategory.setSurveyId(surveyid);
+        surveyCategory.setSurveyCategoryId(surveycategoryid);
+        serviceFactory.getSurveyCategoryService().updateSurveyCategory(surveyid,surveyCategory,session.getAccount().getUsername()); 
+   }
+   
+   @RequestMapping(value="/{surveyid}/categories/{surveycategoryid}",method=RequestMethod.GET)
+   @APIMapping(value="SURVEY_API_GET_SURVEYSECTION_BY_ID",checkTrustedApp=true,checkSessionToken=true)
+   public SurveyCategory getSurveyCategoryById(@PathVariable("surveyid") UUID surveyid,
+		   @PathVariable( "surveycategoryid" ) UUID surveycategoryid,HttpServletRequest request) throws Exception{
+       serviceFactory.getSurveyService().getSurveyById(surveyid);
+	   return serviceFactory.getSurveyCategoryService().getSurveyCategoryById(surveycategoryid); 
+   }
+
+   @RequestMapping(method=RequestMethod.GET,value="/{surveyid}/categories")
+   @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public SurveyCategories getAllSurveyCategories(@PathVariable("surveyid") UUID surveyid,
+                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
+                       @RequestParam(value="maxItems", required=false) Integer maxItems,
+                       HttpServletRequest request) throws Exception {
+           if (startIndex == null) startIndex =0;
+           if (maxItems == null || maxItems > 30) maxItems =30;
+           serviceFactory.getSurveyService().getSurveyById(surveyid);
+        return serviceFactory.getSurveyCategoryService().getAllSurveySurveyCategories(surveyid, startIndex, maxItems);
+   }
+   @RequestMapping(method=RequestMethod.GET,value="/params/{name}")
+   @APIMapping(value="SURVEY_API_GET_ALL_SURVEYSECTION",checkTrustedApp=true,checkSessionToken=true)
+   public List<ParamResponse> getSurveyParams(@PathVariable("name") String name,
+                       @RequestParam(value="startIndex", required=false) Integer startIndex, 
+                       @RequestParam(value="maxItems", required=false) Integer maxItems,
+                       HttpServletRequest request) throws Exception {
+	   if(StringUtils.isNotBlank(name)) {
+		   if(StringUtils.equals("version", name)) {
+			   return HmisVersionEnum.getPickList();
+		   } else if (StringUtils.equals("category", name)) {
+			   return SurveyCategoryEnum.getPickList();
+		   }
+	   }
+           return HmisVersionEnum.getPickList();
+   }
 }

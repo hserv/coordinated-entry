@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.servinglynk.hmis.warehouse.annotations.APIMapping;
+import com.servinglynk.hmis.warehouse.client.MessageSender;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
+import com.servinglynk.hmis.warehouse.core.model.Session;
+
 
 @RestController
 @RequestMapping("/clientsurveysubmissions")
@@ -38,10 +42,10 @@ public class ClientSurveySubmissionController extends BaseController{
 	
 	@RequestMapping(method=RequestMethod.PUT,value="/{clientSubmissionId}")
 	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
-	public void updateGlobalEnrollmentId(@RequestBody ClientSurveySubmission clientSurveySubmission , @PathVariable("clientSubmissionId") UUID clientSubmissionId ) throws Exception {
-		serviceFactory.getClientSurveySubmissionService().updateClientSurveySubmission(clientSubmissionId, clientSurveySubmission.getGlobalEnrollmentId());
+	public void updateGlobalEnrollmentId(@RequestBody ClientSurveySubmission clientSurveySubmission , @PathVariable("clientSubmissionId") UUID clientSubmissionId, HttpServletRequest request) throws Exception {
+		Session session = sessionHelper.getSession(request);
+		serviceFactory.getClientSurveySubmissionService().updateClientSurveySubmission(clientSubmissionId, clientSurveySubmission,session);
 	}
-	
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@APIMapping(value="SURVEY_API_CREATE_RESPONSE",checkTrustedApp=true,checkSessionToken=true)
@@ -56,5 +60,18 @@ public class ClientSurveySubmissionController extends BaseController{
 
 		return serviceFactory.getClientSurveySubmissionService().getSearchClientSurveySubmissions(queryString, startIndex,maxItems,sort,order);
 	}
-
+	
+	
+	
+	
+	@Autowired
+	protected MessageSender messageSender;
+	
+	@RequestMapping(method = RequestMethod.POST)
+	@APIMapping(value="HEALTH_CHECK",checkTrustedApp=false,checkSessionToken=false)
+	public void indexData() {
+		serviceFactory.getClientSurveySubmissionService().indexSurveyData();
+	}
+	
+	
 }

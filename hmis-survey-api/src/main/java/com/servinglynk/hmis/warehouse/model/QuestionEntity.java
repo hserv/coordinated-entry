@@ -9,10 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="QUESTION",schema="survey")
@@ -39,6 +37,9 @@ public class QuestionEntity extends BaseEntity {
 	
 	@Column(name="QUESTION_DATA_TYPE")
 	private String questionDataType;
+	
+	@Column(name="QUESTION_CLASSIFICATION")
+	private String questionClassification;
 	
 	@Column(name="CORRECT_VALUE_FOR_ASSESSMENT")
 	private String correctValueForAssessment;
@@ -203,5 +204,11 @@ public class QuestionEntity extends BaseEntity {
 	}
 	public void setUriObjectField(String uriObjectField) {
 		this.uriObjectField = uriObjectField;
+	}
+	public String getQuestionClassification() {
+		return questionClassification;
+	}
+	public void setQuestionClassification(String questionClassification) {
+		this.questionClassification = questionClassification;
 	}
 }

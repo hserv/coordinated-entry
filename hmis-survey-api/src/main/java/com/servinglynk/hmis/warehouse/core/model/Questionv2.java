@@ -2,15 +2,12 @@ package com.servinglynk.hmis.warehouse.core.model;
 
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.servinglynk.hmis.warehouse.util.QuestionDataTypeEnum;
-import com.servinglynk.hmis.warehouse.util.QuestionTypeEnum;
+import com.servinglynk.hmis.warehouse.core.annotations.AllowedValues;
 
 @JsonRootName("question")
 public class Questionv2 extends ClientModel {
@@ -36,6 +33,9 @@ public class Questionv2 extends ClientModel {
 	private boolean copyQuestionId;
 
 	private boolean hudQuestion;
+	
+	@AllowedValues( allowNullDefault = true, values = { "HUD", "CES", "GENERIC"}, message = "Allowed values for tag value are HUD,CES,GENERIC")
+  	private String questionClassification;
 
 	private boolean locked;
 
@@ -219,6 +219,12 @@ public class Questionv2 extends ClientModel {
 	public void setUriObjectField(String uriObjectField) {
 		this.uriObjectField = uriObjectField;
 	}
-	
-	
+
+	public String getQuestionClassification() {
+		return questionClassification;
+	}
+
+	public void setQuestionClassification(String questionClassification) {
+		this.questionClassification = questionClassification;
+	}
 }

@@ -2,7 +2,7 @@ package com.servinglynk.hmis.warehouse.service.converter;
 
 import com.servinglynk.hmis.warehouse.core.model.Surveyv2;
 import com.servinglynk.hmis.warehouse.model.SurveyEntity;
-public class SurveyConverterv2{
+public class SurveyConverterv2 {
 
    public static SurveyEntity modelToEntity (Surveyv2 model ,SurveyEntity entity) {
        if(entity==null) entity = new SurveyEntity();

@@ -31,7 +31,7 @@ public interface MatchReservationsServiceV3 {
 	
 	public MatchReservationModel findByClientId(UUID clientId);
 	
-	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel);
+	public boolean updateByClientId(UUID clientId, MatchReservationModel matchReservationModel) throws Exception ;
 	
 	
 	public void updateMatchStatus(UUID reservationID,UUID clientId,MatchStatusModel statusModel,String auditUser,Session session,String trustedApp) throws Exception;

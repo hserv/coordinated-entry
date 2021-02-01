@@ -1,5 +1,6 @@
 package com.servinglynk.hmis.warehouse.core.model;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -30,6 +31,12 @@ public class Survey extends ClientModel {
 	private boolean locked;
 
 	private boolean copySurveyId;
+	
+	private String hmisVersion;
+	
+	private String surveyDefinition;
+	
+	private Set<String> surveyCategories;
 
 
 	public UUID getSurveyId() {
@@ -86,5 +93,29 @@ public class Survey extends ClientModel {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
+	}
+
+	public String getHmisVersion() {
+		return hmisVersion;
+	}
+
+	public void setHmisVersion(String hmisVersion) {
+		this.hmisVersion = hmisVersion;
+	}
+
+	public Set<String> getSurveyCategories() {
+		return surveyCategories;
+	}
+
+	public void setSurveyCategories(Set<String> surveyCategories) {
+		this.surveyCategories = surveyCategories;
+	}
+
+	public String getSurveyDefinition() {
+		return surveyDefinition;
+	}
+
+	public void setSurveyDefinition(String surveyDefinition) {
+		this.surveyDefinition = surveyDefinition;
 	}
 }
