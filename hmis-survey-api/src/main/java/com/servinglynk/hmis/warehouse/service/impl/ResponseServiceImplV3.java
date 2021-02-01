@@ -40,7 +40,9 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 	   Response returnResponse = new Response();
 	   
 	   UUID submissionId = UUID.randomUUID();
+
 	   LocalDateTime effectiveDate =LocalDateTime.now();
+
 	   
 	   SurveyEntity surveyEntity = daoFactory.getSurveyEntityDao().getSurveyEntityById(surveyId);
 	   if(surveyEntity==null) throw new SurveyNotFoundException();
@@ -76,10 +78,13 @@ public class ResponseServiceImplV3 extends ServiceBase implements ResponseServic
 			// pResponse));
 //       daoFactory.getResponseEntityDao().updateResponseEntity(pResponse);
 			effectiveDate = DateUtil.least(effectiveDate, response.getEffectiveDate());
+
 			surveyCategory = response.getSurveyCategory();
 		}
 	   
 	   UUID clientSurveySubmissionId = serviceFactory.getClientSurveySubmissionService().createClientSurveySubmission(client.getClientId(), surveyId, submissionId,effectiveDate, surveyCategory);
+
+
 	   
 	   returnResponse.setSubmissionId(submissionId);
 	   returnResponse.setClientSurveySubmissionId(clientSurveySubmissionId);

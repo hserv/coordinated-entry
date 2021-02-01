@@ -9,7 +9,11 @@ import com.servinglynk.hmis.warehouse.core.model.Session;
 
 public interface ClientSurveySubmissionService {
 	
+
 	UUID createClientSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId, LocalDateTime submissionDate, String surveyCategory);
+
+	void createClinetSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId, LocalDateTime submissionDate);
+
 	
 	ClientSurveySubmissions getAllClientSurveySubmissions(UUID clientId,String queryString, String sort, String order, Integer startIndex, Integer maxItems);
 	
@@ -17,8 +21,14 @@ public interface ClientSurveySubmissionService {
 	
 	ClientSurveySubmissions getSearchClientSurveySubmissions(String queryString, Integer startIndex, Integer maxItems, String sort, String order);
 
+
 	void updateClientSurveySubmissionDate(UUID surveyId, UUID clientId);
 	
 	 void indexSurveyData();
+
+	ClientSurveySubmissions getSearchClientSurveySubmissions(String queryString, Integer startIndex, Integer maxItems, String sort, String order);
+
+	void updateClientSurveySubmissionDate(UUID surveyId, UUID clientId);
+
 
 }

@@ -1,7 +1,9 @@
 package com.servinglynk.hmis.warehouse.model;
 
 
+
 import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -32,7 +34,7 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@JoinColumn(name="CLIENT_ID")
 	@OneToOne(fetch=FetchType.LAZY)
 	private ClientEntity clientId;
-	
+
 	@JoinColumn(name="SURVEY_ID")
 	@OneToOne(fetch=FetchType.LAZY)
 	private SurveyEntity surveyId; 
@@ -45,6 +47,7 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
    	@Column(name="GLOBAL_ENROLLMENT_ID")
    	private UUID globalEnrollmentId;
 	
+
 	@Column(name="HMIS_LINK")
 	private String hmisLink;
 	
@@ -66,6 +69,11 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDate")	
 	@Column(name="EXIT_DATE")
 	private LocalDate exitDate;
+
+	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")	
+	@Column(name="SUBMISSION_DATE")
+	private LocalDateTime submissionDate;
+
 
 	@Type(type="org.jadira.usertype.dateandtime.threeten.PersistentLocalDate")	
 	@Column(name="INFORMATION_DATE")
@@ -176,5 +184,10 @@ public class ClientSurveySubmissionEntity extends BaseEntity {
 
 	public void setHmisLink(String hmisLink) {
 		this.hmisLink = hmisLink;
+
+
+	public void setSubmissionDate(LocalDateTime submissionDate) {
+		this.submissionDate = submissionDate;
+
 	}
 }

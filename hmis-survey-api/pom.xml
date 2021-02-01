@@ -7,11 +7,9 @@
 	<packaging>war</packaging>
 
 	<properties>
-
 		<java-version>1.8</java-version>
 
 		<parent-version>2.22</parent-version>
-
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 		<log4j-version>1.2.17</log4j-version>
@@ -116,7 +114,6 @@
 		</dependency>
 
 
-	
 <dependency>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-xml</artifactId>
@@ -132,7 +129,9 @@
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
+
 		    <version>2.9.10.7</version>
+
 		</dependency>
 
 		<dependency>

@@ -2,7 +2,10 @@ package com.servinglynk.hmis.warehouse.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
+
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,12 +26,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.servinglynk.hmis.warehouse.common.MQDateUtil;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmission;
 import com.servinglynk.hmis.warehouse.core.model.ClientSurveySubmissions;
+
 import com.servinglynk.hmis.warehouse.core.model.HmisPostingModel;
 import com.servinglynk.hmis.warehouse.core.model.QuestionResponseModel;
 import com.servinglynk.hmis.warehouse.core.model.Questionv2;
 import com.servinglynk.hmis.warehouse.core.model.Response;
 import com.servinglynk.hmis.warehouse.core.model.Responses;
 import com.servinglynk.hmis.warehouse.core.model.Session;
+
 import com.servinglynk.hmis.warehouse.core.model.Sort;
 import com.servinglynk.hmis.warehouse.core.model.SortedPagination;
 import com.servinglynk.hmis.warehouse.model.AMQEvent;
@@ -45,14 +50,18 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 	final static Logger logger = Logger.getLogger(ClientSurveySubmissionServiceImpl.class);
 	
 	@Transactional
+
 	public UUID createClientSurveySubmission(UUID clientId, UUID surveyId, UUID submissionId,LocalDateTime submissionDate, String surveyCategory) {
+
 		SurveyEntity surveyEntity = daoFactory.getSurveyDao().getSurveyById(surveyId);
 		ClientEntity clientEntity = daoFactory.getClientDao().getClientById(clientId);
 		ClientSurveySubmissionEntity entity = new ClientSurveySubmissionEntity();
 		entity.setClientId(clientEntity);
 		entity.setSubmissionId(submissionId);
 		entity.setSurveyId(surveyEntity);
+
 		entity.setSurveyCategory(surveyCategory);
+
 		entity.setSubmissionDate(submissionDate);
 		entity.setCreatedAt(LocalDateTime.now());
 		entity.setUpdatedAt(LocalDateTime.now());
@@ -77,7 +86,29 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		amqEvent.setSubsystem("survey");
 		messageSender.sendAmqMessage(amqEvent);
 		
+
 		return clientSurveySubmissionId;
+
+		
+		// creating active mq request
+		AMQEvent amqEvent = new AMQEvent();
+
+		amqEvent.setEventType("survey.submissions");
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("clientId", clientId);
+		data.put("dedupClientId", clientEntity.getDedupClientId());
+		data.put("submissionId", submissionId);
+		data.put("surveyId",surveyId);
+		data.put("submissionDate",MQDateUtil.dateTimeToString(submissionDate));
+		data.put("deleted", false);
+		data.put("projectGroupCode", SecurityContextUtil.getUserProjectGroup());
+		data.put("userId",SecurityContextUtil.getUserAccount().getAccountId());
+		amqEvent.setPayload(data);
+		amqEvent.setModule("ces");
+		amqEvent.setSubsystem("survey");
+		messageSender.sendAmqMessage(amqEvent);
+	
+
 	}
 	
 	@Transactional
@@ -300,6 +331,7 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 	public void updateClientSurveySubmissionDate(UUID surveyId, UUID clientId) {
 		List<ClientSurveySubmissionEntity>	entities =	daoFactory.getClientSurveySubmissionDao().getSubmissionBySurveyIdAndClientId(surveyId,clientId);
 		for(ClientSurveySubmissionEntity entity : entities) {
+
 		//	if(entity.getSubmissionDate()==null) {
 				entity.setSubmissionDate(LocalDateTime.now());
 				daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
@@ -339,5 +371,13 @@ public class ClientSurveySubmissionServiceImpl extends ServiceBase implements Cl
 		
 	}
 
+
+
+			if(entity.getSubmissionDate()==null) {
+				entity.setSubmissionDate(LocalDateTime.now());
+				daoFactory.getClientSurveySubmissionDao().updateClientSurveySubmission(entity);
+			}
+		}
+	}
 
 }

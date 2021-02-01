@@ -160,6 +160,7 @@ public class SectionScoreServiceImpl extends ServiceBase implements SectionScore
 			sectionScoreEntity.setUser(getUser());
 			sectionScoreEntity.setClientDedupId(sectionScore.getClientDedupId());
 			daoFactory.getSectionScoreDao().createSectionScore(sectionScoreEntity);
+			serviceFactory.getClientSurveySubmissionService().updateClientSurveySubmissionDate(sectionScore.getSurveyId(),sectionScore.getClientId());
 		}
 		serviceFactory.getClientSurveySubmissionService().updateClientSurveySubmissionDate(sectionScore.getSurveyId(),sectionScore.getClientId());
 		sectionScore.setSectionScoreId(sectionScoreEntity.getId());

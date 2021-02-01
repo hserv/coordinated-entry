@@ -141,9 +141,13 @@ public interface EligibleClientsRepository extends JpaRepository<EligibleClient,
 			"INNER JOIN ( SELECT client_dedup_id, MAX (survey_date) AS maxDate FROM housing_inventory.eligible_clients tm WHERE tm.project_group_code = :projectGroupCode " + 
 			"	AND deleted = FALSE and cast( tm.client_dedup_id as varchar) = :clientDedupId GROUP BY client_dedup_id ) tm ON T .client_dedup_id = tm.client_dedup_id AND T .survey_date = tm.maxDate " + 
 			" AND T .project_group_code = :projectGroupCode " + 
-			"  ORDER BY T.client_dedup_id, survey_score desc ",nativeQuery=true)
+
+			" AND T .ignore_match_process = FALSE ORDER BY T.client_dedup_id, survey_score desc ",nativeQuery=true)
+
 	List<EligibleClient> getActiveEligibleClientByDedupId(@Param("projectGroupCode") String projectGroupCode,@Param("clientDedupId") String clientDedupId);
 
 	
 	
+
 }
+

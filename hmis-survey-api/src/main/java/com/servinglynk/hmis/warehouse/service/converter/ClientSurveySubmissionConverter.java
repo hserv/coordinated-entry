@@ -22,6 +22,7 @@ public class ClientSurveySubmissionConverter {
 		model.setId(entity.getId());
 		model.setSubmissionId(entity.getSubmissionId());
 		model.setSubmissionDate(entity.getSubmissionDate());
+
 		model.setSurveyCategory(entity.getSurveyCategory());
 		model.setHmisLink(entity.getHmisLink());
 		if(entity.getEntryDate() !=null) 
@@ -30,6 +31,13 @@ public class ClientSurveySubmissionConverter {
 			model.setExitDate(Date.from(entity.getExitDate().atStartOfDay(defaultZoneId).toInstant()));
 		if(entity.getInformationDate() !=null)
 			model.setInformationDate(Date.from(entity.getInformationDate().atStartOfDay(defaultZoneId).toInstant()));
+
+		if(entity.getSurveyId()!=null) {
+			model.setSurveyId(entity.getSurveyId().getId());
+			model.setSurvey(SurveyConverter.entityToModel(entity.getSurveyId()));
+		}
+
+
 		
 		model.setHmisPostingStatus(entity.getHmisPostStatus());
 		if(entity.getSurveyId()!=null) {
