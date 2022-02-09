@@ -18,7 +18,7 @@
 
 		<thymeleaf.version>2.1.2.RELEASE</thymeleaf.version>
 
-		<hibernate.version>4.2.0.Final</hibernate.version>
+		<hibernate.version>5.4.24.Final</hibernate.version>
 		<commons.dbcp.version>1.4</commons.dbcp.version>
 		<spring.version>4.0.0.RELEASE</spring.version>
 	</properties>
